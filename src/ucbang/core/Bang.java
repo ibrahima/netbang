@@ -46,20 +46,6 @@ public class Bang {
         players = new Player[p];
         Arrays.fill(players, new Player());
         
-        //Create a drawPile
-        Enum[] cards = {CardName.BANG, CardName.BANG, CardName.BANG, 
-            CardName.BANG, CardName.BANG, CardName.BANG, CardName.BANG, 
-            CardName.BANG, CardName.BANG, CardName.BANG, CardName.BANG, 
-            CardName.BEER, CardName.BEER, CardName.BEER, CardName.PANIC, 
-            CardName.PANIC, CardName.PANIC, CardName.CAT_BALLOU, 
-            CardName.VOLCANIC};
-        ArrayList<Enum> allCards = new ArrayList<Enum>();
-        for(Enum e: cards)
-            allCards.add(e);
-        while(allCards.size()>0){
-            drawPile.add(new Card(allCards.remove((int)(Math.random()*allCards.size()))));
-        }
-        
         //Assign roles
         ArrayList<Enum> roles = new ArrayList<Enum>();
         switch(p){
@@ -94,6 +80,30 @@ public class Bang {
         for(Card s: drawPile)
             System.out.print(s.name+" ");
         System.out.print("\n");
+        
+        //Assign character cards
+        ArrayList<Enum> charList = new ArrayList<Enum>();
+        for(Enum e: Characters.values())
+            charList.add(e);
+        for(Player player: players){
+            drawPile.add(new Card(charList.remove((int)(Math.random()*charList.size()))));
+            drawPile.add(new Card(charList.remove((int)(Math.random()*charList.size()))));
+            playerDrawCard(player, 2);
+        }
+        
+        //Create a drawPile
+        Enum[] cards = {CardName.BANG, CardName.BANG, CardName.BANG, 
+            CardName.BANG, CardName.BANG, CardName.BANG, CardName.BANG, 
+            CardName.BANG, CardName.BANG, CardName.BANG, CardName.BANG, 
+            CardName.BEER, CardName.BEER, CardName.BEER, CardName.PANIC, 
+            CardName.PANIC, CardName.PANIC, CardName.CAT_BALLOU, 
+            CardName.VOLCANIC};
+        ArrayList<Enum> allCards = new ArrayList<Enum>();
+        for(Enum e: cards)
+            allCards.add(e);
+        while(allCards.size()>0){
+            drawPile.add(new Card(allCards.remove((int)(Math.random()*allCards.size()))));
+        }
         
         playerDrawCard(players[0], 10);
         for(Card s: drawPile)
