@@ -19,7 +19,7 @@ public class Bang {
     public ArrayList<Card> drawPile = new ArrayList<Card>(); //the card on the bottom in stored in index 0, the card on top is stored in index size()-1
     public ArrayList<Card> discardPile = new ArrayList<Card>();
     
-    public enum CardName {BANG, BEER, MISS, PANIC, CAT_BALLOU, VOLCANIC};
+    public enum CardName {BANG, MISS, BEER, BARREL, DUEL, INDIANS, GATLING, DYNAMITE, SALOON, WELLS_FARGO, STAGECOACH, GENERAL_STORE, CAT_BALLOU, PANIC, JAIL, APPALOOSA, MUSTANG, VOLCANIC, SCHOFIELD, REMINGTON, REV_CARBINE, WINCHESTER};
     public enum Role {SHERIFF, DEPUTY, OUTLAW, RENEGADE};
     
     /**
