@@ -1,9 +1,12 @@
 package ucbang.network;
 
-import java.nio.*;
-import java.io.*;
-import java.net.*;
-import java.util.*;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.Socket;
+import java.util.Random;
+
+
 public class Client extends Thread{
 	String name;
 	static int players=0;
