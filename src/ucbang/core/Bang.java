@@ -13,6 +13,7 @@ public class Bang {
     }
     
     public Player[] players;
+    public int numPlayers;
     
     public int turn;
     
@@ -33,9 +34,8 @@ public class Bang {
      * @param p
      */
     public void start(int p){
-        turn = 0;
-        
         //Create Players
+        numPlayers = p;
         players = new Player[p];
         Arrays.fill(players, new Player());
         
@@ -93,14 +93,44 @@ public class Bang {
         for(Card s: players[0].hand)
             System.out.print(s.name+" ");
         System.out.print("\n");
+        
+        //Give Sheriff the first turn (turn 0)
+        for(int n=0; n<p; n++){
+            if(players[n].role==Role.SHERIFF){
+                turn=n-1;
+                break;
+            }
+        }
+        nextTurn(); 
     }
     
     public void nextTurn(){
-    
+        turn++;
+        
+        
+        //check if player is dead
+        int oldturn = turn;
+        while(players[turn%numPlayers].lifePoints==0&&turn-oldturn<numPlayers){
+            turn++;
+        }
+        if(turn-oldturn>=numPlayers){
+            //that guy wins!
+            //TODO: add check to see if the only remaining players who are all on the same team
+        }
+        
+        //check jail/dynamite
+        
+        //draw two cards
+        if(players[turn%numPlayers].specialDraw==0){
+            playerDrawCard(players[turn%numPlayers], 2);
+        }
+        else{
+            //Yuck, there's alot of characters with this ability
+        }
     }
     
     /**
-     * Plays a card
+     * Plays a card. This is one of the functions used to connect the GUI to the game.
      */
     public void playCard(){
     
