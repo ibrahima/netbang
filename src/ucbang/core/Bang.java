@@ -3,9 +3,13 @@ package ucbang.core;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import ucbang.gui.GUI;
+
 public class Bang {
     public Bang() {
-        start(4);
+        start(1);
+        gui = new GUI();
+        gui.setVisible(true);
     }
     
     public static void main(String[] args){
@@ -23,6 +27,8 @@ public class Bang {
     public enum CardName {BANG, MISS, BEER, BARREL, DUEL, INDIANS, GATLING, DYNAMITE, SALOON, WELLS_FARGO, STAGECOACH, GENERAL_STORE, CAT_BALLOU, PANIC, JAIL, APPALOOSA, MUSTANG, VOLCANIC, SCHOFIELD, REMINGTON, REV_CARBINE, WINCHESTER};
     public enum Characters {BART_CASSIDY, BLACK_JACK, CALAMITY_JANET, EL_GRINGO, JESSE_JONES, JOURDONNAIS, KIT_CARLSON, LUCKY_DUKE, PAUL_REGRET, PEDRO_RAMIREZ, ROSE_DOOLAN, SID_KETCHUM, SLAB_THE_KILLER, SUZY_LAFAYETTE, VULTURE_SAM, WILLY_THE_KID, APACHE_KID, BELLE_STAR, BILL_NOFACE, CHUCK_WENGAM, DOC_HOLYDAY, ELENA_FUENTE, GREG_DIGGER, HERB_HUNTER, JOSE_DELGADO, MOLLY_STARK, PAT_BRENNAN, PIXIE_PETE, SEAN_MALLORY, TEQUILA_JOE, VERA_CUSTER};
     public enum Role {SHERIFF, DEPUTY, OUTLAW, RENEGADE};
+    
+    public GUI gui;
     
     /**
      * Create p players.
@@ -57,6 +63,8 @@ public class Bang {
         //Assign roles
         ArrayList<Enum> roles = new ArrayList<Enum>();
         switch(p){
+            case 1: //DEBUG MODE
+                roles.add(Role.SHERIFF); break;
             case 4:
                 roles.add(Role.SHERIFF); roles.add(Role.OUTLAW); 
                 roles.add(Role.OUTLAW); roles.add(Role.RENEGADE); break;
