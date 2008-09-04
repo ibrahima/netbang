@@ -15,8 +15,8 @@ import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
-public class GUI extends JFrame{
-    public GUI() {
+public class ClientGUI extends JFrame{
+    public ClientGUI() {
         //set window sizes
         setPreferredSize(new Dimension(800,600));
         setSize(new Dimension(800,600));
@@ -30,11 +30,34 @@ public class GUI extends JFrame{
         
         chat = new JPanel();
         chat.setPreferredSize(new Dimension(800, 200));
+        chat.setLayout(new GridBagLayout());
         
             //TODO: create real backgrounds
         chat.setBackground(new Color(0,100,0));
         
+        //create text field, button, and area
+        JTextField message = new JTextField();
+        JButton send = new JButton();
         JTextArea text = new JTextArea();
+        
+        //add stuff to JPanel chat
+        //everyone loves gridbags....
+        GridBagConstraints c = new GridBagConstraints();
+        c.fill = GridBagConstraints.VERTICAL;
+        c.gridwidth = 1;
+        c.gridx=0;
+        c.ipady=0;
+        c.ipadx=0;
+        c.insets = new Insets(0,0,0,0);
+        
+        chat.add(message, c);
+        c.gridx=1;
+        chat.add(send, c);
+        c.gridx=0;
+        c.gridwidth=2;
+        c.gridy=1;
+        chat.add(text, c);
+        
         
         getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
         getContentPane().add(fields);
@@ -45,5 +68,7 @@ public class GUI extends JFrame{
        
     JPanel fields;
     JPanel chat;
+        JTextField message;
+        JButton send;
         JTextArea text;
 }

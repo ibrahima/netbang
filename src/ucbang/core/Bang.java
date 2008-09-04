@@ -3,12 +3,12 @@ package ucbang.core;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import ucbang.gui.GUI;
+import ucbang.gui.ClientGUI;
 
 public class Bang {
     public Bang() {
         start(1);
-        gui = new GUI();
+        gui = new ClientGUI();
         gui.setVisible(true);
     }
     
@@ -28,7 +28,7 @@ public class Bang {
     public enum Characters {BART_CASSIDY, BLACK_JACK, CALAMITY_JANET, EL_GRINGO, JESSE_JONES, JOURDONNAIS, KIT_CARLSON, LUCKY_DUKE, PAUL_REGRET, PEDRO_RAMIREZ, ROSE_DOOLAN, SID_KETCHUM, SLAB_THE_KILLER, SUZY_LAFAYETTE, VULTURE_SAM, WILLY_THE_KID, APACHE_KID, BELLE_STAR, BILL_NOFACE, CHUCK_WENGAM, DOC_HOLYDAY, ELENA_FUENTE, GREG_DIGGER, HERB_HUNTER, JOSE_DELGADO, MOLLY_STARK, PAT_BRENNAN, PIXIE_PETE, SEAN_MALLORY, TEQUILA_JOE, VERA_CUSTER};
     public enum Role {SHERIFF, DEPUTY, OUTLAW, RENEGADE};
     
-    public GUI gui;
+    public ClientGUI gui;
     
     /**
      * Create p players.
