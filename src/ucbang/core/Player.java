@@ -15,5 +15,5 @@ public class Player {
     ArrayList<Card> hand = new ArrayList<Card>();
     Field field;
     
-    
+    int specialDraw;
 }
