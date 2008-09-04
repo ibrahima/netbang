@@ -1,4 +1,4 @@
-package ucbang;
+package ucbang.core;
 
 public class Card {
     public Card() {

@@ -1,4 +1,4 @@
-package ucbang;
+package ucbang.core;
 
 import java.lang.reflect.Array;
 
