@@ -28,7 +28,6 @@ public class Server extends Thread{
 	}
 
 	public static void main(String Args[]){
-
 		new Server(12345);
 	}
 	public void run(){
@@ -53,7 +52,8 @@ class connection extends Thread{
 	
 	Server myServer;
 	String name="";
-	Object temp;
+	String buffer;
+	boolean connected=false;
 	void print(Object stuff){
     	System.out.println("Server:"+stuff);
     }
@@ -78,9 +78,10 @@ class connection extends Thread{
      	}
 		try
 		{
-			temp=in.readObject();
-			name = (String)temp;
+			buffer=(String)in.readObject();
+			name = buffer;
 			print(name+"("+client.getInetAddress()+") has joined the game.");
+			out.writeObject("Successfully connected.");
 		}
 		catch(Exception e)
 		{
@@ -91,9 +92,8 @@ class connection extends Thread{
 	public synchronized void run(){		
 		while(!client.isClosed()){
 			try {
-				temp=in.readObject();//This line also gives off errors at home but not school...
-
-
+				buffer=(String)in.readObject();//This line also gives off errors at home but not school...
+				System.out.println(buffer);
 	         	if(myServer.messages.containsKey(name)){
 	         		out.writeObject(myServer.messages.get(name));
 	         		myServer.messages.remove(name);

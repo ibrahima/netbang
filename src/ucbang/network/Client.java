@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.LinkedList;
 import java.util.Random;
 
 
@@ -12,9 +13,10 @@ public class Client extends Thread{
 	static int players=0;
 	Socket socket=null;
 	Random r = new Random();
-		
 	int port=12345;
 	String host ="127.0.0.1";
+	boolean connected=false;
+	LinkedList<String> msgs = new LinkedList<String>();
 	public Client(String host, boolean guiEnabled) {
 		this.host=host;
 		players++;
@@ -39,7 +41,6 @@ public class Client extends Thread{
 			}
 			else
 				new Client(Args[0],true).name=Args[1];
-			
 		}	
 	}
 	public String getPlayerName(){
@@ -53,7 +54,7 @@ public class Client extends Thread{
 			System.err.println(e+"\nServer Socket Error!");
 		}
 		//////print("Connection made with "+socket);
-		new connector(socket, name);
+		new connector(socket, name, this);
 		
 		while(true){
 			try
@@ -63,38 +64,43 @@ public class Client extends Thread{
 			catch(InterruptedException e){}
 		}
 	}
-	synchronized void print(Object stuff){
+	void print(Object stuff){
     	/*if(gui!=null)
     		gui.addMsg("Client:"+stuff);
     	else*/
     		System.out.println("Client:"+stuff);
     }
+	void addMsg(String msg){
+		synchronized(msgs){
+			msgs.add(msg);
+		}
+	}
 
 }
 
 class connector extends Thread{
-	//sends HashMap of stuff to clients
 	Socket server;
 	String name;
 	//Ship old;
 	ObjectInputStream in;
 	ObjectOutputStream out;
-	public connector(Socket theServer, String theName)
-	{
+	Client c;
+	String buffer;
+	public connector(Socket theServer, String theName, Client c){
 		server=theServer;
 		name=theName;
-			try {
-      			out = new ObjectOutputStream(server.getOutputStream());
-      			in= new ObjectInputStream(server.getInputStream());
+		this.c=c;
+		try {
+  			out = new ObjectOutputStream(server.getOutputStream());
+  			in= new ObjectInputStream(server.getInputStream());
+ 		}
+ 		catch(Exception e1) {
+     		try {
+        		server.close();
      		}
-     		catch(Exception e1) {
-         		try {
-            		server.close();
-         		}
-         		catch(Exception e) {
-           			//////print(e.getMessage());
-         		}
-         	return;
+     		catch(Exception e) {
+     		}
+     	return;
      	}
      	this.start();
      	
@@ -110,14 +116,18 @@ class connector extends Thread{
 		}
 		while(!server.isClosed()){
 			try {
-				if(name!=null&&out!=null)out.writeObject(name);//This line is giving off errors
-	        	//print("Client "+name+" just wrote its ship which is "+me+" at "+java.text.DateFormat.getTimeInstance(java.text.DateFormat.FULL).format(new java.util.Date()));
-	         	out.flush();
-	         	
+				if(name!=null&&out!=null&&!c.connected){
+					out.writeObject(name);
+		         	out.flush();
+				}
 	         	out.reset();
+	         	buffer=(String)in.readObject();
+	         	if(!c.connected&&buffer.equals("Successfully connected.")){
+	         		c.connected=true;
+	         		System.out.println("Successfully connected to server on "+server.getInetAddress());
+	         	}
 	      }
 	      catch(Exception e) {
-	      	//////print("Something bad happened in client")	;
 	      	if(e!=null&&e.getMessage()!=null&&e.getMessage().equals("Connection reset"))
 	      	{
 	      		print("Connection to server lost");
