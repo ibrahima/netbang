@@ -145,6 +145,12 @@ public class Bang {
      * Only used when draw pile is empty
      */
     public void shuffleDeck(){
-        
+        if(drawPile.size()>0){
+            System.out.println("Error: did not need to shuffleDeck()");
+            return;
+        }
+        while(discardPile.size()>0){
+            drawPile.add(discardPile.remove((int)Math.random()*discardPile.size()));
+        }
     }
 }
