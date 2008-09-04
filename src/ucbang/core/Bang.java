@@ -1,7 +1,5 @@
 package ucbang.core;
 
-import java.lang.reflect.Array;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -21,8 +19,8 @@ public class Bang {
     public ArrayList<Card> drawPile = new ArrayList<Card>(); //the card on the bottom in stored in index 0, the card on top is stored in index size()-1
     public ArrayList<Card> discardPile = new ArrayList<Card>();
     
-    public enum cardname {BANG, BEER, MISS, PANIC, CAT_BALLOU, VOLCANIC};
-    public enum role {SHERIFF, DEPUTY, OUTLAW, RENEGADE};
+    public enum CardName {BANG, BEER, MISS, PANIC, CAT_BALLOU, VOLCANIC};
+    public enum Role {SHERIFF, DEPUTY, OUTLAW, RENEGADE};
     
     /**
      * Create p players.
@@ -42,12 +40,12 @@ public class Bang {
         Arrays.fill(players, new Player());
         
         //Create a drawPile
-        Enum[] cards = {cardname.BANG, cardname.BANG, cardname.BANG, 
-            cardname.BANG, cardname.BANG, cardname.BANG, cardname.BANG, 
-            cardname.BANG, cardname.BANG, cardname.BANG, cardname.BANG, 
-            cardname.BEER, cardname.BEER, cardname.BEER, cardname.PANIC, 
-            cardname.PANIC, cardname.PANIC, cardname.CAT_BALLOU, 
-            cardname.VOLCANIC};
+        Enum[] cards = {CardName.BANG, CardName.BANG, CardName.BANG, 
+            CardName.BANG, CardName.BANG, CardName.BANG, CardName.BANG, 
+            CardName.BANG, CardName.BANG, CardName.BANG, CardName.BANG, 
+            CardName.BEER, CardName.BEER, CardName.BEER, CardName.PANIC, 
+            CardName.PANIC, CardName.PANIC, CardName.CAT_BALLOU, 
+            CardName.VOLCANIC};
         ArrayList<Enum> allCards = new ArrayList<Enum>();
         for(Enum e: cards)
             allCards.add(e);
@@ -59,26 +57,26 @@ public class Bang {
         ArrayList<Enum> roles = new ArrayList<Enum>();
         switch(p){
             case 4:
-                roles.add(role.SHERIFF); roles.add(role.OUTLAW); 
-                roles.add(role.OUTLAW); roles.add(role.RENEGADE); break;
+                roles.add(Role.SHERIFF); roles.add(Role.OUTLAW); 
+                roles.add(Role.OUTLAW); roles.add(Role.RENEGADE); break;
             case 5:
-                roles.add(role.SHERIFF); roles.add(role.OUTLAW); 
-                roles.add(role.OUTLAW); roles.add(role.RENEGADE); 
-                roles.add(role.DEPUTY); break;
+                roles.add(Role.SHERIFF); roles.add(Role.OUTLAW); 
+                roles.add(Role.OUTLAW); roles.add(Role.RENEGADE); 
+                roles.add(Role.DEPUTY); break;
             case 6:
-                roles.add(role.SHERIFF); roles.add(role.OUTLAW); 
-                roles.add(role.OUTLAW); roles.add(role.RENEGADE); 
-                roles.add(role.DEPUTY); roles.add(role.OUTLAW); break;
+                roles.add(Role.SHERIFF); roles.add(Role.OUTLAW); 
+                roles.add(Role.OUTLAW); roles.add(Role.RENEGADE); 
+                roles.add(Role.DEPUTY); roles.add(Role.OUTLAW); break;
             case 7:
-                roles.add(role.SHERIFF); roles.add(role.OUTLAW); 
-                roles.add(role.OUTLAW); roles.add(role.RENEGADE); 
-                roles.add(role.DEPUTY); roles.add(role.OUTLAW); 
-                roles.add(role.DEPUTY); break;
+                roles.add(Role.SHERIFF); roles.add(Role.OUTLAW); 
+                roles.add(Role.OUTLAW); roles.add(Role.RENEGADE); 
+                roles.add(Role.DEPUTY); roles.add(Role.OUTLAW); 
+                roles.add(Role.DEPUTY); break;
             case 8:
-                roles.add(role.SHERIFF); roles.add(role.OUTLAW); 
-                roles.add(role.OUTLAW); roles.add(role.RENEGADE); 
-                roles.add(role.DEPUTY); roles.add(role.OUTLAW); 
-                roles.add(role.OUTLAW); roles.add(role.RENEGADE); break;
+                roles.add(Role.SHERIFF); roles.add(Role.OUTLAW); 
+                roles.add(Role.OUTLAW); roles.add(Role.RENEGADE); 
+                roles.add(Role.DEPUTY); roles.add(Role.OUTLAW); 
+                roles.add(Role.OUTLAW); roles.add(Role.RENEGADE); break;
             default: 
                 System.out.print("Bad number of players!"); System.exit(0); break;
         }
