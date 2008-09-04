@@ -17,4 +17,6 @@ public class Player {
     
     int lifePoints;
     int specialDraw;
+    
+    int character;
 }
