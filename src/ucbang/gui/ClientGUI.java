@@ -2,80 +2,61 @@ package ucbang.gui;
 
 import java.awt.Color;
 import java.awt.Dimension;
-
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-
-import java.awt.Insets;
-
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.image.BufferStrategy;
 
 import java.util.ArrayList;
 
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
 
 import ucbang.core.Card;
 import ucbang.core.Player;
 
 public class ClientGUI extends JFrame{
+	Keyboard kb;
+	BufferStrategy strategy;
+    int player;
+    
     public ClientGUI() {
     }
     public ClientGUI(int p) {
         player = p;
-        
         //set window sizes
         setPreferredSize(new Dimension(800,600));
         setSize(new Dimension(800,600));
-        
-        //create panels
-        fields = new JPanel();
-        fields.setPreferredSize(new Dimension(400, 400));
-        
-            //TODO: create real backgrounds
-        fields.setBackground(new Color(100,0,0));
-        
-        chat = new JPanel();
-        chat.setPreferredSize(new Dimension(800, 200));
-        chat.setLayout(new GridBagLayout());
-        
-            //TODO: create real backgrounds
-        chat.setBackground(new Color(0,100,0));
-
-        getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
-        getContentPane().add(fields);
-        getContentPane().add(chat);
-        
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        
-        //I'll take a shot at making a keylistener, but it's probably not the best way to do things
-         addKeyListener(new KeyListener(){
-                    public void keyTyped(KeyEvent e) {
-                        lastKey = e.getKeyChar();
-                    }
-
-                    public void keyPressed(KeyEvent e) {
-                    }
-
-                    public void keyReleased(KeyEvent e) {
-                    }
-                });
-        
-        validate();
+        kb=new Keyboard();
+        addKeyListener(kb);
+     	this.setIgnoreRepaint(true);
+     	this.setVisible(true);
+    	this.createBufferStrategy(2);
+    	strategy=this.getBufferStrategy();
     }
        
-    JPanel fields;
-    JPanel chat;
-    int player;
-    Character lastKey;
-    
+    public void paint(Graphics g){
+		Graphics2D graphics;
+		try {
+			graphics = (Graphics2D) strategy.getDrawGraphics();
+		} catch (Exception e) {
+			return;
+		}
+		//fill background w/ dark green
+		graphics.setColor(Color.GREEN);
+		graphics.fillRect(0, 0, 800, 400);
+		graphics.setColor(new Color(100,0,0));
+		graphics.fillRect(0, 400, 800, 600);
+
+		graphics.dispose();
+		//paint backbuffer to window
+		strategy.show();
+	}
+    public void update(){
+		paint(this.getGraphics());
+
+    }
     /**
      * Asks the player to choose a card
      * @param al
@@ -83,17 +64,17 @@ public class ClientGUI extends JFrame{
      */
     public int promptChooseCard(ArrayList<Card> al){
         while(true){
-            while(lastKey == null){
+            while(kb.lastKey == null){
             }
-            if(Character.isDigit(lastKey)){
-                if(Integer.valueOf(lastKey)%49<al.size()){
-                    char key = lastKey;
-                    lastKey = null;
+            if(Character.isDigit(kb.lastKey)){
+                if(Integer.valueOf(kb.lastKey)%49<al.size()){
+                    char key = kb.lastKey;
+                    kb.lastKey = null;
                     return Integer.valueOf(key)%49;
                 }
                 else{   
-                    System.out.println("You typed invalid number "+Integer.valueOf(lastKey)%48);
-                    lastKey = null;
+                    System.out.println("You typed invalid number "+Integer.valueOf(kb.lastKey)%48);
+                    kb.lastKey = null;
                 }
             }
         }
