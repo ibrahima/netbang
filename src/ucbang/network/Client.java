@@ -7,6 +7,9 @@ import java.net.Socket;
 import java.util.LinkedList;
 import java.util.Random;
 
+import ucbang.core.Player;
+import ucbang.gui.ClientGUI;
+
 
 public class Client extends Thread{
 	String name;
@@ -16,20 +19,20 @@ public class Client extends Thread{
 	int port=12345;
 	String host ="127.0.0.1";
 	boolean connected=false;
-	LinkedList<String> msgs = new LinkedList<String>();
+	LinkedList<String> outMsgs = new LinkedList<String>();
+	ClientGUI gui;
+	Player player;
 	public Client(String host, boolean guiEnabled) {
 		this.host=host;
-		players++;
 		name="Test client"+players;
+		if(guiEnabled)gui = new ClientGUI(players++, this);
 		this.start();
-		
 	}
 	public Client(String host, boolean guiEnabled, String name) {
 		this.host=host;
-		players++;
 		this.name=name;
-		this.start();
-		
+		if(guiEnabled)gui = new ClientGUI(players++, this);
+		this.start();		
 	}
 
 	public static void main(String Args[]){
@@ -53,7 +56,6 @@ public class Client extends Thread{
 		catch(Exception e){
 			System.err.println(e+"\nServer Socket Error!");
 		}
-		//////print("Connection made with "+socket);
 		new ClientThread(socket, name, this);
 		
 		while(true){
@@ -71,8 +73,8 @@ public class Client extends Thread{
     		System.out.println("Client:"+stuff);
     }
 	void addMsg(String msg){
-		synchronized(msgs){
-			msgs.add(msg);
+		synchronized(outMsgs){
+			outMsgs.add(msg);
 		}
 	}
 

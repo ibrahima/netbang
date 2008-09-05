@@ -15,6 +15,7 @@ import javax.swing.JOptionPane;
 
 import ucbang.core.Card;
 import ucbang.core.Player;
+import ucbang.network.Client;
 
 public class ClientGUI extends JFrame implements KeyListener{
     BufferStrategy strategy;
@@ -25,11 +26,9 @@ public class ClientGUI extends JFrame implements KeyListener{
     
     ArrayList<String> text = new ArrayList<String>();
     int textIndex = -1; //the bottom line of the text
+    Client client;
     
-    public ClientGUI() {
-    }
-    
-    public ClientGUI(int p) {
+    public ClientGUI(int p, Client client) {
         this.p = p;
         chat=new StringBuilder();
         //set window sizes
@@ -41,6 +40,7 @@ public class ClientGUI extends JFrame implements KeyListener{
      	this.setVisible(true);
     	this.createBufferStrategy(2);
     	strategy=this.getBufferStrategy();
+    	this.client=client;
     }
        
     public void paint(Graphics g){
@@ -145,7 +145,7 @@ public class ClientGUI extends JFrame implements KeyListener{
                                 chat.delete(0, chat.length());
 			}
 		}else if(chatting){
-                    if((e.getKeyChar())==8)
+                    if((e.getKeyChar())==8&&chat.length()>0)
                         chat.deleteCharAt(chat.length()-1);
                     else
 			chat.append(e.getKeyChar());
