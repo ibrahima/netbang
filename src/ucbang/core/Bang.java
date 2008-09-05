@@ -7,9 +7,16 @@ import ucbang.gui.ClientGUI;
 
 public class Bang {
     public Bang() {
-        gui = new ClientGUI(0);
-        gui.setVisible(true);
-        start(2);
+        //temporary fix for not having networking by opening multiple guis
+        int p = 2;
+        gui = new ClientGUI[2];
+        for(int n = 0; n<p; n++){
+            gui[n] = new ClientGUI(n);
+            gui[n].setName(String.valueOf(n));
+            gui[n].setLocation(800*n,0);
+            gui[n].setVisible(true);
+        }
+        start(p);
     }
     
     public static void main(String[] args){
@@ -28,7 +35,7 @@ public class Bang {
     public static enum Characters {BART_CASSIDY, BLACK_JACK, CALAMITY_JANET, EL_GRINGO, JESSE_JONES, JOURDONNAIS, KIT_CARLSON, LUCKY_DUKE, PAUL_REGRET, PEDRO_RAMIREZ, ROSE_DOOLAN, SID_KETCHUM, SLAB_THE_KILLER, SUZY_LAFAYETTE, VULTURE_SAM, WILLY_THE_KID, APACHE_KID, BELLE_STAR, BILL_NOFACE, CHUCK_WENGAM, DOC_HOLYDAY, ELENA_FUENTE, GREG_DIGGER, HERB_HUNTER, JOSE_DELGADO, MOLLY_STARK, PAT_BRENNAN, PIXIE_PETE, SEAN_MALLORY, TEQUILA_JOE, VERA_CUSTER};
     public static enum Role {SHERIFF, DEPUTY, OUTLAW, RENEGADE};
     
-    public ClientGUI gui;
+    public ClientGUI[] gui;
     
     /**
      * Create p players.
@@ -104,7 +111,7 @@ public class Bang {
             //doesn't prompt all players at the same time
             System.out.println("1. " + players[n].hand.get(0).name + " HP: " + players[n].hand.get(0).special);
             System.out.println("2. " + players[n].hand.get(1).name + " HP: " + players[n].hand.get(1).special);
-            Card c = players[n].hand.get(gui.promptChooseCharacter(players[n].hand));
+            Card c = players[n].hand.get(gui[n].promptChooseCharacter(players[n].hand));
             players[n].character = c.ordinal;
             players[n].lifePoints = c.special; //special is hp for char cards
             playerDiscardHand(players[n]);
