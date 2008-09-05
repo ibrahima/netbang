@@ -11,7 +11,7 @@ public class Bang {
         int p = 2;
         gui = new ClientGUI[2];
         for(int n = 0; n<p; n++){
-            gui[n] = new ClientGUI(n);
+            gui[n] = new ClientGUI(n,null);
             gui[n].setTitle(String.valueOf(n));
             gui[n].setLocation(800*n,0);
             gui[n].setVisible(true);
