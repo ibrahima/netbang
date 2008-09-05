@@ -11,6 +11,7 @@ import java.awt.image.BufferStrategy;
 import java.util.ArrayList;
 
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 import ucbang.core.Card;
 import ucbang.core.Player;
@@ -63,20 +64,16 @@ public class ClientGUI extends JFrame{
      * @return
      */
     public int promptChooseCard(ArrayList<Card> al){
-        while(true){
-            while(kb.lastKey == null){
-            }
-            if(Character.isDigit(kb.lastKey)){
-                if(Integer.valueOf(kb.lastKey)%49<al.size()){
-                    char key = kb.lastKey;
-                    kb.lastKey = null;
-                    return Integer.valueOf(key)%49;
-                }
-                else{   
-                    System.out.println("You typed invalid number "+Integer.valueOf(kb.lastKey)%48);
-                    kb.lastKey = null;
-                }
-            }
-        }
+    	Object[] options = al.toArray();
+		int n = JOptionPane.showOptionDialog(this,
+		"Who do you want to be?",
+		"Choose your character!",
+		JOptionPane.YES_NO_CANCEL_OPTION,
+		JOptionPane.QUESTION_MESSAGE,
+		null,
+		options,
+		options[0]);
+
+        return n;
     }
 }
