@@ -24,7 +24,7 @@ public class Bang {
     public ArrayList<Card> drawPile = new ArrayList<Card>(); //the card on the bottom in stored in index 0, the card on top is stored in index size()-1
     public ArrayList<Card> discardPile = new ArrayList<Card>();
     
-    public enum CardName {BANG, MISS, BEER, BARREL, DUEL, INDIANS, GATLING, DYNAMITE, SALOON, WELLS_FARGO, STAGECOACH, GENERAL_STORE, CAT_BALLOU, PANIC, JAIL, APPALOOSA, MUSTANG, VOLCANIC, SCHOFIELD, REMINGTON, REV_CARBINE, WINCHESTER};
+    public enum CardName {BANG, MISS, BEER, BARREL, DUEL, INDIANS, GATLING, DYNAMITE, SALOON, WELLS_FARGO, STAGECOACH, GENERAL_STORE, CAT_BALLOU, PANIC, JAIL, APPALOOSA, MUSTANG, VOLCANIC, SCHOFIELD, REMINGTON, REV_CARBINE, WINCHESTER, HIDEOUT, SILVER, BRAWL, DODGE, PUNCH, RAG_TIME, SPRINGFIELD, TEQUILA, WHISKY, BIBLE, BUFFALO_RIFLE, CAN_CAN, CANTEEN, CONESTOGA, DERRINGER, HOWITZER, IRON_PLATE, KNIFE, PEPPERBOX, PONY_EXPRESS, SOMBRERO, TEN_GALLON_HAT};
     public enum Characters {BART_CASSIDY, BLACK_JACK, CALAMITY_JANET, EL_GRINGO, JESSE_JONES, JOURDONNAIS, KIT_CARLSON, LUCKY_DUKE, PAUL_REGRET, PEDRO_RAMIREZ, ROSE_DOOLAN, SID_KETCHUM, SLAB_THE_KILLER, SUZY_LAFAYETTE, VULTURE_SAM, WILLY_THE_KID, APACHE_KID, BELLE_STAR, BILL_NOFACE, CHUCK_WENGAM, DOC_HOLYDAY, ELENA_FUENTE, GREG_DIGGER, HERB_HUNTER, JOSE_DELGADO, MOLLY_STARK, PAT_BRENNAN, PIXIE_PETE, SEAN_MALLORY, TEQUILA_JOE, VERA_CUSTER};
     public enum Role {SHERIFF, DEPUTY, OUTLAW, RENEGADE};
     
@@ -109,12 +109,53 @@ public class Bang {
         }
         
         //Create a drawPile
-        Enum[] cards = {CardName.BANG, CardName.BANG, CardName.BANG, 
-            CardName.BANG, CardName.BANG, CardName.BANG, CardName.BANG, 
-            CardName.BANG, CardName.BANG, CardName.BANG, CardName.BANG, 
-            CardName.BEER, CardName.BEER, CardName.BEER, CardName.PANIC, 
-            CardName.PANIC, CardName.PANIC, CardName.CAT_BALLOU, 
-            CardName.VOLCANIC};
+        Enum[] cards = new Enum[120];
+        Arrays.fill(cards, 0, 0, CardName.APPALOOSA);
+        Arrays.fill(cards, 1, 29, CardName.BANG);
+        Arrays.fill(cards, 30, 32, CardName.BARREL);
+        Arrays.fill(cards, 33, 40, CardName.BEER);
+        Arrays.fill(cards, 41, 41, CardName.BIBLE);
+        Arrays.fill(cards, 42, 42, CardName.BRAWL);
+        Arrays.fill(cards, 43, 43, CardName.BUFFALO_RIFLE);
+        Arrays.fill(cards, 44, 44, CardName.CAN_CAN);
+        Arrays.fill(cards, 45, 50, CardName.CAT_BALLOU);
+        Arrays.fill(cards, 51, 51, CardName.CONESTOGA);
+        Arrays.fill(cards, 52, 52, CardName.DERRINGER);
+        Arrays.fill(cards, 53, 54, CardName.DODGE);
+        Arrays.fill(cards, 55, 57, CardName.DUEL);
+        Arrays.fill(cards, 58, 59, CardName.DYNAMITE);
+        Arrays.fill(cards, 60, 60, CardName.GATLING);
+        Arrays.fill(cards, 61, 63, CardName.GENERAL_STORE);
+        Arrays.fill(cards, 64, 64, CardName.HOWITZER);
+        Arrays.fill(cards, 65, 65, CardName.HOWITZER);
+        Arrays.fill(cards, 66, 68, CardName.INDIANS);
+        Arrays.fill(cards, 69, 70, CardName.IRON_PLATE);
+        Arrays.fill(cards, 71, 73, CardName.JAIL);
+        Arrays.fill(cards, 74, 74, CardName.KNIFE);
+        Arrays.fill(cards, 75, 87, CardName.MISS);
+        Arrays.fill(cards, 88, 90, CardName.MUSTANG);
+        Arrays.fill(cards, 91, 95, CardName.PANIC);
+        Arrays.fill(cards, 96, 96, CardName.PEPPERBOX);
+        Arrays.fill(cards, 97, 97, CardName.PONY_EXPRESS);
+        Arrays.fill(cards, 98, 98, CardName.PUNCH);
+        Arrays.fill(cards, 99, 99, CardName.RAG_TIME);
+        Arrays.fill(cards, 100, 101, CardName.REMINGTON);
+        Arrays.fill(cards, 102, 103, CardName.REV_CARBINE);
+        Arrays.fill(cards, 104, 104, CardName.SALOON);
+        Arrays.fill(cards, 105, 107, CardName.SCHOFIELD);
+        Arrays.fill(cards, 108, 108, CardName.SILVER);
+        Arrays.fill(cards, 109, 109, CardName.SOMBRERO);
+        Arrays.fill(cards, 110, 110, CardName.SPRINGFIELD);
+        Arrays.fill(cards, 111, 112, CardName.STAGECOACH);
+        Arrays.fill(cards, 113, 113, CardName.TEN_GALLON_HAT);
+        Arrays.fill(cards, 114, 114, CardName.TEQUILA);
+        Arrays.fill(cards, 115, 116, CardName.VOLCANIC);
+        Arrays.fill(cards, 117, 117, CardName.WELLS_FARGO);
+        Arrays.fill(cards, 118, 118, CardName.WHISKY);
+        Arrays.fill(cards, 119, 119, CardName.WINCHESTER);
+        
+        
+                
         ArrayList<Enum> allCards = new ArrayList<Enum>();
         for(Enum e: cards)
             allCards.add(e);
