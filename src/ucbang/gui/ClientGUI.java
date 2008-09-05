@@ -8,8 +8,12 @@ import java.awt.GridBagLayout;
 
 import java.awt.Insets;
 
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+
+import java.util.ArrayList;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -17,6 +21,9 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+
+import ucbang.core.Card;
+import ucbang.core.Player;
 
 public class ClientGUI extends JFrame{
     public ClientGUI() {
@@ -37,43 +44,52 @@ public class ClientGUI extends JFrame{
         
             //TODO: create real backgrounds
         chat.setBackground(new Color(0,100,0));
-        
-        //create text field, button, and area
-        JTextField message = new JTextField();
-        JButton send = new JButton();
-        JTextArea text = new JTextArea();
-        
-        //add stuff to JPanel chat
-        //everyone loves gridbags....
-        GridBagConstraints c = new GridBagConstraints();
-        c.fill = GridBagConstraints.VERTICAL;
-        c.gridwidth = 1;
-        c.gridx=0;
-        c.ipady=0;
-        c.ipadx=0;
-        c.insets = new Insets(0,0,0,0);
-        
-        chat.add(message, c);
-        c.gridx=1;
-        chat.add(send, c);
-        c.gridx=0;
-        c.gridwidth=2;
-        c.gridy=1;
-        chat.add(text, c);
-        
-        
+
         getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
         getContentPane().add(fields);
         getContentPane().add(chat);
         
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
+        //I'll take a shot at making a keylistener, but it's probably not the best way to do things
+         addKeyListener(new KeyListener(){
+                    public void keyTyped(KeyEvent e) {
+                        lastKey = e.getKeyChar();
+                    }
+
+                    public void keyPressed(KeyEvent e) {
+                    }
+
+                    public void keyReleased(KeyEvent e) {
+                    }
+                });
+        
         validate();
     }
        
     JPanel fields;
     JPanel chat;
-        JTextField message;
-        JButton send;
-        JTextArea text;
+    Player player;
+    Character lastKey;
+    
+    /**
+     * Asks the player to choose a card
+     * @param al
+     * @return
+     */
+    public int promptChooseCard(ArrayList<Card> al){
+        while(true){
+            while(lastKey == null){
+            }
+            if(Character.isDigit(lastKey)){
+                if(Integer.valueOf(lastKey)%49<al.size()){
+                    return Integer.valueOf(lastKey)%49;
+                }
+                else{   
+                    System.out.println("You typed invalid number "+Integer.valueOf(lastKey)%48);
+                    lastKey = null;
+                }
+            }
+        }
+    }
 }

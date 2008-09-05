@@ -7,9 +7,9 @@ import ucbang.gui.ClientGUI;
 
 public class Bang {
     public Bang() {
-        start(1);
         gui = new ClientGUI();
         gui.setVisible(true);
+        start(1);
     }
     
     public static void main(String[] args){
@@ -91,6 +91,23 @@ public class Bang {
             playerDrawCard(player, 2);
         }
         
+        //Make players choose characters; wait
+        for(Player player: players){
+            //doesn't prompt all players at the same time
+            System.out.println("1. " + player.hand.get(0).name + " HP: " + player.hand.get(0).special);
+            System.out.println("2. " + player.hand.get(1).name + " HP: " + player.hand.get(1).special);
+            Card c = player.hand.get(gui.promptChooseCard(player.hand));
+            player.character = c.ordinal;
+            player.lifePoints = c.special; //special is hp for char cards
+            playerDiscardHand(player);
+        }
+        while(!areCharactersChosen()){
+            try{
+                    Thread.sleep(300); //don't check too often
+            }
+            catch(InterruptedException e){}
+        }
+        
         //Create a drawPile
         Enum[] cards = {CardName.BANG, CardName.BANG, CardName.BANG, 
             CardName.BANG, CardName.BANG, CardName.BANG, CardName.BANG, 
@@ -105,13 +122,18 @@ public class Bang {
             drawPile.add(new Card(allCards.remove((int)(Math.random()*allCards.size()))));
         }
         
-        playerDrawCard(players[0], 10);
+        //draw cards equal to lifepoints
+        for(Player player: players){
+            playerDrawCard(player, player.lifePoints);
+        }
+        
+        System.out.print("Cards in draw pile: ");
         for(Card s: drawPile)
             System.out.print(s.name+" ");
-        System.out.print("\n");
+        System.out.print("\nCards in hand: ");
         for(Card s: players[0].hand)
             System.out.print(s.name+" ");
-        System.out.print("\n");
+        System.out.print("\nYou are: " + Characters.values()[players[0].character] + "\n");
         
         //Give Sheriff the first turn (turn 0)
         for(int n=0; n<p; n++){
@@ -166,6 +188,29 @@ public class Bang {
     }
     
     /**
+     * Discards Player p's hand
+     */
+    public void playerDiscardHand(Player p){
+        for(int n=p.hand.size()-1; n>=0; n--)
+            playerDiscardCard(p, n);
+    }
+    
+    /**
+     * Discards card n in Player p's hand
+     */
+    public void playerDiscardCard(Player p, int n){
+        Card c = p.hand.get(n);
+        //is card a character card
+        if(c.type==1){
+            p.hand.remove(c);
+        }
+        else{
+            discardPile.add(c);
+        }
+            
+    }
+    
+    /**
      * Flips the top card of the drawPile. This card is then put in the discard 
      * pile. Used for barrels and other effects.
      * @return
@@ -201,5 +246,14 @@ public class Bang {
         while(discardPile.size()>0){
             drawPile.add(discardPile.remove((int)Math.random()*discardPile.size()));
         }
+    }
+
+    public boolean areCharactersChosen(){
+        for(Player p:players){
+            if(p.character==-1){
+                return false;
+            }
+        }
+        return true;
     }
 }

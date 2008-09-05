@@ -18,5 +18,5 @@ public class Player {
     int lifePoints;
     int specialDraw;
     
-    int character;
+    int character = -1; //default -1 = no character
 }
