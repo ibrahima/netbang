@@ -64,7 +64,12 @@ public class ClientGUI extends JFrame{
      * @return
      */
     public int promptChooseCard(ArrayList<Card> al){
-    	Object[] options = al.toArray();
+    	Card[] temp = new Card[al.size()];
+    	temp = al.toArray(temp);
+    	String[] options=new String[temp.length];
+    	for(int i=0;i<temp.length;i++){
+    		options[i]=((Card)temp[i]).name;
+    	}
 		int n = JOptionPane.showOptionDialog(this,
 		"Who do you want to be?",
 		"Choose your character!",
