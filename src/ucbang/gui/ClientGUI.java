@@ -8,6 +8,9 @@ import java.awt.GridBagLayout;
 
 import java.awt.Insets;
 
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -62,6 +65,8 @@ public class ClientGUI extends JFrame{
         getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
         getContentPane().add(fields);
         getContentPane().add(chat);
+        
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
         validate();
     }
