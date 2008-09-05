@@ -6,6 +6,8 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.awt.image.BufferStrategy;
 
 import java.util.ArrayList;
@@ -41,6 +43,12 @@ public class ClientGUI extends JFrame implements KeyListener{
     	this.createBufferStrategy(2);
     	strategy=this.getBufferStrategy();
     	this.client=client;
+        
+        addWindowListener(new WindowAdapter() {
+            public void windowActivated(WindowEvent e){
+                paint(getGraphics());
+            }
+        });
     }
        
     public void paint(Graphics g){
