@@ -23,6 +23,9 @@ public class ClientGUI extends JFrame implements KeyListener{
     StringBuilder chat;
     boolean chatting=false;
     
+    ArrayList<String> text = new ArrayList<String>();
+    int textIndex = -1; //the bottom line of the text
+    
     public ClientGUI() {
     }
     
@@ -53,17 +56,43 @@ public class ClientGUI extends JFrame implements KeyListener{
 		graphics.setColor(new Color(100,0,0));
 		graphics.fillRect(0, 400, 800, 600);
 		if(chatting){
-			graphics.setColor(Color.WHITE);
-			graphics.drawString(chat.toString(), 10, 550);
+                    graphics.setColor(Color.WHITE);
+                    graphics.drawString("Chatting: " + chat.toString(), 20, 420);
 		}
+                if(textIndex>=0){ // there is text to display, must draw it
+                    for(int n = textIndex; n >= (textIndex<9?0:textIndex-9); n--){
+                        graphics.setColor(Color.WHITE);
+                        graphics.drawString(text.get(n), 20, 580-15*(textIndex-n));
+                    }
+                }
 
 		graphics.dispose();
 		//paint backbuffer to window
 		strategy.show();
-	}
+    }
+    
+    /**
+     * appendText with default color of black
+     * @param str
+     * @param c
+     */
+    public void appendText(String str){
+        appendText(str, Color.BLACK);
+    }
+    
+    /**
+     * adds text to the bottom of the text area
+     * @param str
+     * @param c
+     */
+    public void appendText(String str, Color c){
+        //TODO: actually do something with color
+        textIndex++;
+        text.add(str);
+    }
+    
     public void update(){
 		paint(this.getGraphics());
-
     }
     
     public int promptChooseCharacter(ArrayList<Card> al){
@@ -110,12 +139,13 @@ public class ClientGUI extends JFrame implements KeyListener{
 		if(e.getKeyChar()=='\n'){
 			chatting=!chatting;
 			if(!chatting&&chat.length()>0){
-				System.out.println("Sent chat message "+chat);
-				chat.delete(0, chat.length());
-				//TODO: Actually send chats.
+                                appendText(chat.toString());
+                                System.out.println("Sent chat message #"+String.valueOf(textIndex)+" "+chat);
+                                chat.delete(0, chat.length());
 			}
 		}else if(chatting){
 			chat.append(e.getKeyChar());
 		}
+                paint(getGraphics());
 	}
 }

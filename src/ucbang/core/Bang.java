@@ -116,6 +116,7 @@ public class Bang {
             players[n].character = c.ordinal;
             players[n].lifePoints = c.special; //special is hp for char cards
             playerDiscardHand(players[n]);
+            gui[n].paint(gui[n].getGraphics()); //TODO: this shouldn't here, but this is the only place where it didn't glitch up
         }
         while(!areCharactersChosen()){
             try{
@@ -223,13 +224,17 @@ public class Bang {
         else{
             //Yuck, there's alot of characters with this ability
         }
+        System.out.println("hi");
+        
+        
     }
     
     /**
      * Plays a card. This is one of the functions used to connect the GUI to the game.
      */
     public void playCard(){
-    
+        //TODO: currently only removes the card from hand and sets it into discard
+        
     }
     
     /**
