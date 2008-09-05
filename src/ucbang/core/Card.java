@@ -17,7 +17,8 @@ public class Card {
         name = e.toString();
         if(e instanceof Bang.Characters){
             type = 1;
-            if(Arrays.binarySearch(new int[]{3, 6, 8, 16, 21, 27, 28, 30}, ordinal)!=-1){
+            int[] threehp = new int[]{3, 6, 8, 16, 21, 27, 28, 30};
+            if(Arrays.binarySearch(threehp, ordinal)>=0 && ordinal == threehp[Arrays.binarySearch(threehp, ordinal)]){ //awkward way of doing contains
                 special = 3;
             }
             else

@@ -221,7 +221,7 @@ public class Bang {
         //check jail/dynamite
         
         //draw two cards
-        if(players[turn%numPlayers].specialDraw==0){
+        if(players[turn%numPlayers].specialDraw==0){ //TODO: get rid of specialDraw, move to a direct reference to character cards
             playerDrawCard(players[turn%numPlayers], 2);
         }
         else{
