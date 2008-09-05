@@ -183,13 +183,16 @@ public class Bang {
             playerDrawCard(p1, p1.lifePoints);
         }
         
-        System.out.print("Cards in draw pile: ");
+        gui[0].appendText("Cards in draw pile: ");
+        String pile = "";
         for(Card s: drawPile)
-            System.out.print(s.name+" ");
-        System.out.print("\nCards in hand: ");
+            pile = pile + s.name + " "; //TODO: make large messages wrap around
+        gui[0].appendText(pile);
+        gui[0].appendText("\nCards in hand: ");
         for(Card s: players[0].hand)
-            System.out.print(s.name+" ");
-        System.out.print("\nYou are: " + Characters.values()[players[0].character] + ", the " + players[0].role.name() + "\n");
+            gui[0].appendText(s.name+" ");
+        gui[0].appendText("\nYou are: " + Characters.values()[players[0].character] + ", the " + players[0].role.name() + "\n");
+        gui[0].paint(gui[0].getGraphics());
         
         //Give Sheriff the first turn (turn 0)
         for(int n=0; n<p; n++){
@@ -224,9 +227,6 @@ public class Bang {
         else{
             //Yuck, there's alot of characters with this ability
         }
-        System.out.println("hi");
-        
-        
     }
     
     /**
