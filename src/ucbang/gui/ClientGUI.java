@@ -96,7 +96,7 @@ public class ClientGUI extends JFrame implements KeyListener{
     }
     
     public int promptChooseCharacter(ArrayList<Card> al){
-        return promptChooseCard(al, "Who do you want to be? You are a(n) " + player.role, "Choose your character!");
+        return promptChooseCard(al, "Who do you want to be? You are a(n) " + player.role, "Choose your character!", true);
     }
     
     
@@ -106,7 +106,7 @@ public class ClientGUI extends JFrame implements KeyListener{
      * @param al
      * @return
      */
-    public int promptChooseCard(ArrayList<Card> al, String str1, String str2){
+    public int promptChooseCard(ArrayList<Card> al, String str1, String str2, boolean forceDecision){
     	Card[] temp = new Card[al.size()];
     	temp = al.toArray(temp);
     	String[] options=new String[temp.length];
@@ -114,7 +114,8 @@ public class ClientGUI extends JFrame implements KeyListener{
     		options[i]=((Card)temp[i]).name;
     	}
         int n = -1;
-        while(n==-1)
+        if(forceDecision){
+            while(n==-1)
                 n = JOptionPane.showOptionDialog(this,
 		str1,
 		str2,
@@ -123,7 +124,16 @@ public class ClientGUI extends JFrame implements KeyListener{
 		null,
 		options,
 		options[0]);
-        return n;
+            return n;
+        }
+        else return JOptionPane.showOptionDialog(this,
+		str1,
+		str2,
+		JOptionPane.YES_NO_OPTION,
+		JOptionPane.QUESTION_MESSAGE,
+		null,
+		options,
+		options[0]);
     }
 	public void keyPressed(KeyEvent e) {
 		// TODO Auto-generated method stub

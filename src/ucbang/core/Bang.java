@@ -201,10 +201,12 @@ public class Bang {
                 break;
             }
         }
-        nextTurn(); 
+        while(nextTurn()){
+        }
     }
     
-    public void nextTurn(){
+    //returns false if game is over
+    public boolean nextTurn(){
         turn++;
         
         
@@ -227,14 +229,33 @@ public class Bang {
         else{
             //Yuck, there's alot of characters with this ability
         }
+        
+        int card = -2;
+        while(card != -1){
+            if(players[turn%numPlayers].hand.size()>0){
+                card = gui[turn%numPlayers].promptChooseCard(players[turn%numPlayers].hand, "Play a card!", "It's your turn", false);
+                if(card!=-1)
+                    playCardFromHand(players[turn%numPlayers], players[turn%numPlayers].hand.get(card));
+            }
+            else{
+                //normally, you'd still be able to play cards on field
+                card = -1;
+            }
+        }
+        System.out.println(drawPile.size());
+        return true;
     }
     
     /**
      * Plays a card. This is one of the functions used to connect the GUI to the game.
+     * @param c
+     * @return Whether that is a legal move (boolean)
      */
-    public void playCard(){
+    public boolean playCardFromHand(Player p, Card c){
+        p.hand.remove(c);
+        discardPile.add(c);
         //TODO: currently only removes the card from hand and sets it into discard
-        
+        return true;
     }
     
     /**
