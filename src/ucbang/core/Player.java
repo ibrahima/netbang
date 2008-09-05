@@ -7,7 +7,7 @@ public class Player {
     }
     
     String name;
-    Enum role;
+    public Enum role;
     
     int weaponRange; //only counts for Bang! cards
     int realRange; //also counts for Panics, etc.

@@ -12,7 +12,7 @@ public class Bang {
         gui = new ClientGUI[2];
         for(int n = 0; n<p; n++){
             gui[n] = new ClientGUI(n);
-            gui[n].setName(String.valueOf(n));
+            gui[n].setTitle(String.valueOf(n));
             gui[n].setLocation(800*n,0);
             gui[n].setVisible(true);
         }
@@ -53,6 +53,7 @@ public class Bang {
         players = new Player[numPlayers];
         for(int n=0; n<numPlayers; n++){
             players[n] = new Player();
+            gui[n].player = players[n];
         }
         
         //Assign roles
@@ -187,7 +188,7 @@ public class Bang {
         System.out.print("\nCards in hand: ");
         for(Card s: players[0].hand)
             System.out.print(s.name+" ");
-        System.out.print("\nYou are: " + Characters.values()[players[0].character] + "\n");
+        System.out.print("\nYou are: " + Characters.values()[players[0].character] + ", the " + players[0].role.name() + "\n");
         
         //Give Sheriff the first turn (turn 0)
         for(int n=0; n<p; n++){

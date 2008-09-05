@@ -6,8 +6,6 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.awt.image.BufferStrategy;
 
 import java.util.ArrayList;
@@ -20,13 +18,16 @@ import ucbang.core.Player;
 
 public class ClientGUI extends JFrame implements KeyListener{
     BufferStrategy strategy;
-    int player;
+    public Player player;
+    int p;
     StringBuilder chat;
     boolean chatting=false;
+    
     public ClientGUI() {
     }
+    
     public ClientGUI(int p) {
-        player = p;
+        this.p = p;
         chat=new StringBuilder();
         //set window sizes
         setPreferredSize(new Dimension(800,600));
@@ -66,7 +67,7 @@ public class ClientGUI extends JFrame implements KeyListener{
     }
     
     public int promptChooseCharacter(ArrayList<Card> al){
-        return promptChooseCard(al, "Who do you want to be?", "Choose your character!");
+        return promptChooseCard(al, "Who do you want to be? You are a(n) " + player.role, "Choose your character!");
     }
     
     
