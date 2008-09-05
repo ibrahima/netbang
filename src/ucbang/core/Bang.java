@@ -53,6 +53,7 @@ public class Bang {
         players = new Player[numPlayers];
         for(int n=0; n<numPlayers; n++){
             players[n] = new Player();
+            players[n].id = n;
             gui[n].player = players[n];
         }
         
@@ -203,6 +204,7 @@ public class Bang {
         }
         while(nextTurn()){
         }
+        System.out.println("GAME OVER");
     }
     
     //returns false if game is over
@@ -214,10 +216,6 @@ public class Bang {
         int oldturn = turn;
         while(players[turn%numPlayers].lifePoints==0&&turn-oldturn<numPlayers){
             turn++;
-        }
-        if(turn-oldturn>=numPlayers){
-            //that guy wins!
-            //TODO: add check to see if the only remaining players who are all on the same team
         }
         
         //check jail/dynamite
@@ -242,9 +240,15 @@ public class Bang {
                 card = -1;
             }
         }
-        System.out.println(drawPile.size());
         return true;
     }
+    
+    /**
+     * If written, this method would replace the return value above
+     */
+     public boolean isGameWon(){
+         return false;
+     }
     
     /**
      * Plays a card. This is one of the functions used to connect the GUI to the game.
@@ -253,7 +257,28 @@ public class Bang {
      */
     public boolean playCardFromHand(Player p, Card c){
         p.hand.remove(c);
-        discardPile.add(c);
+        if(c.type == 3){
+            //put it on the field
+        }
+        if(c.type == 2){
+            if(c.effect == Card.play.DAMAGE.ordinal()){
+                int target = gui[p.id].promptChooseTargetPlayer();
+                if(true){ //change this to a flag checking barrels/if target want to play a miss, etc.
+                    if(players[target].lifePoints<=0)
+                        System.out.println("Invalid Target!");
+                    else{
+                        players[target].lifePoints--;
+                        System.out.println(p.id+": "+players[target].lifePoints);
+                        if(players[target].lifePoints <= 0){
+                            gui[p.id].appendText("You killed player "+target+"! \nPlayer"+target+"was a "+players[target].role.name());
+                            if(players[target].role.ordinal()==3) //if he was an outlaw, claim bounty
+                                playerDrawCard(p, 3);
+                        }
+                    }
+                }
+            }
+            discardPile.add(c);
+        }
         //TODO: currently only removes the card from hand and sets it into discard
         return true;
     }

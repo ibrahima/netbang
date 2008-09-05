@@ -95,10 +95,13 @@ public class ClientGUI extends JFrame implements KeyListener{
 		paint(this.getGraphics());
     }
     
+    public int promptChooseTargetPlayer() {
+        return 1-p; //temporary fix for not being able to target
+    }
+    
     public int promptChooseCharacter(ArrayList<Card> al){
         return promptChooseCard(al, "Who do you want to be? You are a(n) " + player.role, "Choose your character!", true);
     }
-    
     
     /**
      * Asks the player to choose a card. This is used for many instances.

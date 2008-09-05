@@ -8,8 +8,8 @@ public class Card {
     public Card() {
     }
     
-    enum play{DAMAGE, HEAL, MISS, DRAW, STEAL, DISCARD}; //played cards
-    enum field{DAMAGE, HEAL, MISS, DRAW, STEAL, DISCARD, GUN, HORSE}; //field cards
+    public static enum play{DAMAGE, HEAL, MISS, DRAW, STEAL, DISCARD}; //played cards
+    public static enum field{DAMAGE, HEAL, MISS, DRAW, STEAL, DISCARD, GUN, HORSE}; //field cards
     
     public Card(Enum e) {
         this.e = e;
@@ -31,6 +31,8 @@ public class Card {
                 //put all direct damage cards here
                 case BANG: special = 1;
                 case PUNCH: 
+                case GATLING: //allow cards to target all
+                case INDIANS:
                 case KNIFE: type = 2; effect = play.DAMAGE.ordinal(); break;
                 case BUFFALO_RIFLE: type = 3;  break;
                 
@@ -38,7 +40,7 @@ public class Card {
                 
                 //all cards with beer effect
                 case BEER: special = 1; effect = play.HEAL.ordinal(); break;
-                default: special = 1; type = 2; effect = play.DAMAGE.ordinal(); break; //all cards left untreated are treated as bangs
+                default: break; //special = 1; type = 2; effect = play.DAMAGE.ordinal(); break; //all cards left untreated are treated as bangs
             }
         }
     }
