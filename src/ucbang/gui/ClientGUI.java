@@ -27,6 +27,10 @@ import ucbang.core.Player;
 
 public class ClientGUI extends JFrame{
     public ClientGUI() {
+    }
+    public ClientGUI(int p) {
+        player = p;
+        
         //set window sizes
         setPreferredSize(new Dimension(800,600));
         setSize(new Dimension(800,600));
@@ -69,7 +73,7 @@ public class ClientGUI extends JFrame{
        
     JPanel fields;
     JPanel chat;
-    Player player;
+    int player;
     Character lastKey;
     
     /**
@@ -83,7 +87,9 @@ public class ClientGUI extends JFrame{
             }
             if(Character.isDigit(lastKey)){
                 if(Integer.valueOf(lastKey)%49<al.size()){
-                    return Integer.valueOf(lastKey)%49;
+                    char key = lastKey;
+                    lastKey = null;
+                    return Integer.valueOf(key)%49;
                 }
                 else{   
                     System.out.println("You typed invalid number "+Integer.valueOf(lastKey)%48);
