@@ -6,6 +6,8 @@ public class Player {
     public Player() {
     }
     
+    public int id; //temporary probably
+    
     String name;
     public Enum role;
     
