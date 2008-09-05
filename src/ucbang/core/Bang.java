@@ -231,24 +231,57 @@ public class Bang {
         int card = -2;
         while(card != -1){
             if(players[turn%numPlayers].hand.size()>0){
+                if(isGameWon())
+                    return false;
                 card = gui[turn%numPlayers].promptChooseCard(players[turn%numPlayers].hand, "Play a card!", "It's your turn", false);
                 if(card!=-1)
                     playCardFromHand(players[turn%numPlayers], players[turn%numPlayers].hand.get(card));
+                
             }
             else{
                 //normally, you'd still be able to play cards on field
                 card = -1;
             }
         }
-        return true;
+        return !isGameWon();
     }
     
     /**
      * If written, this method would replace the return value above
      */
-     public boolean isGameWon(){
-         return false;
-     }
+    public boolean isGameWon(){
+        int deputies = 0;
+        int sheriff = 0;
+        int outlaws = 0;
+        int renegades = 0;
+        for(Player p: players){
+            if(p.lifePoints>0){
+                switch((Role)p.role){
+                    case DEPUTY: deputies++;
+                    case SHERIFF: sheriff++; break;
+                    case OUTLAW: outlaws++; break;
+                    case RENEGADE: renegades++; break;
+                }
+            }
+        }
+        if(sheriff==0){
+            if(outlaws==0&&deputies==0){
+                System.out.println("Renegades win!");
+                return true;
+            }
+            else{
+                System.out.println("Outlaws win!");
+                return true;
+            }
+        }
+        if(sheriff>=0){
+            if(outlaws==0&&deputies==0){
+                System.out.println("Sheiff+Deputies win!");
+                return true;
+            }
+        }
+        return false;
+    }
     
     /**
      * Plays a card. This is one of the functions used to connect the GUI to the game.
@@ -264,16 +297,16 @@ public class Bang {
             if(c.effect == Card.play.DAMAGE.ordinal()){
                 int target = gui[p.id].promptChooseTargetPlayer();
                 if(true){ //change this to a flag checking barrels/if target want to play a miss, etc.
-                    if(players[target].lifePoints<=0)
+                    while(players[target].lifePoints<=0){
                         System.out.println("Invalid Target!");
-                    else{
-                        players[target].lifePoints--;
-                        System.out.println(p.id+": "+players[target].lifePoints);
-                        if(players[target].lifePoints <= 0){
-                            gui[p.id].appendText("You killed player "+target+"! \nPlayer"+target+"was a "+players[target].role.name());
-                            if(players[target].role.ordinal()==3) //if he was an outlaw, claim bounty
-                                playerDrawCard(p, 3);
-                        }
+                        gui[p.id].promptChooseTargetPlayer();
+                    }
+                    players[target].lifePoints--;
+                    System.out.println(p.id+": "+players[target].lifePoints);
+                    if(players[target].lifePoints <= 0){
+                        gui[p.id].appendText("You killed player "+target+"! \nPlayer "+target+"was a "+players[target].role.name());
+                        if(players[target].role.ordinal()==3) //if he was an outlaw, claim bounty
+                            playerDrawCard(p, 3);
                     }
                 }
             }
