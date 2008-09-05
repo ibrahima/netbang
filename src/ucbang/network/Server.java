@@ -1,8 +1,10 @@
 package ucbang.network;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashMap;
@@ -47,8 +49,8 @@ public class Server extends Thread{
 class ServerThread extends Thread{
 	//sends HashMap of stuff to clients, gets client's updated positions
 	Socket client;
-	ObjectInputStream in;
-	ObjectOutputStream out;
+	BufferedReader in;
+	BufferedWriter out;
 	
 	Server myServer;
 	String name="";
@@ -62,8 +64,8 @@ class ServerThread extends Thread{
 
 		this.myServer=myServer;
 		try {
-      		in= new ObjectInputStream(client.getInputStream());
-      		out = new ObjectOutputStream(client.getOutputStream());
+      		in= new BufferedReader(new InputStreamReader(client.getInputStream()));
+      		out = new BufferedWriter(new OutputStreamWriter(client.getOutputStream()));
      	}
      	catch(Exception e1) {
      		
@@ -78,10 +80,12 @@ class ServerThread extends Thread{
      	}
 		try
 		{
-			buffer=(String)in.readObject();
+			buffer=(String)in.readLine();
 			name = buffer;
 			print(name+"("+client.getInetAddress()+") has joined the game.");
-			out.writeObject("Successfully connected.");
+			out.write("Successfully connected.");
+			out.newLine();
+			out.flush();
 		}
 		catch(Exception e)
 		{
@@ -92,15 +96,15 @@ class ServerThread extends Thread{
 	public synchronized void run(){		
 		while(!client.isClosed()){
 			try {
-				buffer=(String)in.readObject();//This line also gives off errors at home but not school...
-				System.out.println(buffer);
+				if(in.ready()){
+					buffer=(String)in.readLine();//This line also gives off errors at home but not school...
+					System.out.println("Server received "+buffer);					
+				}
 	         	if(myServer.messages.containsKey(name)){
-	         		out.writeObject(myServer.messages.get(name));
+	         		out.write(myServer.messages.get(name));
+	         		out.newLine();
 	         		myServer.messages.remove(name);
-	         	}/**/
-	         	else{
-	         		out.writeObject(null);
-	         	}	         	
+	         	}
 	         	out.flush();
 
 	      }

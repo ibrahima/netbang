@@ -1,11 +1,15 @@
 package ucbang.network;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.net.Socket;
 import java.util.LinkedList;
 import java.util.Random;
+
+import java.util.Iterator;
 
 import ucbang.core.Player;
 import ucbang.gui.ClientGUI;
@@ -67,15 +71,19 @@ public class Client extends Thread{
 		}
 	}
 	void print(Object stuff){
-    	/*if(gui!=null)
-    		gui.addMsg("Client:"+stuff);
-    	else*/
+    	if(gui!=null)
+    		gui.appendText("Client:"+stuff);
+    	else
     		System.out.println("Client:"+stuff);
     }
 	void addMsg(String msg){
 		synchronized(outMsgs){
 			outMsgs.add(msg);
+			print("Sent "+msg+" to server");
 		}
+	}
+	public void addChat(String chat){
+		addMsg("Chat: "+chat);
 	}
 
 }
@@ -84,8 +92,8 @@ class ClientThread extends Thread{
 	Socket server;
 	String name;
 	//Ship old;
-	ObjectInputStream in;
-	ObjectOutputStream out;
+	BufferedReader in;
+	BufferedWriter out;
 	Client c;
 	String buffer;
 	public ClientThread(Socket theServer, String theName, Client c){
@@ -93,8 +101,8 @@ class ClientThread extends Thread{
 		name=theName;
 		this.c=c;
 		try {
-  			out = new ObjectOutputStream(server.getOutputStream());
-  			in= new ObjectInputStream(server.getInputStream());
+  			out = new BufferedWriter(new OutputStreamWriter(server.getOutputStream()));
+  			in= new BufferedReader(new InputStreamReader(server.getInputStream()));
  		}
  		catch(Exception e1) {
      		try {
@@ -107,10 +115,10 @@ class ClientThread extends Thread{
      	this.start();
      	
 	}
-	public synchronized void run(){
+	public void run(){
 		try
 		{
-			out.writeObject(name);
+			out.write(name);
 		} 
 		catch(IOException e)
 		{
@@ -119,31 +127,38 @@ class ClientThread extends Thread{
 		while(!server.isClosed()){
 			try {
 				if(name!=null&&out!=null&&!c.connected){
-					out.writeObject(name);
+					out.write(name);
+					out.newLine();
 		         	out.flush();
 				}
-	         	out.reset();
-	         	buffer=(String)in.readObject();
-	         	if(!c.connected&&buffer.equals("Successfully connected.")){
-	         		c.connected=true;
-	         		System.out.println("Successfully connected to server on "+server.getInetAddress());
+				synchronized(c.outMsgs){
+					if(!c.outMsgs.isEmpty()){
+						Iterator<String> iter = c.outMsgs.iterator();
+						while(iter.hasNext()){
+							out.write(iter.next());
+							out.newLine();
+							iter.remove();
+						}
+					}
+				}
+				out.flush();
+	         	if(in.ready()){
+		         	buffer=(String)in.readLine();
+		         	if(!c.connected&&buffer.equals("Successfully connected.")){
+		         		c.connected=true;
+		         		System.out.println("Successfully connected to server on "+server.getInetAddress());
+		         	}
 	         	}
 	      }
 	      catch(Exception e) {
-	      	if(e!=null&&e.getMessage()!=null&&e.getMessage().equals("Connection reset"))
-	      	{
+	      	if(e!=null&&e.getMessage()!=null&&e.getMessage().equals("Connection reset")){
 	      		print("Connection to server lost");
-	      			try{finalize();}catch(Throwable t){}
+	      			try{finalize();}catch(Throwable t){t.printStackTrace();}
 	      	}
 	      	e.printStackTrace();
 	      }
-		/*try
-			{
-				sleep(45);
-			}
-			catch(InterruptedException e){}*/
-		
 		}
+		System.out.println("Server connection closed");
 	}
   	protected void finalize() throws Throwable{	
          	try{
@@ -154,9 +169,9 @@ class ClientThread extends Thread{
          	catch(Exception e){}
     }
     void print(Object stuff){
-    	/*if(gui!=null)
-    		gui.addMsg("Client:"+stuff);
-    	else */
-    		System.out.println("Client:"+stuff);
+    	if(c.gui!=null)
+    		c.gui.appendText("ClientThread:"+stuff);
+    	else 
+    		System.out.println("ClientThread:"+stuff);
     }
 }

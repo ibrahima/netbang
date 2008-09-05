@@ -158,11 +158,11 @@ public class ClientGUI extends JFrame implements KeyListener{
 	}
 
 	public void keyTyped(KeyEvent e) {
-                
 		if(e.getKeyChar()=='\n'){
 			chatting=!chatting;
 			if(!chatting&&chat.length()>0){
                                 appendText(chat.toString());
+                                client.addChat(chat.toString());
                                 System.out.println("Sent chat message #"+String.valueOf(textIndex)+" "+chat);
                                 chat.delete(0, chat.length());
 			}
