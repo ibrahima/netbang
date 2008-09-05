@@ -19,7 +19,7 @@ import ucbang.core.Card;
 import ucbang.core.Player;
 
 public class ClientGUI extends JFrame implements KeyListener{
-	BufferStrategy strategy;
+    BufferStrategy strategy;
     int player;
     StringBuilder chat;
     boolean chatting=false;
@@ -87,19 +87,16 @@ public class ClientGUI extends JFrame implements KeyListener{
 
         return n;
     }
-	@Override
 	public void keyPressed(KeyEvent e) {
 		// TODO Auto-generated method stub
 
 	}
 
-	@Override
 	public void keyReleased(KeyEvent e) {
 		// TODO Auto-generated method stub
 
 	}
 
-	@Override
 	public void keyTyped(KeyEvent e) {
 		if(e.getKeyChar()=='\n'){
 			chatting=!chatting;
