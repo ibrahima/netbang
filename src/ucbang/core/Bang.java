@@ -7,9 +7,9 @@ import ucbang.gui.ClientGUI;
 
 public class Bang {
     public Bang() {
-        gui = new ClientGUI();
+        gui = new ClientGUI(0);
         gui.setVisible(true);
-        start(1);
+        start(2);
     }
     
     public static void main(String[] args){
@@ -43,14 +43,16 @@ public class Bang {
     public void start(int p){
         //Create Players
         numPlayers = p;
-        players = new Player[p];
-        Arrays.fill(players, new Player());
+        players = new Player[numPlayers];
+        for(int n=0; n<numPlayers; n++){
+            players[n] = new Player();
+        }
         
         //Assign roles
         ArrayList<Enum> roles = new ArrayList<Enum>();
         switch(p){
-            case 1: //DEBUG MODE
-                roles.add(Role.SHERIFF); break;
+            case 2: //DEBUG MODE
+                roles.add(Role.SHERIFF); roles.add(Role.OUTLAW); break;
             case 4:
                 roles.add(Role.SHERIFF); roles.add(Role.OUTLAW); 
                 roles.add(Role.OUTLAW); roles.add(Role.RENEGADE); break;
@@ -75,7 +77,7 @@ public class Bang {
             default: 
                 System.out.print("Bad number of players!"); System.exit(0); break;
         }
-        for(int n=0; n<players.length; n++)
+        for(int n=0; n<numPlayers; n++)
             players[n].role = roles.remove((int)(Math.random()*roles.size()));
         for(Card s: drawPile)
             System.out.print(s.name+" ");
@@ -83,23 +85,31 @@ public class Bang {
         
         //Assign character cards
         ArrayList<Enum> charList = new ArrayList<Enum>();
-        for(Enum e: Characters.values())
+        for(Enum e: Characters.values()){
             charList.add(e);
-        for(Player player: players){
+        }
+        for(int n = 0; n<numPlayers; n++){
             drawPile.add(new Card(charList.remove((int)(Math.random()*charList.size()))));
             drawPile.add(new Card(charList.remove((int)(Math.random()*charList.size()))));
-            playerDrawCard(player, 2);
+            playerDrawCard(players[n], 2);
+            System.out.println(players[n].hand.size());
+        }
+        
+        //debug mode
+        if(p==2){
+            
         }
         
         //Make players choose characters; wait
-        for(Player player: players){
+        for(int n = 0; n<players.length; n++){
             //doesn't prompt all players at the same time
-            System.out.println("1. " + player.hand.get(0).name + " HP: " + player.hand.get(0).special);
-            System.out.println("2. " + player.hand.get(1).name + " HP: " + player.hand.get(1).special);
-            Card c = player.hand.get(gui.promptChooseCard(player.hand));
-            player.character = c.ordinal;
-            player.lifePoints = c.special; //special is hp for char cards
-            playerDiscardHand(player);
+            //System.out.println(players[n].hand.size());
+            System.out.println("1. " + players[n].hand.get(0).name + " HP: " + players[n].hand.get(0).special);
+            System.out.println("2. " + players[n].hand.get(1).name + " HP: " + players[n].hand.get(1).special);
+            Card c = players[n].hand.get(gui.promptChooseCard(players[n].hand));
+            players[n].character = c.ordinal;
+            players[n].lifePoints = c.special; //special is hp for char cards
+            playerDiscardHand(players[n]);
         }
         while(!areCharactersChosen()){
             try{
@@ -162,8 +172,8 @@ public class Bang {
         }
         
         //draw cards equal to lifepoints
-        for(Player player: players){
-            playerDrawCard(player, player.lifePoints);
+        for(Player p1: players){
+            playerDrawCard(p1, p1.lifePoints);
         }
         
         System.out.print("Cards in draw pile: ");
