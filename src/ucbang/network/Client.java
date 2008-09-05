@@ -54,7 +54,7 @@ public class Client extends Thread{
 			System.err.println(e+"\nServer Socket Error!");
 		}
 		//////print("Connection made with "+socket);
-		new connector(socket, name, this);
+		new ClientThread(socket, name, this);
 		
 		while(true){
 			try
@@ -78,7 +78,7 @@ public class Client extends Thread{
 
 }
 
-class connector extends Thread{
+class ClientThread extends Thread{
 	Socket server;
 	String name;
 	//Ship old;
@@ -86,7 +86,7 @@ class connector extends Thread{
 	ObjectOutputStream out;
 	Client c;
 	String buffer;
-	public connector(Socket theServer, String theName, Client c){
+	public ClientThread(Socket theServer, String theName, Client c){
 		server=theServer;
 		name=theName;
 		this.c=c;
@@ -134,14 +134,12 @@ class connector extends Thread{
 	      			try{finalize();}catch(Throwable t){}
 	      	}
 	      	e.printStackTrace();
-	      	//try{sleep(1000);}
-	      	//catch(InterruptedException e1){}
 	      }
-		try
+		/*try
 			{
 				sleep(45);
 			}
-			catch(InterruptedException e){}
+			catch(InterruptedException e){}*/
 		
 		}
 	}

@@ -8,7 +8,7 @@ import java.net.Socket;
 import java.util.HashMap;
 
 public class Server extends Thread{
-	HashMap<String,Socket> players = new HashMap<String,Socket>();
+	HashMap<String,ServerThread> players = new HashMap<String,ServerThread>();
 	protected HashMap<String,String> messages = new HashMap<String,String>();	
 	static int numPlayers;
 	ServerSocket me;
@@ -36,7 +36,7 @@ public class Server extends Thread{
         		//////print("Waiting for connections.");
         		Socket client = me.accept();
         		//print("Accepted a connection from: "+ client.getInetAddress());
-        		connection c = new connection(client, this);
+        		ServerThread c = new ServerThread(client, this);
         		numPlayers++;
        		} 
        		catch(Exception e) {e.printStackTrace();}
@@ -44,7 +44,7 @@ public class Server extends Thread{
 	}
 }
 
-class connection extends Thread{
+class ServerThread extends Thread{
 	//sends HashMap of stuff to clients, gets client's updated positions
 	Socket client;
 	ObjectInputStream in;
@@ -57,7 +57,7 @@ class connection extends Thread{
 	void print(Object stuff){
     	System.out.println("Server:"+stuff);
     }
-	public connection(Socket theClient, Server myServer){
+	public ServerThread(Socket theClient, Server myServer){
 		client=theClient;
 
 		this.myServer=myServer;
