@@ -136,6 +136,7 @@ public class ClientGUI extends JFrame implements KeyListener{
 	}
 
 	public void keyTyped(KeyEvent e) {
+                
 		if(e.getKeyChar()=='\n'){
 			chatting=!chatting;
 			if(!chatting&&chat.length()>0){
@@ -144,6 +145,9 @@ public class ClientGUI extends JFrame implements KeyListener{
                                 chat.delete(0, chat.length());
 			}
 		}else if(chatting){
+                    if((e.getKeyChar())==8)
+                        chat.deleteCharAt(chat.length()-1);
+                    else
 			chat.append(e.getKeyChar());
 		}
                 paint(getGraphics());
