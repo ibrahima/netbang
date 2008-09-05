@@ -8,10 +8,12 @@ import java.io.OutputStreamWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
 
 public class Server extends Thread{
 	HashMap<String,ServerThread> players = new HashMap<String,ServerThread>();
-	protected HashMap<String,String> messages = new HashMap<String,String>();	
+	protected HashMap<String,LinkedList<String>> messages = new HashMap<String,LinkedList<String>>();	
 	static int numPlayers;
 	ServerSocket me;
 	
@@ -44,6 +46,13 @@ public class Server extends Thread{
        		catch(Exception e) {e.printStackTrace();}
      	}
 	}
+	public void addChat(String string) {
+		Iterator<String> keyter = messages.keySet().iterator();
+		while(keyter.hasNext()){
+			messages.get(keyter.next()).add("Chat:"+string);
+		}
+		print("Sent "+string+" to everyone");
+	}
 }
 
 class ServerThread extends Thread{
@@ -56,6 +65,7 @@ class ServerThread extends Thread{
 	String name="";
 	String buffer;
 	boolean connected=false;
+	LinkedList<String> newMsgs = new LinkedList<String>();
 	void print(Object stuff){
     	System.out.println("Server:"+stuff);
     }
@@ -83,6 +93,7 @@ class ServerThread extends Thread{
 			buffer=(String)in.readLine();
 			name = buffer;
 			print(name+"("+client.getInetAddress()+") has joined the game.");
+			myServer.messages.put(name, newMsgs);
 			out.write("Successfully connected.");
 			out.newLine();
 			out.flush();
@@ -97,13 +108,21 @@ class ServerThread extends Thread{
 		while(!client.isClosed()){
 			try {
 				if(in.ready()){
-					buffer=(String)in.readLine();//This line also gives off errors at home but not school...
-					System.out.println("Server received "+buffer);					
+					buffer=(String)in.readLine();
+					System.out.println("Server received "+buffer);
+					String[] temp = buffer.split(":");
+					print(temp[0]);
+					if(temp[0].equals("Chat")){
+						myServer.addChat(temp[1]);
+					}
 				}
-	         	if(myServer.messages.containsKey(name)){
-	         		out.write(myServer.messages.get(name));
-	         		out.newLine();
-	         		myServer.messages.remove(name);
+	         	if(!newMsgs.isEmpty()){
+	         		Iterator<String> iter = newMsgs.iterator();
+	         		while(iter.hasNext()){
+		         		out.write(iter.next());
+		         		out.newLine();
+		         		iter.remove();
+	         		}
 	         	}
 	         	out.flush();
 

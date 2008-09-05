@@ -83,7 +83,7 @@ public class Client extends Thread{
 		}
 	}
 	public void addChat(String chat){
-		addMsg("Chat: "+chat);
+		addMsg("Chat:"+chat);
 	}
 
 }
@@ -148,6 +148,7 @@ class ClientThread extends Thread{
 		         		c.connected=true;
 		         		System.out.println("Successfully connected to server on "+server.getInetAddress());
 		         	}
+		         	print("Received "+buffer);
 	         	}
 	      }
 	      catch(Exception e) {
