@@ -64,12 +64,19 @@ public class ClientGUI extends JFrame implements KeyListener{
 		paint(this.getGraphics());
 
     }
+    
+    public int promptChooseCharacter(ArrayList<Card> al){
+        return promptChooseCard(al, "Who do you want to be?", "Choose your character!");
+    }
+    
+    
     /**
-     * Asks the player to choose a card. This is used for many instances
+     * Asks the player to choose a card. This is used for many instances.
+     * TODO: replace al with ID of the player.
      * @param al
      * @return
      */
-    public int promptChooseCard(ArrayList<Card> al){
+    public int promptChooseCard(ArrayList<Card> al, String str1, String str2){
     	Card[] temp = new Card[al.size()];
     	temp = al.toArray(temp);
     	String[] options=new String[temp.length];
@@ -79,8 +86,8 @@ public class ClientGUI extends JFrame implements KeyListener{
         int n = -1;
         while(n==-1)
                 n = JOptionPane.showOptionDialog(this,
-		"Who do you want to be?",
-		"Choose your character!",
+		str1,
+		str2,
 		JOptionPane.YES_NO_OPTION,
 		JOptionPane.QUESTION_MESSAGE,
 		null,

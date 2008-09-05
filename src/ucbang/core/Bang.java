@@ -104,7 +104,7 @@ public class Bang {
             //doesn't prompt all players at the same time
             System.out.println("1. " + players[n].hand.get(0).name + " HP: " + players[n].hand.get(0).special);
             System.out.println("2. " + players[n].hand.get(1).name + " HP: " + players[n].hand.get(1).special);
-            Card c = players[n].hand.get(gui.promptChooseCard(players[n].hand));
+            Card c = players[n].hand.get(gui.promptChooseCharacter(players[n].hand));
             players[n].character = c.ordinal;
             players[n].lifePoints = c.special; //special is hp for char cards
             playerDiscardHand(players[n]);
