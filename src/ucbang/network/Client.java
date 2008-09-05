@@ -148,7 +148,10 @@ class ClientThread extends Thread{
 		         		c.connected=true;
 		         		System.out.println("Successfully connected to server on "+server.getInetAddress());
 		         	}
-		         	print("Received "+buffer);
+					String[] temp = buffer.split(":");
+					if(temp[0].equals("Chat")){
+						c.gui.appendText(temp[1]);
+					}
 	         	}
 	      }
 	      catch(Exception e) {

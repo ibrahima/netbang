@@ -111,7 +111,6 @@ class ServerThread extends Thread{
 					buffer=(String)in.readLine();
 					System.out.println("Server received "+buffer);
 					String[] temp = buffer.split(":");
-					print(temp[0]);
 					if(temp[0].equals("Chat")){
 						myServer.addChat(temp[1]);
 					}
