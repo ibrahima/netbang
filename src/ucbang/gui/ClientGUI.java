@@ -89,6 +89,7 @@ public class ClientGUI extends JFrame implements KeyListener{
         //TODO: actually do something with color
         textIndex++;
         text.add(str);
+        paint(getGraphics());
     }
     
     public void update(){
