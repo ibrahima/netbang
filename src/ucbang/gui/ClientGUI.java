@@ -65,7 +65,7 @@ public class ClientGUI extends JFrame implements KeyListener{
 
     }
     /**
-     * Asks the player to choose a card
+     * Asks the player to choose a card. This is used for many instances
      * @param al
      * @return
      */
@@ -76,15 +76,16 @@ public class ClientGUI extends JFrame implements KeyListener{
     	for(int i=0;i<temp.length;i++){
     		options[i]=((Card)temp[i]).name;
     	}
-		int n = JOptionPane.showOptionDialog(this,
+        int n = -1;
+        while(n==-1)
+                n = JOptionPane.showOptionDialog(this,
 		"Who do you want to be?",
 		"Choose your character!",
-		JOptionPane.YES_NO_CANCEL_OPTION,
+		JOptionPane.YES_NO_OPTION,
 		JOptionPane.QUESTION_MESSAGE,
 		null,
 		options,
 		options[0]);
-
         return n;
     }
 	public void keyPressed(KeyEvent e) {
