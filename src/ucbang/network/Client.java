@@ -27,7 +27,6 @@ public class Client extends Thread{
 	public Player player;
 	public LinkedList<String> players = new LinkedList<String>();
     ClientThread t;
-    Object lock="";
 	public Client(String host, boolean guiEnabled) {
 		this.host=host;
 		if(guiEnabled)gui = new ClientGUI(numplayers, this);
@@ -57,10 +56,12 @@ public class Client extends Thread{
 		return name;
 	}
 	void promptName(){
+		System.out.println("Choosing a new name");
 		name=gui.promptChooseName();
-		synchronized(lock){
-			lock.notifyAll();
+		synchronized(name){
+			name.notifyAll();
 		}
+		System.out.println("New name is "+name);
 	}
 	public void run(){
 		try{
@@ -156,11 +157,13 @@ class ClientThread extends Thread{
 			         		System.out.println(name+": Successfully connected to server on "+server.getInetAddress());
 			         	}
 			         	else if(!c.connected&&temp[1].equals("Name taken!")){
-			         		System.out.println(name+": Connection refused because name was taken");
+			         		System.out.println(this+": Connection refused because name was taken");
 			         		namesent=false;
 			         		c.promptName();
-			         		synchronized(c.lock){
-			         			c.lock.wait();
+			         		synchronized(c.name){
+			         			System.out.println("Waiting");
+			         			c.name.wait();
+			         			System.out.println("No longer waiting");
 			         		}
 			         	}
 					}
