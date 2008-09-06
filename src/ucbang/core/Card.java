@@ -33,7 +33,7 @@ public class Card {
                 case PUNCH: type = 2; target = 2; range = 1; effect = play.DAMAGE.ordinal(); break;
                 case GATLING: type = 2; target = 4; effect = play.DAMAGE.ordinal(); break;
                 case HOWITZER: type = 3; target = 4; effect = play.DAMAGE.ordinal(); break;
-                case INDIANS: type = 2; target = 4; effect = play.DAMAGE.ordinal(); break;
+                case INDIANS: type = 2; special = 2; target = 4; effect = play.DAMAGE.ordinal(); break;
                 case KNIFE: type = 2; target = 2; range = 1; effect = play.DAMAGE.ordinal(); break;
                 case BUFFALO_RIFLE: type = 3; target = 2; range = -1; effect = play.DAMAGE.ordinal(); break;
                 case SPRINGFIELD: type = 2; target = 2; discardToPlay = true; range = -1; effect = play.DAMAGE.ordinal(); break;

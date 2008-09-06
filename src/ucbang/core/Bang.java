@@ -328,7 +328,11 @@ public class Bang {
             //damage
             if(c.effect == Card.play.DAMAGE.ordinal()){
                 for(int target: targets){
-                    if(true){ //change this to a flag checking barrels/if target want to play a miss, etc.
+                    int miss = -2; //or bang for indians
+                    while(miss != -1 || (miss>=0 && miss<players[target].hand.size() && players[target].hand.get(miss).special==(c.name==CardName.INDIANS.name()?1:0) && players[target].hand.get(miss).effect==(c.name==CardName.INDIANS.name()?Card.play.DAMAGE.ordinal():Card.play.DAMAGE.ordinal()))){
+                        miss = gui[target].promptChooseCard(players[target].hand, "Dodge!", "Play a miss?", false);
+                    }
+                    if(miss == -1){ //change this to a flag checking barrels/if target want to play a miss, etc.
                         while(players[target].lifePoints<=0){
                             System.out.println("Invalid Target!");
                             gui[p.id].promptChooseTargetPlayer();
