@@ -286,9 +286,13 @@ public class Bang {
     /**
      * Plays a card. This is one of the functions used to connect the GUI to the game.
      * @param c
-     * @return Whether that is a legal move (boolean)
+     * @return Whether that is a legal move (boolean) //TODO: this is stupid
      */
     public boolean playCardFromHand(Player p, Card c){
+        if(c.type == 4){
+            System.out.println("A miss card cannot be played.");
+            return false;
+        }
         p.hand.remove(c);
         if(c.type == 3){
             //put it on the field
