@@ -5,5 +5,6 @@ public class Host {
 		new Server(12345);
 		new Client("localhost", true,"Host");
                 new Client("localhost", true);
+                new Client("localhost", true, "Test client 0");
 	}
 }

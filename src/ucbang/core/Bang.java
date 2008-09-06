@@ -19,9 +19,9 @@ public class Bang {
         start(p);
     }
     
-    public static void main(String[] args){
+    /*public static void main(String[] args){
         new Bang();
-    }
+    }*/
     
     public Player[] players;
     public int numPlayers;

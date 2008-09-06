@@ -95,7 +95,16 @@ class ServerThread extends Thread{
 		{
 			buffer=(String)in.readLine();
 			name = buffer;
-			print(name+"("+client.getInetAddress()+") has joined the game.");
+                        if(myServer.messages.containsKey(name)){
+                            out.write("Name taken!");
+                            out.newLine();
+                            out.flush();
+                            print(name+"("+client.getInetAddress()+") Attempting joining with taken name.");
+                            return; //is this safe?
+                        }
+			else{
+                            print(name+"("+client.getInetAddress()+") has joined the game.");
+                        }
 			server.playerJoin(name);
 			myServer.messages.put(name, newMsgs);
 			out.write("Successfully connected.");
