@@ -27,6 +27,7 @@ public class Client extends Thread{
 	public Player player;
 	public LinkedList<String> players = new LinkedList<String>();
     ClientThread t;
+    Object lock="";
 	public Client(String host, boolean guiEnabled) {
 		this.host=host;
 		if(guiEnabled)gui = new ClientGUI(numplayers, this);
@@ -57,7 +58,9 @@ public class Client extends Thread{
 	}
 	void promptName(){
 		name=gui.promptChooseName();
-		if(t!=null)t.notify();
+		synchronized(lock){
+			lock.notifyAll();
+		}
 	}
 	public void run(){
 		try{
@@ -68,6 +71,7 @@ public class Client extends Thread{
 		}
 		t=new ClientThread(socket, name, this);
 		while(true){
+			gui.update();
 			try
 			{
 				sleep(45);
@@ -100,7 +104,7 @@ class ClientThread extends Thread{
 	BufferedWriter out;
 	Client c;
 	String buffer;
-        
+	boolean namesent=false;
 	public ClientThread(Socket theServer, String theName, Client c){
 		server=theServer;
 		name=theName;
@@ -124,15 +128,11 @@ class ClientThread extends Thread{
 	public void run(){
 		while(!server.isClosed()){
 			try {
-				if(name!=null&&out!=null&&!c.connected){
+				if(name!=null&&out!=null&&!c.connected&&!namesent){
 					out.write(name);
 					out.newLine();
 		         	out.flush();
-		         	buffer=(String)in.readLine();
-		         	if(!c.connected&&buffer.equals("Connection:Successfully connected.")){
-		         		c.connected=true;
-		         		System.out.println("Successfully connected to server on "+server.getInetAddress());
-		         	}
+		         	namesent=true;
 				}
 				synchronized(c.outMsgs){
 					if(!c.outMsgs.isEmpty()){
@@ -157,8 +157,11 @@ class ClientThread extends Thread{
 			         	}
 			         	else if(!c.connected&&temp[1].equals("Name taken!")){
 			         		System.out.println(name+": Connection refused because name was taken");
+			         		namesent=false;
 			         		c.promptName();
-			         		this.wait();
+			         		synchronized(c.lock){
+			         			c.lock.wait();
+			         		}
 			         	}
 					}
 					else if(temp[0].equals("Chat")){
@@ -187,6 +190,8 @@ class ClientThread extends Thread{
 	      	}
 	      	e.printStackTrace();
 	      }
+	      try{sleep(45);}
+	      catch(InterruptedException e){}
 		}
 		System.out.println("Server connection closed");
 	}
