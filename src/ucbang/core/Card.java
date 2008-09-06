@@ -33,7 +33,7 @@ public class Card {
                 case PUNCH: type = 2; target = 2; range = 1; effect = play.DAMAGE.ordinal(); break;
                 case GATLING: type = 2; target = 4; effect = play.DAMAGE.ordinal(); break;
                 case HOWITZER: type = 3; target = 4; effect = play.DAMAGE.ordinal(); break;
-                case INDIANS: type = 2; target = 3; effect = play.DAMAGE.ordinal(); break;
+                case INDIANS: type = 2; target = 4; effect = play.DAMAGE.ordinal(); break;
                 case KNIFE: type = 2; target = 2; range = 1; effect = play.DAMAGE.ordinal(); break;
                 case BUFFALO_RIFLE: type = 3; target = 2; range = -1; effect = play.DAMAGE.ordinal(); break;
                 case SPRINGFIELD: type = 2; target = 2; discardToPlay = true; range = -1; effect = play.DAMAGE.ordinal(); break;
@@ -56,7 +56,7 @@ public class Card {
                 case STAGECOACH: type = 2; range = 2; effect = play.DRAW.ordinal(); break;
                 case CONESTOGA: type = 3; range = 2; effect = play.DRAW.ordinal(); break;
                 case PONY_EXPRESS: type = 3; range = 3; effect = play.DRAW.ordinal(); break;
-                case GENERAL_STORE: type = 2; range = 1; effect = play.DRAW.ordinal(); break; //fix general store
+                case GENERAL_STORE: type = 2; target = 3; range = 1; effect = play.DRAW.ordinal(); break; //fix general store
                 
                 case JAIL: type = 2; range = -1; effect = play.JAIL.ordinal(); break; //special case: even though jail remains on the field of a player, it is "played"
                 
@@ -69,9 +69,9 @@ public class Card {
                 case TEQUILA: type = 2; target = 2; discardToPlay = true; effect = play.HEAL.ordinal(); break;
                 case WHISKY: type = 2; target = 1; range = 1; discardToPlay = true; effect = play.HEAL.ordinal(); break; //special case: heals 2 hp, so i guess i'll use "range"
                 case CANTEEN: type = 3; target = 1; effect = play.HEAL.ordinal(); break;
-                case SALOON: type = 2; target = 4; effect = play.HEAL.ordinal(); break;
+                case SALOON: type = 2; target = 3; effect = play.HEAL.ordinal(); break;
                 
-                case BRAWL: type = 2; target = 3; discardToPlay = true; play.DISCARD.ordinal(); break;
+                case BRAWL: type = 2; target = 4; discardToPlay = true; play.DISCARD.ordinal(); break;
                 case CAN_CAN: type = 3; target = 2; range = -1; effect = play.STEAL.ordinal(); break;
                 case RAG_TIME: type = 2; target = 2; range = -1; discardToPlay = true; effect = play.STEAL.ordinal(); break;
                 case PANIC: type = 2; target = 2; range = 1; effect = play.STEAL.ordinal(); break;

@@ -307,7 +307,7 @@ public class Bang {
             if(c.target == 2){
                 targets = new int[]{gui[p.id].promptChooseTargetPlayer()};
             }
-            else if(c.target == 3){
+            else if(c.target == 4){
                 targets = new int[numPlayers-1];
                 int m = 0;
                 for(int n = 0; n<targets.length; n++, m++)
@@ -316,7 +316,7 @@ public class Bang {
                     else
                         n--;
             }
-            else if(c.target ==4){
+            else if(c.target ==3){
                 targets = new int[numPlayers];
                 for(int n = 0; n<targets.length; n++)
                     targets[n] = n;
