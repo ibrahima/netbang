@@ -33,7 +33,7 @@ public class Card {
                 case PUNCH: type = 2; target = 2; range = 1; effect = play.DAMAGE.ordinal(); break;
                 case GATLING: type = 2; target = 4; effect = play.DAMAGE.ordinal(); break;
                 case HOWITZER: type = 3; target = 4; effect = play.DAMAGE.ordinal(); break;
-                case INDIANS: type = 2; target = 4; effect = play.DAMAGE.ordinal(); break;
+                case INDIANS: type = 2; target = 3; effect = play.DAMAGE.ordinal(); break;
                 case KNIFE: type = 2; target = 2; range = 1; effect = play.DAMAGE.ordinal(); break;
                 case BUFFALO_RIFLE: type = 3; target = 2; range = -1; effect = play.DAMAGE.ordinal(); break;
                 case SPRINGFIELD: type = 2; target = 2; discardToPlay = true; range = -1; effect = play.DAMAGE.ordinal(); break;
@@ -67,7 +67,7 @@ public class Card {
                 
                 case BEER: type = 2; target = 1; special = 1; effect = play.HEAL.ordinal(); break;
                 case TEQUILA: type = 2; target = 2; discardToPlay = true; effect = play.HEAL.ordinal(); break;
-                case WHISKY: type = 2; target = 1; range = 2; discardToPlay = true; effect = play.HEAL.ordinal(); break; //special case: heals 2 hp, so i guess i'll use "range"
+                case WHISKY: type = 2; target = 1; range = 1; discardToPlay = true; effect = play.HEAL.ordinal(); break; //special case: heals 2 hp, so i guess i'll use "range"
                 case CANTEEN: type = 3; target = 1; effect = play.HEAL.ordinal(); break;
                 case SALOON: type = 2; target = 4; effect = play.HEAL.ordinal(); break;
                 

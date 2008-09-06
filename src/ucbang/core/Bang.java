@@ -86,8 +86,12 @@ public class Bang {
             default: 
                 System.out.print("Bad number of players!"); System.exit(0); break;
         }
-        for(int n=0; n<numPlayers; n++)
+        for(int n=0; n<numPlayers; n++){
             players[n].role = roles.remove((int)(Math.random()*roles.size()));
+            if(players[n].role.ordinal()==0){
+                players[n].maxLifePoints++;
+            }
+        }
         for(Card s: drawPile)
             System.out.print(s.name+" ");
         System.out.print("\n");
@@ -115,7 +119,8 @@ public class Bang {
             System.out.println("2. " + players[n].hand.get(1).name + " HP: " + players[n].hand.get(1).special);
             Card c = players[n].hand.get(gui[n].promptChooseCharacter(players[n].hand));
             players[n].character = c.ordinal;
-            players[n].lifePoints = c.special; //special is hp for char cards
+            players[n].maxLifePoints += c.special; //special is hp for char cards
+            players[n].lifePoints = players[n].maxLifePoints;
             playerDiscardHand(players[n]);
             gui[n].paint(gui[n].getGraphics()); //TODO: this shouldn't here, but this is the only place where it didn't glitch up
         }
@@ -298,23 +303,59 @@ public class Bang {
             //put it on the field
         }
         if(c.type == 2){
+            int[] targets;
+            if(c.target == 2){
+                targets = new int[]{gui[p.id].promptChooseTargetPlayer()};
+            }
+            else if(c.target == 3){
+                targets = new int[numPlayers-1];
+                int m = 0;
+                for(int n = 0; n<targets.length; n++, m++)
+                    if(m!=p.id)
+                        targets[n] = m;
+                    else
+                        n--;
+            }
+            else if(c.target ==4){
+                targets = new int[numPlayers];
+                for(int n = 0; n<targets.length; n++)
+                    targets[n] = n;
+            }
+            else{
+                targets = new int[1]; //serves no purpose but to initialize value
+            }
+        
             //damage
             if(c.effect == Card.play.DAMAGE.ordinal()){
-                int target = gui[p.id].promptChooseTargetPlayer();
-                if(true){ //change this to a flag checking barrels/if target want to play a miss, etc.
-                    while(players[target].lifePoints<=0){
-                        System.out.println("Invalid Target!");
-                        gui[p.id].promptChooseTargetPlayer();
-                    }
-                    players[target].lifePoints--;
-                    System.out.println(p.id+": "+players[target].lifePoints);
-                    if(players[target].lifePoints <= 0){
-                        gui[p.id].appendText("You killed player "+target+"! \nPlayer "+target+" was a(n) "+players[target].role.name()+" ("+players[target].role.ordinal()+")");
-                        if(players[target].role.ordinal()==2){ //if he was an outlaw, claim bounty
-                            gui[p.id].appendText("Draw 3 cards!");
-                            playerDrawCard(p, 3);
+                for(int target: targets){
+                    if(true){ //change this to a flag checking barrels/if target want to play a miss, etc.
+                        while(players[target].lifePoints<=0){
+                            System.out.println("Invalid Target!");
+                            gui[p.id].promptChooseTargetPlayer();
+                        }
+                        players[target].lifePoints--;
+                        System.out.println(target+"'s hp: "+players[target].lifePoints);
+                        if(players[target].lifePoints <= 0){
+                            gui[p.id].appendText("You killed player "+target+"! \nPlayer "+target+" was a(n) "+players[target].role.name()+" ("+players[target].role.ordinal()+")");
+                            if(players[target].role.ordinal()==2){ //if he was an outlaw, claim bounty
+                                gui[p.id].appendText("Draw 3 cards!");
+                                playerDrawCard(p, 3);
+                            }
                         }
                     }
+                }
+            }
+            
+            //heal
+            if(c.effect == Card.play.HEAL.ordinal()){
+                for(int target: targets){
+                    if(c.range != 1) //shiskey
+                        players[target].lifePoints++;
+                    else
+                        players[target].lifePoints += 2;
+                    if(players[target].lifePoints>players[target].maxLifePoints)
+                        players[target].lifePoints = players[target].maxLifePoints;
+                    System.out.println(target+"'s hp: "+players[target].lifePoints);
                 }
             }
             //draw

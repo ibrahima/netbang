@@ -18,6 +18,7 @@ public class Player {
     Field field;
     
     int lifePoints;
+    int maxLifePoints;
     int specialDraw;
     
     int character = -1; //default -1 = no character
