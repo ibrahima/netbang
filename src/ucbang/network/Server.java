@@ -38,13 +38,13 @@ public class Server extends Thread{
 	public void run(){
 		while(true) {
 			try {
-                            Socket client = me.accept();
-                            ServerThread c = new ServerThread(client, this);
-                            numPlayers++;
-                        } 
-                        catch(Exception e) {e.printStackTrace();}
-                }
-     	}
+				Socket client = me.accept();
+				ServerThread c = new ServerThread(client, this);
+				numPlayers++;
+			}
+			catch(Exception e) {e.printStackTrace();}
+		}
+	}
 	public void addChat(String string) {
 		Iterator<String> keyter = messages.keySet().iterator();
 		while(keyter.hasNext()){

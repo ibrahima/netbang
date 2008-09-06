@@ -30,32 +30,27 @@ public class Client extends Thread{
         
 	public Client(String host, boolean guiEnabled) {
 		this.host=host;
-		name="Test client "+players.size();
-		if(guiEnabled)gui = new ClientGUI(numplayers++, this);
+		name="Test client "+numplayers++;
+		if(guiEnabled)gui = new ClientGUI(numplayers, this);
 		this.start();
 	}
 	public Client(String host, boolean guiEnabled, String name) {
-
-                    this.host=host;
-                    this.name=name;
-                    if(guiEnabled)gui = new ClientGUI(numplayers++, this);
-                    this.start();
-
+        this.host=host;
+        this.name=name;
+        if(guiEnabled)gui = new ClientGUI(numplayers++, this);
+        this.start();
 	}
 
 	public static void main(String[] Args){
-		if(Args.length>0&&Args[0]==null) //pretty sure this is supposed to be 0?
+		if(Args.length==0)
+			new Client("127.0.0.1",true);
+		else if(Args.length==1)
 			new Client(Args[0],true);
-		else{
-			if(Args.length>0&&Args[0].equals("Dummy")){
+		else if(Args.length==2)
+			if(Args[1].equals("Dummy"))
 				new Client(Args[0],false);
-			}
-			else{
-                                Args = new String[1];
-                                Args[0] = "127.0.0.1";
-				new Client(Args[0],true).name=Args[0];
-                        }
-		}	
+			else
+				new Client(Args[0],true,Args[1]);
 	}
 	public String getPlayerName(){
 		return name;
@@ -79,10 +74,10 @@ public class Client extends Thread{
 	}
 	void print(Object stuff){
     	if(gui!=null)
-                    gui.appendText("Client:"+stuff);
-                else
-                    System.out.println("Client:"+stuff);
-        }
+            gui.appendText("Client:"+stuff);
+        else
+            System.out.println("Client:"+stuff);
+    }
 	void addMsg(String msg){
 		synchronized(outMsgs){
 			outMsgs.add(msg);
@@ -116,10 +111,11 @@ class ClientThread extends Thread{
         		server.close();
      		}
      		catch(Exception e) {
+     			e.printStackTrace();
      		}
-                return;
-            }
-            this.start();
+            return;
+        }
+        this.start();
 	}
         
 	public void run(){
@@ -158,7 +154,7 @@ class ClientThread extends Thread{
 					}else if(temp[0].equals("Players")){
 						String[] ppl=temp[1].split(",");
 						for(int i=0;i<ppl.length;i++){
-							if(ppl[i]!=null){
+							if(ppl[i]!=null&&!ppl[i].isEmpty()){
 								c.players.add(ppl[i]);
 							}
 						}
@@ -176,16 +172,16 @@ class ClientThread extends Thread{
 	      	}
 	      	e.printStackTrace();
 	      }
-            }
+		}
 		System.out.println("Server connection closed");
 	}
-  	protected void finalize() throws Throwable{	
-         	try{
-         		in.close();
-         		out.close();
-         		server.close();
-         	}
-         	catch(Exception e){}
+  	protected void finalize() throws Throwable{
+     	try{
+     		in.close();
+     		out.close();
+     		server.close();
+     	}
+     	catch(Exception e){}
     }
     void print(Object stuff){
     	if(c.gui!=null)
