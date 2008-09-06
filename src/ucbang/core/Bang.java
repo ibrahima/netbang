@@ -294,6 +294,7 @@ public class Bang {
             //put it on the field
         }
         if(c.type == 2){
+            //damage
             if(c.effect == Card.play.DAMAGE.ordinal()){
                 int target = gui[p.id].promptChooseTargetPlayer();
                 if(true){ //change this to a flag checking barrels/if target want to play a miss, etc.
@@ -311,6 +312,10 @@ public class Bang {
                         }
                     }
                 }
+            }
+            //draw
+            if(c.effect == Card.play.DRAW.ordinal()){
+                playerDrawCard(p, c.range);
             }
             discardPile.add(c);
         }

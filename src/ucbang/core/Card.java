@@ -52,11 +52,11 @@ public class Card {
             
                 case BARREL: break;
                 
-                case WELLS_FARGO: break;
-                case STAGECOACH: break;
-                case CONESTOGA: break;
-                case PONY_EXPRESS: break;
-                case GENERAL_STORE: break;
+                case WELLS_FARGO: type = 2; range = 3; effect = play.DRAW.ordinal(); break;
+                case STAGECOACH: type = 2; range = 2; effect = play.DRAW.ordinal(); break;
+                case CONESTOGA: type = 3; range = 2; effect = play.DRAW.ordinal(); break;
+                case PONY_EXPRESS: type = 3; range = 3; effect = play.DRAW.ordinal(); break;
+                case GENERAL_STORE: type = 2; range = 1; effect = play.DRAW.ordinal(); break; //fix general store
                 
                 case JAIL: break;
                 
@@ -98,5 +98,5 @@ public class Card {
     public int effect2; //secondary effects only affect player
     public int special; //HP for char cards, ???? for other cards, 1 for beer and bangs, 1 for miss, 2 for dodge
     public boolean discardToPlay; //cards that need a discard to play
-    public int range; //used for guns and panic
+    public int range; //used for guns and panic and #cards drawn
 }
