@@ -110,9 +110,12 @@ class ServerThread extends Thread{
 				if(in.ready()){
 					buffer=(String)in.readLine();
 					System.out.println("Server received "+buffer);
-					String[] temp = buffer.split(":");
+					String[] temp = buffer.split(":",2);
 					if(temp[0].equals("Chat")){
-						myServer.addChat(temp[1]);
+						if(temp[1].charAt(0)=='/'&&client.getInetAddress().toString().equals("/127.0.0.1")){
+							//TODO: Send commands
+						}else
+							myServer.addChat(name+": "+temp[1]);
 					}
 				}
 	         	if(!newMsgs.isEmpty()){

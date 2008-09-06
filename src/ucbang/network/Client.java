@@ -79,7 +79,6 @@ public class Client extends Thread{
 	void addMsg(String msg){
 		synchronized(outMsgs){
 			outMsgs.add(msg);
-			print("Sent "+msg+" to server");
 		}
 	}
 	public void addChat(String chat){
@@ -116,14 +115,6 @@ class ClientThread extends Thread{
      	
 	}
 	public void run(){
-		try
-		{
-			out.write(name);
-		} 
-		catch(IOException e)
-		{
-			e.printStackTrace();
-		}
 		while(!server.isClosed()){
 			try {
 				if(name!=null&&out!=null&&!c.connected){
@@ -148,7 +139,7 @@ class ClientThread extends Thread{
 		         		c.connected=true;
 		         		System.out.println("Successfully connected to server on "+server.getInetAddress());
 		         	}
-					String[] temp = buffer.split(":");
+					String[] temp = buffer.split(":",2);
 					if(temp[0].equals("Chat")){
 						c.gui.appendText(temp[1]);
 					}
