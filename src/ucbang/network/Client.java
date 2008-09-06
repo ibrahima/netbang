@@ -40,15 +40,18 @@ public class Client extends Thread{
 		this.start();		
 	}
 
-	public static void main(String Args[]){
-		if(Args[1]==null)
+	public static void main(String[] Args){
+		if(Args.length>0&&Args[0]==null) //pretty sure this is supposed to be 0?
 			new Client(Args[0],true);
 		else{
-			if(Args[1].equals("Dummy")){
+			if(Args.length>0&&Args[0].equals("Dummy")){
 				new Client(Args[0],false);
 			}
-			else
-				new Client(Args[0],true).name=Args[1];
+			else{
+                                Args = new String[1];
+                                Args[0] = "127.0.0.1";
+				new Client(Args[0],true).name=Args[0];
+                        }
 		}	
 	}
 	public String getPlayerName(){
@@ -151,7 +154,7 @@ class ClientThread extends Thread{
 					}else if(temp[0].equals("Players")){
 						String[] ppl=temp[1].split(",");
 						for(int i=0;i<ppl.length;i++){
-							if(!ppl[i].isEmpty()){
+							if(ppl[i]!=null){
 								c.players.add(ppl[i]);
 							}
 						}
