@@ -2,7 +2,6 @@ package ucbang.network;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
@@ -27,11 +26,11 @@ public class Client extends Thread{
 	ClientGUI gui;
 	public Player player;
 	public LinkedList<String> players = new LinkedList<String>();
-        
+    ClientThread t;
 	public Client(String host, boolean guiEnabled) {
 		this.host=host;
-		name="Test client "+numplayers++;
 		if(guiEnabled)gui = new ClientGUI(numplayers, this);
+		promptName();
 		this.start();
 	}
 	public Client(String host, boolean guiEnabled, String name) {
@@ -52,8 +51,13 @@ public class Client extends Thread{
 			else
 				new Client(Args[0],true,Args[1]);
 	}
+	
 	public String getPlayerName(){
 		return name;
+	}
+	void promptName(){
+		name=gui.promptChooseName();
+		if(t!=null)t.notify();
 	}
 	public void run(){
 		try{
@@ -62,8 +66,7 @@ public class Client extends Thread{
 		catch(Exception e){
 			System.err.println(e+"\nServer Socket Error!");
 		}
-		new ClientThread(socket, name, this);
-		
+		t=new ClientThread(socket, name, this);
 		while(true){
 			try
 			{
@@ -126,10 +129,10 @@ class ClientThread extends Thread{
 					out.newLine();
 		         	out.flush();
 		         	buffer=(String)in.readLine();
-		         	if(!c.connected&&buffer.equals("Successfully connected.")){
+		         	if(!c.connected&&buffer.equals("Connection:Successfully connected.")){
 		         		c.connected=true;
 		         		System.out.println("Successfully connected to server on "+server.getInetAddress());
-		         	}		         	
+		         	}
 				}
 				synchronized(c.outMsgs){
 					if(!c.outMsgs.isEmpty()){
@@ -144,23 +147,35 @@ class ClientThread extends Thread{
 				out.flush();
 	         	if(in.ready()){
 		         	buffer=(String)in.readLine();
-		         	if(!c.connected&&buffer.equals("Successfully connected.")){
-		         		c.connected=true;
-		         		System.out.println("Successfully connected to server on "+server.getInetAddress());
-		         	}
+
 					String[] temp = buffer.split(":",2);
-					if(temp[0].equals("Chat")){
+					if(temp[0].equals("Connection")){
+						System.out.println(temp[1]);
+			         	if(!c.connected&&temp[1].equals("Successfully connected.")){
+			         		c.connected=true;
+			         		System.out.println(name+": Successfully connected to server on "+server.getInetAddress());
+			         	}
+			         	else if(!c.connected&&temp[1].equals("Name taken!")){
+			         		System.out.println(name+": Connection refused because name was taken");
+			         		c.promptName();
+			         		this.wait();
+			         	}
+					}
+					else if(temp[0].equals("Chat")){
 						c.gui.appendText(temp[1]);
-					}else if(temp[0].equals("Players")){
+					}
+					else if(temp[0].equals("Players")){
 						String[] ppl=temp[1].split(",");
 						for(int i=0;i<ppl.length;i++){
 							if(ppl[i]!=null&&!ppl[i].isEmpty()){
 								c.players.add(ppl[i]);
 							}
 						}
-					}else if(temp[0].equals("PlayerJoin")){
+					}
+					else if(temp[0].equals("PlayerJoin")){
 						c.players.add(temp[1]);
-					}else if(temp[0].equals("PlayerLeave")){
+					}
+					else if(temp[0].equals("PlayerLeave")){
 						c.players.remove(temp[1]);
 					}
 	         	}

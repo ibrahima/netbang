@@ -20,142 +20,148 @@ import ucbang.core.Card;
 import ucbang.core.Player;
 import ucbang.network.Client;
 
-public class ClientGUI extends JFrame implements KeyListener{
-    BufferStrategy strategy;
-    public Player player;
-    int p;
-    StringBuilder chat;
-    boolean chatting=false;
-    
-    ArrayList<String> text = new ArrayList<String>();
-    int textIndex = -1; //the bottom line of the text
-    Client client;
-    
-    public ClientGUI(int p, Client client) {
-        this.p = p;
-        chat=new StringBuilder();
-        //set window sizes
-        setPreferredSize(new Dimension(800,600));
-        setSize(new Dimension(800,600));
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        addKeyListener(this);
-     	this.setIgnoreRepaint(true);
-     	this.setVisible(true);
-    	this.createBufferStrategy(2);
-    	strategy=this.getBufferStrategy();
-    	this.client=client;
-        
-        addWindowListener(new WindowAdapter() {
-            public void windowActivated(WindowEvent e){
-                paint(getGraphics());
-            }
-        });
-        
-        paint(getGraphics());
-    }
-       
-    public void paint(Graphics g){
+public class ClientGUI extends JFrame implements KeyListener {
+	BufferStrategy strategy;
+	public Player player;
+	int p;
+	StringBuilder chat;
+	boolean chatting = false;
+
+	ArrayList<String> text = new ArrayList<String>();
+	int textIndex = -1; // the bottom line of the text
+	Client client;
+
+	public ClientGUI(int p, Client client) {
+		this.p = p;
+		chat = new StringBuilder();
+		// set window sizes
+		setPreferredSize(new Dimension(800, 600));
+		setSize(new Dimension(800, 600));
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		addKeyListener(this);
+		this.setIgnoreRepaint(true);
+		this.setVisible(true);
+		this.requestFocus(true);
+		this.createBufferStrategy(2);
+		strategy = this.getBufferStrategy();
+		this.client = client;
+
+		addWindowListener(new WindowAdapter() {
+			public void windowActivated(WindowEvent e) {
+				paint(getGraphics());
+			}
+		});
+
+		paint(getGraphics());
+	}
+
+	public void paint(Graphics g) {
 		Graphics2D graphics;
 		try {
 			graphics = (Graphics2D) strategy.getDrawGraphics();
 		} catch (Exception e) {
 			return;
 		}
-		//fill background w/ dark green
+		// fill background w/ dark green
 		graphics.setColor(Color.GREEN);
 		graphics.fillRect(0, 0, 800, 400);
-		graphics.setColor(new Color(100,0,0));
+		graphics.setColor(new Color(100, 0, 0));
 		graphics.fillRect(0, 400, 800, 600);
-		if(chatting){
-                    graphics.setColor(Color.WHITE);
-                    graphics.drawString("Chatting: " + chat.toString(), 20, 420);
+		if (chatting) {
+			graphics.setColor(Color.WHITE);
+			graphics.drawString("Chatting: " + chat.toString(), 20, 420);
 		}
-        if(textIndex>=0){ // there is text to display, must draw it
-            graphics.setColor(Color.WHITE);
-            for(int n = textIndex; n >= (textIndex<9?0:textIndex-9); n--){
-                graphics.drawString(text.get(n), 20, 580-15*(textIndex-n));
-            }
-        }
-        graphics.setColor(Color.DARK_GRAY);
-        graphics.drawString("Players", 25, 40);
-        Iterator<String> iter = client.players.iterator();
-        int n=0;
-        while(iter.hasNext()){
-        	graphics.drawString(iter.next(), 30, 60+15*n++);
-        }
+		if (textIndex >= 0) { // there is text to display, must draw it
+			graphics.setColor(Color.WHITE);
+			for (int n = textIndex; n >= (textIndex < 9 ? 0 : textIndex - 9); n--) {
+				graphics
+						.drawString(text.get(n), 20, 580 - 15 * (textIndex - n));
+			}
+		}
+		graphics.setColor(Color.DARK_GRAY);
+		graphics.drawString("Players", 25, 40);
+		Iterator<String> iter = client.players.iterator();
+		int n = 0;
+		while (iter.hasNext()) {
+			graphics.drawString(iter.next(), 30, 60 + 15 * n++);
+		}
 		graphics.dispose();
-		//paint backbuffer to window
+		// paint backbuffer to window
 		strategy.show();
-    }
-    
-    /**
-     * appendText with default color of black
-     * @param str
-     * @param c
-     */
-    public void appendText(String str){
-        appendText(str, Color.BLACK);
-    }
-    
-    /**
-     * adds text to the bottom of the text area
-     * @param str
-     * @param c
-     */
-    public void appendText(String str, Color c){
-        //TODO: actually do something with color
-        textIndex++;
-        text.add(str);
-        paint(getGraphics());
-    }
-    
-    public void update(){
+	}
+
+	/**
+	 * appendText with default color of black
+	 * 
+	 * @param str
+	 * @param c
+	 */
+	public void appendText(String str) {
+		appendText(str, Color.BLACK);
+	}
+
+	/**
+	 * adds text to the bottom of the text area
+	 * 
+	 * @param str
+	 * @param c
+	 */
+	public void appendText(String str, Color c) {
+		// TODO: actually do something with color
+		textIndex++;
+		text.add(str);
+		paint(getGraphics());
+	}
+
+	public void update() {
 		paint(this.getGraphics());
-    }
-    
-    public int promptChooseTargetPlayer() {
-        return 1-p; //temporary fix for not being able to target
-    }
-    
-    public int promptChooseCharacter(ArrayList<Card> al){
-        return promptChooseCard(al, "Who do you want to be? You are a(n) " + player.role, "Choose your character!", true);
-    }
-    
-    /**
-     * Asks the player to choose a card. This is used for many instances.
-     * TODO: replace al with ID of the player.
-     * @param al
-     * @return
-     */
-    public int promptChooseCard(ArrayList<Card> al, String str1, String str2, boolean forceDecision){
-    	Card[] temp = new Card[al.size()];
-    	temp = al.toArray(temp);
-    	String[] options=new String[temp.length];
-    	for(int i=0;i<temp.length;i++){
-    		options[i]=((Card)temp[i]).name;
-    	}
-        int n = -1;
-        if(forceDecision){
-            while(n==-1)
-                n = JOptionPane.showOptionDialog(this,
-		str1,
-		str2,
-		JOptionPane.YES_NO_OPTION,
-		JOptionPane.QUESTION_MESSAGE,
-		null,
-		options,
-		options[0]);
-            return n;
-        }
-        else return JOptionPane.showOptionDialog(this,
-		str1,
-		str2,
-		JOptionPane.YES_NO_OPTION,
-		JOptionPane.QUESTION_MESSAGE,
-		null,
-		options,
-		options[0]);
-    }
+	}
+	public String promptChooseName(){
+		String s="";
+		while(s.length()==0){
+			s = (String)JOptionPane.showInputDialog(this, "What is your name?");
+		}
+		return s;
+	}
+	public int promptChooseTargetPlayer() {
+		return 1 - p; // temporary fix for not being able to target
+	}
+
+	public int promptChooseCharacter(ArrayList<Card> al) {
+		return promptChooseCard(al, "Who do you want to be? You are a(n) " //TODO: check for a/an instead of being lazy
+				+ player.role, "Choose your character!", true);
+	}
+
+	/**
+	 * Asks the player to choose a card. This is used for many instances. TODO:
+	 * replace al with ID of the player.
+	 * 
+	 * @param al
+	 * @return
+	 */
+	public int promptChooseCard(ArrayList<Card> al, String str1, String str2,
+			boolean forceDecision) {
+		Card[] temp = new Card[al.size()];
+		temp = al.toArray(temp);
+		String[] options = new String[temp.length];
+		for (int i = 0; i < temp.length; i++) {
+			options[i] = ((Card) temp[i]).name;
+		}
+		int n = -1;
+		if (forceDecision) {
+			while (n == -1)
+				n = JOptionPane
+						.showOptionDialog(this, str1, str2,
+								JOptionPane.YES_NO_OPTION,
+								JOptionPane.QUESTION_MESSAGE, null, options,
+								options[0]);
+			return n;
+		} else
+			return JOptionPane.showOptionDialog(this, str1, str2,
+					JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE,
+					null, options, options[0]);
+	}
+
 	public void keyPressed(KeyEvent e) {
 		// TODO Auto-generated method stub
 
@@ -167,18 +173,18 @@ public class ClientGUI extends JFrame implements KeyListener{
 	}
 
 	public void keyTyped(KeyEvent e) {
-		if(e.getKeyChar()=='\n'){
-			chatting=!chatting;
-			if(!chatting&&chat.length()>0){
-                                client.addChat(chat.toString());
-                                chat.delete(0, chat.length());
+		if (e.getKeyChar() == '\n') {
+			chatting = !chatting;
+			if (!chatting && chat.length() > 0) {
+				client.addChat(chat.toString());
+				chat.delete(0, chat.length());
 			}
-		}else if(chatting){
-                    if((e.getKeyChar())==8&&chat.length()>0)
-                        chat.deleteCharAt(chat.length()-1);
-                    else
-			chat.append(e.getKeyChar());
+		} else if (chatting) {
+			if ((e.getKeyChar()) == 8 && chat.length() > 0)
+				chat.deleteCharAt(chat.length() - 1);
+			else
+				chat.append(e.getKeyChar());
 		}
-                paint(getGraphics());
+		paint(getGraphics());
 	}
 }
