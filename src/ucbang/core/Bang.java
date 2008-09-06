@@ -304,9 +304,11 @@ public class Bang {
                     players[target].lifePoints--;
                     System.out.println(p.id+": "+players[target].lifePoints);
                     if(players[target].lifePoints <= 0){
-                        gui[p.id].appendText("You killed player "+target+"! \nPlayer "+target+"was a "+players[target].role.name());
-                        if(players[target].role.ordinal()==3) //if he was an outlaw, claim bounty
+                        gui[p.id].appendText("You killed player "+target+"! \nPlayer "+target+" was a(n) "+players[target].role.name()+" ("+players[target].role.ordinal()+")");
+                        if(players[target].role.ordinal()==2){ //if he was an outlaw, claim bounty
+                            gui[p.id].appendText("Draw 3 cards!");
                             playerDrawCard(p, 3);
+                        }
                     }
                 }
             }
@@ -322,6 +324,10 @@ public class Bang {
      * @return
      */
     public void playerDrawCard(Player p, int n){
+        /*if(n <= 2)
+            gui[p.id].appendText("Draw "+n+" card(s).");
+        else if(n>2)
+            gui[p.id].appendText("Draw "+n+" cards!");*/
         for(int m=0; m<n; m++)
             p.hand.add(drawCard());
     }

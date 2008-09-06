@@ -9,7 +9,7 @@ public class Card {
     }
     
     public static enum play{DAMAGE, HEAL, MISS, DRAW, STEAL, DISCARD}; //played cards
-    public static enum field{DAMAGE, HEAL, MISS, DRAW, STEAL, DISCARD, GUN, HORSE}; //field cards
+    public static enum field{DAMAGE, HEAL, MISS, DRAW, STEAL, DISCARD, GUN, HORSE_RUN, HORSE_CHASE}; //field cards
     
     public Card(Enum e) {
         this.e = e;
@@ -29,17 +29,60 @@ public class Card {
          
             switch((Bang.CardName)e){
                 //put all direct damage cards here
-                case BANG: special = 1;
-                case PUNCH: 
-                case GATLING: //allow cards to target all
-                case INDIANS:
-                case KNIFE: type = 2; effect = play.DAMAGE.ordinal(); break;
-                case BUFFALO_RIFLE: type = 3;  break;
+                case PUNCH: type = 2; target = 2; range = 1; effect = play.DAMAGE.ordinal(); break;
+                case BANG: type = 2; special = 1; target = 2; effect = play.DAMAGE.ordinal(); break;
+                case GATLING: type = 2; target = 4; effect = play.DAMAGE.ordinal(); break;
+                case HOWITZER: type = 3; target = 4; effect = play.DAMAGE.ordinal(); break;
+                case INDIANS: type = 2; target = 4; effect = play.DAMAGE.ordinal(); break;
+                case KNIFE: type = 2; target = 2; range = 1; effect = play.DAMAGE.ordinal(); break;
+                case BUFFALO_RIFLE: type = 3; target = 2; effect = play.DAMAGE.ordinal(); break;
+                case SPRINGFIELD: type = 2; target = 2; discardToPlay = true; effect = play.DAMAGE.ordinal(); break;
+                case PEPPERBOX: type = 3; target = 2; effect = play.DAMAGE.ordinal(); break;
+                case DERRINGER: effect = play.DAMAGE.ordinal(); effect2 = play.DRAW.ordinal(); break;
                 
-                //all cards with miss effect
+                case DUEL: break;
+                case DYNAMITE: break;
                 
-                //all cards with beer effect
-                case BEER: special = 1; effect = play.HEAL.ordinal(); break;
+                case MISS: effect = play.MISS.ordinal(); break;
+                case DODGE: effect = play.MISS.ordinal(); break;
+                case BIBLE: effect = play.MISS.ordinal(); break;
+                case IRON_PLATE: effect = play.MISS.ordinal(); break;
+                case SOMBRERO: effect = play.MISS.ordinal(); break;
+                case TEN_GALLON_HAT: effect = play.MISS.ordinal(); break;
+            
+                case BARREL: break;
+                
+                case WELLS_FARGO: break;
+                case STAGECOACH: break;
+                case CONESTOGA: break;
+                case PONY_EXPRESS: break;
+                case GENERAL_STORE: break;
+                
+                case JAIL: break;
+                
+                case APPALOOSA: break;
+                case MUSTANG: break;
+                case HIDEOUT: break;
+                case SILVER: break;
+                
+                case BEER: break;
+                case TEQUILA: break;
+                case WHISKY: break;
+                case CANTEEN: break;
+                case SALOON: break;
+                
+                case BRAWL: break;
+                case CAN_CAN: break;
+                case RAG_TIME: break;
+                case PANIC: break;
+                case CAT_BALLOU: break;
+                
+                case VOLCANIC: break;
+                case SCHOFIELD: break;
+                case REMINGTON: break;
+                case REV_CARBINE: break;
+                case WINCHESTER: break;
+                
                 default: break; //special = 1; type = 2; effect = play.DAMAGE.ordinal(); break; //all cards left untreated are treated as bangs
             }
         }
@@ -49,9 +92,11 @@ public class Card {
         public String name; 
         public int ordinal;
     
-    public int type; //1 = char, 2 = play, 3 = field
+    public int type; //1 = char, 2 = play, 3 = field, 4 = miss
+    public int target; //1 = self, 2 = choose 1 player, 3 = all, 4 = all others
     public int effect; //1 = deal damage, 2 = heal, 3 = miss, 4 = draw
+    public int effect2; //secondary effects only affect player
     public int special; //HP for char cards, ???? for other cards, 1 for beer and bangs, 1 for miss, 2 for dodge
     public boolean discardToPlay; //cards that need a discard to play
-    public int range; //used for guns
+    public int range; //used for guns and panic
 }
