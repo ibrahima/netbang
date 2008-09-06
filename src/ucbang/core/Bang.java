@@ -316,7 +316,7 @@ public class Bang {
             //draw
             if(c.effect == Card.play.DRAW.ordinal())
                 playerDrawCard(p, c.range);
-            if(c.effect2 != null && c.effect2 == Card.play.DRAW.ordinal())
+            if(c.effect2 != 0 && c.effect2 == Card.play.DRAW.ordinal())
                 playerDrawCard(p, 1);
             discardPile.add(c);
         }
