@@ -27,17 +27,20 @@ public class Client extends Thread{
 	ClientGUI gui;
 	public Player player;
 	public LinkedList<String> players = new LinkedList<String>();
+        
 	public Client(String host, boolean guiEnabled) {
 		this.host=host;
-		name="Test client"+players;
+		name="Test client "+players.size();
 		if(guiEnabled)gui = new ClientGUI(numplayers++, this);
 		this.start();
 	}
 	public Client(String host, boolean guiEnabled, String name) {
-		this.host=host;
-		this.name=name;
-		if(guiEnabled)gui = new ClientGUI(numplayers++, this);
-		this.start();		
+
+                    this.host=host;
+                    this.name=name;
+                    if(guiEnabled)gui = new ClientGUI(numplayers++, this);
+                    this.start();
+
 	}
 
 	public static void main(String[] Args){
@@ -76,10 +79,10 @@ public class Client extends Thread{
 	}
 	void print(Object stuff){
     	if(gui!=null)
-    		gui.appendText("Client:"+stuff);
-    	else
-    		System.out.println("Client:"+stuff);
-    }
+                    gui.appendText("Client:"+stuff);
+                else
+                    System.out.println("Client:"+stuff);
+        }
 	void addMsg(String msg){
 		synchronized(outMsgs){
 			outMsgs.add(msg);
@@ -99,6 +102,7 @@ class ClientThread extends Thread{
 	BufferedWriter out;
 	Client c;
 	String buffer;
+        
 	public ClientThread(Socket theServer, String theName, Client c){
 		server=theServer;
 		name=theName;
@@ -113,11 +117,11 @@ class ClientThread extends Thread{
      		}
      		catch(Exception e) {
      		}
-     	return;
-     	}
-     	this.start();
-     	
+                return;
+            }
+            this.start();
 	}
+        
 	public void run(){
 		while(!server.isClosed()){
 			try {
@@ -172,7 +176,7 @@ class ClientThread extends Thread{
 	      	}
 	      	e.printStackTrace();
 	      }
-		}
+            }
 		System.out.println("Server connection closed");
 	}
   	protected void finalize() throws Throwable{	

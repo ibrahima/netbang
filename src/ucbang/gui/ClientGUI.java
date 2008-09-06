@@ -50,6 +50,8 @@ public class ClientGUI extends JFrame implements KeyListener{
                 paint(getGraphics());
             }
         });
+        
+        paint(getGraphics());
     }
        
     public void paint(Graphics g){

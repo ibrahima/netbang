@@ -26,6 +26,7 @@ public class Server extends Thread{
 		}
 		catch(IOException e){
 			System.err.println("Server Socket Error!\n"+e);
+                        e.printStackTrace();
 		}
 		print("Game server is listening to port "+port);
 		this.start();
@@ -37,13 +38,13 @@ public class Server extends Thread{
 	public void run(){
 		while(true) {
 			try {
-        		Socket client = me.accept();
-        		ServerThread c = new ServerThread(client, this);
-        		numPlayers++;
-       		} 
-       		catch(Exception e) {e.printStackTrace();}
+                            Socket client = me.accept();
+                            ServerThread c = new ServerThread(client, this);
+                            numPlayers++;
+                        } 
+                        catch(Exception e) {e.printStackTrace();}
+                }
      	}
-	}
 	public void addChat(String string) {
 		Iterator<String> keyter = messages.keySet().iterator();
 		while(keyter.hasNext()){
