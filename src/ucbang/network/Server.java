@@ -37,9 +37,7 @@ public class Server extends Thread{
 	public void run(){
 		while(true) {
 			try {
-        		//////print("Waiting for connections.");
         		Socket client = me.accept();
-        		//print("Accepted a connection from: "+ client.getInetAddress());
         		ServerThread c = new ServerThread(client, this);
         		numPlayers++;
        		} 
@@ -51,7 +49,12 @@ public class Server extends Thread{
 		while(keyter.hasNext()){
 			messages.get(keyter.next()).add("Chat:"+string);
 		}
-		print("Sent "+string+" to everyone");
+	}
+	void playerJoin(String player){
+		Iterator<String> keyter = messages.keySet().iterator();
+		while(keyter.hasNext()){
+			messages.get(keyter.next()).add("PlayerJoin:"+player);
+		}		
 	}
 }
 
@@ -61,7 +64,7 @@ class ServerThread extends Thread{
 	BufferedReader in;
 	BufferedWriter out;
 	
-	Server myServer;
+	Server server;
 	String name="";
 	String buffer;
 	boolean connected=false;
@@ -72,7 +75,7 @@ class ServerThread extends Thread{
 	public ServerThread(Socket theClient, Server myServer){
 		client=theClient;
 
-		this.myServer=myServer;
+		this.server=myServer;
 		try {
       		in= new BufferedReader(new InputStreamReader(client.getInputStream()));
       		out = new BufferedWriter(new OutputStreamWriter(client.getOutputStream()));
@@ -86,15 +89,22 @@ class ServerThread extends Thread{
         	catch(Exception e) {
            		e.printStackTrace();
          	}
-         //return;
      	}
 		try
 		{
 			buffer=(String)in.readLine();
 			name = buffer;
 			print(name+"("+client.getInetAddress()+") has joined the game.");
+			server.playerJoin(name);
 			myServer.messages.put(name, newMsgs);
 			out.write("Successfully connected.");
+			out.newLine();
+			out.flush();
+			Iterator<String> players = server.messages.keySet().iterator();
+			out.write("Players:");
+			while(players.hasNext()){//give player list of current players
+				out.write(players.next()+",");
+			}
 			out.newLine();
 			out.flush();
 		}
@@ -115,7 +125,7 @@ class ServerThread extends Thread{
 						if(temp[1].charAt(0)=='/'&&client.getInetAddress().toString().equals("/127.0.0.1")){
 							//TODO: Send commands
 						}else
-							myServer.addChat(name+": "+temp[1]);
+							server.addChat(name+": "+temp[1]);
 					}
 				}
 	         	if(!newMsgs.isEmpty()){

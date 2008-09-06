@@ -17,7 +17,7 @@ import ucbang.gui.ClientGUI;
 
 public class Client extends Thread{
 	String name;
-	static int players=0;
+	static int numplayers=0;//should be deprecated soon in favor of players.size()
 	Socket socket=null;
 	Random r = new Random();
 	int port=12345;
@@ -25,17 +25,18 @@ public class Client extends Thread{
 	boolean connected=false;
 	LinkedList<String> outMsgs = new LinkedList<String>();
 	ClientGUI gui;
-	Player player;
+	public Player player;
+	public LinkedList<String> players = new LinkedList<String>();
 	public Client(String host, boolean guiEnabled) {
 		this.host=host;
 		name="Test client"+players;
-		if(guiEnabled)gui = new ClientGUI(players++, this);
+		if(guiEnabled)gui = new ClientGUI(numplayers++, this);
 		this.start();
 	}
 	public Client(String host, boolean guiEnabled, String name) {
 		this.host=host;
 		this.name=name;
-		if(guiEnabled)gui = new ClientGUI(players++, this);
+		if(guiEnabled)gui = new ClientGUI(numplayers++, this);
 		this.start();		
 	}
 
@@ -121,6 +122,11 @@ class ClientThread extends Thread{
 					out.write(name);
 					out.newLine();
 		         	out.flush();
+		         	buffer=(String)in.readLine();
+		         	if(!c.connected&&buffer.equals("Successfully connected.")){
+		         		c.connected=true;
+		         		System.out.println("Successfully connected to server on "+server.getInetAddress());
+		         	}		         	
 				}
 				synchronized(c.outMsgs){
 					if(!c.outMsgs.isEmpty()){
@@ -142,6 +148,17 @@ class ClientThread extends Thread{
 					String[] temp = buffer.split(":",2);
 					if(temp[0].equals("Chat")){
 						c.gui.appendText(temp[1]);
+					}else if(temp[0].equals("Players")){
+						String[] ppl=temp[1].split(",");
+						for(int i=0;i<ppl.length;i++){
+							if(!ppl[i].isEmpty()){
+								c.players.add(ppl[i]);
+							}
+						}
+					}else if(temp[0].equals("PlayerJoin")){
+						c.players.add(temp[1]);
+					}else if(temp[0].equals("PlayerLeave")){
+						c.players.remove(temp[1]);
 					}
 	         	}
 	      }

@@ -11,6 +11,7 @@ import java.awt.event.WindowEvent;
 import java.awt.image.BufferStrategy;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -67,13 +68,19 @@ public class ClientGUI extends JFrame implements KeyListener{
                     graphics.setColor(Color.WHITE);
                     graphics.drawString("Chatting: " + chat.toString(), 20, 420);
 		}
-                if(textIndex>=0){ // there is text to display, must draw it
-                    for(int n = textIndex; n >= (textIndex<9?0:textIndex-9); n--){
-                        graphics.setColor(Color.WHITE);
-                        graphics.drawString(text.get(n), 20, 580-15*(textIndex-n));
-                    }
-                }
-
+        if(textIndex>=0){ // there is text to display, must draw it
+            graphics.setColor(Color.WHITE);
+            for(int n = textIndex; n >= (textIndex<9?0:textIndex-9); n--){
+                graphics.drawString(text.get(n), 20, 580-15*(textIndex-n));
+            }
+        }
+        graphics.setColor(Color.DARK_GRAY);
+        graphics.drawString("Players", 25, 40);
+        Iterator<String> iter = client.players.iterator();
+        int n=0;
+        while(iter.hasNext()){
+        	graphics.drawString(iter.next(), 30, 60+15*n++);
+        }
 		graphics.dispose();
 		//paint backbuffer to window
 		strategy.show();
