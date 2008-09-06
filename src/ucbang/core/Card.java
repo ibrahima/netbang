@@ -9,7 +9,7 @@ public class Card {
     }
     
     public static enum play{DAMAGE, HEAL, MISS, DRAW, STEAL, DISCARD}; //played cards
-    public static enum field{DAMAGE, HEAL, MISS, DRAW, STEAL, DISCARD, GUN, HORSE_RUN, HORSE_CHASE}; //field cards
+    public static enum field{DAMAGE, HEAL, MISS, DRAW, STEAL, DISCARD, DYNAMITE, GUN, HORSE_RUN, HORSE_CHASE}; //field cards
     
     public Card(Enum e) {
         this.e = e;
