@@ -146,14 +146,34 @@ class ServerThread extends Thread{
 				    			out.newLine();
 				    			out.flush();
 				            }
-						}else{//player is renaming himself
-							
 						}
 					}
 					else if(temp[0].equals("Chat")){
 						if(temp[1].charAt(0)=='/'&&client.getInetAddress().toString().equals("/127.0.0.1")){
 							//TODO: Send commands
 							if(temp[1].equals("/start")) server.startGame();//TODO: needs to make sure game isn't already in progress
+							else if(temp[1].startsWith("/rename")){
+								String temp1=temp[1].split(" ",2)[1];
+					            if(server.messages.containsKey(temp1)){
+					                out.write("Connection:Name taken!");
+					                out.newLine();
+					                out.flush();
+					                print(name+"("+client.getInetAddress()+") Attempting renaming to taken name.");
+
+					            }
+								else{
+					                print(name+"("+client.getInetAddress()+") is now known as "+temp1);
+					    			server.messages.remove(name);
+					    			server.messages.put(temp1, newMsgs);
+					    			server.playerLeave(name);
+					    			server.playerJoin(temp1);
+					    			name=temp1;
+					    			out.write("Connection:Successfully renamed.");
+					    			out.newLine();
+					    			out.flush();
+
+					            }
+							}
 						}else
 							server.addChat(name+": "+temp[1]);
 					}
