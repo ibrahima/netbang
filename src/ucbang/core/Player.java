@@ -7,9 +7,9 @@ public class Player {
     }
     
     public int id; //temporary probably
-    
     String name;
     public Enum role;
+    int maxLifePoints;
     
     int weaponRange; //only counts for Bang! cards
     int realRange; //also counts for Panics, etc.
@@ -18,8 +18,6 @@ public class Player {
     Field field;
     
     int lifePoints;
-    int maxLifePoints;
     int specialDraw;
-    
     int character = -1; //default -1 = no character
 }

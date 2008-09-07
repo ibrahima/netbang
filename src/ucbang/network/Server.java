@@ -20,10 +20,11 @@ public class Server extends Thread{
 	protected HashMap<String,LinkedList<String>> messages = new HashMap<String,LinkedList<String>>();	
 	static int numPlayers;
 	ServerSocket me;
-        int gameInProgress; //1 = attempting to start game, 2 = game started for realz lawl
-        int prompting; //flag for whether people are still being prompting for something 0 = no, 1 = prompting with no unchecked updates, 2 = unchecked prompt
-	int[][] choice; //int[m][n], where m is player and n is option
+        public int gameInProgress; //1 = attempting to start game, 2 = game started for realz lawl
+        public int prompting; //flag for whether people are still being prompting for something 0 = no, 1 = prompting with no unchecked updates, 2 = unchecked prompt
+	public int[][] choice; //int[m][n], where m is player and n is option
         Bang game; //just insert game stuff here
+        ArrayList<String> names = new ArrayList<String>();
         
         void print(Object stuff){
             System.out.println("Server:"+stuff);
@@ -66,15 +67,20 @@ public class Server extends Thread{
                                     }
                                 }
                                 System.out.println(flag);
-                                if(flag){ 
+                                if(flag){
+                                    //this is if it's checking the game when it has just started
+                                    prompting = 0;
+                                    //received all choices, send this to bang.java or w/e    
                                     if(gameInProgress == 1){
                                         System.out.println("Game started!");
                                         gameInProgress++;
                                         
+                                        //check order of names
+                                        for(String s: names){
+                                            System.out.println(s);
+                                        }
                                         game = new Bang(numPlayers, this);//FLAG: game stuff
                                     }
-                                    prompting = 0;
-                                    //received all choices, send this to bang.java or w/e    
                                 }
                                 else{
                                     //still prompting
@@ -85,6 +91,9 @@ public class Server extends Thread{
                         
                 }
 	}
+        void sendInfo( String info){
+            
+        }
 	void addChat(String string) {
 		Iterator<String> keyter = messages.keySet().iterator();
 		while(keyter.hasNext()){
@@ -92,12 +101,14 @@ public class Server extends Thread{
 		}
 	}
 	void playerJoin(String player){
+            names.add(player);
 		Iterator<String> keyter = messages.keySet().iterator();
 		while(keyter.hasNext()){
 			messages.get(keyter.next()).add("PlayerJoin:"+player);
 		}		
 	}
 	void playerLeave(String player){
+	    names.remove(player);
 		messages.remove(player);
 		Iterator<String> keyter = messages.keySet().iterator();
 		while(keyter.hasNext()){

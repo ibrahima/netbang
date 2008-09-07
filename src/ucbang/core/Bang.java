@@ -1,5 +1,7 @@
 package ucbang.core;
 
+import java.io.IOException;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -106,7 +108,7 @@ public class Bang {
         }
         
         //Make players choose characters; wait
-        for(int n = 0; n<players.length; n++){
+        for(int n = 0; n<numPlayers; n++){
             //doesn't prompt all players at the same time
             System.out.println("1. " + players[n].hand.get(0).name + " HP: " + players[n].hand.get(0).special);
             System.out.println("2. " + players[n].hand.get(1).name + " HP: " + players[n].hand.get(1).special);
@@ -117,12 +119,9 @@ public class Bang {
             playerDiscardHand(players[n]);
             gui[n].paint(gui[n].getGraphics()); //TODO: this shouldn't here, but this is the only place where it didn't glitch up
         }
-        while(!areCharactersChosen()){
-            try{
-                    Thread.sleep(300); //don't check too often
-            }
-            catch(InterruptedException e){}
-        }
+        //System.out.println("asdfasdfasdfasfasdfasfasfasfasdf1");
+        while(server.prompting>0){try{Thread.sleep(100);} catch(Exception e){}}
+        //System.out.println("asdfasdfasdfasfasdfasfasfasfasdf");
         
         //Create a drawPile
         Enum[] cards = new Enum[120];
@@ -439,14 +438,5 @@ public class Bang {
         while(discardPile.size()>0){
             drawPile.add(discardPile.remove((int)Math.random()*discardPile.size()));
         }
-    }
-
-    public boolean areCharactersChosen(){
-        for(Player p:players){
-            if(p.character==-1){
-                return false;
-            }
-        }
-        return true;
     }
 }
