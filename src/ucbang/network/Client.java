@@ -26,7 +26,7 @@ public class Client extends Thread{
 	ClientGUI gui;
 	public Player player;
 	public LinkedList<String> players = new LinkedList<String>();
-    ClientThread t;
+        ClientThread t;
 	public Client(String host, boolean guiEnabled) {
 		this.host=host;
 		if(guiEnabled)gui = new ClientGUI(numplayers, this);
@@ -176,6 +176,11 @@ class ClientThread extends Thread{
 					else if(temp[0].equals("PlayerLeave")){
 						c.players.remove(temp[1]);
 					}
+                                        else if(temp[0].equals("Prompt")){
+                                            //received a prompt from host
+                                            if(temp[1].equals("Start"))
+                                                c.gui.appendText("Host has requested the game be started");
+                                        }
 	         	}
 	      }
 	      catch(Exception e) {

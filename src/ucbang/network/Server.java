@@ -7,9 +7,13 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
+
+import ucbang.core.Player;
 
 public class Server extends Thread{
 	protected HashMap<String,LinkedList<String>> messages = new HashMap<String,LinkedList<String>>();	
@@ -68,9 +72,13 @@ public class Server extends Thread{
                 gameInProgress = true;
 		Iterator<String> keyter = messages.keySet().iterator();
 		while(keyter.hasNext()){
-			messages.get(keyter.next()).add("Prompt:Player");
+			//messages.get(keyter.next()).add("Prompt:Player"); //what's :Player for?
+                        messages.get(keyter.next()).add("Prompt:Start");
 		}
 	}
+        void prompt(ArrayList<Player> al, Object[] options){
+                
+        }
 }
 
 class ServerThread extends Thread{
@@ -153,7 +161,7 @@ class ServerThread extends Thread{
 					else if(temp[0].equals("Chat")){
 						if(temp[1].charAt(0)=='/'){
 							//TODO: Send commands
-							if(temp[1].equals("/start")&&client.getInetAddress().toString().equals("/127.0.0.1")&&!server.gameInProgress) server.startGame();//TODO: needs to make sure game isn't already in progress
+							if(temp[1].equals("/start")&&client.getInetAddress().toString().equals("/127.0.0.1")&&!server.gameInProgress) server.startGame();
 							else if(temp[1].startsWith("/rename")){
                                                             if(temp[1].length()>7&&temp[1].charAt(7)==' '){
                                                                 String temp1=temp[1].split(" ",2)[1];
