@@ -19,10 +19,9 @@ public class Server extends Thread{
 	protected HashMap<String,LinkedList<String>> messages = new HashMap<String,LinkedList<String>>();	
 	static int numPlayers;
 	ServerSocket me;
-        boolean gameInProgress = false;
-        boolean prompting = false; //flag for whether people are still being prompting for something
+        int gameInProgress = 0; //1 = attempting to start game, 2 = game started for realz lawl
+        int prompting = 0; //flag for whether people are still being prompting for something 0 = no, 1 = prompting with no unchecked updates, 2 = unchecked prompt
 	int[][] choice; //int[m][n], where m is player and n is option
-        
 	void print(Object stuff){
     	System.out.println("Server:"+stuff);
     }
@@ -43,13 +42,30 @@ public class Server extends Thread{
 	}
 	public void run(){
 		while(true) {
-			try {
-				Socket client = me.accept();
-				new ServerThread(client, this);
-				numPlayers++;
-			}
-			catch(Exception e) {e.printStackTrace();}
-		}
+			if(gameInProgress==0){
+                            try {
+                                    Socket client = me.accept();
+                                    new ServerThread(client, this);
+                                    numPlayers++;
+                            }
+                            catch(Exception e) {e.printStackTrace();}
+                        }
+                        if(prompting==2){
+                            boolean flag = true;
+                            for(int n=0; n<choice[0].length; n++){
+                                if(choice[n][1]>-2)
+                                    flag = false;
+                            }
+                            if(flag){ 
+                                if(gameInProgress == 1){
+                                    System.out.println("Game started!");
+                                    gameInProgress++;
+                                }
+                                //received all choices, send this to bang.java or w/e    
+                            }
+                        }
+                        
+                }
 	}
 	void addChat(String string) {
 		Iterator<String> keyter = messages.keySet().iterator();
@@ -71,7 +87,13 @@ public class Server extends Thread{
 		}		
 	}	
 	void startGame(){
-                gameInProgress = true;
+                gameInProgress = 1;
+                prompting = 1;
+                choice = new int[numPlayers][2];
+                for(int n = 0; n<numPlayers; n++){//this prompt goes out to everyone
+                    choice[n][0]=n;
+                    choice[n][1]=-2;
+                }
 		Iterator<String> keyter = messages.keySet().iterator();
 		while(keyter.hasNext()){
 			//messages.get(keyter.next()).add("Prompt:Player"); //what's :Player for?
@@ -85,9 +107,9 @@ class ServerThread extends Thread{
 	Socket client;
 	BufferedReader in;
 	BufferedWriter out;
-	
 	Server server;
 	String name="";
+        int id;
 	String buffer;
 	boolean connected=false;
 	LinkedList<String> newMsgs = new LinkedList<String>();
@@ -96,8 +118,8 @@ class ServerThread extends Thread{
     }
 	public ServerThread(Socket theClient, Server myServer){
 		client=theClient;
-
 		this.server=myServer;
+                id = server.numPlayers-1;
 		try {
       		in= new BufferedReader(new InputStreamReader(client.getInputStream()));
       		out = new BufferedWriter(new OutputStreamWriter(client.getOutputStream()));
@@ -160,7 +182,7 @@ class ServerThread extends Thread{
 					else if(temp[0].equals("Chat")){
 						if(temp[1].charAt(0)=='/'){
 							//TODO: Send commands
-							if(temp[1].equals("/start")&&client.getInetAddress().toString().equals("/127.0.0.1")&&!server.gameInProgress) server.startGame();
+							if(temp[1].equals("/start")&&client.getInetAddress().toString().equals("/127.0.0.1")&&server.gameInProgress==0) server.startGame();
 							else if(temp[1].startsWith("/rename")){
                                                             if(temp[1].length()>7&&temp[1].charAt(7)==' '){
                                                                 String temp1=temp[1].split(" ",2)[1];
@@ -190,7 +212,17 @@ class ServerThread extends Thread{
 							server.addChat(name+": "+temp[1]);
 					}
                                         else if(temp[0].equals("Prompt")){
-                                            System.out.println(name+" agreed to start.");
+                                            if(server.prompting>=1){
+                                                int n;
+                                                for(n = 0; server.choice[n][0]!=id; n++){
+                                                    System.out.println(server.choice[n][0]+" "+id);
+                                                }
+                                                server.choice[n][1]= Integer.valueOf(temp[1]);
+                                                server.prompting = 2;
+                                            }
+                                            else{
+                                                System.out.println("Received prompt from player when not prompted!");
+                                            }
                                         }
                                         else{
                                             System.out.println("Error: Junk String received:" + temp[0]+" "+temp[1]);

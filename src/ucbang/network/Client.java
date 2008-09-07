@@ -174,10 +174,10 @@ class ClientThread extends Thread{
 						}
 					}
 					else if(temp[0].equals("PlayerJoin")){
-						c.players.add(temp[1]);
+                                            c.players.add(temp[1]);
 					}
 					else if(temp[0].equals("PlayerLeave")){
-						c.players.remove(temp[1]);
+                                            c.players.remove(temp[1]);
 					}
                                         else if(temp[0].equals("Prompt")){
                                             //received a prompt from host
@@ -185,6 +185,9 @@ class ClientThread extends Thread{
                                             if(temp[1].equals("Start")){ //will waiting for response here cause client to desync with server?
                                                 c.outMsgs.add("Prompt:"+c.gui.promptYesNo("Host has sent a request to start game","Start game?"));
                                                 c.gui.appendText("Host has requested the game be started");
+                                            }
+                                            else if(temp[1].equals("")){
+                                                
                                             }
                                         }
 	         	}
