@@ -103,14 +103,18 @@ public class Server extends Thread{
 			messages.get(keyter.next()).add("PlayerLeave:"+player);
 		}		
 	}	
-	void startGame(){
+	void startGame(int host){
                 gameInProgress = 1;
                 try{me.close();} catch(Exception e) {e.printStackTrace();}
                 prompting = 1;
-                choice = new int[numPlayers][2];
-                for(int n = 0; n<numPlayers; n++){//this prompt goes out to everyone
-                    choice[n][0]=n;
-                    choice[n][1]=-2;
+                choice = new int[numPlayers-1][2];
+                for(int n = 0, m = 0; m<numPlayers-1; n++, m++){//this prompt goes out to everyone
+                    if(n!=host){
+                        choice[m][0]=n;
+                        choice[m][1]=-2;
+                    }
+                    else
+                        m--;
                 }
 		Iterator<String> keyter = messages.keySet().iterator();
 		while(keyter.hasNext()){
@@ -201,7 +205,7 @@ class ServerThread extends Thread{
 					else if(temp[0].equals("Chat")){
 						if(temp[1].charAt(0)=='/'){
 							//TODO: Send commands
-							if(temp[1].equals("/start")&&client.getInetAddress().toString().equals("/127.0.0.1")&&server.gameInProgress==0) server.startGame();
+							if(temp[1].equals("/start")&&client.getInetAddress().toString().equals("/127.0.0.1")&&server.gameInProgress==0) server.startGame(id);
 							else if(temp[1].startsWith("/rename")){
                                                             if(temp[1].length()>7&&temp[1].charAt(7)==' '){
                                                                 String temp1=temp[1].split(" ",2)[1];
