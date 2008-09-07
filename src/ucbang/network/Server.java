@@ -20,7 +20,9 @@ public class Server extends Thread{
 	static int numPlayers;
 	ServerSocket me;
         boolean gameInProgress = false;
-	
+        boolean prompting = false; //flag for whether people are still being prompting for something
+	int[][] choice; //int[m][n], where m is player and n is option
+        
 	void print(Object stuff){
     	System.out.println("Server:"+stuff);
     }
@@ -76,9 +78,6 @@ public class Server extends Thread{
                         messages.get(keyter.next()).add("Prompt:Start");
 		}
 	}
-        void prompt(ArrayList<Player> al, Object[] options){
-                
-        }
 }
 
 class ServerThread extends Thread{
@@ -132,31 +131,31 @@ class ServerThread extends Thread{
 					System.out.println("Server received "+buffer);
 					String[] temp = buffer.split(":",2);
 					if(temp[0].equals("Name")){
-						if(!connected){//player was never connected
-				            if(server.messages.containsKey(temp[1])){
-				                out.write("Connection:Name taken!");
-				                out.newLine();
-				                out.flush();
-				                print(client.getInetAddress()+" Attempting joining with taken name.");
-
-				            }
-							else{
-								name=temp[1];
-				                print(name+"("+client.getInetAddress()+") has joined the game.");
-				    			server.playerJoin(name);
-				    			server.messages.put(name, newMsgs);
-				    			out.write("Connection:Successfully connected.");
-				    			out.newLine();
-				    			out.flush();
-				    			Iterator<String> players = server.messages.keySet().iterator();
-				    			out.write("Players:");
-				    			while(players.hasNext()){//give player list of current players
-				    				out.write(players.next()+",");
-				    			}
-				    			out.newLine();
-				    			out.flush();
-				            }
-						}
+                                            if(!connected){//player was never connected
+                                                if(server.messages.containsKey(temp[1])){
+                                                    out.write("Connection:Name taken!");
+                                                    out.newLine();
+                                                    out.flush();
+                                                    print(client.getInetAddress()+" Attempting joining with taken name.");
+    
+                                                }
+                                                else{
+                                                    name=temp[1];
+                                                    print(name+"("+client.getInetAddress()+") has joined the game.");
+                                                        server.playerJoin(name);
+                                                        server.messages.put(name, newMsgs);
+                                                        out.write("Connection:Successfully connected.");
+                                                        out.newLine();
+                                                        out.flush();
+                                                        Iterator<String> players = server.messages.keySet().iterator();
+                                                        out.write("Players:");
+                                                        while(players.hasNext()){//give player list of current players
+                                                            out.write(players.next()+",");
+                                                        }
+                                                        out.newLine();
+                                                        out.flush();
+                                                }
+                                            }
 					}
 					else if(temp[0].equals("Chat")){
 						if(temp[1].charAt(0)=='/'){
@@ -190,6 +189,12 @@ class ServerThread extends Thread{
 						}else
 							server.addChat(name+": "+temp[1]);
 					}
+                                        else if(temp[0].equals("Prompt")){
+                                            System.out.println(name+" agreed to start.");
+                                        }
+                                        else{
+                                            System.out.println("Error: Junk String received:" + temp[0]+" "+temp[1]);
+                                        }
 				}
 	         	if(!newMsgs.isEmpty()){
 	         		Iterator<String> iter = ((LinkedList<String>) newMsgs.clone()).iterator();

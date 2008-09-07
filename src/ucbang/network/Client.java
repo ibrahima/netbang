@@ -104,6 +104,9 @@ class ClientThread extends Thread{
 	Client c;
 	String buffer;
 	boolean namesent=false;
+        boolean awaitingPrompt=false; //flag if the server is waiting for a response from this user, makes the boolean above redundant?
+        //int response = -2; //-1 is cancel
+        
 	public ClientThread(Socket theServer,  Client c){
 		server=theServer;
 		this.c=c;
@@ -128,10 +131,10 @@ class ClientThread extends Thread{
 			//System.out.println("Loop looping");
 			try {
 				if(c.name!=null&&out!=null&&!c.connected&&!namesent){
-					out.write("Name:"+c.name);
-					out.newLine();
-		         	out.flush();
-		         	namesent=true;
+                                    out.write("Name:"+c.name);
+                                    out.newLine();
+                                    out.flush();
+                                    namesent=true;
 				}
 				synchronized(c.outMsgs){
 					if(!c.outMsgs.isEmpty()){
@@ -178,8 +181,11 @@ class ClientThread extends Thread{
 					}
                                         else if(temp[0].equals("Prompt")){
                                             //received a prompt from host
-                                            if(temp[1].equals("Start"))
+                                            awaitingPrompt = true;
+                                            if(temp[1].equals("Start")){ //will waiting for response here cause client to desync with server?
+                                                c.outMsgs.add("Prompt:"+c.gui.promptYesNo("Host has sent a request to start game","Start game?"));
                                                 c.gui.appendText("Host has requested the game be started");
+                                            }
                                         }
 	         	}
 	      }

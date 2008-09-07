@@ -120,6 +120,7 @@ public class ClientGUI extends JFrame implements KeyListener {
 	public void update() {
 		paint(this.getGraphics());
 	}
+        
 	public String promptChooseName(){
 		String s="";
 		while(s==null||s.length()==0){
@@ -127,6 +128,16 @@ public class ClientGUI extends JFrame implements KeyListener {
 		}
 		return s;
 	}
+        
+        //I think it's visually more intuitive to have Yes on the left, but keep in mind that this means 01 is yes and 1 is no!
+        public int promptYesNo(String str1, String str2) {
+            int r = -1;
+            while(r==-1){
+                r = JOptionPane.showOptionDialog(this, str1, str2, JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, new String[]{"Yes","No"},"Yes");
+            }
+            return r;
+        }
+        
 	public int promptChooseTargetPlayer() {
 		return 1 - p; // temporary fix for not being able to target
 	}
