@@ -45,20 +45,23 @@ public class Server extends Thread{
 			if(gameInProgress==0){
                             try {
                                     Socket client = me.accept();
-                                    new ServerThread(client, this);
-                                    numPlayers++;
+                                    if(client!=null){
+                                        new ServerThread(client, this);
+                                        numPlayers++;
+                                    }
                             }
                             catch(Exception e) {e.printStackTrace();}
                         }
                         else{
-                            System.out.println("Has it been updated? "+prompting);
+                            //System.out.println("Has it been updated? "+prompting);
                             if(prompting==2){
                                 boolean flag = true;
                                 for(int n=0; n<choice[0].length; n++){
-                                    if(choice[n][1]>-2)
+                                    if(choice[n][1]==-2){
                                         flag = false;
+                                    }
                                 }
-                                System.out.println(flag+" "+gameInProgress);
+                                System.out.println(flag);
                                 if(flag){ 
                                     if(gameInProgress == 1){
                                         System.out.println("Game started!");
@@ -97,6 +100,7 @@ public class Server extends Thread{
 	}	
 	void startGame(){
                 gameInProgress = 1;
+                try{me.close();} catch(Exception e) {e.printStackTrace();}
                 prompting = 1;
                 choice = new int[numPlayers][2];
                 for(int n = 0; n<numPlayers; n++){//this prompt goes out to everyone
