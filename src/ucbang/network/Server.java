@@ -119,7 +119,8 @@ class ServerThread extends Thread{
 	public ServerThread(Socket theClient, Server myServer){
 		client=theClient;
 		this.server=myServer;
-                id = server.numPlayers-1;
+                id = server.numPlayers;
+                System.out.println("This is client id "+id);
 		try {
       		in= new BufferedReader(new InputStreamReader(client.getInputStream()));
       		out = new BufferedWriter(new OutputStreamWriter(client.getOutputStream()));
@@ -215,7 +216,6 @@ class ServerThread extends Thread{
                                             if(server.prompting>=1){
                                                 int n;
                                                 for(n = 0; server.choice[n][0]!=id; n++){
-                                                    System.out.println(server.choice[n][0]+" "+id);
                                                 }
                                                 server.choice[n][1]= Integer.valueOf(temp[1]);
                                                 server.prompting = 2;
