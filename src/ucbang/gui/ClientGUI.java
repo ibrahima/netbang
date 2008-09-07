@@ -21,6 +21,10 @@ import ucbang.core.Player;
 import ucbang.network.Client;
 
 public class ClientGUI extends JFrame implements KeyListener {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 4377855794895936467L;
 	BufferStrategy strategy;
 	public Player player;
 	int p;
@@ -118,7 +122,7 @@ public class ClientGUI extends JFrame implements KeyListener {
 	}
 	public String promptChooseName(){
 		String s="";
-		while(s.length()==0){
+		while(s==null||s.length()==0){
 			s = (String)JOptionPane.showInputDialog(this, "What is your name?");
 		}
 		return s;

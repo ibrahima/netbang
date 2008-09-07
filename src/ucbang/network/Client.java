@@ -15,7 +15,7 @@ import ucbang.gui.ClientGUI;
 
 
 public class Client extends Thread{
-	String name;
+	String name="";
 	static int numplayers=0;//should be deprecated soon in favor of players.size()
 	Socket socket=null;
 	Random r = new Random();
@@ -70,7 +70,7 @@ public class Client extends Thread{
 		catch(Exception e){
 			System.err.println(e+"\nServer Socket Error!");
 		}
-		t=new ClientThread(socket, name, this);
+		t=new ClientThread(socket, this);
 		while(true){
 			gui.update();
 			try
@@ -99,16 +99,13 @@ public class Client extends Thread{
 
 class ClientThread extends Thread{
 	Socket server;
-	String name;
-	//Ship old;
 	BufferedReader in;
 	BufferedWriter out;
 	Client c;
 	String buffer;
 	boolean namesent=false;
-	public ClientThread(Socket theServer, String theName, Client c){
+	public ClientThread(Socket theServer,  Client c){
 		server=theServer;
-		name=theName;
 		this.c=c;
 		try {
   			out = new BufferedWriter(new OutputStreamWriter(server.getOutputStream()));
@@ -128,9 +125,10 @@ class ClientThread extends Thread{
         
 	public void run(){
 		while(!server.isClosed()){
+			//System.out.println("Loop looping");
 			try {
-				if(name!=null&&out!=null&&!c.connected&&!namesent){
-					out.write(name);
+				if(c.name!=null&&out!=null&&!c.connected&&!namesent){
+					out.write("Name:"+c.name);
 					out.newLine();
 		         	out.flush();
 		         	namesent=true;
@@ -148,23 +146,17 @@ class ClientThread extends Thread{
 				out.flush();
 	         	if(in.ready()){
 		         	buffer=(String)in.readLine();
-
 					String[] temp = buffer.split(":",2);
 					if(temp[0].equals("Connection")){
 						System.out.println(temp[1]);
 			         	if(!c.connected&&temp[1].equals("Successfully connected.")){
 			         		c.connected=true;
-			         		System.out.println(name+": Successfully connected to server on "+server.getInetAddress());
+			         		System.out.println(c.name+": Successfully connected to server on "+server.getInetAddress());
 			         	}
 			         	else if(!c.connected&&temp[1].equals("Name taken!")){
 			         		System.out.println(this+": Connection refused because name was taken");
 			         		namesent=false;
 			         		c.promptName();
-			         		synchronized(c.name){
-			         			System.out.println("Waiting");
-			         			c.name.wait();
-			         			System.out.println("No longer waiting");
-			         		}
 			         	}
 					}
 					else if(temp[0].equals("Chat")){

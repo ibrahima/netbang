@@ -105,31 +105,7 @@ class ServerThread extends Thread{
      	}
 		try
 		{
-			buffer=(String)in.readLine();
-			name = buffer;
-            if(myServer.messages.containsKey(name)){
-                out.write("Connection:Name taken!");
-                out.newLine();
-                out.flush();
-                print(name+"("+client.getInetAddress()+") Attempting joining with taken name.");
-                //return; //is this safe? 
-                //no it's not, probably needs to be handled with a prompt for a new name.
-            }
-			else{
-                print(name+"("+client.getInetAddress()+") has joined the game.");
-    			server.playerJoin(name);
-    			myServer.messages.put(name, newMsgs);
-    			out.write("Connection:Successfully connected.");
-    			out.newLine();
-    			out.flush();
-    			Iterator<String> players = server.messages.keySet().iterator();
-    			out.write("Players:");
-    			while(players.hasNext()){//give player list of current players
-    				out.write(players.next()+",");
-    			}
-    			out.newLine();
-    			out.flush();
-            }
+
 
 		}
 		catch(Exception e)
@@ -145,7 +121,36 @@ class ServerThread extends Thread{
 					buffer=(String)in.readLine();
 					System.out.println("Server received "+buffer);
 					String[] temp = buffer.split(":",2);
-					if(temp[0].equals("Chat")){
+					if(temp[0].equals("Name")){
+						if(!connected){//player was never connected
+				            if(server.messages.containsKey(temp[1])){
+				                out.write("Connection:Name taken!");
+				                out.newLine();
+				                out.flush();
+				                print(client.getInetAddress()+" Attempting joining with taken name.");
+
+				            }
+							else{
+								name=temp[1];
+				                print(name+"("+client.getInetAddress()+") has joined the game.");
+				    			server.playerJoin(name);
+				    			server.messages.put(name, newMsgs);
+				    			out.write("Connection:Successfully connected.");
+				    			out.newLine();
+				    			out.flush();
+				    			Iterator<String> players = server.messages.keySet().iterator();
+				    			out.write("Players:");
+				    			while(players.hasNext()){//give player list of current players
+				    				out.write(players.next()+",");
+				    			}
+				    			out.newLine();
+				    			out.flush();
+				            }
+						}else{//player is renaming himself
+							
+						}
+					}
+					else if(temp[0].equals("Chat")){
 						if(temp[1].charAt(0)=='/'&&client.getInetAddress().toString().equals("/127.0.0.1")){
 							//TODO: Send commands
 							if(temp[1].equals("/start")) server.startGame();//TODO: needs to make sure game isn't already in progress
