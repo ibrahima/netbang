@@ -19,8 +19,8 @@ public class Server extends Thread{
 	protected HashMap<String,LinkedList<String>> messages = new HashMap<String,LinkedList<String>>();	
 	static int numPlayers;
 	ServerSocket me;
-        int gameInProgress = 0; //1 = attempting to start game, 2 = game started for realz lawl
-        int prompting = 0; //flag for whether people are still being prompting for something 0 = no, 1 = prompting with no unchecked updates, 2 = unchecked prompt
+        int gameInProgress; //1 = attempting to start game, 2 = game started for realz lawl
+        int prompting; //flag for whether people are still being prompting for something 0 = no, 1 = prompting with no unchecked updates, 2 = unchecked prompt
 	int[][] choice; //int[m][n], where m is player and n is option
 	void print(Object stuff){
     	System.out.println("Server:"+stuff);
@@ -41,7 +41,7 @@ public class Server extends Thread{
 		new Server(12345);
 	}
 	public void run(){
-		while(true) {
+		while(true) { //TODO: make this loop run more than once
 			if(gameInProgress==0){
                             try {
                                     Socket client = me.accept();
@@ -50,18 +50,27 @@ public class Server extends Thread{
                             }
                             catch(Exception e) {e.printStackTrace();}
                         }
-                        if(prompting==2){
-                            boolean flag = true;
-                            for(int n=0; n<choice[0].length; n++){
-                                if(choice[n][1]>-2)
-                                    flag = false;
-                            }
-                            if(flag){ 
-                                if(gameInProgress == 1){
-                                    System.out.println("Game started!");
-                                    gameInProgress++;
+                        else{
+                            System.out.println("Has it been updated? "+prompting);
+                            if(prompting==2){
+                                boolean flag = true;
+                                for(int n=0; n<choice[0].length; n++){
+                                    if(choice[n][1]>-2)
+                                        flag = false;
                                 }
-                                //received all choices, send this to bang.java or w/e    
+                                System.out.println(flag+" "+gameInProgress);
+                                if(flag){ 
+                                    if(gameInProgress == 1){
+                                        System.out.println("Game started!");
+                                        gameInProgress++;
+                                    }
+                                    prompting = 0;
+                                    //received all choices, send this to bang.java or w/e    
+                                }
+                                else{
+                                    //still prompting
+                                    prompting = 1;
+                                }
                             }
                         }
                         
