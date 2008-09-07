@@ -15,6 +15,7 @@ public class Server extends Thread{
 	protected HashMap<String,LinkedList<String>> messages = new HashMap<String,LinkedList<String>>();	
 	static int numPlayers;
 	ServerSocket me;
+        boolean gameInProgress = false;
 	
 	void print(Object stuff){
     	System.out.println("Server:"+stuff);
@@ -64,6 +65,7 @@ public class Server extends Thread{
 		}		
 	}	
 	void startGame(){
+                gameInProgress = true;
 		Iterator<String> keyter = messages.keySet().iterator();
 		while(keyter.hasNext()){
 			messages.get(keyter.next()).add("Prompt:Player");
@@ -149,9 +151,9 @@ class ServerThread extends Thread{
 						}
 					}
 					else if(temp[0].equals("Chat")){
-						if(temp[1].charAt(0)=='/'&&client.getInetAddress().toString().equals("/127.0.0.1")){
+						if(temp[1].charAt(0)=='/'){
 							//TODO: Send commands
-							if(temp[1].equals("/start")) server.startGame();//TODO: needs to make sure game isn't already in progress
+							if(temp[1].equals("/start")&&client.getInetAddress().toString().equals("/127.0.0.1")&&!server.gameInProgress) server.startGame();//TODO: needs to make sure game isn't already in progress
 							else if(temp[1].startsWith("/rename")){
                                                             if(temp[1].length()>7&&temp[1].charAt(7)==' '){
                                                                 String temp1=temp[1].split(" ",2)[1];
