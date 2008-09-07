@@ -5,23 +5,20 @@ import java.util.Arrays;
 
 import ucbang.gui.ClientGUI;
 
+import ucbang.network.Server;
+
 public class Bang {
-    public Bang() {
-        //temporary fix for not having networking by opening multiple guis
-        int p = 2;
-        gui = new ClientGUI[2];
-        for(int n = 0; n<p; n++){
-            gui[n] = new ClientGUI(n,null);
-            gui[n].setTitle(String.valueOf(n));
-            gui[n].setLocation(800*n,0);
-            gui[n].setVisible(true);
-        }
+    public Bang(int p, Server s) {
+        server = s;
         start(p);
     }
     
     /*public static void main(String[] args){
         new Bang();
     }*/
+    Server server;
+    
+    
     
     public Player[] players;
     public int numPlayers;
@@ -35,7 +32,7 @@ public class Bang {
     public static enum Characters {BART_CASSIDY, BLACK_JACK, CALAMITY_JANET, EL_GRINGO, JESSE_JONES, JOURDONNAIS, KIT_CARLSON, LUCKY_DUKE, PAUL_REGRET, PEDRO_RAMIREZ, ROSE_DOOLAN, SID_KETCHUM, SLAB_THE_KILLER, SUZY_LAFAYETTE, VULTURE_SAM, WILLY_THE_KID, APACHE_KID, BELLE_STAR, BILL_NOFACE, CHUCK_WENGAM, DOC_HOLYDAY, ELENA_FUENTE, GREG_DIGGER, HERB_HUNTER, JOSE_DELGADO, MOLLY_STARK, PAT_BRENNAN, PIXIE_PETE, SEAN_MALLORY, TEQUILA_JOE, VERA_CUSTER};
     public static enum Role {SHERIFF, DEPUTY, OUTLAW, RENEGADE};
     
-    public ClientGUI[] gui;
+    //public ClientGUI[] gui;
     
     /**
      * Create p players.
@@ -49,13 +46,7 @@ public class Bang {
      */
     public void start(int p){
         //Create Players
-        numPlayers = p;
-        players = new Player[numPlayers];
-        for(int n=0; n<numPlayers; n++){
-            players[n] = new Player();
-            players[n].id = n;
-            gui[n].player = players[n];
-        }
+        
         
         //Assign roles
         ArrayList<Enum> roles = new ArrayList<Enum>();

@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 
+import ucbang.core.Bang;
 import ucbang.core.Player;
 
 public class Server extends Thread{
@@ -22,9 +23,11 @@ public class Server extends Thread{
         int gameInProgress; //1 = attempting to start game, 2 = game started for realz lawl
         int prompting; //flag for whether people are still being prompting for something 0 = no, 1 = prompting with no unchecked updates, 2 = unchecked prompt
 	int[][] choice; //int[m][n], where m is player and n is option
-	void print(Object stuff){
-    	System.out.println("Server:"+stuff);
-    }
+        Bang game; //just insert game stuff here
+        
+        void print(Object stuff){
+            System.out.println("Server:"+stuff);
+        }
 	public Server(int port){
 		try{
 			me=new ServerSocket(port);
@@ -50,7 +53,7 @@ public class Server extends Thread{
                                         numPlayers++;
                                     }
                             }
-                            catch(Exception e) {e.printStackTrace();}
+                            catch(Exception e) {/*e.printStackTrace();*/}
                         }
                         else{
                             //System.out.println("Has it been updated? "+prompting);
@@ -66,6 +69,8 @@ public class Server extends Thread{
                                     if(gameInProgress == 1){
                                         System.out.println("Game started!");
                                         gameInProgress++;
+                                        
+                                        game = new Bang(numPlayers, this);//FLAG: game stuff
                                     }
                                     prompting = 0;
                                     //received all choices, send this to bang.java or w/e    
