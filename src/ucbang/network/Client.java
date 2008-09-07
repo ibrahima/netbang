@@ -24,6 +24,7 @@ public class Client extends Thread{
 	boolean connected=false;
 	LinkedList<String> outMsgs = new LinkedList<String>();
 	ClientGUI gui;
+	public Player player;
 	public LinkedList<String> players = new LinkedList<String>();
         ClientThread t;
 	public Client(String host, boolean guiEnabled) {

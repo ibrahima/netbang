@@ -10,7 +10,9 @@ import ucbang.network.Server;
 public class Bang {
     public Bang(int p, Server s) {
         server = s;
+        gui = new ClientGUI[p]; //deleteme
         start(p);
+        
     }
     
     /*public static void main(String[] args){
@@ -18,7 +20,7 @@ public class Bang {
     }*/
     Server server;
     
-    
+    public ClientGUI[] gui;// deleteme
     
     public Player[] players;
     public int numPlayers;

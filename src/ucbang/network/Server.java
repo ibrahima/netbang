@@ -59,7 +59,8 @@ public class Server extends Thread{
                             //System.out.println("Has it been updated? "+prompting);
                             if(prompting==2){
                                 boolean flag = true;
-                                for(int n=0; n<choice[0].length; n++){
+                                System.out.println(choice.length+" "+choice[0].length);
+                                for(int n=0; n<choice.length; n++){
                                     if(choice[n][1]==-2){
                                         flag = false;
                                     }
@@ -103,7 +104,7 @@ public class Server extends Thread{
 			messages.get(keyter.next()).add("PlayerLeave:"+player);
 		}		
 	}	
-	void startGame(int host){
+	void startGame(int host, String name){
                 gameInProgress = 1;
                 try{me.close();} catch(Exception e) {e.printStackTrace();}
                 prompting = 1;
@@ -119,7 +120,9 @@ public class Server extends Thread{
 		Iterator<String> keyter = messages.keySet().iterator();
 		while(keyter.hasNext()){
 			//messages.get(keyter.next()).add("Prompt:Player"); //what's :Player for?
-                        messages.get(keyter.next()).add("Prompt:Start");
+                        String s = keyter.next();
+                        if(s!=name)
+                            messages.get(s).add("Prompt:Start");
 		}
 	}
 }
@@ -205,7 +208,8 @@ class ServerThread extends Thread{
 					else if(temp[0].equals("Chat")){
 						if(temp[1].charAt(0)=='/'){
 							//TODO: Send commands
-							if(temp[1].equals("/start")&&client.getInetAddress().toString().equals("/127.0.0.1")&&server.gameInProgress==0) server.startGame(id);
+							if(temp[1].equals("/start")&&client.getInetAddress().toString().equals("/127.0.0.1")&&server.gameInProgress==0) 
+                                                            server.startGame(id, name);
 							else if(temp[1].startsWith("/rename")){
                                                             if(temp[1].length()>7&&temp[1].charAt(7)==' '){
                                                                 String temp1=temp[1].split(" ",2)[1];
