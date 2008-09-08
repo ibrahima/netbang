@@ -21,10 +21,10 @@ public class Server extends Thread {
 	static int numPlayers;
 	ServerSocket me;
 	public int gameInProgress; // 1 = attempting to start game, 2 = game started
-								// for realz lawl
+	// for realz lawl
 	public int prompting; // flag for whether people are still being prompting
-							// for something 0 = no, 1 = prompting with no
-							// unchecked updates, 2 = unchecked prompt
+	// for something 0 = no, 1 = prompting with no
+	// unchecked updates, 2 = unchecked prompt
 	public int[][] choice; // int[m][n], where m is player and n is option
 	Bang game; // just insert game stuff here
 	ArrayList<String> names = new ArrayList<String>();
@@ -90,7 +90,7 @@ public class Server extends Thread {
 							}
 
 							game = new Bang(numPlayers, this);// FLAG: game
-																// stuff
+							// stuff
 						}
 					} else {
 						// still prompting
@@ -141,8 +141,8 @@ public class Server extends Thread {
 		prompting = 1;
 		choice = new int[numPlayers - 1][2];
 		for (int n = 0, m = 0; m < numPlayers - 1; n++, m++) {// this prompt
-																// goes out to
-																// everyone
+			// goes out to
+			// everyone
 			if (n != host) {
 				choice[m][0] = n;
 				choice[m][1] = -2;
@@ -231,8 +231,8 @@ class ServerThread extends Thread {
 										.keySet().iterator();
 								out.write("Players:");
 								while (players.hasNext()) {// give player list
-															// of current
-															// players
+									// of current
+									// players
 									out.write(players.next() + ",");
 								}
 								out.newLine();

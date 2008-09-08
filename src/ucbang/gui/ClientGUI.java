@@ -41,7 +41,7 @@ public class ClientGUI extends JFrame implements KeyListener {
 		// set window sizes
 		setPreferredSize(new Dimension(800, 600));
 		setSize(new Dimension(800, 600));
-		//setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		// setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		addKeyListener(this);
 		this.setIgnoreRepaint(true);
 		this.setVisible(true);
@@ -120,30 +120,44 @@ public class ClientGUI extends JFrame implements KeyListener {
 	public void update() {
 		paint(this.getGraphics());
 	}
-        
-	public String promptChooseName(){
-		String s="";
-		while(s==null||s.length()==0){
-			s = (String)JOptionPane.showInputDialog(this, "What is your name?");
+
+	public String promptChooseName() {
+		String s = "";
+		while (s == null || s.length() == 0) {
+			s = (String) JOptionPane
+					.showInputDialog(this, "What is your name?");
 		}
 		return s;
 	}
-        
-        //I think it's visually more intuitive to have Yes on the left, but keep in mind that this means 01 is yes and 1 is no!
-        public int promptYesNo(String str1, String str2) {
-            int r = -1;
-            while(r==-1){
-                r = JOptionPane.showOptionDialog(this, str1, str2, JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, new String[]{"Yes","No"},"Yes");
-            }
-            return r;
-        }
-        
+
+	// I think it's visually more intuitive to have Yes on the left, but keep in
+	// mind that this means 01 is yes and 1 is no!
+	public int promptYesNo(String str1, String str2) {
+		int r = -1;
+		while (r == -1) {
+			r = JOptionPane.showOptionDialog(this, str1, str2,
+					JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE,
+					null, new String[] { "Yes", "No" }, "Yes");
+		}
+		return r;
+	}
+
 	public int promptChooseTargetPlayer() {
 		return 1 - p; // temporary fix for not being able to target
 	}
 
 	public int promptChooseCharacter(ArrayList<Card> al) {
-		return promptChooseCard(al, "Who do you want to be? You are a(n) " //TODO: check for a/an instead of being lazy
+		return promptChooseCard(al, "Who do you want to be? You are a(n) " // TODO
+																			// :
+																			// check
+																			// for
+																			// a
+																			// /
+																			// an
+																			// instead
+																			// of
+																			// being
+																			// lazy
 				+ player.role, "Choose your character!", true);
 	}
 
