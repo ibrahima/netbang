@@ -10,12 +10,14 @@ import java.util.Random;
 
 import java.util.Iterator;
 
+import ucbang.core.Bang;
 import ucbang.core.Player;
 import ucbang.gui.ClientGUI;
 
 
 public class Client extends Thread{
 	String name="";
+        int id;
 	static int numplayers=0;//should be deprecated soon in favor of players.size()
 	Socket socket=null;
 	Random r = new Random();
@@ -34,10 +36,10 @@ public class Client extends Thread{
 		this.start();
 	}
 	public Client(String host, boolean guiEnabled, String name) {
-        this.host=host;
-        this.name=name;
-        if(guiEnabled)gui = new ClientGUI(numplayers++, this);
-        this.start();
+            this.host=host;
+            this.name=name;
+            if(guiEnabled)gui = new ClientGUI(numplayers++, this);
+            this.start();
 	}
 
 	public static void main(String[] Args){
@@ -186,8 +188,30 @@ class ClientThread extends Thread{
                                                 c.outMsgs.add("Prompt:"+c.gui.promptYesNo("Host has sent a request to start game","Start game?"));
                                                 c.gui.appendText("Host has requested the game be started");
                                             }
-                                            else if(temp[1].equals("")){
+                                            if(temp[1].equals("Start")){
+                                            }
+                                            else if(temp[1].equals("Character")){
                                                 
+                                            }
+                                        }
+                                        else if(temp[0].equals("GetInfo")){
+                                            //get information about hand and stuff
+                                            //how many parameters are needed?
+                                            String[] temp1 = buffer.split(":",2);
+                                            
+                                        }
+                                        else if(temp[0].equals("SetInfo")){ //note: a bit of a misnomer for lifepoints, just adds or subtracts that amount
+                                            //set information about hand and stuff
+                                            String[] temp1 = buffer.split(":",2);
+                                            if(temp1[0].equals("newPlayer")){
+                                                c.player = new Player(Integer.valueOf(temp1[1]), c.name);
+                                            }
+                                            if(temp1[0].equals("role")){
+                                                c.player.role = Bang.Role.valueOf(temp1[1]);
+                                                System.out.println(c.player.role);
+                                            }
+                                            if(temp1[0].equals("maxHP")){
+                                                c.player.maxLifePoints += Integer.valueOf(temp1[1]);
                                             }
                                         }
 	         	}

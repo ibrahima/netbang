@@ -14,7 +14,6 @@ public class Bang {
         server = s;
         gui = new ClientGUI[p]; //deleteme
         start(p);
-        
     }
     
     /*public static void main(String[] args){
@@ -49,8 +48,7 @@ public class Bang {
      * @param p
      */
     public void start(int p){
-        //Create Players
-        
+        numPlayers = p;
         
         //Assign roles
         ArrayList<Enum> roles = new ArrayList<Enum>();
@@ -82,9 +80,10 @@ public class Bang {
                 System.out.print("Bad number of players!"); System.exit(0); break;
         }
         for(int n=0; n<numPlayers; n++){
-            players[n].role = roles.remove((int)(Math.random()*roles.size()));
-            if(players[n].role.ordinal()==0){
-                players[n].maxLifePoints++;
+            int role = roles.remove((int)(Math.random()*roles.size())).ordinal();
+            server.sendInfo(n,"SetInfo:role:"+role);
+            if(role==0){
+                server.sendInfo(n,"SetInfo:maxHP:1");
             }
         }
         for(Card s: drawPile)
@@ -103,12 +102,14 @@ public class Bang {
         }
         
         //debug mode
+
+
         if(p==2){
             
         }
         
         //Make players choose characters; wait
-        for(int n = 0; n<numPlayers; n++){
+        /*for(int n = 0; n<numPlayers; n++){
             //doesn't prompt all players at the same time
             System.out.println("1. " + players[n].hand.get(0).name + " HP: " + players[n].hand.get(0).special);
             System.out.println("2. " + players[n].hand.get(1).name + " HP: " + players[n].hand.get(1).special);
@@ -118,7 +119,7 @@ public class Bang {
             players[n].lifePoints = players[n].maxLifePoints;
             playerDiscardHand(players[n]);
             gui[n].paint(gui[n].getGraphics()); //TODO: this shouldn't here, but this is the only place where it didn't glitch up
-        }
+        }*/
         //System.out.println("asdfasdfasdfasfasdfasfasfasfasdf1");
         while(server.prompting>0){try{Thread.sleep(100);} catch(Exception e){}}
         //System.out.println("asdfasdfasdfasfasdfasfasfasfasdf");

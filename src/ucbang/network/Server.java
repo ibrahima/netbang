@@ -76,9 +76,15 @@ public class Server extends Thread{
                                         gameInProgress++;
                                         
                                         //check order of names
-                                        for(String s: names){
+                                        /*for(String s: names){
                                             System.out.println(s);
+                                        }*/
+                                        
+                                        //create player objects
+                                        for(int n = 0; n<names.size(); n++){
+                                            sendInfo(n, "SetInfo:newPlayer:"+n);
                                         }
+                                        
                                         game = new Bang(numPlayers, this);//FLAG: game stuff
                                     }
                                 }
@@ -91,8 +97,9 @@ public class Server extends Thread{
                         
                 }
 	}
-        void sendInfo( String info){
-            
+        public void sendInfo(int player, String info){
+            System.out.println(info);
+            messages.get(names.get(player)).add(info);
         }
 	void addChat(String string) {
 		Iterator<String> keyter = messages.keySet().iterator();

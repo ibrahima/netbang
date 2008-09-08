@@ -3,21 +3,23 @@ package ucbang.core;
 import java.util.ArrayList;
 
 public class Player {
-    public Player() {
+    public Player(int id, String name) {
+        this.id = id;
+        this.name = name;
     }
     
     public int id; //temporary probably
-    String name;
+    public String name;
     public Enum role;
-    int maxLifePoints;
+    public int maxLifePoints;
     
-    int weaponRange; //only counts for Bang! cards
-    int realRange; //also counts for Panics, etc.
-    int distance; //your protection against other player's Bang!s
-    ArrayList<Card> hand = new ArrayList<Card>();
-    Field field;
+    public int weaponRange; //only counts for Bang! cards
+    public int realRange; //also counts for Panics, etc.
+    public int distance; //your protection against other player's Bang!s
+    public ArrayList<Card> hand = new ArrayList<Card>();
+    public Field field;
     
-    int lifePoints;
-    int specialDraw;
-    int character = -1; //default -1 = no character
+    public int lifePoints;
+    public int specialDraw;
+    public int character = -1; //default -1 = no character
 }
