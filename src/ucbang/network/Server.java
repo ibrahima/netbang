@@ -27,7 +27,7 @@ public class Server extends Thread {
 	// unchecked updates, 2 = unchecked prompt
 	public int[][] choice; // int[m][n], where m is player and n is option
 	Bang game; // just insert game stuff here
-	ArrayList<String> names = new ArrayList<String>();
+	public ArrayList<String> names = new ArrayList<String>();
 
 	void print(Object stuff) {
 		System.out.println("Server:" + stuff);
@@ -103,7 +103,6 @@ public class Server extends Thread {
 	}
 
 	public void sendInfo(int player, String info) {
-		System.out.println(info);
 		messages.get(names.get(player)).add(info);
 	}
 

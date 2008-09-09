@@ -11,6 +11,7 @@ import java.util.Random;
 import java.util.Iterator;
 
 import ucbang.core.Bang;
+import ucbang.core.Card;
 import ucbang.core.Player;
 import ucbang.gui.ClientGUI;
 
@@ -36,6 +37,7 @@ public class Client extends Thread {
 			gui = new ClientGUI(numplayers, this);
 		promptName();
 		this.start();
+                player = new Player(id,"name");   //check if this is right
 	}
 
 	public Client(String host, boolean guiEnabled, String name) {
@@ -44,6 +46,7 @@ public class Client extends Thread {
 		if (guiEnabled)
 			gui = new ClientGUI(numplayers++, this);
 		this.start();
+                player = new Player(id,"name");   //check if this is right
 	}
 
 	public static void main(String[] Args) {
@@ -211,7 +214,18 @@ class ClientThread extends Thread {
 						} else if (temp[1].equals("Character")) {
 
 						}
-					} else if (temp[0].equals("GetInfo")) {
+					} 
+                                        else if (temp[0].equals("Draw")) {
+                                                String[] temp1 = temp[1].split(":", 2);
+                                                //System.out.println(temp1[0]);
+                                                if(temp1[0].equals("Character")){
+                                                    c.player.hand.add(new Card(Bang.Characters.valueOf(temp1[1])));
+                                                }
+                                                else{
+                                                    c.player.hand.add(new Card(Bang.CardName.valueOf(temp1[1])));    
+                                                }
+                                        }
+                                        else if (temp[0].equals("GetInfo")) {
 						// get information about hand and stuff
 						// how many parameters are needed?
 						String[] temp1 = buffer.split(":", 2);

@@ -98,8 +98,10 @@ public class Bang {
         for(int n = 0; n<numPlayers; n++){
             drawPile.add(new Card(charList.remove((int)(Math.random()*charList.size()))));
             drawPile.add(new Card(charList.remove((int)(Math.random()*charList.size()))));
-            playerDrawCard(players[n], 2);
+            playerDrawCard(n, 2);
         }
+        
+        server.prompting = 1;
         
         //debug mode
 
@@ -366,18 +368,21 @@ public class Bang {
         return true;
     }
     
-    /**
-     * Adds the top n card(s) of the drawPile to Player p's hand
-     * @param p, n
-     * @return
-     */
+    public void playerDrawCard(int p, int n){
+        for(int m=0; m<n; m++){
+            Card c = drawCard();
+            server.sendInfo(p, "Draw:"+(c.type==1?"Character:":"Game:")+c.name);
+        }
+    }
+    
+    //this one won't work anymore
     public void playerDrawCard(Player p, int n){
         /*if(n <= 2)
             gui[p.id].appendText("Draw "+n+" card(s).");
         else if(n>2)
             gui[p.id].appendText("Draw "+n+" cards!");*/
         for(int m=0; m<n; m++)
-            p.hand.add(drawCard());
+            server.sendInfo(p.id, drawCard().toString());
     }
     
     /**
