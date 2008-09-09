@@ -76,6 +76,7 @@ public class Server extends Thread {
 						prompting = 0;
 						// received all choices, send this to bang.java or w/e
 						if (gameInProgress == 1) {
+                                                        choice = null;
 							System.out.println("Game started!");
 							gameInProgress++;
 
@@ -92,6 +93,10 @@ public class Server extends Thread {
 							game = new Bang(numPlayers, this);// FLAG: game
 							// stuff
 						}
+                                                else if (gameInProgress == 2){ //game started, but chars not chosen
+                                                        //do something;
+                                                        gameInProgress++;
+                                                }
 					} else {
 						// still prompting
 						prompting = 1;
@@ -150,13 +155,24 @@ public class Server extends Thread {
 		}
 		Iterator<String> keyter = messages.keySet().iterator();
 		while (keyter.hasNext()) {
-			// messages.get(keyter.next()).add("Prompt:Player"); //what's
-			// :Player for?
 			String s = keyter.next();
 			if (s != name)
 				messages.get(s).add("Prompt:Start");
 		}
 	}
+        public void promptAll(String s){
+            prompting = 1;
+            choice = new int[numPlayers][2];
+            for(String n:names){
+                prompt(n, s);
+            }
+        }
+        public void prompt(String n, String s){
+            if(prompting == 0){
+                prompting = 1;
+            }
+            messages.get(n).add("Prompt:"+s);
+        }
 }
 
 class ServerThread extends Thread {

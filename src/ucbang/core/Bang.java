@@ -101,7 +101,7 @@ public class Bang {
             playerDrawCard(n, 2);
         }
         
-        server.prompting = 1;
+        server.promptAll("ChooseCharacter");
         
         //debug mode
 

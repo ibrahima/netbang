@@ -201,19 +201,15 @@ class ClientThread extends Thread {
 							// response here cause
 							// client to desync with
 							// server?
-							c.outMsgs
-									.add("Prompt:"
-											+ c.gui
-													.promptYesNo(
-															"Host has sent a request to start game",
-															"Start game?"));
-							c.gui
-									.appendText("Host has requested the game be started");
+							c.outMsgs.add("Prompt:"+ c.gui.promptYesNo("Host has sent a request to start game","Start game?"));
+							c.gui.appendText("Host has requested the game be started");
 						}
-						if (temp[1].equals("Start")) {
-						} else if (temp[1].equals("Character")) {
-
+						else if (temp[1].equals("PlayCard")) { //play one card
+                                                    c.gui.promptChooseCard(c.player.hand,"","",true);
 						}
+                                                else if (temp[1].equals("ChooseCharacter")) { //play one card
+                                                    c.gui.promptChooseCard(c.player.hand,"","",true);
+                                                }
 					} 
                                         else if (temp[0].equals("Draw")) {
                                                 String[] temp1 = temp[1].split(":", 2);
