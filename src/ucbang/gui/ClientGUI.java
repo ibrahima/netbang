@@ -49,7 +49,7 @@ public class ClientGUI extends JFrame implements KeyListener {
 		this.createBufferStrategy(2);
 		strategy = this.getBufferStrategy();
 		this.client = client;
-
+		this.setTitle("UCBang");
 		addWindowListener(new WindowAdapter() {
 			public void windowActivated(WindowEvent e) {
 				paint(getGraphics());

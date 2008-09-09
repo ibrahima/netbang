@@ -168,9 +168,8 @@ class ClientThread extends Thread {
 						if (!c.connected
 								&& temp[1].equals("Successfully connected.")) {
 							c.connected = true;
-							System.out.println(c.name
-									+ ": Successfully connected to server on "
-									+ server.getInetAddress());
+							c.gui.setTitle("UCBang - "+c.name+" - Connected to server on "+
+									server.getInetAddress());
 						} else if (!c.connected
 								&& temp[1].equals("Name taken!")) {
 							System.out
