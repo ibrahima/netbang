@@ -18,6 +18,7 @@ import javax.swing.JOptionPane;
 
 import ucbang.core.Card;
 import ucbang.core.Player;
+import ucbang.core.Bang.CardName;
 import ucbang.network.Client;
 
 public class ClientGUI extends JFrame implements KeyListener {
@@ -34,7 +35,7 @@ public class ClientGUI extends JFrame implements KeyListener {
 	ArrayList<String> text = new ArrayList<String>();
 	int textIndex = -1; // the bottom line of the text
 	Client client;
-
+	CardDisplayer cd;//TODO: Temporary
 	public ClientGUI(int p, Client client) {
 		this.p = p;
 		chat = new StringBuilder();
@@ -55,7 +56,8 @@ public class ClientGUI extends JFrame implements KeyListener {
 				paint(getGraphics());
 			}
 		});
-
+		//TODO: Remove this later, just for testing drawing.
+		cd = new CardDisplayer(new Card(CardName.BANG), 200, 50);
 		paint(getGraphics());
 	}
 
@@ -89,6 +91,7 @@ public class ClientGUI extends JFrame implements KeyListener {
 		while (iter.hasNext()) {
 			graphics.drawString(iter.next(), 30, 60 + 15 * n++);
 		}
+		cd.paint(graphics);
 		graphics.dispose();
 		// paint backbuffer to window
 		strategy.show();
