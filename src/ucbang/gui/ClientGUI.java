@@ -57,7 +57,7 @@ public class ClientGUI extends JFrame implements KeyListener {
 			}
 		});
 		//TODO: Remove this later, just for testing drawing.
-		cd = new CardDisplayer(new Card(CardName.BANG), 200, 50);
+		cd = new CardDisplayer(new Card(Deck.CardName.BANG), 200, 50);
 		paint(getGraphics());
 	}
 
