@@ -31,9 +31,7 @@ public class Bang {
     public ArrayList<Card> drawPile = new ArrayList<Card>(); //the card on the bottom in stored in index 0, the card on top is stored in index size()-1
     public ArrayList<Card> discardPile = new ArrayList<Card>();
     
-    public static enum CardName {BANG, MISS, BEER, BARREL, DUEL, INDIANS, GATLING, DYNAMITE, SALOON, WELLS_FARGO, STAGECOACH, GENERAL_STORE, CAT_BALLOU, PANIC, JAIL, APPALOOSA, MUSTANG, VOLCANIC, SCHOFIELD, REMINGTON, REV_CARBINE, WINCHESTER, HIDEOUT, SILVER, BRAWL, DODGE, PUNCH, RAG_TIME, SPRINGFIELD, TEQUILA, WHISKY, BIBLE, BUFFALO_RIFLE, CAN_CAN, CANTEEN, CONESTOGA, DERRINGER, HOWITZER, IRON_PLATE, KNIFE, PEPPERBOX, PONY_EXPRESS, SOMBRERO, TEN_GALLON_HAT};
-    public static enum Characters {BART_CASSIDY, BLACK_JACK, CALAMITY_JANET, EL_GRINGO, JESSE_JONES, JOURDONNAIS, KIT_CARLSON, LUCKY_DUKE, PAUL_REGRET, PEDRO_RAMIREZ, ROSE_DOOLAN, SID_KETCHUM, SLAB_THE_KILLER, SUZY_LAFAYETTE, VULTURE_SAM, WILLY_THE_KID, APACHE_KID, BELLE_STAR, BILL_NOFACE, CHUCK_WENGAM, DOC_HOLYDAY, ELENA_FUENTE, GREG_DIGGER, HERB_HUNTER, JOSE_DELGADO, MOLLY_STARK, PAT_BRENNAN, PIXIE_PETE, SEAN_MALLORY, TEQUILA_JOE, VERA_CUSTER};
-    public static enum Role {SHERIFF, DEPUTY, OUTLAW, RENEGADE};
+    public Deck deck;
     
     //public ClientGUI[] gui;
     
@@ -54,28 +52,28 @@ public class Bang {
         ArrayList<Enum> roles = new ArrayList<Enum>();
         switch(p){
             case 2: //DEBUG MODE
-                roles.add(Role.SHERIFF); roles.add(Role.OUTLAW); break;
+                roles.add(Deck.Role.SHERIFF); roles.add(Deck.Role.OUTLAW); break;
             case 4:
-                roles.add(Role.SHERIFF); roles.add(Role.OUTLAW); 
-                roles.add(Role.OUTLAW); roles.add(Role.RENEGADE); break;
+                roles.add(Deck.Role.SHERIFF); roles.add(Deck.Role.OUTLAW); 
+                roles.add(Deck.Role.OUTLAW); roles.add(Deck.Role.RENEGADE); break;
             case 5:
-                roles.add(Role.SHERIFF); roles.add(Role.OUTLAW); 
-                roles.add(Role.OUTLAW); roles.add(Role.RENEGADE); 
-                roles.add(Role.DEPUTY); break;
+                roles.add(Deck.Role.SHERIFF); roles.add(Deck.Role.OUTLAW); 
+                roles.add(Deck.Role.OUTLAW); roles.add(Deck.Role.RENEGADE); 
+                roles.add(Deck.Role.DEPUTY); break;
             case 6:
-                roles.add(Role.SHERIFF); roles.add(Role.OUTLAW); 
-                roles.add(Role.OUTLAW); roles.add(Role.RENEGADE); 
-                roles.add(Role.DEPUTY); roles.add(Role.OUTLAW); break;
+                roles.add(Deck.Role.SHERIFF); roles.add(Deck.Role.OUTLAW); 
+                roles.add(Deck.Role.OUTLAW); roles.add(Deck.Role.RENEGADE); 
+                roles.add(Deck.Role.DEPUTY); roles.add(Deck.Role.OUTLAW); break;
             case 7:
-                roles.add(Role.SHERIFF); roles.add(Role.OUTLAW); 
-                roles.add(Role.OUTLAW); roles.add(Role.RENEGADE); 
-                roles.add(Role.DEPUTY); roles.add(Role.OUTLAW); 
-                roles.add(Role.DEPUTY); break;
+                roles.add(Deck.Role.SHERIFF); roles.add(Deck.Role.OUTLAW); 
+                roles.add(Deck.Role.OUTLAW); roles.add(Deck.Role.RENEGADE); 
+                roles.add(Deck.Role.DEPUTY); roles.add(Deck.Role.OUTLAW); 
+                roles.add(Deck.Role.DEPUTY); break;
             case 8:
-                roles.add(Role.SHERIFF); roles.add(Role.OUTLAW); 
-                roles.add(Role.OUTLAW); roles.add(Role.RENEGADE); 
-                roles.add(Role.DEPUTY); roles.add(Role.OUTLAW); 
-                roles.add(Role.OUTLAW); roles.add(Role.RENEGADE); break;
+                roles.add(Deck.Role.SHERIFF); roles.add(Deck.Role.OUTLAW); 
+                roles.add(Deck.Role.OUTLAW); roles.add(Deck.Role.RENEGADE); 
+                roles.add(Deck.Role.DEPUTY); roles.add(Deck.Role.OUTLAW); 
+                roles.add(Deck.Role.OUTLAW); roles.add(Deck.Role.RENEGADE); break;
             default: 
                 System.out.print("Bad number of players!"); System.exit(0); break;
         }
@@ -92,7 +90,7 @@ public class Bang {
         
         //Assign character cards
         ArrayList<Enum> charList = new ArrayList<Enum>();
-        for(Enum e: Characters.values()){
+        for(Enum e: Deck.Characters.values()){
             charList.add(e);
         }
         for(int n = 0; n<numPlayers; n++){
@@ -105,7 +103,8 @@ public class Bang {
         
         //debug mode
 
-
+        deck = new Deck();
+        
         if(p==2){
             
         }
@@ -126,58 +125,9 @@ public class Bang {
         while(server.prompting>0){try{Thread.sleep(100);} catch(Exception e){}}
         //System.out.println("asdfasdfasdfasfasdfasfasfasfasdf");
         
-        //Create a drawPile
-        Enum[] cards = new Enum[120];
-        Arrays.fill(cards, 0, 1, CardName.APPALOOSA);
-        Arrays.fill(cards, 1, 30, CardName.BANG);
-        Arrays.fill(cards, 30, 33, CardName.BARREL);
-        Arrays.fill(cards, 33, 41, CardName.BEER);
-        Arrays.fill(cards, 41, 42, CardName.BIBLE);
-        Arrays.fill(cards, 42, 43, CardName.BRAWL);
-        Arrays.fill(cards, 43, 44, CardName.BUFFALO_RIFLE);
-        Arrays.fill(cards, 44, 45, CardName.CAN_CAN);
-        Arrays.fill(cards, 45, 51, CardName.CAT_BALLOU);
-        Arrays.fill(cards, 51, 52, CardName.CONESTOGA);
-        Arrays.fill(cards, 52, 53, CardName.DERRINGER);
-        Arrays.fill(cards, 53, 55, CardName.DODGE);
-        Arrays.fill(cards, 55, 58, CardName.DUEL);
-        Arrays.fill(cards, 58, 60, CardName.DYNAMITE);
-        Arrays.fill(cards, 60, 61, CardName.GATLING);
-        Arrays.fill(cards, 61, 64, CardName.GENERAL_STORE);
-        Arrays.fill(cards, 64, 65, CardName.HOWITZER);
-        Arrays.fill(cards, 65, 66, CardName.HOWITZER);
-        Arrays.fill(cards, 66, 69, CardName.INDIANS);
-        Arrays.fill(cards, 69, 71, CardName.IRON_PLATE);
-        Arrays.fill(cards, 71, 74, CardName.JAIL);
-        Arrays.fill(cards, 74, 75, CardName.KNIFE);
-        Arrays.fill(cards, 75, 88, CardName.MISS);
-        Arrays.fill(cards, 88, 91, CardName.MUSTANG);
-        Arrays.fill(cards, 91, 96, CardName.PANIC);
-        Arrays.fill(cards, 96, 97, CardName.PEPPERBOX);
-        Arrays.fill(cards, 97, 98, CardName.PONY_EXPRESS);
-        Arrays.fill(cards, 98, 99, CardName.PUNCH);
-        Arrays.fill(cards, 99, 100, CardName.RAG_TIME);
-        Arrays.fill(cards, 100, 102, CardName.REMINGTON);
-        Arrays.fill(cards, 102, 104, CardName.REV_CARBINE);
-        Arrays.fill(cards, 104, 105, CardName.SALOON);
-        Arrays.fill(cards, 105, 108, CardName.SCHOFIELD);
-        Arrays.fill(cards, 108, 109, CardName.SILVER);
-        Arrays.fill(cards, 109, 110, CardName.SOMBRERO);
-        Arrays.fill(cards, 110, 111, CardName.SPRINGFIELD);
-        Arrays.fill(cards, 111, 113, CardName.STAGECOACH);
-        Arrays.fill(cards, 113, 114, CardName.TEN_GALLON_HAT);
-        Arrays.fill(cards, 114, 115, CardName.TEQUILA);
-        Arrays.fill(cards, 115, 117, CardName.VOLCANIC);
-        Arrays.fill(cards, 117, 118, CardName.WELLS_FARGO);
-        Arrays.fill(cards, 118, 119, CardName.WHISKY);
-        Arrays.fill(cards, 119, 120, CardName.WINCHESTER);
+        System.out.println("checkpoints");
         
         ArrayList<Enum> allCards = new ArrayList<Enum>();
-        for(Enum e: cards)
-            allCards.add(e);
-        while(allCards.size()>0){
-            drawPile.add(new Card(allCards.remove((int)(Math.random()*allCards.size()))));
-        }
         
         //draw cards equal to lifepoints
         for(Player p1: players){
@@ -192,12 +142,12 @@ public class Bang {
         gui[0].appendText("\nCards in hand: ");
         for(Card s: players[0].hand)
             gui[0].appendText(s.name+" ");
-        gui[0].appendText("\nYou are: " + Characters.values()[players[0].character] + ", the " + players[0].role.name() + "\n");
+        gui[0].appendText("\nYou are: " + Deck.Characters.values()[players[0].character] + ", the " + players[0].role.name() + "\n");
         gui[0].paint(gui[0].getGraphics());
         
         //Give Sheriff the first turn (turn 0)
         for(int n=0; n<p; n++){
-            if(players[n].role==Role.SHERIFF){
+            if(players[n].role==Deck.Role.SHERIFF){
                 turn=n-1;
                 break;
             }
@@ -256,7 +206,7 @@ public class Bang {
         int renegades = 0;
         for(Player p: players){
             if(p.lifePoints>0){
-                switch((Role)p.role){
+                switch((Deck.Role)p.role){
                     case DEPUTY: deputies++;
                     case SHERIFF: sheriff++; break;
                     case OUTLAW: outlaws++; break;
@@ -324,7 +274,7 @@ public class Bang {
             if(c.effect == Card.play.DAMAGE.ordinal()){
                 for(int target: targets){
                     int miss = -2; //or bang for indians
-                    while(miss != -1 || (miss>=0 && miss<players[target].hand.size() && players[target].hand.get(miss).special==(c.name==CardName.INDIANS.name()?1:0) && players[target].hand.get(miss).effect==(c.name==CardName.INDIANS.name()?Card.play.DAMAGE.ordinal():Card.play.DAMAGE.ordinal()))){
+                    while(miss != -1 || (miss>=0 && miss<players[target].hand.size() && players[target].hand.get(miss).special==(c.name==Deck.CardName.INDIANS.name()?1:0) && players[target].hand.get(miss).effect==(c.name==Deck.CardName.INDIANS.name()?Card.play.DAMAGE.ordinal():Card.play.DAMAGE.ordinal()))){
                         miss = gui[target].promptChooseCard(players[target].hand, "Dodge!", "Play a miss?", false);
                     }
                     if(miss == -1){ //change this to a flag checking barrels/if target want to play a miss, etc.
@@ -370,6 +320,7 @@ public class Bang {
     
     public void playerDrawCard(int p, int n){
         for(int m=0; m<n; m++){
+            
             Card c = drawCard();
             server.sendInfo(p, "Draw:"+(c.type==1?"Character:":"Game:")+c.name);
         }

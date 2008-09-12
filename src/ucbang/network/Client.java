@@ -12,6 +12,7 @@ import java.util.Iterator;
 
 import ucbang.core.Bang;
 import ucbang.core.Card;
+import ucbang.core.Deck;
 import ucbang.core.Player;
 import ucbang.gui.ClientGUI;
 
@@ -215,10 +216,10 @@ class ClientThread extends Thread {
                                                 String[] temp1 = temp[1].split(":", 2);
                                                 //System.out.println(temp1[0]);
                                                 if(temp1[0].equals("Character")){
-                                                    c.player.hand.add(new Card(Bang.Characters.valueOf(temp1[1])));
+                                                    c.player.hand.add(new Card(Deck.Characters.valueOf(temp1[1])));
                                                 }
                                                 else{
-                                                    c.player.hand.add(new Card(Bang.CardName.valueOf(temp1[1])));    
+                                                    c.player.hand.add(new Card(Deck.CardName.valueOf(temp1[1])));    
                                                 }
                                         }
                                         else if (temp[0].equals("GetInfo")) {
@@ -238,7 +239,7 @@ class ClientThread extends Thread {
 									c.name);
 						}
 						if (temp1[0].equals("role")) {
-							c.player.role = Bang.Role.valueOf(temp1[1]);
+							c.player.role = Deck.Role.valueOf(temp1[1]);
 							System.out.println(c.player.role);
 						}
 						if (temp1[0].equals("maxHP")) {

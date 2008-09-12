@@ -18,7 +18,7 @@ public class Card {
 		this.e = e;
 		ordinal = e.ordinal();
 		name = e.toString();
-		if (e instanceof Bang.Characters) {
+		if (e instanceof Deck.Characters) {
 			type = 1;
 			int[] threehp = new int[] { 3, 6, 8, 16, 21, 27, 28, 30 };
 			if (Arrays.binarySearch(threehp, ordinal) >= 0
@@ -33,7 +33,7 @@ public class Card {
 		} else {
 			// TODO: find out what kind of card it is
 
-			switch ((Bang.CardName) e) {
+			switch ((Deck.CardName) e) {
 			// put all direct damage cards here
 			case BANG:
 				type = 2;
