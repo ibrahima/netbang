@@ -222,8 +222,8 @@ class ClientThread extends Thread {
 						// get information about hand and stuff
 						// how many parameters are needed?
 						String[] temp1 = buffer.split(":", 2);
-
-					} else if (temp[0].equals("SetInfo")) { // note: a bit of a
+                                                c.outMsgs.add("Ready");
+                                        } else if (temp[0].equals("SetInfo")) { // note: a bit of a
 						// misnomer for
 						// lifepoints, just
 						// adds or subtracts
@@ -241,6 +241,7 @@ class ClientThread extends Thread {
 						if (temp1[0].equals("maxHP")) {
 							c.player.maxLifePoints += Integer.valueOf(temp1[1]);
 						}
+					    c.outMsgs.add("Ready");
 					}
 				}
 			} catch (Exception e) {

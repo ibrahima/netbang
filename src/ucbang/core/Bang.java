@@ -50,6 +50,7 @@ public class Bang {
         
         //Assign roles
         ArrayList<Enum> roles = new ArrayList<Enum>();
+        
         switch(p){
             case 2: //DEBUG MODE
                 roles.add(Deck.Role.SHERIFF); roles.add(Deck.Role.OUTLAW); break;
@@ -79,14 +80,15 @@ public class Bang {
         }
         for(int n=0; n<numPlayers; n++){
             int role = roles.remove((int)(Math.random()*roles.size())).ordinal();
+            System.out.println("ASDFASDFASFASfs"+ role);
             server.sendInfo(n,"SetInfo:role:"+role);
             if(role==0){
                 server.sendInfo(n,"SetInfo:maxHP:1");
             }
         }
-        for(Card s: drawPile)
+        /*for(Card s: deck.drawPile)
             System.out.print(s.name+" ");
-        System.out.print("\n");
+        System.out.print("\n");*/
         
         //Assign character cards
         ArrayList<Enum> charList = new ArrayList<Enum>();

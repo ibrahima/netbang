@@ -93,14 +93,13 @@ public class Server extends Thread {
 								sendInfo(n, "SetInfo:newPlayer:" + n);
 							}
                                                         System.out.println("NumPlayers:"+numPlayers);
+                                                        ready = new int[numPlayers][2];
+                                                        for(int n = 0; n<ready.length; n++){
+                                                             ready[n][0] = n;
+                                                             ready[n][1] = 0;
+                                                        }
 							game = new Bang(numPlayers, this);// FLAG: game
 							// stuff
-							ready = new int[numPlayers][2];
-							for(int n = 0; n<ready.length; n++){
-							     ready[n][0] = n;
-							     ready[n][1] = 0;
-							}
-                                                        
 						}
                                                 else if (gameInProgress == 2){ //game started, but chars not chosen
                                                         //do something;
@@ -118,8 +117,20 @@ public class Server extends Thread {
 
 	public void sendInfo(int player, String info) { //info can be sent to multiple people at the same time, unlike prompts                
                 if(ready!=null){
-                    while(ready[player][1]>=1){} //wait
+                    while(ready[player][1]>0){} //wait
                     ready[player][1]++;
+                }
+                else{
+                    ready = new int[numPlayers][2];
+                    for(int n = 0; n<ready.length; n++){
+                         ready[n][0] = n;
+                         if(n != player){
+                            ready[n][1] = 0;
+                         }
+                         else{
+                             ready[n][1] = 1;
+                         }
+                    }
                 }
 		messages.get(names.get(player)).add(info);
 	}
@@ -338,9 +349,7 @@ class ServerThread extends Thread {
 						}
                                         }  else if (temp[0].equals("Ready")) {
                                             if(server.ready!=null){server.ready[id][1]--;}
-                                            else 
-                                            {}
-                                            
+                                            else {System.out.println("ERROR: Ready for what?");}    
                                         }
                                         else {
 						System.out.println("Error: Junk String received:"
