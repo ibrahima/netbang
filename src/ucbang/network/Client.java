@@ -203,8 +203,6 @@ class ClientThread extends Thread {
                                                     c.gui.promptChooseCard(c.player.hand,"","",true);
 						}
                                                 else if (temp[1].equals("ChooseCharacter")) { //play one card
-                                                    System.out.println(c.player.hand==null);
-                                                    System.out.println(c.player.role==null);
                                                     c.outMsgs.add("Prompt:"+ c.gui.promptChooseCard(c.player.hand, "You are a(n):" + c.player.role.name(),"Choose your character", true));
                                                 }
 					} 
@@ -237,7 +235,6 @@ class ClientThread extends Thread {
 						}
 						else if (temp1[0].equals("role")) {
 							c.player.role = Deck.Role.values()[Integer.valueOf(temp1[1])];
-							System.out.println("WTFWTFWTFWTF"+c.player.role);
 						}
 						else if (temp1[0].equals("maxHP")) {
 							c.player.maxLifePoints += Integer.valueOf(temp1[1]);

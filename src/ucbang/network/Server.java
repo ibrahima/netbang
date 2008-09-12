@@ -183,6 +183,7 @@ public class Server extends Thread {
 		}
 	}
         public void promptAll(String s){
+            System.out.println("waiting for all players");
             prompting = 1;
             choice = new int[numPlayers][2];
             for (int n = 0; n < numPlayers - 1; n++) {// this prompt
@@ -265,7 +266,7 @@ class ServerThread extends Thread {
 			try {
 				if (in.ready()) {
 					buffer = (String) in.readLine();
-					System.out.println("Server received " + buffer);
+					System.out.println("Server received from player ID "+id+" "+ buffer);
 					String[] temp = buffer.split(":", 2);
 					if (temp[0].equals("Name")) {
 						if (!connected) {// player was never connected

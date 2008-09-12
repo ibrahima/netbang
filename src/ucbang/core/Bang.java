@@ -127,11 +127,9 @@ public class Bang {
             playerDiscardHand(players[n]);
             gui[n].paint(gui[n].getGraphics()); //TODO: this shouldn't here, but this is the only place where it didn't glitch up
         }*/
-         System.out.println("checkpoints1");
         
         while(server.prompting>0){try{Thread.sleep(100);} catch(Exception e){}}
-        System.out.println("checkpoints2");
-        
+        System.out.println("what gives");
         ArrayList<Enum> allCards = new ArrayList<Enum>();
         
         //draw cards equal to lifepoints
