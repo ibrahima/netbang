@@ -96,7 +96,10 @@ public class Bang {
         for(int n = 0; n<numPlayers; n++){
             drawPile.add(new Card(charList.remove((int)(Math.random()*charList.size()))));
             drawPile.add(new Card(charList.remove((int)(Math.random()*charList.size()))));
-            playerDrawCard(n, 2);
+            drawPile.add(new Card(charList.remove((int)(Math.random()*charList.size()))));
+            drawPile.add(new Card(charList.remove((int)(Math.random()*charList.size()))));
+            drawPile.add(new Card(charList.remove((int)(Math.random()*charList.size()))));
+            playerDrawCard(n, 5);
         }
         
         server.promptAll("ChooseCharacter");
@@ -320,7 +323,6 @@ public class Bang {
     
     public void playerDrawCard(int p, int n){
         for(int m=0; m<n; m++){
-            
             Card c = drawCard();
             server.sendInfo(p, "Draw:"+(c.type==1?"Character:":"Game:")+c.name);
         }

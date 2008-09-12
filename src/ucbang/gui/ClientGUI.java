@@ -18,7 +18,7 @@ import javax.swing.JOptionPane;
 
 import ucbang.core.Card;
 import ucbang.core.Player;
-import ucbang.core.Bang.CardName;
+import ucbang.core.Deck;
 import ucbang.network.Client;
 
 public class ClientGUI extends JFrame implements KeyListener {

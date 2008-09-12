@@ -107,7 +107,13 @@ public class Server extends Thread {
 		}
 	}
 
-	public void sendInfo(int player, String info) {
+	public void sendInfo(int player, String info) { //info can be sent to multiple people at the same time, unlike prompts
+                prompting = 1;
+                if(choice != null){
+                    int[][] backup = choice;
+                } 
+                choice = new int[1][2];
+                
 		messages.get(names.get(player)).add(info);
 	}
 
@@ -144,9 +150,7 @@ public class Server extends Thread {
 		}
 		prompting = 1;
 		choice = new int[numPlayers - 1][2];
-		for (int n = 0, m = 0; m < numPlayers - 1; n++, m++) {// this prompt
-			// goes out to
-			// everyone
+		for (int n = 0, m = 0; m < numPlayers - 1; n++, m++) {// this prompt goes out to everyone except host
 			if (n != host) {
 				choice[m][0] = n;
 				choice[m][1] = -2;
@@ -163,15 +167,35 @@ public class Server extends Thread {
         public void promptAll(String s){
             prompting = 1;
             choice = new int[numPlayers][2];
+            for (int n = 0; n < numPlayers - 1; n++) {// this prompt
+                    // goes out to
+                    // everyone
+                    choice[n][0] = n;
+                    choice[n][1] = -2;
+            }
             for(String n:names){
                 prompt(n, s);
             }
         }
         public void prompt(String n, String s){
+            if(choice==null){
+                System.out.println("Waiting for one player");
+                choice = new int[1][2];
+            }
             if(prompting == 0){
                 prompting = 1;
             }
             messages.get(n).add("Prompt:"+s);
+        }
+        public void prompt(int player, String s) {
+            if(choice==null){
+                System.out.println("Waiting for one player");
+                choice = new int[1][2];
+            }
+            if(prompting == 0){
+                prompting = 1;
+            }
+            messages.get(player).add("Prompt:"+s);
         }
 }
 
