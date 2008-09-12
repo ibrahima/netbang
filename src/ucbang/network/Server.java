@@ -26,6 +26,8 @@ public class Server extends Thread {
 	// for something 0 = no, 1 = prompting with no
 	// unchecked updates, 2 = unchecked prompt
 	public int[][] choice; // int[m][n], where m is player and n is option
+        public int[][] ready;
+        
 	Bang game; // just insert game stuff here
 	public ArrayList<String> names = new ArrayList<String>();
 
@@ -86,12 +88,19 @@ public class Server extends Thread {
 							 */
 
 							// create player objects
-							for (int n = 0; n < names.size(); n++) {
+							for (int n = 0; n < names.size(); n++
+                                                        ) {
 								sendInfo(n, "SetInfo:newPlayer:" + n);
 							}
-
+                                                        System.out.println("NumPlayers:"+numPlayers);
 							game = new Bang(numPlayers, this);// FLAG: game
 							// stuff
+							ready = new int[numPlayers][2];
+							for(int n = 0; n<ready.length; n++){
+							     ready[n][0] = n;
+							     ready[n][1] = 0;
+							}
+                                                        
 						}
                                                 else if (gameInProgress == 2){ //game started, but chars not chosen
                                                         //do something;
@@ -107,13 +116,11 @@ public class Server extends Thread {
 		}
 	}
 
-	public void sendInfo(int player, String info) { //info can be sent to multiple people at the same time, unlike prompts
-                prompting = 1;
-                if(choice != null){
-                    int[][] backup = choice;
-                } 
-                choice = new int[1][2];
-                
+	public void sendInfo(int player, String info) { //info can be sent to multiple people at the same time, unlike prompts                
+                if(ready!=null){
+                    while(ready[player][1]>=1){} //wait
+                    ready[player][1]++;
+                }
 		messages.get(names.get(player)).add(info);
 	}
 
@@ -329,7 +336,13 @@ class ServerThread extends Thread {
 							System.out
 									.println("Received prompt from player when not prompted!");
 						}
-					} else {
+                                        }  else if (temp[0].equals("Ready")) {
+                                            if(server.ready!=null){server.ready[id][1]--;}
+                                            else 
+                                            {}
+                                            
+                                        }
+                                        else {
 						System.out.println("Error: Junk String received:"
 								+ temp[0] + " " + temp[1]);
 					}
@@ -352,6 +365,7 @@ class ServerThread extends Thread {
 					try {
 						finalize();
 					} catch (Throwable t) {
+                                            t.printStackTrace();
 					}
 				else
 					e.printStackTrace();

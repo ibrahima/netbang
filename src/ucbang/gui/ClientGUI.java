@@ -42,7 +42,7 @@ public class ClientGUI extends JFrame implements KeyListener {
 		// set window sizes
 		setPreferredSize(new Dimension(800, 600));
 		setSize(new Dimension(800, 600));
-		// setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		addKeyListener(this);
 		this.setIgnoreRepaint(true);
 		this.setVisible(true);

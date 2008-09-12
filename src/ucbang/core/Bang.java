@@ -99,6 +99,8 @@ public class Bang {
             drawPile.add(new Card(charList.remove((int)(Math.random()*charList.size()))));
             drawPile.add(new Card(charList.remove((int)(Math.random()*charList.size()))));
             drawPile.add(new Card(charList.remove((int)(Math.random()*charList.size()))));
+        }
+        for(int n = 0; n<numPlayers; n++){
             playerDrawCard(n, 5);
         }
         
@@ -382,6 +384,7 @@ public class Bang {
         if(drawPile.size()==0){
             shuffleDeck();
         }
+        System.out.println(drawPile.get(drawPile.size()-1).name);
         return drawPile.remove(drawPile.size()-1);
     }
     

@@ -117,10 +117,6 @@ class ClientThread extends Thread {
 	Client c;
 	String buffer;
 	boolean namesent = false;
-	boolean awaitingPrompt = false; // flag if the server is waiting for a
-
-	// response from this user, makes the
-	// boolean above redundant?
 
 	// int response = -2; //-1 is cancel
 
@@ -197,7 +193,6 @@ class ClientThread extends Thread {
 						c.players.remove(temp[1]);
 					} else if (temp[0].equals("Prompt")) {
 						// received a prompt from host
-						awaitingPrompt = true;
 						if (temp[1].equals("Start")) { // will waiting for
 							// response here cause
 							// client to desync with
@@ -214,13 +209,14 @@ class ClientThread extends Thread {
 					} 
                                         else if (temp[0].equals("Draw")) {
                                                 String[] temp1 = temp[1].split(":", 2);
-                                                //System.out.println(temp1[0]);
+                                                System.out.println("Client:"+temp1[1]);
                                                 if(temp1[0].equals("Character")){
                                                     c.player.hand.add(new Card(Deck.Characters.valueOf(temp1[1])));
                                                 }
                                                 else{
                                                     c.player.hand.add(new Card(Deck.CardName.valueOf(temp1[1])));    
                                                 }
+                                                c.outMsgs.add("Ready");
                                         }
                                         else if (temp[0].equals("GetInfo")) {
 						// get information about hand and stuff
