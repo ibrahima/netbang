@@ -367,7 +367,7 @@ class ServerThread extends Thread {
 					newMsgs.clear(); // will this still produce CME?
 				}
 				out.flush();
-
+                            sleep(10); //is this needed?
 			} catch (Exception e) {
 				if (e != null && e.getMessage() != null
 						&& e.getMessage().equals("Connection reset"))

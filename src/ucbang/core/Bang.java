@@ -80,7 +80,6 @@ public class Bang {
         }
         for(int n=0; n<numPlayers; n++){
             int role = roles.remove((int)(Math.random()*roles.size())).ordinal();
-            System.out.println("ASDFASDFASFASfs"+ role);
             server.sendInfo(n,"SetInfo:role:"+role);
             if(role==0){
                 server.sendInfo(n,"SetInfo:maxHP:1");
@@ -128,11 +127,10 @@ public class Bang {
             playerDiscardHand(players[n]);
             gui[n].paint(gui[n].getGraphics()); //TODO: this shouldn't here, but this is the only place where it didn't glitch up
         }*/
-        //System.out.println("asdfasdfasdfasfasdfasfasfasfasdf1");
-        while(server.prompting>0){try{Thread.sleep(100);} catch(Exception e){}}
-        //System.out.println("asdfasdfasdfasfasdfasfasfasfasdf");
+         System.out.println("checkpoints1");
         
-        System.out.println("checkpoints");
+        while(server.prompting>0){try{Thread.sleep(100);} catch(Exception e){}}
+        System.out.println("checkpoints2");
         
         ArrayList<Enum> allCards = new ArrayList<Enum>();
         

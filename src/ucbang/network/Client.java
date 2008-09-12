@@ -10,7 +10,6 @@ import java.util.Random;
 
 import java.util.Iterator;
 
-import ucbang.core.Bang;
 import ucbang.core.Card;
 import ucbang.core.Deck;
 import ucbang.core.Player;
@@ -204,7 +203,9 @@ class ClientThread extends Thread {
                                                     c.gui.promptChooseCard(c.player.hand,"","",true);
 						}
                                                 else if (temp[1].equals("ChooseCharacter")) { //play one card
-                                                    c.gui.promptChooseCard(c.player.hand,"","",true);
+                                                    System.out.println(c.player.hand==null);
+                                                    System.out.println(c.player.role==null);
+                                                    c.outMsgs.add("Prompt:"+ c.gui.promptChooseCard(c.player.hand, "You are a(n):" + c.player.role.name(),"Choose your character", true));
                                                 }
 					} 
                                         else if (temp[0].equals("Draw")) {
@@ -229,18 +230,21 @@ class ClientThread extends Thread {
 						// adds or subtracts
 						// that amount
 						// set information about hand and stuff
-						String[] temp1 = buffer.split(":", 2);
-						if (temp1[0].equals("newPlayer")) {
+						String[] temp1 = temp[1].split(":", 2);
+						if (temp1[0].equals("newPlayer")){
 							c.player = new Player(Integer.valueOf(temp1[1]),
 									c.name);
 						}
-						if (temp1[0].equals("role")) {
-							c.player.role = Deck.Role.valueOf(temp1[1]);
-							System.out.println(c.player.role);
+						else if (temp1[0].equals("role")) {
+							c.player.role = Deck.Role.values()[Integer.valueOf(temp1[1])];
+							System.out.println("WTFWTFWTFWTF"+c.player.role);
 						}
-						if (temp1[0].equals("maxHP")) {
+						else if (temp1[0].equals("maxHP")) {
 							c.player.maxLifePoints += Integer.valueOf(temp1[1]);
 						}
+                                                else{
+                                                    System.out.println("WTF do i do with "+temp1[0]+":"+temp1[1]);
+                                                }
 					    c.outMsgs.add("Ready");
 					}
 				}
