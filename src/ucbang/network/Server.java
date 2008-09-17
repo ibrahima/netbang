@@ -71,7 +71,7 @@ public class Server extends Thread {
 							flag = false;
 						}
 					}
-					System.out.println(flag);
+					System.out.println("Are we ready to move on? "+flag);
 					if (flag) {
 						// this is if it's checking the game when it has just
 						// started
@@ -332,6 +332,9 @@ class ServerThread extends Thread {
 									// TODO: (Optional) create /help RENAME
 								}
 							}
+                                                        else if (temp[1].startsWith("/prompting")) {
+                                                            System.out.println("Prompting is "+server.prompting);
+                                                        }
 						} else
 							server.addChat(name + ": " + temp[1]);
 					} else if (temp[0].equals("Prompt")) {

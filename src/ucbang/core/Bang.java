@@ -110,11 +110,7 @@ public class Bang {
         //debug mode
 
         deck = new Deck();
-        
-        if(p==2){
-            
-        }
-        
+
         //Make players choose characters; wait
         /*for(int n = 0; n<numPlayers; n++){
             //doesn't prompt all players at the same time
@@ -126,9 +122,8 @@ public class Bang {
             players[n].lifePoints = players[n].maxLifePoints;
             playerDiscardHand(players[n]);
             gui[n].paint(gui[n].getGraphics()); //TODO: this shouldn't here, but this is the only place where it didn't glitch up
-        }*/
-        
-        while(server.prompting>0){try{Thread.sleep(100);} catch(Exception e){}}
+        }*/        
+        while(server.prompting!=0){try{Thread.sleep(100);} catch(Exception e){e.printStackTrace();}}
         System.out.println("what gives");
         ArrayList<Enum> allCards = new ArrayList<Enum>();
         
@@ -323,7 +318,7 @@ public class Bang {
     
     public void playerDrawCard(int p, int n){
         Card c = drawCard();
-        String s = "Draw:"+(c.type==1?"Character:":"Game:");
+        String s = "Draw:"+(c.type==1?"Character:":"Game:")+c.name+":";
         for(int m=1; m<n; m++){
             c = drawCard();
             s = s+c.name+":";
