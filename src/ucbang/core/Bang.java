@@ -322,10 +322,13 @@ public class Bang {
     }
     
     public void playerDrawCard(int p, int n){
-        for(int m=0; m<n; m++){
-            Card c = drawCard();
-            server.sendInfo(p, "Draw:"+(c.type==1?"Character:":"Game:")+c.name);
+        Card c = drawCard();
+        String s = "Draw:"+(c.type==1?"Character:":"Game:");
+        for(int m=1; m<n; m++){
+            c = drawCard();
+            s = s+c.name+":";
         }
+        server.sendInfo(p, s);
     }
     
     //this one won't work anymore

@@ -86,14 +86,14 @@ public class Server extends Thread {
 							/*
 							 * for(String s: names){ System.out.println(s); }
 							 */
-
+							 ready = new int[numPlayers][2];
+                                                         
 							// create player objects
 							for (int n = 0; n < names.size(); n++
                                                         ) {
 								sendInfo(n, "SetInfo:newPlayer:" + n);
 							}
-                                                        System.out.println("NumPlayers:"+numPlayers);
-                                                        ready = new int[numPlayers][2];
+                                                        //System.out.println("NumPlayers:"+numPlayers);
                                                         for(int n = 0; n<ready.length; n++){
                                                              ready[n][0] = n;
                                                              ready[n][1] = 0;
@@ -121,7 +121,6 @@ public class Server extends Thread {
                     ready[player][1]++;
                 }
                 else{
-                    ready = new int[numPlayers][2];
                     for(int n = 0; n<ready.length; n++){
                          ready[n][0] = n;
                          if(n != player){
@@ -186,9 +185,7 @@ public class Server extends Thread {
             System.out.println("waiting for all players");
             prompting = 1;
             choice = new int[numPlayers][2];
-            for (int n = 0; n < numPlayers - 1; n++) {// this prompt
-                    // goes out to
-                    // everyone
+            for (int n = 0; n < numPlayers; n++) {         
                     choice[n][0] = n;
                     choice[n][1] = -2;
             }
@@ -340,7 +337,9 @@ class ServerThread extends Thread {
 					} else if (temp[0].equals("Prompt")) {
 						if (server.prompting >= 1) {
 							int n;
+                                                        //if(id>server.choice.length) 
 							for (n = 0; server.choice[n][0] != id; n++) {
+							    System.out.println("Looking for id: " + id+ " not "+server.choice[n][0]);
 							}
 							server.choice[n][1] = Integer.valueOf(temp[1]);
 							server.prompting = 2;

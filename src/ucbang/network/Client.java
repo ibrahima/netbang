@@ -207,13 +207,15 @@ class ClientThread extends Thread {
                                                 }
 					} 
                                         else if (temp[0].equals("Draw")) {
-                                                String[] temp1 = temp[1].split(":", 2);
-                                                System.out.println("Client:"+temp1[1]);
-                                                if(temp1[0].equals("Character")){
-                                                    c.player.hand.add(new Card(Deck.Characters.valueOf(temp1[1])));
-                                                }
-                                                else{
-                                                    c.player.hand.add(new Card(Deck.CardName.valueOf(temp1[1])));    
+                                                String[] temp1 = temp[1].split(":");
+                                                int n = temp1.length;
+                                                for(int m = 1; m<n; m++){
+                                                    if(temp1[0].equals("Character")){
+                                                        c.player.hand.add(new Card(Deck.Characters.valueOf(temp1[m])));
+                                                    }
+                                                    else{
+                                                        c.player.hand.add(new Card(Deck.CardName.valueOf(temp1[m])));    
+                                                    }
                                                 }
                                                 c.outMsgs.add("Ready");
                                         }
