@@ -10,19 +10,8 @@ import ucbang.gui.ClientGUI;
 import ucbang.network.Server;
 
 public class Bang {
-    public Bang(int p, Server s) {
-        server = s;
-        gui = new ClientGUI[p]; //deleteme
-        numPlayers = p;
-    }
-    
-    /*public static void main(String[] args){
-        new Bang();
-    }*/
     Server server;
-    
-    public ClientGUI[] gui;// deleteme
-    
+        
     public Player[] players;
     public int numPlayers;
     
@@ -33,8 +22,10 @@ public class Bang {
     
     public Deck deck;
     
-    //public ClientGUI[] gui;
-    
+    public Bang(int p, Server s) {
+        server = s;
+        numPlayers = p;
+    }        
     /**
      * Create p players.
      * Create a draw pile.
@@ -124,16 +115,15 @@ public class Bang {
             playerDrawCard(p1, p1.lifePoints);
         }
         
-        gui[0].appendText("Cards in draw pile: ");
+        System.out.println("Cards in draw pile: ");
         String pile = "";
         for(Card s: drawPile)
             pile = pile + s.name + " "; //TODO: make large messages wrap around
-        gui[0].appendText(pile);
-        gui[0].appendText("\nCards in hand: ");
+        System.out.println(pile);
+        System.out.println("\nCards in hand: ");
         for(Card s: players[0].hand)
-            gui[0].appendText(s.name+" ");
-        gui[0].appendText("\nYou are: " + Deck.Characters.values()[players[0].character] + ", the " + players[0].role.name() + "\n");
-        gui[0].paint(gui[0].getGraphics());
+            System.out.println(s.name+" ");
+        System.out.println("\nYou are: " + Deck.Characters.values()[players[0].character] + ", the " + players[0].role.name() + "\n");
         
         //Give Sheriff the first turn (turn 0)
         for(int n=0; n<numPlayers; n++){
@@ -173,7 +163,7 @@ public class Bang {
             if(players[turn%numPlayers].hand.size()>0){
                 if(isGameWon())
                     return false;
-                card = gui[turn%numPlayers].promptChooseCard(players[turn%numPlayers].hand, "Play a card!", "It's your turn", false);
+                //TODO: ACTUALLY PROMPT PLAYER TO PLAY CARD card = gui[turn%numPlayers].promptChooseCard(players[turn%numPlayers].hand, "Play a card!", "It's your turn", false);
                 if(card!=-1)
                     playCardFromHand(players[turn%numPlayers], players[turn%numPlayers].hand.get(card));
                 
@@ -240,7 +230,7 @@ public class Bang {
         if(c.type == 2){
             int[] targets;
             if(c.target == 2){
-                targets = new int[]{gui[p.id].promptChooseTargetPlayer()};
+                targets = new int[]{1};//gui[p.id].promptChooseTargetPlayer()};//TODO: Actually prompt player to choose targets
             }
             else if(c.target == 4){
                 targets = new int[numPlayers-1];
@@ -265,19 +255,19 @@ public class Bang {
                 for(int target: targets){
                     int miss = -2; //or bang for indians
                     while(miss != -1 || (miss>=0 && miss<players[target].hand.size() && players[target].hand.get(miss).special==(c.name==Deck.CardName.INDIANS.name()?1:0) && players[target].hand.get(miss).effect==(c.name==Deck.CardName.INDIANS.name()?Card.play.DAMAGE.ordinal():Card.play.DAMAGE.ordinal()))){
-                        miss = gui[target].promptChooseCard(players[target].hand, "Dodge!", "Play a miss?", false);
+                        miss = 1;//gui[target].promptChooseCard(players[target].hand, "Dodge!", "Play a miss?", false); //TODO: FIX
                     }
                     if(miss == -1){ //change this to a flag checking barrels/if target want to play a miss, etc.
                         while(players[target].lifePoints<=0){
                             System.out.println("Invalid Target!");
-                            gui[p.id].promptChooseTargetPlayer();
+                            //gui[p.id].promptChooseTargetPlayer();//TODO: FIX
                         }
                         players[target].lifePoints--;
                         System.out.println(target+"'s hp: "+players[target].lifePoints);
                         if(players[target].lifePoints <= 0){
-                            gui[p.id].appendText("You killed player "+target+"! \nPlayer "+target+" was a(n) "+players[target].role.name()+" ("+players[target].role.ordinal()+")");
+                            //gui[p.id].appendText("You killed player "+target+"! \nPlayer "+target+" was a(n) "+players[target].role.name()+" ("+players[target].role.ordinal()+")");//TODO:FIX
                             if(players[target].role.ordinal()==2){ //if he was an outlaw, claim bounty
-                                gui[p.id].appendText("Draw 3 cards!");
+                                //gui[p.id].appendText("Draw 3 cards!");//TODO:FIX
                                 playerDrawCard(p, 3);
                             }
                         }
