@@ -16,16 +16,31 @@ public class Bang {
     public int numPlayers;
     
     public int turn;
-    
-    public ArrayList<Card> drawPile = new ArrayList<Card>(); //the card on the bottom in stored in index 0, the card on top is stored in index size()-1
-    public ArrayList<Card> discardPile = new ArrayList<Card>();
-    
+        
     public Deck deck;
     
     public Bang(int p, Server s) {
         server = s;
         numPlayers = p;
-    }        
+        turn = -2;
+    }    
+    
+    /**
+     * Helper method to remove some conditions from server and put them here,
+     * where it makes more sense
+     */
+    public void process(){
+        if(turn == -2){
+            start();
+            turn++;
+        }
+        else if(turn == -1){
+            start2();
+        }
+        else{
+        }
+    }
+    
     /**
      * Create p players.
      * Create a draw pile.
@@ -34,9 +49,8 @@ public class Bang {
      * Give sheriff the first turn.
      * Draw cards equal to the number of life points.
      * Sheriff gets an additional card.
-     * @param p
      */
-    public void start(int p){
+    public void start(){
         //Assign roles
         ArrayList<Enum> roles = new ArrayList<Enum>();
         players = new Player[numPlayers];
@@ -44,9 +58,7 @@ public class Bang {
             players[n] = new Player(n, server.names.get(n));
         }
         
-        System.out.println(players[0]+""+players[0]+players[0]+players[0]+players[0]+players[0]);
-        
-        switch(p){
+        switch(numPlayers){
             case 2: //DEBUG MODE
                 roles.add(Deck.Role.SHERIFF); roles.add(Deck.Role.OUTLAW); break;
             case 4:
@@ -76,72 +88,49 @@ public class Bang {
         for(int n=0; n<numPlayers; n++){
             int role = roles.remove((int)(Math.random()*roles.size())).ordinal();
             server.sendInfo(n,"SetInfo:role:"+role);
+            players[n].role = Deck.Role.values()[Integer.valueOf(role)];
             if(role==0){
-                server.sendInfo(n,"SetInfo:maxHP:1");
+                changeLifePoints(n, 1);
             }
         }
-        /*for(Card s: deck.drawPile)
-            System.out.print(s.name+" ");
-        System.out.print("\n");*/
         
-        //Assign character cards
-        ArrayList<Enum> charList = new ArrayList<Enum>();
-        for(Enum e: Deck.Characters.values()){
-            charList.add(e);
-        }
-        for(int n = 0; n<numPlayers; n++){
-            drawPile.add(new Card(charList.remove((int)(Math.random()*charList.size()))));
-            drawPile.add(new Card(charList.remove((int)(Math.random()*charList.size()))));
-            drawPile.add(new Card(charList.remove((int)(Math.random()*charList.size()))));
-            drawPile.add(new Card(charList.remove((int)(Math.random()*charList.size()))));
-            drawPile.add(new Card(charList.remove((int)(Math.random()*charList.size()))));
-        }
+        deck = new Deck();
+        deck.fillCharacterCards(numPlayers);
+
         for(int n = 0; n<numPlayers; n++){
             playerDrawCard(n, 5);
         }
         
         server.promptAll("ChooseCharacter");
-        
-        //debug mode
-
-        deck = new Deck();
     }
     
     public void start2(){
-
+        for(int n=0; n<server.choice.length; n++){
+            players[n].character = players[n].hand.get(server.choice[n][1]).ordinal;
+            changeLifePoints(n, players[n].hand.get(server.choice[n][1]).special);
+        }
+    
+        deck.fillGameCards();
         
         //draw cards equal to lifepoints
         for(Player p1: players){
-            playerDrawCard(p1, p1.lifePoints);
+            p1.hand.clear();
+            playerDrawCard(p1.id, p1.lifePoints);
         }
-        /*
-        System.out.println("Cards in draw pile: ");
-        String pile = "";
-        for(Card s: drawPile)
-            pile = pile + s.name + " "; //TODO: make large messages wrap around
-        System.out.println(pile);
-        System.out.println("\nCards in hand: ");
-        for(Card s: players[0].hand)
-            System.out.println(s.name+" ");
-        System.out.println("\nYou are: " + Deck.Characters.values()[players[0].character] + ", the " + players[0].role.name() + "\n");
-        */
         
         //Give Sheriff the first turn (turn 0)
         for(int n=0; n<numPlayers; n++){
+            System.out.println("Player "+n+" is a "+players[n].role);
             if(players[n].role==Deck.Role.SHERIFF){
-                turn=n-1;
+                turn=n;
                 break;
             }
         }
-        /*while(nextTurn()){ TODO: make this without a loop
-        }*/
-        System.out.println("GAME OVER");
     }
     
     //returns false if game is over
     public boolean nextTurn(){
         turn++;
-        
         
         //check if player is dead
         int oldturn = turn;
@@ -153,7 +142,7 @@ public class Bang {
         
         //draw two cards
         if(players[turn%numPlayers].specialDraw==0){ //TODO: get rid of specialDraw, move to a direct reference to character cards
-            playerDrawCard(players[turn%numPlayers], 2);
+            playerDrawCard(turn%numPlayers, 2);
         }
         else{
             //Yuck, there's alot of characters with this ability
@@ -269,7 +258,7 @@ public class Bang {
                             //gui[p.id].appendText("You killed player "+target+"! \nPlayer "+target+" was a(n) "+players[target].role.name()+" ("+players[target].role.ordinal()+")");//TODO:FIX
                             if(players[target].role.ordinal()==2){ //if he was an outlaw, claim bounty
                                 //gui[p.id].appendText("Draw 3 cards!");//TODO:FIX
-                                playerDrawCard(p, 3);
+                                playerDrawCard(p.id, 3);
                             }
                         }
                     }
@@ -290,35 +279,29 @@ public class Bang {
             }
             //draw
             if(c.effect == Card.play.DRAW.ordinal())
-                playerDrawCard(p, c.range);
+                playerDrawCard(p.id, c.range);
             if(c.effect2 != 0 && c.effect2 == Card.play.DRAW.ordinal())
-                playerDrawCard(p, 1);
-            discardPile.add(c);
+                playerDrawCard(p.id, 1);
+            deck.discardPile.add(c);
         }
         //TODO: currently only removes the card from hand and sets it into discard
         return true;
     }
     
     public void playerDrawCard(int p, int n){
+        if(n<=0)
+            return; //must draw at least 1
         Card c = drawCard();
-        String s = "Draw:"+(c.type==1?"Character:":"Game:")+c.name+":";
+        String s = "Draw:"+(c.type==1?"Character:":"Game:")+c.name+":"; //need this to get the card type
+        players[p].hand.add(c);
         for(int m=1; m<n; m++){
             c = drawCard();
             s = s+c.name+":";
+            players[p].hand.add(c);            
         }
         server.sendInfo(p, s);
     }
-    
-    //this one won't work anymore
-    public void playerDrawCard(Player p, int n){
-        /*if(n <= 2)
-            gui[p.id].appendText("Draw "+n+" card(s).");
-        else if(n>2)
-            gui[p.id].appendText("Draw "+n+" cards!");*/
-        for(int m=0; m<n; m++)
-            server.sendInfo(p.id, drawCard().toString());
-    }
-    
+
     /**
      * Discards Player p's hand
      */
@@ -337,7 +320,7 @@ public class Bang {
             p.hand.remove(c);
         }
         else{
-            discardPile.add(c);
+            deck.discardPile.add(c);
         }
             
     }
@@ -349,7 +332,7 @@ public class Bang {
      */
     public Card flipCard(){
         Card c = drawCard();
-        discardPile.add(drawCard());
+        deck.discardPile.add(drawCard());
         return c;
     }
     
@@ -360,11 +343,11 @@ public class Bang {
      * @return Card
      */
     public Card drawCard(){
-        if(drawPile.size()==0){
+        if(deck.drawPile.size()==0){
             shuffleDeck();
         }
-        System.out.println(drawPile.get(drawPile.size()-1).name);
-        return drawPile.remove(drawPile.size()-1);
+        System.out.println(deck.drawPile.peekLast().name);
+        return deck.drawPile.removeLast();
     }
     
     /**
@@ -372,12 +355,17 @@ public class Bang {
      * Only used when draw pile is empty
      */
     public void shuffleDeck(){
-        if(drawPile.size()>0){
+        if(deck.drawPile.size()>0){
             System.out.println("Error: did not need to shuffleDeck()");
             return;
         }
-        while(discardPile.size()>0){
-            drawPile.add(discardPile.remove((int)Math.random()*discardPile.size()));
+        while(deck.discardPile.size()>0){
+            deck.drawPile.add(deck.discardPile.remove((int)Math.random()*deck.discardPile.size()));
         }
+    }
+    
+    void changeLifePoints(int p, int n){
+        server.sendInfo(p,"SetInfo:maxHP:"+n);
+        players[p].lifePoints+=n;
     }
 }

@@ -65,7 +65,7 @@ public class Server extends Thread {
 				// System.out.println("Has it been updated? "+prompting);
 				if (prompting == 2) {
 					boolean flag = true;
-					System.out.println(choice.length + " " + choice[0].length);
+					//System.out.println(choice.length + " " + choice[0].length);
 					for (int n = 0; n < choice.length; n++) {
 						if (choice[n][1] == -2) {
 							flag = false;
@@ -73,13 +73,10 @@ public class Server extends Thread {
 					}
 					System.out.println("Are we ready to move on? "+flag);
 					if (flag) {
-						// this is if it's checking the game when it has just
-						// started
 						prompting = 0;
 						// received all choices, send this to bang.java or w/e
 						if (gameInProgress == 1) {
                                                         choice = null;
-							System.out.println("Game started!");
 							gameInProgress++;
 
 							// check order of names
@@ -89,20 +86,18 @@ public class Server extends Thread {
 							 ready = new int[numPlayers][2];
                                                          
 							// create player objects
-							for (int n = 0; n < names.size(); n++
-                                                        ) {
+							for (int n = 0; n < names.size(); n++) {
 								sendInfo(n, "SetInfo:newPlayer:" + n);
 							}
-                                                        //System.out.println("NumPlayers:"+numPlayers);
                                                         for(int n = 0; n<ready.length; n++){
                                                              ready[n][0] = n;
                                                              ready[n][1] = 0;
                                                         }
 							game = new Bang(numPlayers, this);// FLAG: game
-                                                        game.start(numPlayers);
+                                                        game.process();
 						}
                                                 else if(gameInProgress==2){ //game has started
-                                                        game.start2(); //bleh
+                                                        game.process(); //less bleh
                                                         gameInProgress++;
                                                 }
 					} else {
