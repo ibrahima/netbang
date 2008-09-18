@@ -50,7 +50,7 @@ public class Bang {
         ArrayList<Enum> roles = new ArrayList<Enum>();
         players = new Player[numPlayers];
         for(int n = 0; n<numPlayers; n++){
-            players[n] = new Player(n, server.names.get(n))
+            players[n] = new Player(n, server.names.get(n));
         }
         
         System.out.println(players[0]+""+players[0]+players[0]+players[0]+players[0]+players[0]);
