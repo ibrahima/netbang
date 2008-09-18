@@ -122,7 +122,7 @@ public class Bang {
         for(int n=0; n<numPlayers; n++){
             System.out.println("Player "+n+" is a "+players[n].role);
             if(players[n].role==Deck.Role.SHERIFF){
-                turn=n;
+                turn=n-1;
                 break;
             }
         }
