@@ -51,7 +51,7 @@ public class Server extends Thread {
 	}
 
 	public void run() {
-		while (true) { // TODO: make this loop run more than once
+		while (true) {
 			if (gameInProgress == 0) {
 				try {
 					Socket client = me.accept();
@@ -99,10 +99,10 @@ public class Server extends Thread {
                                                              ready[n][1] = 0;
                                                         }
 							game = new Bang(numPlayers, this);// FLAG: game
-							// stuff
+                                                        game.start(numPlayers);
 						}
-                                                else if (gameInProgress == 2){ //game started, but chars not chosen
-                                                        //do something;
+                                                else if(gameInProgress==2){ //game has started
+                                                        game.start2(); //bleh
                                                         gameInProgress++;
                                                 }
 					} else {
@@ -333,7 +333,7 @@ class ServerThread extends Thread {
 								}
 							}
                                                         else if (temp[1].startsWith("/prompting")) {
-                                                            System.out.println("Prompting is "+server.prompting);
+                                                            System.out.println("Prompting is "+server.prompting+" "+server.gameInProgress);
                                                         }
 						} else
 							server.addChat(name + ": " + temp[1]);

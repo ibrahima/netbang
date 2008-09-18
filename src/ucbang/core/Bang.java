@@ -13,7 +13,7 @@ public class Bang {
     public Bang(int p, Server s) {
         server = s;
         gui = new ClientGUI[p]; //deleteme
-        start(p);
+        numPlayers = p;
     }
     
     /*public static void main(String[] args){
@@ -45,9 +45,7 @@ public class Bang {
      * Sheriff gets an additional card.
      * @param p
      */
-    public void start(int p){
-        numPlayers = p;
-        
+    public void start(int p){        
         //Assign roles
         ArrayList<Enum> roles = new ArrayList<Enum>();
         
@@ -110,22 +108,10 @@ public class Bang {
         //debug mode
 
         deck = new Deck();
+    }
+    
+    public void start2(){
 
-        //Make players choose characters; wait
-        /*for(int n = 0; n<numPlayers; n++){
-            //doesn't prompt all players at the same time
-            System.out.println("1. " + players[n].hand.get(0).name + " HP: " + players[n].hand.get(0).special);
-            System.out.println("2. " + players[n].hand.get(1).name + " HP: " + players[n].hand.get(1).special);
-            Card c = players[n].hand.get(gui[n].promptChooseCharacter(players[n].hand));
-            players[n].character = c.ordinal;
-            players[n].maxLifePoints += c.special; //special is hp for char cards
-            players[n].lifePoints = players[n].maxLifePoints;
-            playerDiscardHand(players[n]);
-            gui[n].paint(gui[n].getGraphics()); //TODO: this shouldn't here, but this is the only place where it didn't glitch up
-        }*/        
-        while(server.prompting!=0){try{Thread.sleep(100);} catch(Exception e){e.printStackTrace();}}
-        System.out.println("what gives");
-        ArrayList<Enum> allCards = new ArrayList<Enum>();
         
         //draw cards equal to lifepoints
         for(Player p1: players){
@@ -144,14 +130,14 @@ public class Bang {
         gui[0].paint(gui[0].getGraphics());
         
         //Give Sheriff the first turn (turn 0)
-        for(int n=0; n<p; n++){
+        for(int n=0; n<numPlayers; n++){
             if(players[n].role==Deck.Role.SHERIFF){
                 turn=n-1;
                 break;
             }
         }
-        while(nextTurn()){
-        }
+        /*while(nextTurn()){ TODO: make this without a loop
+        }*/
         System.out.println("GAME OVER");
     }
     
