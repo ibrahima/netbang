@@ -126,10 +126,11 @@ public class Bang {
                 break;
             }
         }
+        nextTurn();
     }
     
     //returns false if game is over
-    public boolean nextTurn(){
+    public void nextTurn(){
         turn++;
         
         //check if player is dead
@@ -138,7 +139,7 @@ public class Bang {
             turn++;
         }
         
-        //check jail/dynamite
+        server.sendInfo("SetInfo:turn:"+turn);
         
         //draw two cards
         if(players[turn%numPlayers].specialDraw==0){ //TODO: get rid of specialDraw, move to a direct reference to character cards
@@ -147,23 +148,6 @@ public class Bang {
         else{
             //Yuck, there's alot of characters with this ability
         }
-        
-        int card = -2;
-        while(card != -1){
-            if(players[turn%numPlayers].hand.size()>0){
-                if(isGameWon())
-                    return false;
-                //TODO: ACTUALLY PROMPT PLAYER TO PLAY CARD card = gui[turn%numPlayers].promptChooseCard(players[turn%numPlayers].hand, "Play a card!", "It's your turn", false);
-                if(card!=-1)
-                    playCardFromHand(players[turn%numPlayers], players[turn%numPlayers].hand.get(card));
-                
-            }
-            else{
-                //normally, you'd still be able to play cards on field
-                card = -1;
-            }
-        }
-        return !isGameWon();
     }
     
     /**

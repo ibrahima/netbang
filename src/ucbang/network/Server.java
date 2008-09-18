@@ -110,6 +110,11 @@ public class Server extends Thread {
 		}
 	}
 
+        public void sendInfo(String info){
+            for(int n=0; n<numPlayers; n++){
+                sendInfo(n, info);
+            }
+        }
 	public void sendInfo(int player, String info) { //info can be sent to multiple people at the same time, unlike prompts                
                 if(ready!=null){
                     while(ready[player][1]>0){} //wait

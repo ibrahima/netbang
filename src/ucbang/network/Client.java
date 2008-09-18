@@ -30,6 +30,7 @@ public class Client extends Thread {
 	public Player player;
 	public LinkedList<String> players = new LinkedList<String>();
 	ClientThread t;
+        int turn;
 
 	public Client(String host, boolean guiEnabled) {
 		this.host = host;
@@ -242,6 +243,9 @@ class ClientThread extends Thread {
 						else if (temp1[0].equals("maxHP")) {
 							c.player.maxLifePoints += Integer.valueOf(temp1[1]);
 						}
+                                                else if (temp1[0].equals("turn")) {
+                                                        c.turn += Integer.valueOf(temp1[1]);
+                                                }
                                                 else{
                                                     System.out.println("WTF do i do with "+temp1[0]+":"+temp1[1]);
                                                 }
