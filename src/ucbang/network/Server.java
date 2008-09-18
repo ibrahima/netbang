@@ -303,7 +303,10 @@ class ServerThread extends Thread {
 									&& server.gameInProgress == 0)
 								server.startGame(id, name);
 							else if (temp[1].startsWith("/rename")) {
-								if (temp[1].length() > 7
+                                                            if(server.gameInProgress==2){
+                                                                System.out.println("I'm sorry, Dave.");
+                                                            }
+                                                            else if (temp[1].length() > 7
 										&& temp[1].charAt(7) == ' ') {
 									String temp1 = temp[1].split(" ", 2)[1];
 									if (server.messages.containsKey(temp1)) {
@@ -328,7 +331,8 @@ class ServerThread extends Thread {
 										out.newLine();
 										out.flush();
 									}
-								} else {
+								} 
+                                                                else {
 									// TODO: (Optional) create /help RENAME
 								}
 							}

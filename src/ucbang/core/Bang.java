@@ -45,9 +45,15 @@ public class Bang {
      * Sheriff gets an additional card.
      * @param p
      */
-    public void start(int p){        
+    public void start(int p){
         //Assign roles
         ArrayList<Enum> roles = new ArrayList<Enum>();
+        players = new Player[numPlayers];
+        for(int n = 0; n<numPlayers; n++){
+            players[n] = new Player(n, server.names.get(n))
+        }
+        
+        System.out.println(players[0]+""+players[0]+players[0]+players[0]+players[0]+players[0]);
         
         switch(p){
             case 2: //DEBUG MODE
