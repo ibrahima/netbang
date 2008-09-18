@@ -114,7 +114,7 @@ public class Bang {
         for(Player p1: players){
             playerDrawCard(p1, p1.lifePoints);
         }
-        
+        /*
         System.out.println("Cards in draw pile: ");
         String pile = "";
         for(Card s: drawPile)
@@ -124,6 +124,7 @@ public class Bang {
         for(Card s: players[0].hand)
             System.out.println(s.name+" ");
         System.out.println("\nYou are: " + Deck.Characters.values()[players[0].character] + ", the " + players[0].role.name() + "\n");
+        */
         
         //Give Sheriff the first turn (turn 0)
         for(int n=0; n<numPlayers; n++){
