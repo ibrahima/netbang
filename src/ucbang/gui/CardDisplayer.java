@@ -4,8 +4,8 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 
 import javax.imageio.ImageIO;
 
@@ -13,7 +13,7 @@ import ucbang.core.*;
 
 public class CardDisplayer {
 	boolean faceup=false;
-	static HashMap<String,Image> cards = new HashMap<String,Image>();
+	static LinkedHashMap<String,Image> cards = new LinkedHashMap<String,Image>();
 	public CardDisplayer() {
 		loadImages();
 		/*try {
@@ -45,9 +45,9 @@ public class CardDisplayer {
 		cards.put("IRON_PLATE", Toolkit.getDefaultToolkit().getImage("images/cards/dodge/z_ironplate.jpg"));		
 		cards.put("JAIL", Toolkit.getDefaultToolkit().getImage("images/cards/bang/vezeni.jpg"));
 		cards.put("KNIFE", Toolkit.getDefaultToolkit().getImage("images/cards/dodge/z_knife.jpg"));
-		cards.put("MISS", Toolkit.getDefaultToolkit().getImage("images/cards/dodge/vedle.jpg"));
+		cards.put("MISS", Toolkit.getDefaultToolkit().getImage("images/cards/bang/vedle.jpg"));
 		cards.put("MUSTANG", Toolkit.getDefaultToolkit().getImage("images/cards/bang/mustang.jpg"));
-		cards.put("PANIC", Toolkit.getDefaultToolkit().getImage("images/cards/bang/panic.jpg"));
+		cards.put("PANIC", Toolkit.getDefaultToolkit().getImage("images/cards/bang/panika.jpg"));
 		cards.put("PEPPERBOX", Toolkit.getDefaultToolkit().getImage("images/cards/dodge/pepperbox.jpg"));
 		cards.put("PONY_EXPRESS", Toolkit.getDefaultToolkit().getImage("images/cards/dodge/z_ponyexpress.jpg"));
 		cards.put("PUNCH", Toolkit.getDefaultToolkit().getImage("images/cards/dodge/punch.jpg"));
