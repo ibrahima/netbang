@@ -68,7 +68,7 @@ public class CardDisplayer {
 		cards.put("WINCHESTER", Toolkit.getDefaultToolkit().getImage("images/cards/bang/b_winchester.jpg"));
 	}
 
-	void paint(Graphics2D graphics) {
+	public void paint(Graphics2D graphics) {
 		// TODO: Draw card on the graphics object at (x,y)
 		int x = 10;
 		int y = 30;
@@ -82,7 +82,7 @@ public class CardDisplayer {
 			}
 		}
 	}
-	void paint(String card, Graphics2D graphics, int x, int y){
+	public void paint(String card, Graphics2D graphics, int x, int y){
 		if(cards.containsKey(card)){
 			graphics.drawRoundRect(x, y, 55, 85, 5, 5);
 			graphics.drawImage(cards.get(card), x, y, null);
