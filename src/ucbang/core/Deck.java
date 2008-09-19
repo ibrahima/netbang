@@ -46,7 +46,7 @@ public class Deck {
         Arrays.fill(cards, 60, 61, CardName.GATLING);
         Arrays.fill(cards, 61, 64, CardName.GENERAL_STORE);
         Arrays.fill(cards, 64, 65, CardName.HOWITZER);
-        Arrays.fill(cards, 65, 66, CardName.HOWITZER);
+        Arrays.fill(cards, 65, 66, CardName.HOWITZER);//why is this here twice?
         Arrays.fill(cards, 66, 69, CardName.INDIANS);
         Arrays.fill(cards, 69, 71, CardName.IRON_PLATE);
         Arrays.fill(cards, 71, 74, CardName.JAIL);
