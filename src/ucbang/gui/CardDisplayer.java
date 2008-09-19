@@ -5,30 +5,22 @@ import java.awt.Image;
 import java.awt.Toolkit;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Iterator;
 
 import javax.imageio.ImageIO;
 
 import ucbang.core.*;
 
 public class CardDisplayer {
-	Card myCard;
-	int x, y;
 	boolean faceup=false;
-	Image image;
 	static HashMap<String,Image> cards = new HashMap<String,Image>();
-	public CardDisplayer(Card card, int x, int y) {
-		myCard = card;
-		this.x = x;
-		this.y = y;
-		image= Toolkit.getDefaultToolkit().getImage("images/cards/bang/p_serif.jpg");
-		if(cards==null)
-			loadImages();
+	public CardDisplayer() {
+		loadImages();
 		/*try {
 			image = ImageIO.read(url);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}*/
-		//TODO: Load images, probably going to need a huge list of card image names
 	}
 
 	private void loadImages() {
@@ -67,18 +59,35 @@ public class CardDisplayer {
 		cards.put("SILVER", Toolkit.getDefaultToolkit().getImage("images/cards/dodge/silver.jpg"));
 		cards.put("SOMBRERO", Toolkit.getDefaultToolkit().getImage("images/cards/dodge/z_sombrero.jpg"));
 		cards.put("SPRINGFIELD", Toolkit.getDefaultToolkit().getImage("images/cards/dodge/springfield.jpg"));
-		cards.put("STAGECOACH", Toolkit.getDefaultToolkit().getImage("images/cards/dodge/z_bible.jpg"));//TODO
+		cards.put("STAGECOACH", null);//TODO
 		cards.put("TEN_GALLON_HAT", Toolkit.getDefaultToolkit().getImage("images/cards/dodge/z_gallonhat.jpg"));
 		cards.put("TEQUILA", Toolkit.getDefaultToolkit().getImage("images/cards/dodge/tequila.jpg"));
 		cards.put("VOLCANIC", Toolkit.getDefaultToolkit().getImage("images/cards/bang/b_vulcanic.jpg"));
 		cards.put("WELLS_FARGO", Toolkit.getDefaultToolkit().getImage("images/cards/bang/wellsfargo.jpg"));
-		cards.put("WHISKY", Toolkit.getDefaultToolkit().getImage("images/cards/dodge/z_bible.jpg"));//TODO
+		cards.put("WHISKY", null);
 		cards.put("WINCHESTER", Toolkit.getDefaultToolkit().getImage("images/cards/bang/b_winchester.jpg"));
 	}
 
 	void paint(Graphics2D graphics) {
 		// TODO: Draw card on the graphics object at (x,y)
-		graphics.drawRoundRect(x, y, 55, 85, 5, 5);
-		graphics.drawImage(image, x, y, null);
+		int x = 10;
+		int y = 30;
+		Iterator<String> iter = cards.keySet().iterator();
+		while(iter.hasNext()){
+			paint(iter.next(),graphics,x,y);
+			x+=60;
+			if(x>750){
+				y+=90;
+				x=10;
+			}
+		}
+	}
+	void paint(String card, Graphics2D graphics, int x, int y){
+		if(cards.containsKey(card)){
+			graphics.drawRoundRect(x, y, 55, 85, 5, 5);
+			graphics.drawImage(cards.get(card), x, y, null);
+		}else{
+			System.out.println("Card not found");
+		}
 	}
 }

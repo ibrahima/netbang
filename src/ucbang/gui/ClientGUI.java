@@ -51,8 +51,7 @@ public class ClientGUI extends JFrame implements KeyListener {
 		strategy = this.getBufferStrategy();
 		this.client = client;
 		this.setTitle("UCBang");
-		//TODO: Remove this later, just for testing drawing.
-		cd = new CardDisplayer(new Card(Deck.CardName.BANG), 200, 50);
+		cd = new CardDisplayer();
 		addWindowListener(new WindowAdapter() {
 			public void windowActivated(WindowEvent e) {
 				paint(getGraphics());
