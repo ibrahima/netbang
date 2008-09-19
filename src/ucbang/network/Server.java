@@ -27,7 +27,7 @@ public class Server extends Thread {
 	public int prompting; // flag for whether people are still being prompting
 	// for something 0 = no, 1 = prompting with no
 	// unchecked updates, 2 = unchecked prompt
-	public Stack<int[][]> choice; // int[m][n], where m is player and n is option
+	public ArrayList<int[][]> choice; // int[m][n], where m is player and n is option
         public int[][] ready;
         
 	Bang game; // just insert game stuff here
@@ -68,8 +68,8 @@ public class Server extends Thread {
 				if (prompting == 2) {
 					boolean flag = true;
 					//System.out.println(choice.length + " " + choice[0].length);
-					for (int n = 0; n < choice.peek().length; n++) {
-						if (choice.peek()[n][1] == -2) {
+					for (int n = 0; n < choice.get(choice.size()-1).length; n++) {
+						if (choice.get(choice.size()-1)[n][1] == -2) {
 							flag = false;
 						}
 					}
@@ -78,7 +78,7 @@ public class Server extends Thread {
 						prompting = 0;
 						// received all choices, send this to bang.java or w/e
 						if (gameInProgress == 1) {
-                                                        choice.pop();
+                                                        choice.remove(choice.size()-1);
 							gameInProgress++;
 
 							// check order of names
@@ -102,13 +102,15 @@ public class Server extends Thread {
                                                         game.process(); //less bleh
                                                         gameInProgress++;
                                                 }
+                                                else if(gameInProgress==3){
+                                                        game.process();
+                                                }
 					} else {
 						// still prompting
 						prompting = 1;
 					}
 				}
 			}
-
 		}
 	}
 
@@ -168,12 +170,12 @@ public class Server extends Thread {
 			e.printStackTrace();
 		}
 		prompting = 1;
-		choice = new Stack<int[][]>();
-                choice.push(new int[numPlayers - 1][2]);
+		choice = new ArrayList<int[][]>();
+                choice.add(new int[numPlayers - 1][2]);
 		for (int n = 0, m = 0; m < numPlayers - 1; n++, m++) {// this prompt goes out to everyone except host
 			if (n != host) {
-				choice.peek()[m][0] = n;
-				choice.peek()[m][1] = -2;
+				choice.get(choice.size()-1)[m][0] = n;
+				choice.get(choice.size()-1)[m][1] = -2;
 			} else
 				m--;
 		}
@@ -187,19 +189,19 @@ public class Server extends Thread {
         public void promptAll(String s){
             System.out.println("waiting for all players");
             prompting = 1;
-            choice.push(new int[numPlayers][2]);
+            choice.add(new int[numPlayers][2]);
             for (int n = 0; n < numPlayers; n++) {         
-                    choice.peek()[n][0] = n;
-                    choice.peek()[n][1] = -2;
+                    choice.get(choice.size()-1)[n][0] = n;
+                    choice.get(choice.size()-1)[n][1] = -2;
             }
             for(String n:names){
                 prompt(n, s);
             }
         }
         public void prompt(String n, String s){ //TODO: FIX THIS
-            if(choice.peek()==null){
+            if(choice.get(choice.size()-1)==null){
                 System.out.println("Waiting for one player");
-                choice.push(new int[1][2]);
+                choice.add(new int[1][2]);
             }
             if(prompting == 0){
                 prompting = 1;
@@ -207,9 +209,9 @@ public class Server extends Thread {
             messages.get(n).add("Prompt:"+s);
         }
         public void prompt(int player, String s) {
-                if(choice.peek()==null){
+                if(choice.get(choice.size()-1)==null){
                 System.out.println("Waiting for one player");
-                choice.push(new int[1][2]);
+                choice.add(new int[1][2]);
             }
             if(prompting == 0){
                 prompting = 1;
@@ -348,10 +350,10 @@ class ServerThread extends Thread {
 						if (server.prompting >= 1) {
 							int n;
                                                         //if(id>server.choice.length) 
-							for (n = 0; server.choice.peek()[n][0] != id; n++) {
-							    System.out.println("Looking for id: " + id+ " not "+server.choice.peek()[n][0]);
+							for (n = 0; server.choice.get(server.choice.size()-1)[n][0] != id; n++) {
+							    System.out.println("Looking for id: " + id+ " not "+server.choice.get(server.choice.size()-1)[n][0]);
 							}
-							server.choice.peek()[n][1] = Integer.valueOf(temp[1]);
+							server.choice.get(server.choice.size()-1)[n][1] = Integer.valueOf(temp[1]);
 							server.prompting = 2;
 						} else {
 							System.out.println("Received prompt from player when not prompted!");
