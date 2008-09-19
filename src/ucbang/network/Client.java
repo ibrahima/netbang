@@ -232,10 +232,10 @@ class ClientThread extends Thread {
 						// adds or subtracts
 						// that amount
 						// set information about hand and stuff
-						String[] temp1 = temp[1].split(":", 2);
+						String[] temp1 = temp[1].split(":");
 						if (temp1[0].equals("newPlayer")){
-							c.player = new Player(Integer.valueOf(temp1[1]),
-									c.name);
+							c.player = new Player(Integer.valueOf(temp1[1]), c.name);
+                                                        c.numPlayers = Integer.valueOf(temp1[2]);
 						}
 						else if (temp1[0].equals("role")) {
 							c.player.role = Deck.Role.values()[Integer.valueOf(temp1[1])];
