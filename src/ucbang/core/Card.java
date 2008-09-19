@@ -300,4 +300,7 @@ public class Card {
 						// and bangs, 1 for miss, 2 for dodge
 	public boolean discardToPlay; // cards that need a discard to play
 	public int range; // used for guns and panic and #cards drawn
+	public String toString(){
+		return name;
+	}
 }

@@ -29,7 +29,15 @@ public class Field implements MouseListener{
 	}
 	public void mouseClicked(MouseEvent e) {
 		// TODO Auto-generated method stub
-		System.out.println(e.getPoint());
+		Point ep=e.getPoint();
+		Iterator<Card> iter = cards.keySet().iterator();
+		while(iter.hasNext()){
+			Card temp = iter.next();
+			Point p = cards.get(temp);
+			if(ep.x>p.x&&ep.x<p.x+55&&ep.y>p.y&&ep.y<p.y+85){
+				System.out.println("Clicked on " + temp);
+			}
+		}
 	}
 	public void mouseEntered(MouseEvent e) {
 	}
