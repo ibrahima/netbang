@@ -9,6 +9,7 @@ import java.util.LinkedHashMap;
 
 import ucbang.core.Card;
 import ucbang.core.Player;
+import ucbang.core.Deck.CardName;
 public class Field implements MouseListener{
 	Player[] players;//in the future it should get the cards directly from players?
 	LinkedHashMap<Card,Point> cards = new LinkedHashMap<Card,Point>();
@@ -16,8 +17,8 @@ public class Field implements MouseListener{
 	public Field(CardDisplayer cd) {
 		this.cd=cd;
 	}
-	public void add(Card card, Point point){
-		cards.put(card,point);
+	public void add(Card card, int x, int y){
+		cards.put(card,new Point(x,y));
 	}
 	public void paint(Graphics2D graphics){
 		Iterator<Card> iter = cards.keySet().iterator();
@@ -28,8 +29,7 @@ public class Field implements MouseListener{
 	}
 	public void mouseClicked(MouseEvent e) {
 		// TODO Auto-generated method stub
-		System.out.println(e.getLocationOnScreen());
-		
+		System.out.println(e.getPoint());
 	}
 	public void mouseEntered(MouseEvent e) {
 	}

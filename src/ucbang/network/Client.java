@@ -11,6 +11,7 @@ import java.util.Random;
 import java.util.Iterator;
 
 import ucbang.core.*;
+import ucbang.core.Deck.CardName;
 import ucbang.gui.CardDisplayer;
 import ucbang.gui.ClientGUI;
 import ucbang.gui.Field;
@@ -38,6 +39,18 @@ public class Client extends Thread {
 			gui = new ClientGUI(numPlayers, this);
 		field = new Field(new CardDisplayer());
 		gui.addMouseListener(field);
+		//Begin testing card field stuffs
+		CardName[] cards=CardName.values();
+		int x = 10;
+		int y = 30;
+		for(int i=0;i<cards.length;i++){
+			field.add(new Card(cards[i]), x,y);
+			x+=60;
+			if(x>750){
+				y+=90;
+				x=10;
+			}
+		}
 		promptName();
 		this.start();
                 player = new Player(id,"name");   //check if this is right
@@ -48,6 +61,20 @@ public class Client extends Thread {
 		this.name = name;
 		if (guiEnabled)
 			gui = new ClientGUI(numPlayers++, this);
+		field = new Field(new CardDisplayer());
+		gui.addMouseListener(field);
+		//Begin testing card field stuffs
+		CardName[] cards=CardName.values();
+		int x = 10;
+		int y = 30;
+		for(int i=0;i<cards.length;i++){
+			field.add(new Card(cards[i]), x,y);
+			x+=60;
+			if(x>750){
+				y+=90;
+				x=10;
+			}
+		}
 		this.start();
                 player = new Player(id,"name");   //check if this is right
 	}

@@ -13,7 +13,7 @@ import ucbang.core.*;
 
 public class CardDisplayer {
 	boolean faceup=false;
-	static LinkedHashMap<String,Image> cards = new LinkedHashMap<String,Image>();
+	LinkedHashMap<String,Image> cards = new LinkedHashMap<String,Image>();
 	public CardDisplayer() {
 		loadImages();
 		/*try {
@@ -32,6 +32,7 @@ public class CardDisplayer {
 		cards.put("BRAWL", Toolkit.getDefaultToolkit().getImage("images/cards/dodge/rvacka.jpg"));
 		cards.put("BUFFALO_RIFLE", Toolkit.getDefaultToolkit().getImage("images/cards/dodge/buffalorifle.jpg"));			
 		cards.put("CAN_CAN", Toolkit.getDefaultToolkit().getImage("images/cards/dodge/z_cancan.jpg"));		
+		cards.put("CANTEEN", Toolkit.getDefaultToolkit().getImage("images/cards/dodge/z_cannten.jpg"));		
 		cards.put("CAT_BALLOU", Toolkit.getDefaultToolkit().getImage("images/cards/bang/catbalou.jpg"));		
 		cards.put("CONESTOGA", Toolkit.getDefaultToolkit().getImage("images/cards/dodge/z_conestoga.jpg"));		
 		cards.put("DERRINGER", Toolkit.getDefaultToolkit().getImage("images/cards/dodge/z_derringer.jpg"));		
@@ -40,7 +41,8 @@ public class CardDisplayer {
 		cards.put("DYNAMITE", Toolkit.getDefaultToolkit().getImage("images/cards/bang/dynamite.jpg"));		
 		cards.put("GATLING", Toolkit.getDefaultToolkit().getImage("images/cards/bang/kulomet.jpg"));
 		cards.put("GENERAL_STORE", Toolkit.getDefaultToolkit().getImage("images/cards/bang/hokynarstvi.jpg"));	
-		cards.put("HOWITZER", Toolkit.getDefaultToolkit().getImage("images/cards/dodge/z_howitzer.jpg"));		
+		cards.put("HOWITZER", Toolkit.getDefaultToolkit().getImage("images/cards/dodge/z_howitzer.jpg"));	
+		cards.put("HIDEOUT", Toolkit.getDefaultToolkit().getImage("images/cards/dodge/hideout.jpg"));		
 		cards.put("INDIANS", Toolkit.getDefaultToolkit().getImage("images/cards/bang/indiani.jpg"));		
 		cards.put("IRON_PLATE", Toolkit.getDefaultToolkit().getImage("images/cards/dodge/z_ironplate.jpg"));		
 		cards.put("JAIL", Toolkit.getDefaultToolkit().getImage("images/cards/bang/vezeni.jpg"));
@@ -68,26 +70,12 @@ public class CardDisplayer {
 		cards.put("WINCHESTER", Toolkit.getDefaultToolkit().getImage("images/cards/bang/b_winchester.jpg"));
 	}
 
-	public void paint(Graphics2D graphics) {
-		// TODO: Draw card on the graphics object at (x,y)
-		int x = 10;
-		int y = 30;
-		Iterator<String> iter = cards.keySet().iterator();
-		while(iter.hasNext()){
-			paint(iter.next(),graphics,x,y);
-			x+=60;
-			if(x>750){
-				y+=90;
-				x=10;
-			}
-		}
-	}
 	public void paint(String card, Graphics2D graphics, int x, int y){
 		if(cards.containsKey(card)){
 			graphics.drawRoundRect(x, y, 55, 85, 5, 5);
 			graphics.drawImage(cards.get(card), x, y, null);
 		}else{
-			System.out.println("Card not found");
+			System.out.println("Card "+card+" not found");
 		}
 	}
 }

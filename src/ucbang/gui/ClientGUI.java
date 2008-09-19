@@ -33,7 +33,6 @@ public class ClientGUI extends JFrame implements KeyListener {
 	ArrayList<String> text = new ArrayList<String>();
 	int textIndex = -1; // the bottom line of the text
 	Client client;
-	CardDisplayer cd;//TODO: Temporary
 	public ClientGUI(int p, Client client) {
 		this.p = p;
 		chat = new StringBuilder();
@@ -49,13 +48,12 @@ public class ClientGUI extends JFrame implements KeyListener {
 		strategy = this.getBufferStrategy();
 		this.client = client;
 		this.setTitle("UCBang");
-		cd = new CardDisplayer();
 		addWindowListener(new WindowAdapter() {
 			public void windowActivated(WindowEvent e) {
 				paint(getGraphics());
 			}
 		});
-		paint(getGraphics());
+		//paint(getGraphics());
 	}
 
 	public void paint(Graphics g) {
@@ -88,7 +86,8 @@ public class ClientGUI extends JFrame implements KeyListener {
 		while (iter.hasNext()) {
 			graphics.drawString(iter.next(), 30, 60 + 15 * n++);
 		}
-		cd.paint(graphics);
+		if(client.field!=null)
+		client.field.paint(graphics);
 		graphics.dispose();
 		// paint backbuffer to window
 		strategy.show();
