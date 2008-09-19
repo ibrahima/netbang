@@ -10,11 +10,10 @@ import java.util.Random;
 
 import java.util.Iterator;
 
-import ucbang.core.Card;
-import ucbang.core.Deck;
-import ucbang.core.Player;
+import ucbang.core.*;
+import ucbang.gui.CardDisplayer;
 import ucbang.gui.ClientGUI;
-
+import ucbang.gui.Field;
 public class Client extends Thread {
 	String name = "";
 	int id;
@@ -29,13 +28,16 @@ public class Client extends Thread {
 	ClientGUI gui;
 	public Player player;
 	public LinkedList<String> players = new LinkedList<String>();
+	public Field field;
 	ClientThread t;
-        int turn;
+	int turn;
 
 	public Client(String host, boolean guiEnabled) {
 		this.host = host;
 		if (guiEnabled)
 			gui = new ClientGUI(numPlayers, this);
+		field = new Field(new CardDisplayer());
+		gui.addMouseListener(field);
 		promptName();
 		this.start();
                 player = new Player(id,"name");   //check if this is right

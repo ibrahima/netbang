@@ -2,6 +2,8 @@ package ucbang.core;
 
 import java.util.ArrayList;
 
+import ucbang.gui.Field;
+
 public class Player {
 	public Player(int id, String name) {
 		this.id = id;

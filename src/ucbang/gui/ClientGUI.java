@@ -16,9 +16,7 @@ import java.util.Iterator;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
-import ucbang.core.Card;
-import ucbang.core.Player;
-import ucbang.core.Deck;
+import ucbang.core.*;
 import ucbang.network.Client;
 
 public class ClientGUI extends JFrame implements KeyListener {
@@ -57,7 +55,6 @@ public class ClientGUI extends JFrame implements KeyListener {
 				paint(getGraphics());
 			}
 		});
-
 		paint(getGraphics());
 	}
 
