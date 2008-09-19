@@ -203,6 +203,9 @@ class ClientThread extends Thread {
 						else if (temp[1].equals("PlayCard")) { //play one card
                                                     c.outMsgs.add("Prompt:"+c.gui.promptChooseCard(c.player.hand,"","",true));
 						}
+                                                else if (temp[1].equals("PlayCardUnforced")) { //play one card
+                                                    c.outMsgs.add("Prompt:"+c.gui.promptChooseCard(c.player.hand,"","",false));
+                                                }
                                                 else if (temp[1].equals("ChooseCharacter")) { //play one card
                                                     c.outMsgs.add("Prompt:"+ c.gui.promptChooseCard(c.player.hand, "You are a(n):" + c.player.role.name(),"Choose your character", true));
                                                     c.player.hand.clear();
@@ -249,6 +252,9 @@ class ClientThread extends Thread {
                                                             c.gui.appendText("hay guyz, iz my turn");
                                                         }
                                                 }
+                                                else if (temp1[0].equals("discard")) {
+                                                        System.out.println("MOVED TO DISCARD:"+c.player.hand.remove((int)Integer.valueOf(temp1[1])).name);
+                                                }
                                                 else{
                                                     System.out.println("WTF do i do with "+temp1[0]+":"+temp1[1]);
                                                 }
@@ -264,7 +270,7 @@ class ClientThread extends Thread {
 					} catch (Throwable t) {
 						t.printStackTrace();
 					}
-				}
+				} 
 				e.printStackTrace();
 			}
 			try {

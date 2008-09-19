@@ -38,6 +38,19 @@ public class Bang {
             start2();
         }
         else{
+            if(server.choice.size()==1){
+                System.out.println("PLAY SOMETHING");
+                System.out.println("you played "+server.choice.get(0)[0][1]);
+                if(server.choice.get(0)[0][1]==-1){
+                    nextTurn();
+                }
+                else{
+                    playerDiscardCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]); //replace server.choice.get(0)[0][0] with turn%numPlayers?
+                    if(players[turn%numPlayers].hand.size()>0)
+                        server.prompt(turn%numPlayers, "PlayCardUnforced", true);
+                    else{System.out.println("You have no more cards to play"); nextTurn();}
+                }
+            }
         }
     }
     
@@ -105,9 +118,9 @@ public class Bang {
     }
     
     public void start2(){
-        for(int n=0; n<server.choice.length; n++){
-            players[n].character = players[n].hand.get(server.choice[n][1]).ordinal;
-            changeLifePoints(n, players[n].hand.get(server.choice[n][1]).special);
+        for(int n=0; n<server.choice.get(server.choice.size()-1).length; n++){
+            players[n].character = players[n].hand.get(server.choice.get(server.choice.size()-1)[n][1]).ordinal;
+            changeLifePoints(n, players[n].hand.get(server.choice.get(server.choice.size()-1)[n][1]).special);
         }
     
         deck.fillGameCards();
@@ -126,12 +139,18 @@ public class Bang {
                 break;
             }
         }
+        server.choice.remove(0);
         nextTurn();
     }
     
     //returns false if game is over
     public void nextTurn(){
         turn++;
+        
+        if(server.choice.size()>1){
+            System.out.println("ERROR: NEW TURN CALLED TOO EARLY");
+            turn--; return;
+        }
         
         //check if player is dead
         int oldturn = turn;
@@ -148,6 +167,8 @@ public class Bang {
         else{
             //Yuck, there's alot of characters with this ability
         }
+        System.out.println(turn%numPlayers);
+        server.prompt(turn%numPlayers, "PlayCardUnforced", true);
     }
     
     /**
@@ -291,19 +312,20 @@ public class Bang {
      */
     public void playerDiscardHand(Player p){
         for(int n=p.hand.size()-1; n>=0; n--)
-            playerDiscardCard(p, n);
+            playerDiscardCard(p.id, n);
     }
     
     /**
      * Discards card n in Player p's hand
      */
-    public void playerDiscardCard(Player p, int n){
-        Card c = p.hand.get(n);
+    public void playerDiscardCard(int p, int n){
+        Card c = players[p].hand.get(n);
         //is card a character card
         if(c.type==1){
-            p.hand.remove(c);
+            players[p].hand.remove(c);
         }
         else{
+            server.sendInfo(p, "SetInfo:discard:"+n);
             deck.discardPile.add(c);
         }
             

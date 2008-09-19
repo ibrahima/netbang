@@ -194,24 +194,15 @@ public class Server extends Thread {
                     choice.get(choice.size()-1)[n][0] = n;
                     choice.get(choice.size()-1)[n][1] = -2;
             }
-            for(String n:names){
-                prompt(n, s);
+            for(int n=0; n<numPlayers; n++){
+                prompt(n, s, false);
             }
         }
-        public void prompt(String n, String s){ //TODO: FIX THIS
-            if(choice.get(choice.size()-1)==null){
+
+        public void prompt(int player, String s, boolean one) {
+            if(one){    
                 System.out.println("Waiting for one player");
-                choice.add(new int[1][2]);
-            }
-            if(prompting == 0){
-                prompting = 1;
-            }
-            messages.get(n).add("Prompt:"+s);
-        }
-        public void prompt(int player, String s) {
-            if(choice.get(choice.size()-1)==null){
-                System.out.println("Waiting for one player");
-                choice.add(new int[1][2]);
+                choice.add(new int[][]{{player, -2}});
             }
             if(prompting == 0){
                 prompting = 1;
