@@ -216,8 +216,8 @@ public class Server extends Thread {
             if(prompting == 0){
                 prompting = 1;
             }
-            System.out.println(messages.get(player)==null);
-            messages.get(player).add("Prompt:"+s);
+            System.out.println(messages.get(names.get(player))==null);
+            messages.get(names.get(player)).add("Prompt:"+s);
         }
 }
 
