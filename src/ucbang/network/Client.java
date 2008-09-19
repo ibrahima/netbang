@@ -18,7 +18,7 @@ import ucbang.gui.ClientGUI;
 public class Client extends Thread {
 	String name = "";
 	int id;
-	static int numplayers = 0;// should be deprecated soon in favor of
+	public int numPlayers = 0;// should be deprecated soon in favor of
 	// players.size()
 	Socket socket = null;
 	Random r = new Random();
@@ -35,7 +35,7 @@ public class Client extends Thread {
 	public Client(String host, boolean guiEnabled) {
 		this.host = host;
 		if (guiEnabled)
-			gui = new ClientGUI(numplayers, this);
+			gui = new ClientGUI(numPlayers, this);
 		promptName();
 		this.start();
                 player = new Player(id,"name");   //check if this is right
@@ -45,7 +45,7 @@ public class Client extends Thread {
 		this.host = host;
 		this.name = name;
 		if (guiEnabled)
-			gui = new ClientGUI(numplayers++, this);
+			gui = new ClientGUI(numPlayers++, this);
 		this.start();
                 player = new Player(id,"name");   //check if this is right
 	}
@@ -244,7 +244,10 @@ class ClientThread extends Thread {
 							c.player.maxLifePoints += Integer.valueOf(temp1[1]);
 						}
                                                 else if (temp1[0].equals("turn")) {
-                                                        c.turn += Integer.valueOf(temp1[1]);
+                                                        c.turn = Integer.valueOf(temp1[1]);
+                                                        if(c.turn%c.numPlayers==0){
+                                                            c.gui.appendText("hay guyz, iz my turn");
+                                                        }
                                                 }
                                                 else{
                                                     System.out.println("WTF do i do with "+temp1[0]+":"+temp1[1]);
