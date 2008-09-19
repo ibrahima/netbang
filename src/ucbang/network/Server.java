@@ -209,13 +209,14 @@ public class Server extends Thread {
             messages.get(n).add("Prompt:"+s);
         }
         public void prompt(int player, String s) {
-                if(choice.get(choice.size()-1)==null){
+            if(choice.get(choice.size()-1)==null){
                 System.out.println("Waiting for one player");
                 choice.add(new int[1][2]);
             }
             if(prompting == 0){
                 prompting = 1;
             }
+            System.out.println(messages.get(player)==null);
             messages.get(player).add("Prompt:"+s);
         }
 }

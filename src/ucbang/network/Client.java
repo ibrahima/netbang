@@ -201,7 +201,7 @@ class ClientThread extends Thread {
 							c.gui.appendText("Host has requested the game be started");
 						}
 						else if (temp[1].equals("PlayCard")) { //play one card
-                                                    c.gui.promptChooseCard(c.player.hand,"","",true);
+                                                    c.outMsgs.add("Prompt:"+c.gui.promptChooseCard(c.player.hand,"","",true));
 						}
                                                 else if (temp[1].equals("ChooseCharacter")) { //play one card
                                                     c.outMsgs.add("Prompt:"+ c.gui.promptChooseCard(c.player.hand, "You are a(n):" + c.player.role.name(),"Choose your character", true));
