@@ -40,9 +40,9 @@ public class Bang {
         else{
             if(server.choice.size()==1){
                 System.out.println("PLAY SOMETHING");
-                System.out.println("You played "+server.choice.get(0)[0][1]+". You have "+(players[server.choice.get(0)[0][1]].hand.size()-1)+" cards left in your hand.");
+                System.out.println("You played "+server.choice.get(0)[0][1]+". You have "+(players[server.choice.get(0)[0][0]].hand.size()-1)+" cards left in your hand.");
                 playerDiscardCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]); //replace server.choice.get(0)[0][0] with turn%numPlayers?
-                if(server.choice.get(0)[0][1]==-1||players[server.choice.get(0)[0][1]].hand.size()<=0){ //TODO: add check for cards that can be played on field as well
+                if(server.choice.get(0)[0][1]==-1||players[server.choice.get(0)[0][0]].hand.size()<=0){ //TODO: add check for cards that can be played on field as well
                     server.choice.remove(server.choice.size()-1);
                     nextTurn();
                 }
@@ -139,7 +139,7 @@ public class Bang {
                 break;
             }
         }
-        server.choice.remove(0);
+        server.choice.clear();
         nextTurn();
     }
     
@@ -167,7 +167,7 @@ public class Bang {
         else{
             //Yuck, there's alot of characters with this ability
         }
-        System.out.println(turn%numPlayers);
+        System.out.println("It is turn "+turn%numPlayers);
         server.prompt(turn%numPlayers, "PlayCardUnforced", true);
     }
     
@@ -321,7 +321,7 @@ public class Bang {
     public void playerDiscardCard(int p, int n){
         Card c = players[p].hand.get(n);
         //is card a character card
-         players[p].hand.remove(c);
+        players[p].hand.remove(c);
         if(c.type==1){
             //players[p].hand.remove(n);
         }
