@@ -66,7 +66,7 @@ public class CardDisplayer {
 		cards.put("TEQUILA", Toolkit.getDefaultToolkit().getImage("images/cards/dodge/tequila.jpg"));
 		cards.put("VOLCANIC", Toolkit.getDefaultToolkit().getImage("images/cards/bang/b_vulcanic.jpg"));
 		cards.put("WELLS_FARGO", Toolkit.getDefaultToolkit().getImage("images/cards/bang/wellsfargo.jpg"));
-		cards.put("WHISKY", null);
+		cards.put("WHISKY", Toolkit.getDefaultToolkit().getImage("images/cards/dodge/whisky.jpg"));
 		cards.put("WINCHESTER", Toolkit.getDefaultToolkit().getImage("images/cards/bang/b_winchester.jpg"));
 	}
 

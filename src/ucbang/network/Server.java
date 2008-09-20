@@ -260,7 +260,7 @@ class ServerThread extends Thread {
 			try {
 				if (in.ready()) {
 					buffer = (String) in.readLine();
-					System.out.println("Server received from player ID "+id+" "+ buffer);
+					//System.out.println("Server received from player ID "+id+" "+ buffer);
 					String[] temp = buffer.split(":", 2);
 					if (temp[0].equals("Name")) {
 						if (!connected) {// player was never connected

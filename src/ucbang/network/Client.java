@@ -237,7 +237,8 @@ class ClientThread extends Thread {
                                                 else if (temp[1].equals("PlayCardUnforced")) { //play one card
                                                     int a = c.gui.promptChooseCard(c.player.hand,"","",false);
                                                     c.outMsgs.add("Prompt:"+a);
-                                                    System.out.println("PLAYING CARD"+c.player.hand.get(a).name);
+                                                    if(a>=0)
+                                                        System.out.println("PLAYING CARD"+c.player.hand.get(a).name);
                                                 }
                                                 else if (temp[1].equals("ChooseCharacter")) { //play one card
                                                     c.outMsgs.add("Prompt:"+ c.gui.promptChooseCard(c.player.hand, "You are a(n):" + c.player.role.name(),"Choose your character", true));
