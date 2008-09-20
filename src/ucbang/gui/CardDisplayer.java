@@ -61,7 +61,7 @@ public class CardDisplayer {
 		cards.put("SILVER", Toolkit.getDefaultToolkit().getImage("images/cards/dodge/silver.jpg"));
 		cards.put("SOMBRERO", Toolkit.getDefaultToolkit().getImage("images/cards/dodge/z_sombrero.jpg"));
 		cards.put("SPRINGFIELD", Toolkit.getDefaultToolkit().getImage("images/cards/dodge/springfield.jpg"));
-		cards.put("STAGECOACH", null);//TODO
+		cards.put("STAGECOACH", Toolkit.getDefaultToolkit().getImage("images/cards/bang/dostavnik.jpg"));//TODO
 		cards.put("TEN_GALLON_HAT", Toolkit.getDefaultToolkit().getImage("images/cards/dodge/z_gallonhat.jpg"));
 		cards.put("TEQUILA", Toolkit.getDefaultToolkit().getImage("images/cards/dodge/tequila.jpg"));
 		cards.put("VOLCANIC", Toolkit.getDefaultToolkit().getImage("images/cards/bang/b_vulcanic.jpg"));

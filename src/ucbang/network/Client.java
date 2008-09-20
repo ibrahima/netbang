@@ -41,14 +41,14 @@ public class Client extends Thread {
 		gui.addMouseListener(field);
 		//Begin testing card field stuffs
 		CardName[] cards=CardName.values();
-		int x = 10;
+		int x = 70;
 		int y = 30;
 		for(int i=0;i<cards.length;i++){
 			field.add(new Card(cards[i]), x,y);
 			x+=60;
 			if(x>750){
 				y+=90;
-				x=10;
+				x=70;
 			}
 		}
 		promptName();
@@ -65,14 +65,14 @@ public class Client extends Thread {
 		gui.addMouseListener(field);
 		//Begin testing card field stuffs
 		CardName[] cards=CardName.values();
-		int x = 10;
+		int x = 70;
 		int y = 30;
 		for(int i=0;i<cards.length;i++){
 			field.add(new Card(cards[i]), x,y);
 			x+=60;
 			if(x>750){
 				y+=90;
-				x=10;
+				x=70;
 			}
 		}
 		this.start();
