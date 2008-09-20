@@ -79,6 +79,8 @@ public class ClientGUI extends JFrame implements KeyListener {
 						.drawString(text.get(n), 20, 580 - 15 * (textIndex - n));
 			}
 		}
+		if(client.field!=null)
+			client.field.paint(graphics);
 		graphics.setColor(Color.DARK_GRAY);
 		graphics.drawString("Players", 25, 40);
 		Iterator<String> iter = client.players.iterator();
@@ -86,8 +88,7 @@ public class ClientGUI extends JFrame implements KeyListener {
 		while (iter.hasNext()) {
 			graphics.drawString(iter.next(), 30, 60 + 15 * n++);
 		}
-		if(client.field!=null)
-		client.field.paint(graphics);
+
 		graphics.dispose();
 		// paint backbuffer to window
 		strategy.show();
