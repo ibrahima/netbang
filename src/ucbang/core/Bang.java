@@ -41,7 +41,8 @@ public class Bang {
             if(server.choice.size()==1){
                 System.out.println("PLAY SOMETHING");
                 System.out.println("You played "+server.choice.get(0)[0][1]+". You have "+(players[server.choice.get(0)[0][0]].hand.size()-1)+" cards left in your hand.");
-                playerDiscardCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]); //replace server.choice.get(0)[0][0] with turn%numPlayers?
+                if(server.choice.get(0)[0][1]!=-1)
+                    playerDiscardCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]); //replace server.choice.get(0)[0][0] with turn%numPlayers?
                 if(server.choice.get(0)[0][1]==-1||players[server.choice.get(0)[0][0]].hand.size()<=0){ //TODO: add check for cards that can be played on field as well
                     server.choice.remove(server.choice.size()-1);
                     nextTurn();
