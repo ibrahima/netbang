@@ -40,12 +40,12 @@ public class Bang {
         else{
             if(server.choice.size()==1){
                 System.out.println("PLAY SOMETHING");
-                System.out.println("you played "+server.choice.get(0)[0][1]);
-                if(server.choice.get(0)[0][1]==-1||players[server.choice.get(0)[0][1]].hand.size()<=0){
+                System.out.println("You played "+server.choice.get(0)[0][1]+". You have "+(players[server.choice.get(0)[0][1]].hand.size()-1)+" cards left in your hand.");
+                playerDiscardCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]); //replace server.choice.get(0)[0][0] with turn%numPlayers?
+                if(server.choice.get(0)[0][1]==-1||players[server.choice.get(0)[0][1]].hand.size()<=0){ //TODO: add check for cards that can be played on field as well
                     nextTurn();
                 }
                 else{
-                    playerDiscardCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]); //replace server.choice.get(0)[0][0] with turn%numPlayers?
                     server.prompt(turn%numPlayers, "PlayCardUnforced", true);
                 }
                 server.choice.remove(server.choice.size()-1);
@@ -320,8 +320,9 @@ public class Bang {
     public void playerDiscardCard(int p, int n){
         Card c = players[p].hand.get(n);
         //is card a character card
+         players[p].hand.remove(c);
         if(c.type==1){
-            players[p].hand.remove(c);
+            //players[p].hand.remove(n);
         }
         else{
             server.sendInfo(p, "SetInfo:discard:"+n);
