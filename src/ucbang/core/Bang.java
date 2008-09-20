@@ -41,15 +41,14 @@ public class Bang {
             if(server.choice.size()==1){
                 System.out.println("PLAY SOMETHING");
                 System.out.println("you played "+server.choice.get(0)[0][1]);
-                if(server.choice.get(0)[0][1]==-1){
+                if(server.choice.get(0)[0][1]==-1||players[server.choice.get(0)[0][1]].hand.size()<=0){
                     nextTurn();
                 }
                 else{
                     playerDiscardCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]); //replace server.choice.get(0)[0][0] with turn%numPlayers?
-                    if(players[turn%numPlayers].hand.size()>0)
-                        server.prompt(turn%numPlayers, "PlayCardUnforced", true);
-                    else{System.out.println("You have no more cards to play"); nextTurn();}
+                    server.prompt(turn%numPlayers, "PlayCardUnforced", true);
                 }
+                server.choice.remove(server.choice.size()-1);
             }
         }
     }
