@@ -30,9 +30,26 @@ class MainPage(webapp.RequestHandler):
       #servers = servers.filter('date <' , now - threshold)
       template_values = {'servers': servers }
       
-      path = os.path.join(os.path.dirname(__file__), 'list.xml')
+      path = os.path.join(os.path.dirname(__file__), 'index.html')
       self.response.out.write(template.render(path, template_values))
-    
+      
+class Xml(webapp.RequestHandler):
+  def get(self):
+      servers_query = Server.all().order('-date')
+      servers = servers_query.fetch(1000)
+      
+      now = datetime.datetime.now()
+      threshold = datetime.timedelta(minutes=5)
+      for s in servers:
+          diff = now - s.date
+          if diff>threshold:
+              s.delete()
+              servers.remove(s)
+      #servers = servers.filter('date <' , now - threshold)
+      template_values = {'servers': servers }
+      
+      path = os.path.join(os.path.dirname(__file__), 'list.xml')
+      self.response.out.write(template.render(path, template_values))    
 class AddServer(webapp.RequestHandler):
   def get(self):
     self.response.out.write("""
@@ -73,6 +90,7 @@ class ServerList(webapp.RequestHandler):
 
 application = webapp.WSGIApplication(
                                      [('/', MainPage),
+                                      ('/xml', Xml),
                                       ('/add', AddServer),
                                       ('/process', ServerList)],
                                      debug=True)

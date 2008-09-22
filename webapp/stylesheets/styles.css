@@ -1,0 +1,13 @@
+@CHARSET "ISO-8859-1";
+body {
+	font-family: Verdana, Helvetica, sans-serif;
+}
+#serverlist{
+	border:1px solid;
+}
+#serverlist td{
+	border:1px solid
+}
+#serverlist tr{
+	border:1px solid
+}
