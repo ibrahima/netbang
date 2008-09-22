@@ -38,7 +38,8 @@ public class Client extends Thread {
 		if (guiEnabled)
 			gui = new ClientGUI(numPlayers, this);
 		field = new Field(new CardDisplayer());
-		gui.addMouseListener(field);
+		gui.addMouseListener(field); //TODO: does this need to be here?
+                gui.addMouseMotionListener(field);
 		//Begin testing card field stuffs
 		CardName[] cards=CardName.values();
 		int x = 70;
@@ -253,7 +254,9 @@ class ClientThread extends Thread {
                                                         c.player.hand.add(new Card(Deck.Characters.valueOf(temp1[m])));
                                                     }
                                                     else{
-                                                        c.player.hand.add(new Card(Deck.CardName.valueOf(temp1[m])));    
+                                                        Card card = new Card(Deck.CardName.valueOf(temp1[m]));
+                                                        c.player.hand.add(card);    
+                                                        c.field.add(card,80,80);
                                                     }
                                                 }
                                                 c.outMsgs.add("Ready");
@@ -275,6 +278,7 @@ class ClientThread extends Thread {
                                                         c.numPlayers = Integer.valueOf(temp1[2]);
 						}
 						else if (temp1[0].equals("role")) {
+                                                        c.field.clear();
 							c.player.role = Deck.Role.values()[Integer.valueOf(temp1[1])];
 						}
 						else if (temp1[0].equals("maxHP")) {

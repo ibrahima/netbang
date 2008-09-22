@@ -55,6 +55,11 @@ public class ClientGUI extends JFrame implements KeyListener {
 		});
 		//paint(getGraphics());
 	}
+        
+        /*
+        public void clear(){
+            client.field.clear();
+        }*/
 
 	public void paint(Graphics g) {
 		Graphics2D graphics;
@@ -168,8 +173,7 @@ public class ClientGUI extends JFrame implements KeyListener {
 	 * @param al
 	 * @return
 	 */
-	public int promptChooseCard(ArrayList<Card> al, String str1, String str2,
-			boolean forceDecision) {
+	public int promptChooseCard(ArrayList<Card> al, String str1, String str2,boolean forceDecision) {
 		Card[] temp = new Card[al.size()];
 		temp = al.toArray(temp);
 		String[] options = new String[temp.length];
