@@ -1,6 +1,7 @@
 import cgi
 import os
 import hashlib
+import datetime
 
 from google.appengine.api import users
 from google.appengine.ext import webapp
@@ -16,15 +17,21 @@ class Server(db.Model):
     
 class MainPage(webapp.RequestHandler):
   def get(self):
-    servers_query = Server.all().order('-date')
-    servers = servers_query.fetch(10)
-
-    template_values = {
-      'servers': servers
-      }
-
-    path = os.path.join(os.path.dirname(__file__), 'list.xml')
-    self.response.out.write(template.render(path, template_values))
+      servers_query = Server.all().order('-date')
+      servers = servers_query.fetch(1000)
+      
+      now = datetime.datetime.now()
+      threshold = datetime.timedelta(minutes=5)
+      for s in servers:
+          diff = now - s.date
+          if diff>threshold:
+              s.delete()
+              servers.remove(s)
+      #servers = servers.filter('date <' , now - threshold)
+      template_values = {'servers': servers }
+      
+      path = os.path.join(os.path.dirname(__file__), 'list.xml')
+      self.response.out.write(template.render(path, template_values))
     
 class AddServer(webapp.RequestHandler):
   def get(self):
