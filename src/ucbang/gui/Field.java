@@ -93,6 +93,8 @@ public class Field implements MouseListener, MouseMotionListener{
                 cardSpace cs = binarySearchCardAtPoint(ep);
                 if(cs != null)
                     System.out.println("Clicked on "+cs.card.name);
+                else
+                    return;
                 if(client.prompting && pick.contains(cs.card)){
                     System.out.println("sending prompt...");
                     if(cs.card.type==1){
