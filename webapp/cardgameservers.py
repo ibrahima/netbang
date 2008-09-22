@@ -1,9 +1,11 @@
 import cgi
+import os
 
 from google.appengine.api import users
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp.util import run_wsgi_app
 from google.appengine.ext import db
+from google.appengine.ext.webapp import template
 
 class Server(db.Model):
     ip = db.StringProperty()
@@ -12,19 +14,16 @@ class Server(db.Model):
     date = db.DateTimeProperty(auto_now_add=True)
     
 class MainPage(webapp.RequestHandler):
-    def get(self):
-        self.response.out.write('<html><body>')
-    
-        servers = db.GqlQuery("SELECT * FROM Server ORDER BY date DESC LIMIT 10")
-    
-        for server in servers:
-            self.response.out.write('<p>Name: %s'
-                                    % cgi.escape(server.gamename))
-    
-        # Write the submission form and the footer of the page
-        self.response.out.write("""
-            </body>
-          </html>""")
+  def get(self):
+    servers_query = Server.all().order('-date')
+    servers = servers_query.fetch(10)
+
+    template_values = {
+      'servers': servers
+      }
+
+    path = os.path.join(os.path.dirname(__file__), 'list.xml')
+    self.response.out.write(template.render(path, template_values))
     
 class AddServer(webapp.RequestHandler):
   def get(self):

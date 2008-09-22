@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<serverlist>
+    {% for server in servers %}
+	<server>
+		<name>{{ server.gamename|escape }}</name>
+		<ip>{{ server.ip|escape }}</ip>
+		<type>{{ server.type|escape }}</type>
+	</server>
+	{% endfor %}
+</serverlist>
