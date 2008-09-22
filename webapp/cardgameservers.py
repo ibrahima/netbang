@@ -56,13 +56,18 @@ class ServerList(webapp.RequestHandler):
       server.type = self.request.get('type')
       sh.update(self.request.get('ip'))
       if sh.hexdigest()==self.request.get('hash'):
+        q = db.GqlQuery("SELECT * FROM Server WHERE gamename = :gname", gname=server.gamename)
+        results = q.fetch(1000)
+        db.delete(results)
         server.put()
-      self.redirect('/')
+        self.response.out.write("Server added")
+      else:
+        self.response.out.write("Bad hash")
 
 application = webapp.WSGIApplication(
                                      [('/', MainPage),
                                       ('/add', AddServer),
-                                      ('/sign', ServerList)],
+                                      ('/process', ServerList)],
                                      debug=True)
 
 def main():

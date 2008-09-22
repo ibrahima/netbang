@@ -10,7 +10,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 public class ServerListAdder {
-	String address = "http://cardgameservers.appspot.com/";
+	String address = "http://cardgameservers.appspot.com/process";
 	String ip;
 	String hash;
 	final String type = "bang";
@@ -47,22 +47,22 @@ public class ServerListAdder {
 			hConnection.setRequestMethod("POST");
 
 			PrintStream ps = new PrintStream(hConnection.getOutputStream());
-			ps.print("ip="+ip+"&amp;name="+name+"&amp;type="+type+"&amp;hash="+hash);
+			ps.print("ip="+ip+"&amp;gamename="+name+"&amp;type="+type+"&amp;hash="+hash);
 			ps.close();
-
+			System.out.println("Should have added server");
 			hConnection.connect();
 
-			/*if (HttpURLConnection.HTTP_OK == hConnection.getResponseCode()) {
+			if (HttpURLConnection.HTTP_OK == hConnection.getResponseCode()) {
 				InputStream is = hConnection.getInputStream();
-				OutputStream os = new FileOutputStream("output.html");
-				int data;
-				while ((data = is.read()) != -1) {
-					os.write(data);
+				byte data;
+				while ((data = (byte) is.read()) != -1) {
+					System.out.print(data);
 				}
 				is.close();
-				os.close();
 				hConnection.disconnect();
-			}*/
+			}else{
+				System.out.println("Ugh, something bad happened");
+			}
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
