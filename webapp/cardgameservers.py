@@ -1,5 +1,6 @@
 import cgi
 import os
+import hashlib
 
 from google.appengine.api import users
 from google.appengine.ext import webapp
@@ -48,11 +49,14 @@ class AddServer(webapp.RequestHandler):
 
 class ServerList(webapp.RequestHandler):
   def post(self):
+      sh = hashlib.sha1()
       server = Server()
       server.ip = self.request.get('ip')
       server.gamename = self.request.get('gamename')
       server.type = self.request.get('type')
-      server.put()
+      sh.update(self.request.get('ip'))
+      if sh.hexdigest()==self.request.get('hash'):
+        server.put()
       self.redirect('/')
 
 application = webapp.WSGIApplication(
