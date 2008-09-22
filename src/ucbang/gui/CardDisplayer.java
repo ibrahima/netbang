@@ -68,6 +68,37 @@ public class CardDisplayer {
 		cards.put("WELLS_FARGO", Toolkit.getDefaultToolkit().getImage("images/cards/bang/wellsfargo.jpg"));
 		cards.put("WHISKY", Toolkit.getDefaultToolkit().getImage("images/cards/dodge/whisky.jpg"));
 		cards.put("WINCHESTER", Toolkit.getDefaultToolkit().getImage("images/cards/bang/b_winchester.jpg"));
+                cards.put("BART_CASSIDY", Toolkit.getDefaultToolkit().getImage("images/char/bang/bartcassidy.jpg"));
+                cards.put("BLACK_JACK", Toolkit.getDefaultToolkit().getImage("images/char/bang/blackjack.jpg"));
+                cards.put("CALAMITY_JANET",Toolkit.getDefaultToolkit().getImage("images/char/bang/calamityjanet.jpg"));
+                cards.put("EL_GRINGO", Toolkit.getDefaultToolkit().getImage("images/char/bang/elgringo.jpg"));
+                cards.put("JESSE_JONES", Toolkit.getDefaultToolkit().getImage("images/char/bang/jessejones.jpg"));
+                cards.put("JOURDONNAIS", Toolkit.getDefaultToolkit().getImage("images/char/bang/jourdonnais.jpg"));
+                cards.put("KIT_CARLSON", Toolkit.getDefaultToolkit().getImage("images/char/bang/kitcarlson.jpg"));
+                cards.put("LUCKY_DUKE", Toolkit.getDefaultToolkit().getImage("images/char/bang/luckyduke.jpg"));
+                cards.put("PAUL_REGRET", Toolkit.getDefaultToolkit().getImage("images/char/bang/paulregret.jpg"));
+                cards.put("PEDRO_RAMIREZ", Toolkit.getDefaultToolkit().getImage("images/char/bang/pedroramirez.jpg"));
+                cards.put("ROSE_DOOLAN", Toolkit.getDefaultToolkit().getImage("images/char/bang/rosedoolan.jpg"));
+                cards.put("SID_KETCHUM", Toolkit.getDefaultToolkit().getImage("images/char/bang/sidketchum.jpg"));
+                cards.put("SLAB_THE_KILLER", Toolkit.getDefaultToolkit().getImage("images/char/bang/slabthekiller.jpg"));
+                cards.put("SUZY_LAFAYETTE", Toolkit.getDefaultToolkit().getImage("images/char/bang/suzylafayette.jpg"));
+                cards.put("VULTURE_SAM", Toolkit.getDefaultToolkit().getImage("images/char/bang/vulturesam.jpg"));
+                cards.put("WILLY_THE_KID", Toolkit.getDefaultToolkit().getImage("images/char/bang/willythekid.jpg"));
+                cards.put("APACHE_KID", Toolkit.getDefaultToolkit().getImage("images/char/dodge/apachekid.jpg"));
+                cards.put("BELLE_STAR", Toolkit.getDefaultToolkit().getImage("images/char/dodge/bellestar.jpg"));
+                cards.put("BILL_NOFACE", Toolkit.getDefaultToolkit().getImage("images/char/dodge/billnoface.jpg"));
+                cards.put("CHUCK_WENGAM", Toolkit.getDefaultToolkit().getImage("images/char/dodge/chuckwengam.jpg"));
+                cards.put("DOC_HOLYDAY", Toolkit.getDefaultToolkit().getImage("images/char/dodge/docholyday.jpg"));
+                cards.put("ELENA_FUENTE", Toolkit.getDefaultToolkit().getImage("images/char/dodge/elenafuente.jpg"));
+                cards.put("GREG_DIGGER", Toolkit.getDefaultToolkit().getImage("images/char/dodge/gregdigger.jpg"));
+                cards.put("HERB_HUNTER", Toolkit.getDefaultToolkit().getImage("images/char/dodge/herbhunter.jpg"));
+                cards.put("JOSE_DELGADO", Toolkit.getDefaultToolkit().getImage("images/char/dodge/josedelgado.jpg"));
+                cards.put("MOLLY_STARK", Toolkit.getDefaultToolkit().getImage("images/char/dodge/mollystark.jpg"));
+                cards.put("PAT_BRENNAN", Toolkit.getDefaultToolkit().getImage("images/char/dodge/patbrennan.jpg"));
+                cards.put("PIXIE_PETE", Toolkit.getDefaultToolkit().getImage("images/char/dodge/pixiepete.jpg"));
+                cards.put("SEAN_MALLORY", Toolkit.getDefaultToolkit().getImage("images/char/dodge/seanmallory.jpg"));
+                cards.put("TEQUILA_JOE", Toolkit.getDefaultToolkit().getImage("images/char/dodge/tequilajoe.jpg"));
+                cards.put("VERA_CUSTER", Toolkit.getDefaultToolkit().getImage("images/char/dodge/veracuster.jpg"));
 	}
 
 	public void paint(String card, Graphics2D graphics, int x, int y){

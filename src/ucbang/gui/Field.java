@@ -17,15 +17,21 @@ import java.util.LinkedHashMap;
 import ucbang.core.Card;
 import ucbang.core.Player;
 import ucbang.core.Deck.CardName;
+
+import ucbang.network.Client;
+
 public class Field implements MouseListener, MouseMotionListener{
-	Player[] players;//in the future it should get the cards directly from players?
-	BSHashMap<Card, cardSpace> cards = new BSHashMap<Card, cardSpace>();
+	Client client;
+	public BSHashMap<Card, cardSpace> cards = new BSHashMap<Card, cardSpace>();
 	CardDisplayer cd;
         Point pointOnCard;
         cardSpace movingCard;
+        Card clicked;
+        ArrayList<Card> pick;
         
-	public Field(CardDisplayer cd) {
+	public Field(CardDisplayer cd, Client c) {
 		this.cd=cd;
+                client = c;
 	}
 	public void add(Card card, int x, int y){
 		cards.put(card, new cardSpace(card, new Rectangle(x,y,55,85)));
@@ -83,19 +89,31 @@ public class Field implements MouseListener, MouseMotionListener{
         }
         
 	public void mouseClicked(MouseEvent e) {
-		// TODO Auto-generated method stub
 		Point ep=e.getPoint();
-		/*Iterator<Card> iter = cards.keySet().iterator();
-		while(iter.hasNext()){
-                        Card temp = iter.next();
-                        Point p = cards.get(temp).rect.getLocation();
-			if(ep.x>p.x&&ep.x<p.x+55&&ep.y>p.y&&ep.y<p.y+85){
-				System.out.println("Clicked on " + temp);
-			}
-		}*/
                 cardSpace cs = binarySearchCardAtPoint(ep);
                 if(cs != null)
                     System.out.println("Clicked on "+cs.card.name);
+                if(client.prompting && pick.contains(cs.card)){
+                    System.out.println("sending prompt...");
+                    if(cs.card.type==1){
+                        client.outMsgs.add("Prompt:"+ pick.indexOf(cs.card));
+                        client.player.hand.clear(); //you just picked a character card
+                        clear();
+                    }
+                    else{
+                        client.outMsgs.add("Prompt:"+ pick.indexOf(cs.card));
+                    }
+                    client.prompting = false;
+                }
+                else{ //TODO: debug stuff
+                    if(client.prompting){
+                        System.out.println("i was prompting");
+                        if(!client.player.hand.contains(cs.card)){
+                            System.out.println("but the arraylist didn't contain the card i was looking for!");
+                            System.out.println(cs.card+" "+client.player.hand);
+                        }
+                    }
+                }
 	}
 	public void mouseEntered(MouseEvent e) {
 	}
@@ -128,7 +146,7 @@ public class Field implements MouseListener, MouseMotionListener{
         public void mouseMoved(MouseEvent e) {
         }
 
-    private class BSHashMap<K,V> extends HashMap<K,V>{
+    public class BSHashMap<K,V> extends HashMap<K,V>{
         ArrayList<V> occupied = new ArrayList<V>();
         
         public V put(K key, V value){
@@ -149,6 +167,11 @@ public class Field implements MouseListener, MouseMotionListener{
         public void clear(){
             occupied.clear();
             super.clear();
+        }
+        public V remove(Object o){
+            occupied.remove(get(o));
+            V oo = super.remove(o);
+            return oo;
         }
     }
         

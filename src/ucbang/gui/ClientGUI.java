@@ -151,21 +151,6 @@ public class ClientGUI extends JFrame implements KeyListener {
 		return 1 - p; // temporary fix for not being able to target
 	}
 
-	public int promptChooseCharacter(ArrayList<Card> al) {
-		return promptChooseCard(al, "Who do you want to be? You are a(n) " // TODO
-																			// :
-																			// check
-																			// for
-																			// a
-																			// /
-																			// an
-																			// instead
-																			// of
-																			// being
-																			// lazy
-				+ player.role, "Choose your character!", true);
-	}
-
 	/**
 	 * Asks the player to choose a card. This is used for many instances. TODO:
 	 * replace al with ID of the player.
@@ -173,26 +158,44 @@ public class ClientGUI extends JFrame implements KeyListener {
 	 * @param al
 	 * @return
 	 */
-	public int promptChooseCard(ArrayList<Card> al, String str1, String str2,boolean forceDecision) {
-		Card[] temp = new Card[al.size()];
+	public void promptChooseCard(ArrayList<Card> al, String str1, String str2,boolean force) {
+                System.out.println(al.size()+" "+client.player.hand.size());
+                client.field.pick = al;
+                client.prompting = true;
+                client.forceDecision = force;
+                //TODO: remove this junk
+                /*Card[] temp = new Card[al.size()];
 		temp = al.toArray(temp);
 		String[] options = new String[temp.length];
 		for (int i = 0; i < temp.length; i++) {
 			options[i] = ((Card) temp[i]).name;
 		}
-		int n = -1;
-		if (forceDecision) {
-			while (n == -1)
-				n = JOptionPane
-						.showOptionDialog(this, str1, str2,
-								JOptionPane.YES_NO_OPTION,
-								JOptionPane.QUESTION_MESSAGE, null, options,
-								options[0]);
-			return n;
-		} else
-			return JOptionPane.showOptionDialog(this, str1, str2,
-					JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE,
-					null, options, options[0]);
+		
+                int n = -1;
+                if(al.get(0).type==1){
+                    if (forceDecision) {
+                            while (n == -1)
+                                    n = JOptionPane
+                                                    .showOptionDialog(this, str1, str2,
+                                                                    JOptionPane.YES_NO_OPTION,
+                                                                    JOptionPane.QUESTION_MESSAGE, null, options,
+                                                                    options[0]);
+                            return n;
+                    } else
+                            return JOptionPane.showOptionDialog(this, str1, str2,
+                                            JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE,
+                                            null, options, options[0]);
+                }
+                else{
+                    if(forceDecision){
+                        while(client.field.clicked==null){}
+                        return al.indexOf(client.field.clicked);
+                    }
+                    else{ //TODO: add a way of skipping turns
+                        while(client.field.clicked==null){}
+                        return al.indexOf(client.field.clicked);
+                    }
+                }*/
 	}
 
 	public void keyPressed(KeyEvent e) {

@@ -25,19 +25,22 @@ public class Client extends Thread {
 	int port = 12345;
 	String host = "127.0.0.1";
 	boolean connected = false;
-	LinkedList<String> outMsgs = new LinkedList<String>();
+	public LinkedList<String> outMsgs = new LinkedList<String>();
 	ClientGUI gui;
 	public Player player;
 	public LinkedList<String> players = new LinkedList<String>();
 	public Field field;
 	ClientThread t;
 	int turn;
+        
+        public boolean prompting;
+        public boolean forceDecision;
 
 	public Client(String host, boolean guiEnabled) {
 		this.host = host;
 		if (guiEnabled)
 			gui = new ClientGUI(numPlayers, this);
-		field = new Field(new CardDisplayer());
+		field = new Field(new CardDisplayer(), this);
 		gui.addMouseListener(field); //TODO: does this need to be here?
                 gui.addMouseMotionListener(field);
 		//Begin testing card field stuffs
@@ -52,6 +55,20 @@ public class Client extends Thread {
 				x=70;
 			}
 		}
+                
+                /*Deck.Characters[] chars= Deck.Characters.values();
+		x = 70;
+		y = 30;
+		for(int i=0;i<chars.length;i++){
+			field.add(new Card(chars[i]), x,y);
+			x+=60;
+			if(x>750){
+				y+=90;
+				x=70;
+			}
+		}*/
+                 
+                
 		promptName();
 		this.start();
                 player = new Player(id,"name");   //check if this is right
@@ -62,7 +79,7 @@ public class Client extends Thread {
 		this.name = name;
 		if (guiEnabled)
 			gui = new ClientGUI(numPlayers++, this);
-		field = new Field(new CardDisplayer());
+		field = new Field(new CardDisplayer(), this);
 		gui.addMouseListener(field);
 		//Begin testing card field stuffs
 		CardName[] cards=CardName.values();
@@ -160,7 +177,8 @@ class ClientThread extends Thread {
 					.getInputStream()));
 		} catch (Exception e1) {
 			try {
-				server.close();
+				if(server!=null) //is it closing too soon some times?
+                                    server.close();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -231,19 +249,18 @@ class ClientThread extends Thread {
 							c.gui.appendText("Host has requested the game be started");
 						}
 						else if (temp[1].equals("PlayCard")) { //play one card
-                                                    int a = c.gui.promptChooseCard(c.player.hand,"","",true);
-                                                    c.outMsgs.add("Prompt:"+a);
-                                                    System.out.println("PLAYING CARD"+c.player.hand.get(a).name);
+                                                    c.gui.promptChooseCard(c.player.hand,"","",true);
+                                                    //c.outMsgs.add("Prompt:"+a);
+                                                    //System.out.println("PLAYING CARD"+c.player.hand.get(a).name);
 						}
                                                 else if (temp[1].equals("PlayCardUnforced")) { //play one card
-                                                    int a = c.gui.promptChooseCard(c.player.hand,"","",false);
-                                                    c.outMsgs.add("Prompt:"+a);
-                                                    if(a>=0)
-                                                        System.out.println("PLAYING CARD"+c.player.hand.get(a).name);
+                                                    c.gui.promptChooseCard(c.player.hand,"","",false);
+                                                    //c.outMsgs.add("Prompt:"+a);
+                                                    //if(a>=0)
+                                                    //    System.out.println("PLAYING CARD"+c.player.hand.get(a).name);
                                                 }
                                                 else if (temp[1].equals("ChooseCharacter")) { //play one card
-                                                    c.outMsgs.add("Prompt:"+ c.gui.promptChooseCard(c.player.hand, "You are a(n):" + c.player.role.name(),"Choose your character", true));
-                                                    c.player.hand.clear();
+                                                    c.gui.promptChooseCard(c.player.hand,"","",true);
                                                 }
 					} 
                                         else if (temp[0].equals("Draw")) {
@@ -251,12 +268,14 @@ class ClientThread extends Thread {
                                                 int n = temp1.length;
                                                 for(int m = 1; m<n; m++){
                                                     if(temp1[0].equals("Character")){
-                                                        c.player.hand.add(new Card(Deck.Characters.valueOf(temp1[m])));
+                                                        Card card = new Card(Deck.Characters.valueOf(temp1[m]));
+                                                        c.player.hand.add(card);
+                                                        c.field.add(card,80+(int)(400*Math.random()), 80+(int)(400*Math.random()));
                                                     }
                                                     else{
                                                         Card card = new Card(Deck.CardName.valueOf(temp1[m]));
                                                         c.player.hand.add(card);    
-                                                        c.field.add(card,80,80);
+                                                        c.field.add(card,80+(int)(400*Math.random()), 80+(int)(400*Math.random()));
                                                     }
                                                 }
                                                 c.outMsgs.add("Ready");
@@ -282,6 +301,7 @@ class ClientThread extends Thread {
 							c.player.role = Deck.Role.values()[Integer.valueOf(temp1[1])];
 						}
 						else if (temp1[0].equals("maxHP")) {
+                                                        c.field.clear();
 							c.player.maxLifePoints += Integer.valueOf(temp1[1]);
 						}
                                                 else if (temp1[0].equals("turn")) {
@@ -291,6 +311,7 @@ class ClientThread extends Thread {
                                                         }
                                                 }
                                                 else if (temp1[0].equals("discard")) {
+                                                        c.field.cards.remove(c.player.hand.get((int)Integer.valueOf(temp1[1])));
                                                         System.out.println("MOVED TO DISCARD:"+c.player.hand.remove((int)Integer.valueOf(temp1[1])).name);
                                                 }
                                                 else{
