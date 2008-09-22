@@ -87,10 +87,14 @@ class ServerList(webapp.RequestHandler):
         self.response.out.write("Server added")
       else:
         self.response.out.write("Bad hash")
-
+class GetIP(webapp.RequestHandler):
+    def get(self):
+        self.response.out.write(os.environ['REMOTE_ADDR'])
+        
 application = webapp.WSGIApplication(
                                      [('/', MainPage),
                                       ('/xml', Xml),
+                                      ('/ip', GetIP),
                                       ('/add', AddServer),
                                       ('/process', ServerList)],
                                      debug=True)
