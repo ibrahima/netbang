@@ -32,7 +32,8 @@ public class Server extends Thread {
         
 	Bang game; // just insert game stuff here
 	public ArrayList<String> names = new ArrayList<String>();
-
+	ServerListAdder adder = new ServerListAdder();
+	long listLastUpdated;
 	void print(Object stuff) {
 		System.out.println("Server:" + stuff);
 	}
@@ -45,6 +46,7 @@ public class Server extends Thread {
 			e.printStackTrace();
 		}
 		print("Game server is listening to port " + port);
+		
 		this.start();
 	}
 
@@ -54,6 +56,10 @@ public class Server extends Thread {
 
 	public void run() {
 		while (true) {
+			if(listLastUpdated-System.currentTimeMillis()>60000){
+				listLastUpdated=System.currentTimeMillis();
+				adder.addToServerList();
+			}	
 			if (gameInProgress == 0) {
 				try {
 					Socket client = me.accept();

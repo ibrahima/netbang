@@ -25,6 +25,18 @@ public class ServerListAdder {
 			e.printStackTrace();
 		}
 	}
+	public ServerListAdder(String name) {
+		this.name=name;
+		try {
+			MessageDigest md = MessageDigest.getInstance("SHA-1");
+			md.update(name.getBytes());
+			md.update(type.getBytes());
+			byte[] bar = md.digest();
+			hash = getHexString(bar);
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+		}
+	}
 
 	public String getHexString(byte[] b) {
 		String result = "";
