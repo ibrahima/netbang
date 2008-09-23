@@ -42,7 +42,7 @@ public class Client extends Thread {
 			gui = new ClientGUI(numPlayers, this);
 		field = new Field(new CardDisplayer(), this);
 		gui.addMouseListener(field); //TODO: does this need to be here?
-                gui.addMouseMotionListener(field);
+		gui.addMouseMotionListener(field);
 		//Begin testing card field stuffs
 		CardName[] cards=CardName.values();
 		int x = 70;
@@ -54,20 +54,7 @@ public class Client extends Thread {
 				y+=90;
 				x=70;
 			}
-		}
-                
-                /*Deck.Characters[] chars= Deck.Characters.values();
-		x = 70;
-		y = 30;
-		for(int i=0;i<chars.length;i++){
-			field.add(new Card(chars[i]), x,y);
-			x+=60;
-			if(x>750){
-				y+=90;
-				x=70;
-			}
-		}*/
-                 
+		}               
                 
 		promptName();
 		this.start();
@@ -81,6 +68,7 @@ public class Client extends Thread {
 			gui = new ClientGUI(numPlayers++, this);
 		field = new Field(new CardDisplayer(), this);
 		gui.addMouseListener(field);
+		gui.addMouseMotionListener(field);
 		//Begin testing card field stuffs
 		CardName[] cards=CardName.values();
 		int x = 70;
