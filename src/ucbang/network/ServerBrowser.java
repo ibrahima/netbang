@@ -35,7 +35,7 @@ public class ServerBrowser {
 			this.type=type;
 		}
 		public String toString(){
-			return type+" server \""+name+"\"on "+ip;
+			return type+" server \""+name+"\" on "+ip;
 		}
 	}
 	ArrayList<ServerInfo> servers = new ArrayList<ServerInfo>();
