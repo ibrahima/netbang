@@ -56,7 +56,6 @@ public class ClientGUI extends JFrame implements KeyListener {
 				((ClientGUI)(e.getWindow())).client.running=false;
 			}
 		});
-		//paint(getGraphics());
 	}
         
 
@@ -72,6 +71,13 @@ public class ClientGUI extends JFrame implements KeyListener {
 		graphics.fillRect(0, 0, 800, 400);
 		graphics.setColor(new Color(100, 0, 0));
 		graphics.fillRect(0, 400, 800, 600);
+                
+                //the ugly proxy skip turn button: this is coded for in Field.java
+                graphics.setColor(new Color(255, 255, 255));
+                graphics.fillRect(760, 560, 40, 40);
+                graphics.setColor(new Color(0, 0, 0));
+                graphics.drawString("Skip", 770, 580);
+                
 		if (chatting) {
 			graphics.setColor(Color.WHITE);
 			graphics.drawString("Chatting: " + chat.toString(), 20, 420);

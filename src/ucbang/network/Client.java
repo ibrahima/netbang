@@ -90,7 +90,7 @@ public class Client extends Thread {
 
 	public static void main(String[] Args) {
 		if (Args.length == 0)
-			new Client("127.0.0.1", true);
+			new Client("75.37.42.104", true);
 		else if (Args.length == 1)
 			new Client(Args[0], true);
 		else if (Args.length == 2)

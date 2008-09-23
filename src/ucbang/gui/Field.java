@@ -1,5 +1,6 @@
 package ucbang.gui;
 
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -90,6 +91,15 @@ public class Field implements MouseListener, MouseMotionListener{
         
 	public void mouseClicked(MouseEvent e) {
 		Point ep=e.getPoint();
+                
+                ////the ugly proxy skip turn button
+                if(new Rectangle(760, 560, 40, 40).contains(ep)){
+                    if(client.prompting&&!client.forceDecision){
+                        client.outMsgs.add("Prompt:-1");
+                    }
+                };
+                
+                
                 cardSpace cs = binarySearchCardAtPoint(ep);
                 if(cs != null)
                     System.out.println("Clicked on "+cs.card.name);
