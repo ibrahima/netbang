@@ -34,15 +34,13 @@ public class Server extends Thread {
         
 	Bang game; // just insert game stuff here
 	public ArrayList<String> names = new ArrayList<String>();
-	ServerListAdder adder = new ServerListAdder();
+	ServerListAdder adder = new ServerListAdder(JOptionPane.showInputDialog("Input server name"));
 	long listLastUpdated;
 	void print(Object stuff) {
 		System.out.println("Server:" + stuff);
 	}
 
 	public Server(int port) {
-            //name this server
-            adder.name=JOptionPane.showInputDialog("Input server name");
 		try {
 			me = new ServerSocket(port);
 		} catch (IOException e) {
