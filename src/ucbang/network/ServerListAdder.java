@@ -13,7 +13,7 @@ public class ServerListAdder {
 	String address = "http://cardgameservers.appspot.com/process";
 	String hash;
 	final String type = "bang";
-	String name="TestServer";
+	public String name;
 	public ServerListAdder() {
 		try {
 			MessageDigest md = MessageDigest.getInstance("SHA-1");
@@ -58,7 +58,7 @@ public class ServerListAdder {
 			hConnection.setRequestMethod("POST");
 
 			PrintStream ps = new PrintStream(hConnection.getOutputStream());
-			ps.print("gamename="+name+"&amp;type="+type+"&amp;hash="+hash);
+			ps.print("gamename="+name+"&amp;type="+type+"&amp;hash="+hash+"\n");
 			ps.close();
 			System.out.println("Should have added server");
 			hConnection.connect();

@@ -15,6 +15,8 @@ import java.util.LinkedList;
 
 import java.util.Stack;
 
+import javax.swing.JOptionPane;
+
 import ucbang.core.Bang;
 import ucbang.core.Player;
 
@@ -39,6 +41,8 @@ public class Server extends Thread {
 	}
 
 	public Server(int port) {
+            //name this server
+            adder.name=JOptionPane.showInputDialog("Input server name");
 		try {
 			me = new ServerSocket(port);
 		} catch (IOException e) {
