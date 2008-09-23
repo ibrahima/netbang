@@ -15,8 +15,9 @@ public class ServerListAdder {
 	String address = "http://cardgameservers.appspot.com/";
 	String hash;
 	final String type = "bang";
-	public String name;
+	private String name;
 	public ServerListAdder() {
+		name="NameMePlz";
 		try {
 			MessageDigest md = MessageDigest.getInstance("SHA-1");
 			md.update(name.getBytes());
@@ -39,7 +40,19 @@ public class ServerListAdder {
 			e.printStackTrace();
 		}
 	}
-
+	public void setName(String name){
+		this.name=name;
+		MessageDigest md;
+		try {
+			md = MessageDigest.getInstance("SHA-1");
+			md.update(name.getBytes());
+			md.update(type.getBytes());
+			byte[] bar = md.digest();
+			hash = getHexString(bar);
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+		}
+	}
 	public String getHexString(byte[] b) {
 		String result = "";
 		for (int i = 0; i < b.length; i++) {
@@ -60,12 +73,13 @@ public class ServerListAdder {
 			hConnection.setRequestMethod("POST");
 
 			PrintStream ps = new PrintStream(hConnection.getOutputStream());
-			ps.print("gamename="+name+"&amp;type="+type+"&amp;hash="+hash+"\n");
+			ps.print("gamename="+name+"&amp;type="+type+"&amp;hash="+hash);
 			ps.close();
 			hConnection.connect();
 
 			if (HttpURLConnection.HTTP_OK == hConnection.getResponseCode()) {
 				BufferedReader is = new BufferedReader(new InputStreamReader(hConnection.getInputStream()));
+				while(is.ready())
 				System.out.println(is.readLine());
 				is.close();
 				hConnection.disconnect();

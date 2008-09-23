@@ -86,7 +86,7 @@ class AddToServerList(webapp.RequestHandler):
         server.put()
         self.response.out.write("Server added")
       else:
-        self.response.out.write("Bad hash")
+        self.response.out.write("Bad Hash")                
 
 class RemoveFromServerList(webapp.RequestHandler):
   def post(self):
@@ -103,8 +103,7 @@ class RemoveFromServerList(webapp.RequestHandler):
         db.delete(results)
         self.response.out.write("Server Removed")
       else:
-        self.response.out.write("Bad hash")
-                
+        self.response.out.write("Bad hash. Server provided "+self.request.get('hash')+ " which should have been"+sh.hexdigest)                
 class GetIP(webapp.RequestHandler):
     def get(self):
         self.response.out.write(os.environ['REMOTE_ADDR'])
