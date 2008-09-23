@@ -7,11 +7,6 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.*;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
@@ -44,7 +39,13 @@ public class ServerBrowser {
 	}
 
 	ArrayList<ServerInfo> servers = new ArrayList<ServerInfo>();
-
+	public ServerBrowser(){
+		downloadList();
+	}
+	public String chooseServer(){
+		//TODO: Work out a choosing thing.
+		return servers.get(0).ip;
+	}
 	public static void main(String args[]) {
 		new ServerBrowser().downloadList();
 	}

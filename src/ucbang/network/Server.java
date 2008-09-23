@@ -78,7 +78,7 @@ public class Server extends Thread {
 						numPlayers++;
 					}
 				} catch (SocketTimeoutException e) {}
-				catch (IOException e) {e.printStackTrace();
+				catch (Exception e) {e.printStackTrace();
 				}
 			} else {
 				// System.out.println("Has it been updated? "+prompting);
