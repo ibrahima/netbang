@@ -119,7 +119,7 @@ public class Card {
 				effect = play.MISS.ordinal();
 				break;
 			case BIBLE:
-				type = 4;
+				type = 3;
 				effect = play.MISS.ordinal();
 				break;
 			case IRON_PLATE:
