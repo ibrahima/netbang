@@ -11,15 +11,14 @@ import java.security.NoSuchAlgorithmException;
 
 public class ServerListAdder {
 	String address = "http://cardgameservers.appspot.com/process";
-	String ip;
 	String hash;
 	final String type = "bang";
 	String name="TestServer";
-	public ServerListAdder(String ip) {
-		this.ip = ip;
+	public ServerListAdder() {
 		try {
 			MessageDigest md = MessageDigest.getInstance("SHA-1");
-			md.update(ip.getBytes());
+			md.update(name.getBytes());
+			md.update(type.getBytes());
 			byte[] bar = md.digest();
 			hash = getHexString(bar);
 		} catch (NoSuchAlgorithmException e) {
@@ -47,7 +46,7 @@ public class ServerListAdder {
 			hConnection.setRequestMethod("POST");
 
 			PrintStream ps = new PrintStream(hConnection.getOutputStream());
-			ps.print("ip="+ip+"&amp;gamename="+name+"&amp;type="+type+"&amp;hash="+hash);
+			ps.print("gamename="+name+"&amp;type="+type+"&amp;hash="+hash);
 			ps.close();
 			System.out.println("Should have added server");
 			hConnection.connect();

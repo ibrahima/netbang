@@ -61,7 +61,6 @@ class AddServer(webapp.RequestHandler):
           <form action="/sign" method="post">
             <div>
                 Name: <input type="text" name="gamename"></input><br />
-                IP Address: <input type="text" name="ip"></input><br />
                 Game Type: <input type="text" name="type"></input><br />
                 SHA-1 Hash: <input type="text" name="hash"></input><br />
             </div>
@@ -75,10 +74,11 @@ class ServerList(webapp.RequestHandler):
   def post(self):
       sh = hashlib.sha1()
       server = Server()
-      server.ip = self.request.get('ip')
+      server.ip = os.environ['REMOTE_ADDR']
       server.gamename = self.request.get('gamename')
       server.type = self.request.get('type')
-      sh.update(self.request.get('ip'))
+      sh.update(server.gamename)
+      sh.update(server.type)
       if sh.hexdigest()==self.request.get('hash'):
         q = db.GqlQuery("SELECT * FROM Server WHERE gamename = :gname", gname=server.gamename)
         results = q.fetch(1000)
