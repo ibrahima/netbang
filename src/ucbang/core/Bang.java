@@ -42,8 +42,26 @@ public class Bang {
                 }
 
                 if(server.choice.get(0)[0][1]!=-1){
-                    if(isCardLegal(players[server.choice.get(0)[0][0]].hand.get(server.choice.get(0)[0][1]), players[server.choice.get(0)[0][0]], null)){
-                        playerDiscardCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]); //replace server.choice.get(0)[0][0] with turn%numPlayers?
+                    if(players[server.choice.get(0)[0][0]].hand.get(server.choice.get(0)[0][1]).target==2){
+                        if(server.choice.size()==1){
+                            //TODO: prompt to pick a target
+                            {
+                            //TODO: oops, this should be in client, but i have class
+                                if(server.choice.get(0)[0][0]==0)
+                                    server.choice.add(new int[][]{{0,1}});
+                                else
+                                    server.choice.add(new int[][]{{1,0}});
+                            }
+                        }
+                        else if(isCardLegal(players[server.choice.get(0)[0][0]].hand.get(server.choice.get(0)[0][1]), players[server.choice.get(0)[0][0]], players[server.choice.get(1)[0][1]])){
+                            server.choice.remove(server.choice.size()-1);
+                            playerDiscardCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]); //replace server.choice.get(0)[0][0] with turn%numPlayers?
+                        }
+                    }
+                    else{
+                        if(isCardLegal(players[server.choice.get(0)[0][0]].hand.get(server.choice.get(0)[0][1]), players[server.choice.get(0)[0][0]], null)){
+                            playerDiscardCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]); //replace server.choice.get(0)[0][0] with turn%numPlayers?
+                        }
                     }
                     server.choice.remove(server.choice.size()-1);
                     server.prompt(turn%numPlayers, "PlayCardUnforced", true);
@@ -63,6 +81,10 @@ public class Bang {
         //programming malfunction check
         if(c.target!=2&&p2!=null){
             System.out.println("NON-TARGETING CARD HAS TARGET");
+            return false;
+        }
+        else if(c.target==2&&p2==null){
+            System.out.println("TARGETING CARD DOES NOT HAVE TARGET");
             return false;
         }
         //the rules
