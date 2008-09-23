@@ -318,13 +318,12 @@ class ServerThread extends Thread {
 								out.flush();
 							}
 						}
-					} else if(temp[0].equals("/shutdown")){
+					} else if(temp[0].equals("/shutdown")&&id==0){
 						server.running=false;
 					} else if (temp[0].equals("Chat")) {
 						if (temp[1].charAt(0) == '/') {
 							// TODO: Send commands
-							if (temp[1].equals("/start")&& client.getInetAddress().toString()
-											.equals("/127.0.0.1")&& server.gameInProgress == 0){
+							if (temp[1].equals("/start")&& id==0&& server.gameInProgress == 0){
 								server.startGame(id, name);
 							}
 							else if (temp[1].startsWith("/rename")) {
@@ -357,6 +356,7 @@ class ServerThread extends Thread {
 									}
 								} else {
 									// TODO: (Optional) create /help RENAME
+									// TODO: Create /help commands
 								}
 							} else if (temp[1].startsWith("/prompting")) {
 								System.out.println("Prompting is "
