@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE serverlist SYSTEM "dtd/serverlist.dtd" >
+
 <serverlist>
 	{% for server in servers %}<server>
 		<name>{{ server.gamename|escape }}</name>
