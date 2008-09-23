@@ -56,7 +56,7 @@ public class Server extends Thread {
 
 	public void run() {
 		while (true) {
-			if(listLastUpdated-System.currentTimeMillis()>60000){
+			if(System.currentTimeMillis()-listLastUpdated>60000){
 				listLastUpdated=System.currentTimeMillis();
 				adder.addToServerList();
 			}	
