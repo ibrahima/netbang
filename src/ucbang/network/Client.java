@@ -314,6 +314,7 @@ class ClientThread extends Thread {
 						} else if (temp1[0].equals("maxHP")) {
 							c.field.clear();
 							c.player.maxLifePoints += Integer.valueOf(temp1[1]);
+                                                        c.player.lifePoints = c.player.maxLifePoints;
 						} else if (temp1[0].equals("turn")) {
 							c.turn = Integer.valueOf(temp1[1]);
 							if (c.turn % c.numPlayers == 0) {

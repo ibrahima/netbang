@@ -37,13 +37,14 @@ public class Bang {
         }
         else{
             if(server.choice.size()==1){
-                System.out.println("PLAY SOMETHING");
                 if(server.choice.size()==1){
                     System.out.println("You played "+server.choice.get(0)[0][1]+". You have "+(players[server.choice.get(0)[0][0]].hand.size()-1)+" cards left in your hand.");
                 }
 
                 if(server.choice.get(0)[0][1]!=-1){
-                    playerDiscardCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]); //replace server.choice.get(0)[0][0] with turn%numPlayers?
+                    if(isCardLegal(players[server.choice.get(0)[0][0]].hand.get(server.choice.get(0)[0][1]), players[server.choice.get(0)[0][0]], null)){
+                        playerDiscardCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]); //replace server.choice.get(0)[0][0] with turn%numPlayers?
+                    }
                     server.choice.remove(server.choice.size()-1);
                     server.prompt(turn%numPlayers, "PlayCardUnforced", true);
                 }
@@ -53,6 +54,46 @@ public class Bang {
                 }
             }
         }
+    }
+    
+    /**
+     * 
+     */
+    public boolean isCardLegal(Card c, Player p1, Player p2){ //p2 can be null!!!
+        //programming malfunction check
+        if(c.target!=2&&p2!=null){
+            System.out.println("NON-TARGETING CARD HAS TARGET");
+            return false;
+        }
+        //the rules
+        if(server.choice.size()==1){ //cards that can be played at the start of a turn
+            if(c.type==2){
+                if(c.effect==Card.play.HEAL.ordinal()){
+                    if(c.target==1&&p1.lifePoints==p1.maxLifePoints){ //can't beer self with max hp
+                        System.out.println("ILLEGAL CARD: you are already at maxhp");   
+                        return false;
+                    }
+                    /*else if(c.target==2&&p2.lifePoints==p2.maxLifePoints){
+                        System.out.println("ILLEGAL CARD: target is already at maxhp");   
+                        return false;
+                    }*/
+                }
+            }
+            if(c.type==4&&c.effect==Card.play.MISS.ordinal()){     //can't play miss
+                System.out.println("ILLEGAL CARD: can't play miss on turn");   
+                return false;
+            }
+        }
+        return true;
+    }
+    
+    /**
+     * Gets the distance between p1 and p2. Includes horses and hideouts, but not guns
+     * @param Player 1, Player 2
+     * @return int of how far they are apart
+     */
+    public int getRangeBetweenPlayers(Player p1, Player p2){
+        return Math.min(1,1);
     }
     
     /**
@@ -118,6 +159,9 @@ public class Bang {
         server.promptAll("ChooseCharacter");
     }
     
+    /**
+     * After characters have been chosen, continue starting the game
+     */
     public void start2(){
         for(int n=0; n<server.choice.get(server.choice.size()-1).length; n++){
             players[n].character = players[n].hand.get(server.choice.get(server.choice.size()-1)[n][1]).ordinal;
@@ -374,6 +418,7 @@ public class Bang {
     
     void changeLifePoints(int p, int n){
         server.sendInfo(p,"SetInfo:maxHP:"+n);
-        players[p].lifePoints+=n;
+        players[p].maxLifePoints+=n;
+        players[p].lifePoints=players[p].maxLifePoints;
     }
 }
