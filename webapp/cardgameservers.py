@@ -70,7 +70,7 @@ class AddServer(webapp.RequestHandler):
       </html>""")
 
 
-class ServerList(webapp.RequestHandler):
+class AddToServerList(webapp.RequestHandler):
   def post(self):
       sh = hashlib.sha1()
       server = Server()
@@ -87,6 +87,24 @@ class ServerList(webapp.RequestHandler):
         self.response.out.write("Server added")
       else:
         self.response.out.write("Bad hash")
+
+class RemoveFromServerList(webapp.RequestHandler):
+  def post(self):
+      sh = hashlib.sha1()
+      server = Server()
+      server.ip = os.environ['REMOTE_ADDR']
+      server.gamename = self.request.get('gamename')
+      server.type = self.request.get('type')
+      sh.update(server.gamename)
+      sh.update(server.type)
+      if sh.hexdigest()==self.request.get('hash'):
+        q = db.GqlQuery("SELECT * FROM Server WHERE gamename = :gname", gname=server.gamename)
+        results = q.fetch(1000)
+        db.delete(results)
+        self.response.out.write("Server Removed")
+      else:
+        self.response.out.write("Bad hash")
+                
 class GetIP(webapp.RequestHandler):
     def get(self):
         self.response.out.write(os.environ['REMOTE_ADDR'])
@@ -95,8 +113,9 @@ application = webapp.WSGIApplication(
                                      [('/', MainPage),
                                       ('/xml', Xml),
                                       ('/ip', GetIP),
-                                      ('/add', AddServer),
-                                      ('/process', ServerList)],
+                                      ('/addform', AddServer),
+                                      ('/add', AddToServerList),
+                                      ('/remove', RemoveFromServerList)],
                                      debug=True)
 
 def main():
