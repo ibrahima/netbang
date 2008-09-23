@@ -15,6 +15,7 @@ import ucbang.core.Deck.CardName;
 import ucbang.gui.CardDisplayer;
 import ucbang.gui.ClientGUI;
 import ucbang.gui.Field;
+
 public class Client extends Thread {
 	String name = "";
 	int id;
@@ -32,36 +33,38 @@ public class Client extends Thread {
 	public Field field;
 	ClientThread t;
 	int turn;
-        
-        public boolean prompting;
-        public boolean forceDecision;
+	public boolean running;
+	public boolean prompting;
+	public boolean forceDecision;
 
 	public Client(String host, boolean guiEnabled) {
+		running = true;
 		this.host = host;
 		if (guiEnabled)
 			gui = new ClientGUI(numPlayers, this);
 		field = new Field(new CardDisplayer(), this);
-		gui.addMouseListener(field); //TODO: does this need to be here?
+		gui.addMouseListener(field); // TODO: does this need to be here?
 		gui.addMouseMotionListener(field);
-		//Begin testing card field stuffs
-		CardName[] cards=CardName.values();
+		// Begin testing card field stuffs
+		CardName[] cards = CardName.values();
 		int x = 70;
 		int y = 30;
-		for(int i=0;i<cards.length;i++){
-			field.add(new Card(cards[i]), x,y);
-			x+=60;
-			if(x>750){
-				y+=90;
-				x=70;
+		for (int i = 0; i < cards.length; i++) {
+			field.add(new Card(cards[i]), x, y);
+			x += 60;
+			if (x > 750) {
+				y += 90;
+				x = 70;
 			}
-		}               
-                
+		}
+
 		promptName();
 		this.start();
-                player = new Player(id,"name");   //check if this is right
+		player = new Player(id, "name"); // check if this is right
 	}
 
 	public Client(String host, boolean guiEnabled, String name) {
+		running = true;
 		this.host = host;
 		this.name = name;
 		if (guiEnabled)
@@ -69,20 +72,20 @@ public class Client extends Thread {
 		field = new Field(new CardDisplayer(), this);
 		gui.addMouseListener(field);
 		gui.addMouseMotionListener(field);
-		//Begin testing card field stuffs
-		CardName[] cards=CardName.values();
+		// Begin testing card field stuffs
+		CardName[] cards = CardName.values();
 		int x = 70;
 		int y = 30;
-		for(int i=0;i<cards.length;i++){
-			field.add(new Card(cards[i]), x,y);
-			x+=60;
-			if(x>750){
-				y+=90;
-				x=70;
+		for (int i = 0; i < cards.length; i++) {
+			field.add(new Card(cards[i]), x, y);
+			x += 60;
+			if (x > 750) {
+				y += 90;
+				x = 70;
 			}
 		}
 		this.start();
-                player = new Player(id,"name");   //check if this is right
+		player = new Player(id, "name"); // check if this is right
 	}
 
 	public static void main(String[] Args) {
@@ -117,13 +120,17 @@ public class Client extends Thread {
 			System.err.println(e + "\nServer Socket Error!");
 		}
 		t = new ClientThread(socket, this);
-		while (true) {
+		while (running) {
 			gui.update();
 			try {
 				sleep(45);
 			} catch (InterruptedException e) {
 			}
 		}
+		outMsgs.add("/shutdown");
+		gui.dispose();
+		gui = null;
+		System.out.println("Exiting");
 	}
 
 	void print(Object stuff) {
@@ -165,8 +172,8 @@ class ClientThread extends Thread {
 					.getInputStream()));
 		} catch (Exception e1) {
 			try {
-				if(server!=null) //is it closing too soon some times?
-                                    server.close();
+				if (server != null) // is it closing too soon some times?
+					server.close();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -204,8 +211,9 @@ class ClientThread extends Thread {
 						if (!c.connected
 								&& temp[1].equals("Successfully connected.")) {
 							c.connected = true;
-							c.gui.setTitle("UCBang - "+c.name+" - Connected to server on "+
-									server.getInetAddress());
+							c.gui.setTitle("UCBang - " + c.name
+									+ " - Connected to server on "
+									+ server.getInetAddress());
 						} else if (!c.connected
 								&& temp[1].equals("Name taken!")) {
 							System.out
@@ -233,79 +241,95 @@ class ClientThread extends Thread {
 							// response here cause
 							// client to desync with
 							// server?
-							c.outMsgs.add("Prompt:"+ c.gui.promptYesNo("Host has sent a request to start game","Start game?"));
-							c.gui.appendText("Host has requested the game be started");
+							c.outMsgs
+									.add("Prompt:"
+											+ c.gui
+													.promptYesNo(
+															"Host has sent a request to start game",
+															"Start game?"));
+							c.gui
+									.appendText("Host has requested the game be started");
+						} else if (temp[1].equals("PlayCard")) { // play one
+																	// card
+							c.gui.promptChooseCard(c.player.hand, "", "", true);
+							// c.outMsgs.add("Prompt:"+a);
+							//System.out.println("PLAYING CARD"+c.player.hand.get
+							// (a).name);
+						} else if (temp[1].equals("PlayCardUnforced")) { // play
+																			// one
+																			// card
+							c.gui
+									.promptChooseCard(c.player.hand, "", "",
+											false);
+							// c.outMsgs.add("Prompt:"+a);
+							// if(a>=0)
+							//System.out.println("PLAYING CARD"+c.player.hand.get
+							// (a).name);
+						} else if (temp[1].equals("ChooseCharacter")) { // play
+																		// one
+																		// card
+							c.gui.promptChooseCard(c.player.hand, "", "", true);
 						}
-						else if (temp[1].equals("PlayCard")) { //play one card
-                                                    c.gui.promptChooseCard(c.player.hand,"","",true);
-                                                    //c.outMsgs.add("Prompt:"+a);
-                                                    //System.out.println("PLAYING CARD"+c.player.hand.get(a).name);
+					} else if (temp[0].equals("Draw")) {
+						String[] temp1 = temp[1].split(":");
+						int n = temp1.length;
+						for (int m = 1; m < n; m++) {
+							if (temp1[0].equals("Character")) {
+								Card card = new Card(Deck.Characters
+										.valueOf(temp1[m]));
+								c.player.hand.add(card);
+								c.field.add(card, 80 + (int) (400 * Math
+										.random()), 80 + (int) (400 * Math
+										.random()));
+							} else {
+								Card card = new Card(Deck.CardName
+										.valueOf(temp1[m]));
+								c.player.hand.add(card);
+								c.field.add(card, 80 + (int) (400 * Math
+										.random()), 80 + (int) (400 * Math
+										.random()));
+							}
 						}
-                                                else if (temp[1].equals("PlayCardUnforced")) { //play one card
-                                                    c.gui.promptChooseCard(c.player.hand,"","",false);
-                                                    //c.outMsgs.add("Prompt:"+a);
-                                                    //if(a>=0)
-                                                    //    System.out.println("PLAYING CARD"+c.player.hand.get(a).name);
-                                                }
-                                                else if (temp[1].equals("ChooseCharacter")) { //play one card
-                                                    c.gui.promptChooseCard(c.player.hand,"","",true);
-                                                }
-					} 
-                                        else if (temp[0].equals("Draw")) {
-                                                String[] temp1 = temp[1].split(":");
-                                                int n = temp1.length;
-                                                for(int m = 1; m<n; m++){
-                                                    if(temp1[0].equals("Character")){
-                                                        Card card = new Card(Deck.Characters.valueOf(temp1[m]));
-                                                        c.player.hand.add(card);
-                                                        c.field.add(card,80+(int)(400*Math.random()), 80+(int)(400*Math.random()));
-                                                    }
-                                                    else{
-                                                        Card card = new Card(Deck.CardName.valueOf(temp1[m]));
-                                                        c.player.hand.add(card);    
-                                                        c.field.add(card,80+(int)(400*Math.random()), 80+(int)(400*Math.random()));
-                                                    }
-                                                }
-                                                c.outMsgs.add("Ready");
-                                        }
-                                        else if (temp[0].equals("GetInfo")) {
+						c.outMsgs.add("Ready");
+					} else if (temp[0].equals("GetInfo")) {
 						// get information about hand and stuff
 						// how many parameters are needed?
 						String[] temp1 = buffer.split(":", 2);
-                                                c.outMsgs.add("Ready");
-                                        } else if (temp[0].equals("SetInfo")) { // note: a bit of a
+						c.outMsgs.add("Ready");
+					} else if (temp[0].equals("SetInfo")) { // note: a bit of a
 						// misnomer for
 						// lifepoints, just
 						// adds or subtracts
 						// that amount
 						// set information about hand and stuff
 						String[] temp1 = temp[1].split(":");
-						if (temp1[0].equals("newPlayer")){
-							c.player = new Player(Integer.valueOf(temp1[1]), c.name);
-                                                        c.numPlayers = Integer.valueOf(temp1[2]);
-						}
-						else if (temp1[0].equals("role")) {
-                                                        c.field.clear();
-							c.player.role = Deck.Role.values()[Integer.valueOf(temp1[1])];
-						}
-						else if (temp1[0].equals("maxHP")) {
-                                                        c.field.clear();
+						if (temp1[0].equals("newPlayer")) {
+							c.player = new Player(Integer.valueOf(temp1[1]),
+									c.name);
+							c.numPlayers = Integer.valueOf(temp1[2]);
+						} else if (temp1[0].equals("role")) {
+							c.field.clear();
+							c.player.role = Deck.Role.values()[Integer
+									.valueOf(temp1[1])];
+						} else if (temp1[0].equals("maxHP")) {
+							c.field.clear();
 							c.player.maxLifePoints += Integer.valueOf(temp1[1]);
+						} else if (temp1[0].equals("turn")) {
+							c.turn = Integer.valueOf(temp1[1]);
+							if (c.turn % c.numPlayers == 0) {
+								c.gui.appendText("hay guyz, iz my turn");
+							}
+						} else if (temp1[0].equals("discard")) {
+							c.field.cards.remove(c.player.hand
+									.get((int) Integer.valueOf(temp1[1])));
+							System.out.println("MOVED TO DISCARD:"
+									+ c.player.hand.remove((int) Integer
+											.valueOf(temp1[1])).name);
+						} else {
+							System.out.println("WTF do i do with " + temp1[0]
+									+ ":" + temp1[1]);
 						}
-                                                else if (temp1[0].equals("turn")) {
-                                                        c.turn = Integer.valueOf(temp1[1]);
-                                                        if(c.turn%c.numPlayers==0){
-                                                            c.gui.appendText("hay guyz, iz my turn");
-                                                        }
-                                                }
-                                                else if (temp1[0].equals("discard")) {
-                                                        c.field.cards.remove(c.player.hand.get((int)Integer.valueOf(temp1[1])));
-                                                        System.out.println("MOVED TO DISCARD:"+c.player.hand.remove((int)Integer.valueOf(temp1[1])).name);
-                                                }
-                                                else{
-                                                    System.out.println("WTF do i do with "+temp1[0]+":"+temp1[1]);
-                                                }
-					    c.outMsgs.add("Ready");
+						c.outMsgs.add("Ready");
 					}
 				}
 			} catch (Exception e) {
@@ -317,7 +341,7 @@ class ClientThread extends Thread {
 					} catch (Throwable t) {
 						t.printStackTrace();
 					}
-				} 
+				}
 				e.printStackTrace();
 			}
 			try {

@@ -16,8 +16,9 @@ public class ServerListAdder {
 	String hash;
 	final String type = "bang";
 	private String name;
+
 	public ServerListAdder() {
-		name="NameMePlz";
+		name = "NameMePlz";
 		try {
 			MessageDigest md = MessageDigest.getInstance("SHA-1");
 			md.update(name.getBytes());
@@ -28,8 +29,9 @@ public class ServerListAdder {
 			e.printStackTrace();
 		}
 	}
+
 	public ServerListAdder(String name) {
-		this.name=name;
+		this.name = name;
 		try {
 			MessageDigest md = MessageDigest.getInstance("SHA-1");
 			md.update(name.getBytes());
@@ -40,8 +42,9 @@ public class ServerListAdder {
 			e.printStackTrace();
 		}
 	}
-	public void setName(String name){
-		this.name=name;
+
+	public void setName(String name) {
+		this.name = name;
 		MessageDigest md;
 		try {
 			md = MessageDigest.getInstance("SHA-1");
@@ -53,6 +56,7 @@ public class ServerListAdder {
 			e.printStackTrace();
 		}
 	}
+
 	public String getHexString(byte[] b) {
 		String result = "";
 		for (int i = 0; i < b.length; i++) {
@@ -63,7 +67,7 @@ public class ServerListAdder {
 
 	public void addToServerList() {
 		try {
-			URL url = new URL(address+"add");
+			URL url = new URL(address + "add");
 
 			HttpURLConnection hConnection = (HttpURLConnection) url
 					.openConnection();
@@ -73,26 +77,29 @@ public class ServerListAdder {
 			hConnection.setRequestMethod("POST");
 
 			PrintStream ps = new PrintStream(hConnection.getOutputStream());
-			ps.print("gamename="+name+"&amp;type="+type+"&amp;hash="+hash);
+			ps.print("gamename=" + name + "&amp;type=" + type + "&amp;hash="
+					+ hash);
 			ps.close();
 			hConnection.connect();
 
 			if (HttpURLConnection.HTTP_OK == hConnection.getResponseCode()) {
-				BufferedReader is = new BufferedReader(new InputStreamReader(hConnection.getInputStream()));
-				while(is.ready())
-				System.out.println(is.readLine());
+				BufferedReader is = new BufferedReader(new InputStreamReader(
+						hConnection.getInputStream()));
+				while (is.ready())
+					System.out.println(is.readLine());
 				is.close();
 				hConnection.disconnect();
-			}else{
+			} else {
 				System.out.println("Ugh, something bad happened");
 			}
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
 	}
+
 	public void RemoveFromServerList() {
 		try {
-			URL url = new URL(address+"remove");
+			URL url = new URL(address + "remove");
 
 			HttpURLConnection hConnection = (HttpURLConnection) url
 					.openConnection();
@@ -102,16 +109,18 @@ public class ServerListAdder {
 			hConnection.setRequestMethod("POST");
 
 			PrintStream ps = new PrintStream(hConnection.getOutputStream());
-			ps.print("gamename="+name+"&amp;type="+type+"&amp;hash="+hash);
+			ps.print("gamename=" + name + "&amp;type=" + type + "&amp;hash="
+					+ hash);
 			ps.close();
 			hConnection.connect();
 
 			if (HttpURLConnection.HTTP_OK == hConnection.getResponseCode()) {
-				BufferedReader is = new BufferedReader(new InputStreamReader(hConnection.getInputStream()));
+				BufferedReader is = new BufferedReader(new InputStreamReader(
+						hConnection.getInputStream()));
 				System.out.println(is.readLine());
 				is.close();
 				hConnection.disconnect();
-			}else{
+			} else {
 				System.out.println("Ugh, something bad happened");
 			}
 		} catch (Exception ex) {
