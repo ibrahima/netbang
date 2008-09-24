@@ -160,10 +160,12 @@ public class Bang {
                         if(server.choice.size()==1){
                             int[] p = new int[numPlayers-1];
                             for(int n = 0, m = 0; n<numPlayers-1; n++, m++){
-                                if(m==turn%numPlayers) m++;
+                                if(m==turn%numPlayers){m++;}
+                                System.out.println("ASDFASFASFASFASDF prompting:"+m);
                                 p[n]=m;
                             }
                             server.promptPlayers(p, "PlayCardUnforced");
+                            return;
                         }
                         else if(server.choice.size()==2){
                             ArrayList<Integer> al = new ArrayList<Integer>();
@@ -178,6 +180,7 @@ public class Bang {
                                     changeLifePoints(n[0],1);
                                 }
                                 else{
+                                    System.out.println("SOMEONE DID NOT PLAY A LEGAL CARD");
                                     al.add(n[0]);
                                 }
                             }
