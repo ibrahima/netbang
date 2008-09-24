@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowAdapter;
@@ -215,7 +216,22 @@ public class ClientGUI extends JFrame implements KeyListener {
 	}
 
 	public void keyTyped(KeyEvent e) {
-		if (e.getKeyChar() == '\n') {
+                if((int)e.getKeyChar()==27){
+                    if(chatting){
+                        chatting = false;
+                        if (chat.length() > 0) {
+                                chat.delete(0, chat.length());
+                        }
+                    }
+                    else{
+                        if(client.prompting&&!client.forceDecision){
+                            client.outMsgs.add("Prompt:-1");
+                            client.prompting = false;
+                        }
+                        return;
+                    }
+                }
+		else if (e.getKeyChar() == '\n') {
 			chatting = !chatting;
 			if (!chatting && chat.length() > 0) {
 				client.addChat(chat.toString());
