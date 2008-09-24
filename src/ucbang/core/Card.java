@@ -96,7 +96,6 @@ public class Card {
 				effect = play.DAMAGE.ordinal();
 				effect2 = play.DRAW.ordinal();
 				break;
-
 			case DUEL:
 				type = 2;
 				target = 2;

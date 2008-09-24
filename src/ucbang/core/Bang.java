@@ -58,35 +58,50 @@ public class Bang {
                                 server.choice.remove(server.choice.size()-1);
                             }
                             else if(isCardLegal(players[server.choice.get(0)[0][0]].hand.get(server.choice.get(0)[0][1]), players[server.choice.get(0)[0][0]], players[server.choice.get(1)[0][1]])){
-                                server.prompt(server.choice.get(1)[0][1], "PlayCardUnforced", true); //unforce b/c do not have to miss
                                 server.sendInfo("SetInfo:CardPlayed:"+server.choice.get(0)[0][0]+":"+players[server.choice.get(0)[0][0]].hand.get(server.choice.get(0)[0][1]).name+":"+server.choice.get(1)[0][1]);
                                 System.out.println("Player "+server.choice.get(1)[0][0]+" is targetting "+server.choice.get(1)[0][1]);
-                                return;
+                                if(players[server.choice.get(0)[0][0]].hand.get(server.choice.get(0)[0][1]).effect==Card.play.DAMAGE.ordinal()){
+                                    server.prompt(server.choice.get(1)[0][1], "PlayCardUnforced", true); //unforce b/c do not have to miss
+                                    return;
+                                }
+                                else{
+                                    System.out.println("NOT A BANG, SO TARGET DOES NOT CHOOSE (Unimplemented targetting card)");
+                                    playerDiscardCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]); 
+                                    server.choice.remove(server.choice.size()-1);
+                                }
                             }
                         }
                         else if(server.choice.size()==3){
-                            if(server.choice.get(2)[0][1]==-1){ //no miss played
-                                server.sendInfo("SetInfo:CardPlayed:"+server.choice.get(1)[0][1]+":no miss");
-                                changeLifePoints(server.choice.get(1)[0][1], -1);
-                                server.choice.remove(server.choice.size()-1);
-                                server.choice.remove(server.choice.size()-1);
-                                playerDiscardCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]);
-                            }
-                            else if(players[server.choice.get(1)[0][1]].hand.get(server.choice.get(2)[0][1]).effect==Card.play.MISS.ordinal()&&players[server.choice.get(1)[0][1]].hand.get(server.choice.get(2)[0][1]).type==4){
-                                server.sendInfo("SetInfo:CardPlayed:"+server.choice.get(1)[0][1]+":"+players[server.choice.get(1)[0][1]].hand.get(server.choice.get(2)[0][1]).name);
-                                if(players[server.choice.get(1)[0][1]].hand.get(server.choice.get(2)[0][1]).effect2==Card.play.DRAW.ordinal()){
-                                    playerDrawCard(server.choice.get(1)[0][1], 1);
+                            if(players[server.choice.get(0)[0][0]].hand.get(server.choice.get(0)[0][1]).effect==Card.play.DAMAGE.ordinal()&&players[server.choice.get(0)[0][0]].hand.get(server.choice.get(0)[0][1]).special!=2){
+                                if(server.choice.get(2)[0][1]==-1){ //no miss played
+                                    server.sendInfo("SetInfo:CardPlayed:"+server.choice.get(1)[0][1]+":no miss");
+                                    changeLifePoints(server.choice.get(1)[0][1], -1);
+                                    if(players[server.choice.get(0)[0][0]].hand.get(server.choice.get(0)[0][1]).effect2==Card.play.DRAW.ordinal()){
+                                        playerDrawCard(server.choice.get(1)[0][0], 1);
+                                    }
+                                    server.choice.remove(server.choice.size()-1);
+                                    server.choice.remove(server.choice.size()-1);
+                                    playerDiscardCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]);
                                 }
-                                playerDiscardCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]); 
-                                playerDiscardCard(server.choice.get(1)[0][1], server.choice.get(2)[0][1]);
-                                server.choice.remove(server.choice.size()-1);
-                                server.choice.remove(server.choice.size()-1);
-                            }
-                            else{ //not a miss card!
-                                System.out.println("May only play a miss!");
-                                server.choice.remove(server.choice.size()-1);
-                                server.prompt(server.choice.get(1)[0][1], "PlayCardUnforced", true);
-                                return;
+                                else if(players[server.choice.get(1)[0][1]].hand.get(server.choice.get(2)[0][1]).effect==Card.play.MISS.ordinal()&&players[server.choice.get(1)[0][1]].hand.get(server.choice.get(2)[0][1]).type==4){
+                                    server.sendInfo("SetInfo:CardPlayed:"+server.choice.get(1)[0][1]+":"+players[server.choice.get(1)[0][1]].hand.get(server.choice.get(2)[0][1]).name);
+                                    if(players[server.choice.get(1)[0][1]].hand.get(server.choice.get(2)[0][1]).effect2==Card.play.DRAW.ordinal()){
+                                        playerDrawCard(server.choice.get(1)[0][1], 1);
+                                    }
+                                    if(players[server.choice.get(0)[0][0]].hand.get(server.choice.get(0)[0][1]).effect2==Card.play.DRAW.ordinal()){
+                                        playerDrawCard(server.choice.get(1)[0][0], 1);
+                                    }
+                                    playerDiscardCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]); 
+                                    playerDiscardCard(server.choice.get(1)[0][1], server.choice.get(2)[0][1]);
+                                    server.choice.remove(server.choice.size()-1);
+                                    server.choice.remove(server.choice.size()-1);
+                                }
+                                else{ //not a miss card!
+                                    System.out.println("May only play a miss!");
+                                    server.choice.remove(server.choice.size()-1);
+                                    server.prompt(server.choice.get(1)[0][1], "PlayCardUnforced", true);
+                                    return;
+                                }
                             }
                         }
                     }
@@ -323,7 +338,7 @@ public class Bang {
      * @param c
      * @return Whether that is a legal move (boolean) //TODO: this is stupid
      */
-    public boolean playCardFromHand(Player p, Card c){
+    /**public boolean playCardFromHand(Player p, Card c){
         if(c.type == 4){
             System.out.println("A miss card cannot be played.");
             return false;
@@ -401,7 +416,7 @@ public class Bang {
         }
         //TODO: currently only removes the card from hand and sets it into discard
         return true;
-    }
+    }**/
     
     public void playerDrawCard(int p, int n){
         if(n<=0)
