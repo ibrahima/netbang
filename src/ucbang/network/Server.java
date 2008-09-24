@@ -5,6 +5,8 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
@@ -318,12 +320,16 @@ class ServerThread extends Thread {
 								out.flush();
 							}
 						}
-					} else if(temp[0].equals("/shutdown")&&id==0){
+					} else if(temp[0].equals("/shutdown")){
+                                            if(id==0)
 						server.running=false;
+                                            else{
+                                                System.out.println("Client left the game"); //to avoid this from being picked up as a junk string
+                                            }
 					} else if (temp[0].equals("Chat")) {
 						if (temp[1].charAt(0) == '/') {
 							// TODO: Send commands
-							if (temp[1].equals("/start")&& id==0&& server.gameInProgress == 0){
+							if (temp[1].equals("/start")&&(id==0||client.getInetAddress().toString().equals("/127.0.0.1"))&& server.gameInProgress == 0){
 								server.startGame(id, name);
 							}
 							else if (temp[1].startsWith("/rename")) {
