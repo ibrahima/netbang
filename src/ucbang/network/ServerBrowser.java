@@ -48,6 +48,7 @@ public class ServerBrowser extends JFrame implements ActionListener{
 		scrollPane = new JScrollPane(servertable);
 		servertable.setFillsViewportHeight(true);
 		this.setLayout(new GridBagLayout());
+		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		GridBagConstraints gbc = new GridBagConstraints();
 		gbc.gridy=1;
 		gbc.weightx=1;
@@ -145,6 +146,7 @@ public class ServerBrowser extends JFrame implements ActionListener{
 			int i=servertable.getSelectedRow();
 			System.out.println("Joining "+servers.get(i).ip);
 			new Client(servers.get(i).ip, true);
+			this.dispose();
 		}
 		
 	}

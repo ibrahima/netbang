@@ -184,7 +184,7 @@ class ClientThread extends Thread {
 	}
 
 	public void run() {
-		while (!server.isClosed()) {
+		while (!server.isClosed()&&c.running) {
 			// System.out.println("Loop looping");
 			try {
 				if (c.name != null && out != null && !c.connected && !namesent) {
@@ -356,6 +356,12 @@ class ClientThread extends Thread {
 				sleep(45);
 			} catch (InterruptedException e) {
 			}
+		}
+		try {
+			this.finalize();
+		} catch (Throwable e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		System.out.println("Server connection closed");
 	}
