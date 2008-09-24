@@ -157,11 +157,41 @@ public class Bang {
                     
                     }
                     else if(players[server.choice.get(0)[0][0]].hand.get(server.choice.get(0)[0][1]).target==4||(players[server.choice.get(0)[0][0]].hand.get(server.choice.get(0)[0][1]).type==3&&false)){ //replace the false with a check of whether the card is played from field
-                        if(true){
-                            playerDiscardCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]); //replace server.choice.get(0)[0][0] with turn%numPlayers?
+                        if(server.choice.size()==1){
+                            int[] p = new int[numPlayers-1];
+                            for(int n = 0, m = 0; n<numPlayers-1; n++, m++){
+                                if(m==turn%numPlayers) m++;
+                                p[n]=m;
+                            }
+                            server.promptPlayers(p, "PlayCardUnforced");
                         }
-                        else{
-                            System.out.println("Don't think there's any other card that does this....");
+                        else if(server.choice.size()==2){
+                            ArrayList<Integer> al = new ArrayList<Integer>();
+                            for(int[] n:server.choice.get(1)){
+                                if((players[server.choice.get(0)[0][0]].hand.get(server.choice.get(0)[0][1]).special==0&&players[n[0]].hand.get(n[1]).effect==Card.play.MISS.ordinal())||(players[server.choice.get(0)[0][0]].hand.get(server.choice.get(0)[0][1]).special==2&&players[n[0]].hand.get(n[1]).effect==Card.play.DAMAGE.ordinal()&&players[n[0]].hand.get(n[1]).special==1)){ //LOL if you try to understand this mess
+                                    if(players[n[0]].hand.get(n[1]).effect2==Card.play.DRAW.ordinal()){
+                                        playerDrawCard(n[0],1);
+                                    }
+                                    playerDiscardCard(n[0], n[1]);
+                                }
+                                else if(n[1]==-1){
+                                    changeLifePoints(n[0],1);
+                                }
+                                else{
+                                    al.add(n[0]);
+                                }
+                            }
+                            if(al.size()==0) //all the players have done something
+                                playerDiscardCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]); //replace server.choice.get(0)[0][0] with turn%numPlayers?
+                            else{
+                                int[] pp = new int[al.size()];
+                                for(int n = 0; n<pp.length; n++){
+                                    pp[n]= al.get(n);
+                                }
+                                server.choice.remove(server.choice.size()-1);
+                                server.promptPlayers(pp, "PlayCardUnforced");
+                                return;   
+                            }
                         }
                     }
                     else{ //self targetting
