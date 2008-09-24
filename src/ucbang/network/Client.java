@@ -268,7 +268,10 @@ class ClientThread extends Thread {
 						} else if (temp[1].equals("PickTarget")) {
                                                         System.out.println("I am player " + c.id+", prompting = "+c.prompting);
                                                         c.outMsgs.add("Prompt:"+(1-c.id));
+                                                } else {
+                                                    System.out.println("WTF do i do with " + temp[1]);
                                                 }
+                                                
 					} else if (temp[0].equals("Draw")) {
 						String[] temp1 = temp[1].split(":");
 						int n = temp1.length;

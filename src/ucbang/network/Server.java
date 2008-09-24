@@ -215,7 +215,6 @@ public class Server extends Thread {
 	}
 
 	public void promptAll(String s) {
-		System.out.println("waiting for all players");
 		prompting = 1;
 		choice.add(new int[numPlayers][2]);
 		for (int n = 0; n < numPlayers; n++) {
@@ -226,10 +225,24 @@ public class Server extends Thread {
 			prompt(n, s, false);
 		}
 	}
-
+     /**
+     * Prompt the players in the gives int array.
+     * @param p
+     * @param s
+     */
+        public void promptPlayers(int[] p, String s) {
+                prompting = 1;
+                choice.add(new int[numPlayers][2]);
+                for (int n = 0; n < p.length; n++) {
+                        choice.get(choice.size() - 1)[n][0] = p[n];
+                        choice.get(choice.size() - 1)[n][1] = -2;
+                }
+                for (int n = 0; n < numPlayers; n++) {
+                        prompt(n, s, false);
+                }
+        }
 	public void prompt(int player, String s, boolean one) {
 		if (one) {
-			System.out.println("Waiting for one player");
 			choice.add(new int[][] { { player, -2 } });
 		}
 		if (prompting == 0) {
@@ -374,13 +387,7 @@ class ServerThread extends Thread {
 						if (server.prompting >= 1) {
 							int n;
 							// if(id>server.choice.length)
-							for (n = 0; server.choice
-									.get(server.choice.size() - 1)[n][0] != id; n++) {
-								System.out.println("Looking for id: "
-										+ id
-										+ " not "
-										+ server.choice.get(server.choice
-												.size() - 1)[n][0]);
+							for (n = 0; server.choice.get(server.choice.size() - 1)[n][0] != id||(server.choice.get(server.choice.size() - 1)[n][0] == id && server.choice.get(server.choice.size() - 1)[n][1]>-1); n++) {
 							}
 							server.choice.get(server.choice.size() - 1)[n][1] = Integer
 									.valueOf(temp[1]);
