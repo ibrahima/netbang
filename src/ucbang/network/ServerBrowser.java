@@ -1,5 +1,8 @@
 package ucbang.network;
 
+import javax.swing.JFrame;
+import javax.swing.JTable;
+import javax.swing.table.AbstractTableModel;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import org.xml.sax.ErrorHandler;
@@ -7,6 +10,7 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.*;
 
+import java.awt.Dimension;
 import java.io.PrintWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
@@ -21,33 +25,26 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-public class ServerBrowser {
-	private class ServerInfo {
-		String name;
-		String ip;
-		String type;
-
-		public ServerInfo(String name, String ip, String type) {
-			this.name = name;
-			this.ip = ip;
-			this.type = type;
-		}
-
-		public String toString() {
-			return type + " server \"" + name + "\" on " + ip;
-		}
-	}
-
+public class ServerBrowser extends JFrame{
 	ArrayList<ServerInfo> servers = new ArrayList<ServerInfo>();
+	JTable servertable;
 	public ServerBrowser(){
 		downloadList();
+		setPreferredSize(new Dimension(480, 320));
+		setSize(new Dimension(480, 320));
+		this.setVisible(true);
+		this.setTitle("Server Browser");
+		ServerTableModel tm = new ServerTableModel(servers);
+		servertable=new JTable(tm);
+		this.add(servertable);
+
 	}
 	public String chooseServer(){
 		//TODO: Work out a choosing thing.
 		return servers.get(0).ip;
 	}
 	public static void main(String args[]) {
-		new ServerBrowser().downloadList();
+		new ServerBrowser();
 	}
 
 	public void downloadList() {
@@ -135,4 +132,63 @@ public class ServerBrowser {
 			throw new SAXException(message);
 		}
 	}
+	private class ServerInfo {
+		String name;
+		String ip;
+		String type;
+
+		public ServerInfo(String name, String ip, String type) {
+			this.name = name;
+			this.ip = ip;
+			this.type = type;
+		}
+
+		public String toString() {
+			return type + " server \"" + name + "\" on " + ip;
+		}
+	}
+	class ServerTableModel extends AbstractTableModel {
+		String[] columns = {"Name","IP Address", "Game Type"};
+	    private String[][] data;
+	    public ServerTableModel(ArrayList<ServerInfo> list){
+	    	data = new String[list.size()][3];
+	    	Iterator<ServerInfo> iter = list.iterator();
+	    	int i=0;
+	    	while(iter.hasNext()){
+	    		ServerInfo temp = iter.next();
+	    		data[i][0]=temp.name;
+	    		data[i][1]=temp.ip;
+	    		data[i][2]=temp.type;
+	    		i++;
+	    	}
+	    }
+
+	    public int getColumnCount() {
+	        return columns.length;
+	    }
+
+	    public int getRowCount() {
+	        return data.length;
+	    }
+
+	    public String getColumnName(int col) {
+	        return columns[col];
+	    }
+
+	    public Object getValueAt(int row, int col) {
+	        return data[row][col];
+	    }
+
+
+	    /*
+	     * Don't need to implement this method unless your table's
+	     * editable.
+	     */
+	    public boolean isCellEditable(int row, int col) {
+	        //Note that the data/cell address is constant,
+	        //no matter where the cell appears onscreen.
+            return false;
+	    }
+    }
+
 }
