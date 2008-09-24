@@ -32,12 +32,12 @@ public class ServerBrowser extends JFrame{
 		downloadList();
 		setPreferredSize(new Dimension(480, 320));
 		setSize(new Dimension(480, 320));
-		this.setVisible(true);
 		this.setTitle("Server Browser");
 		ServerTableModel tm = new ServerTableModel(servers);
 		servertable=new JTable(tm);
 		this.add(servertable);
-
+		this.pack();
+		this.setVisible(true);
 	}
 	public String chooseServer(){
 		//TODO: Work out a choosing thing.
@@ -177,17 +177,6 @@ public class ServerBrowser extends JFrame{
 
 	    public Object getValueAt(int row, int col) {
 	        return data[row][col];
-	    }
-
-
-	    /*
-	     * Don't need to implement this method unless your table's
-	     * editable.
-	     */
-	    public boolean isCellEditable(int row, int col) {
-	        //Note that the data/cell address is constant,
-	        //no matter where the cell appears onscreen.
-            return false;
 	    }
     }
 

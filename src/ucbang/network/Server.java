@@ -321,11 +321,10 @@ class ServerThread extends Thread {
 							}
 						}
 					} else if(temp[0].equals("/shutdown")){
-                                            if(id==0)
-						server.running=false;
-                                            else{
-                                                System.out.println("Client left the game"); //to avoid this from being picked up as a junk string
-                                            }
+						if(id==0){
+							server.running=false;
+							System.out.println("Server shutting down");
+						}
 					} else if (temp[0].equals("Chat")) {
 						if (temp[1].charAt(0) == '/') {
 							// TODO: Send commands

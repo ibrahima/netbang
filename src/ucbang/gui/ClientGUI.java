@@ -55,7 +55,6 @@ public class ClientGUI extends JFrame implements KeyListener {
 			}
 			public void windowClosing(WindowEvent e){
 				((ClientGUI)(e.getWindow())).client.running=false;
-                                System.exit(0);
 			}
 		});
 	}

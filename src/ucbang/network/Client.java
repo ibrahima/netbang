@@ -127,7 +127,8 @@ public class Client extends Thread {
 			} catch (InterruptedException e) {
 			}
 		}
-		outMsgs.add("/shutdown");
+		if(id==0)
+			outMsgs.add("/shutdown");
 		gui.dispose();
 		gui = null;
 		System.out.println("Exiting");
