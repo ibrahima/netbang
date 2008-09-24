@@ -142,8 +142,17 @@ public class Bang {
                         else{
                             System.out.println("Don't think there's any other card that does this....");
                         }
+                    
                     }
-                    else{
+                    else if(players[server.choice.get(0)[0][0]].hand.get(server.choice.get(0)[0][1]).target==4||(players[server.choice.get(0)[0][0]].hand.get(server.choice.get(0)[0][1]).type==3&&false)){ //replace the false with a check of whether the card is played from field
+                        if(false){
+                            
+                        }
+                        else{
+                            System.out.println("Don't think there's any other card that does this....");
+                        }
+                    }
+                    else{ //self targetting
                         if(isCardLegal(players[server.choice.get(0)[0][0]].hand.get(server.choice.get(0)[0][1]), players[server.choice.get(0)[0][0]], null)){
                             server.sendInfo("SetInfo:CardPlayed:"+server.choice.get(0)[0][0]+":"+players[server.choice.get(0)[0][0]].hand.get(server.choice.get(0)[0][1]).name);
                             if(players[server.choice.get(0)[0][0]].hand.get(server.choice.get(0)[0][1]).effect==Card.play.DRAW.ordinal()){
