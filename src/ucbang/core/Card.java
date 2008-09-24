@@ -166,7 +166,7 @@ public class Card {
 				target = 3;
 				range = 1;
 				effect = play.DRAW.ordinal();
-				break; // fix general store
+				break; //TODO: fix general store
 
 			case JAIL:
 				type = 2;

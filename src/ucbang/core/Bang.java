@@ -126,6 +126,23 @@ public class Bang {
                             }
                         }
                     }
+                    else if(players[server.choice.get(0)[0][0]].hand.get(server.choice.get(0)[0][1]).target==3||(players[server.choice.get(0)[0][0]].hand.get(server.choice.get(0)[0][1]).type==3&&false)){ //replace the false with a check of whether the card is played from field
+                        if(players[server.choice.get(0)[0][0]].hand.get(server.choice.get(0)[0][1]).effect==Card.play.HEAL.ordinal()){
+                            for(int n = 0; n<numPlayers; n++){
+                                changeLifePoints(n, 1);
+                            }
+                            playerDiscardCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]);
+                        }
+                        if(players[server.choice.get(0)[0][0]].hand.get(server.choice.get(0)[0][1]).effect==Card.play.DRAW.ordinal()){
+                            for(int n = 0; n<numPlayers; n++){
+                                playerDrawCard(n, 1);
+                            }
+                            playerDiscardCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]); //TODO: fix general store
+                        }
+                        else{
+                            System.out.println("Don't think there's any other card that does this....");
+                        }
+                    }
                     else{
                         if(isCardLegal(players[server.choice.get(0)[0][0]].hand.get(server.choice.get(0)[0][1]), players[server.choice.get(0)[0][0]], null)){
                             server.sendInfo("SetInfo:CardPlayed:"+server.choice.get(0)[0][0]+":"+players[server.choice.get(0)[0][0]].hand.get(server.choice.get(0)[0][1]).name);
@@ -526,7 +543,15 @@ public class Bang {
         players[p].lifePoints=players[p].maxLifePoints;
     }
     void changeLifePoints(int p, int n){
-        server.sendInfo(p,"SetInfo:HP:"+n);
-        players[p].lifePoints+=n;
+        if(players[p].lifePoints+n>players[p].maxLifePoints){
+            System.out.println("Player "+p+" is now at max hp.");
+            n = players[p].maxLifePoints - players[p].lifePoints;
+            server.sendInfo(p,"SetInfo:HP:"+n);
+            players[p].lifePoints+=n;
+        }
+        else{
+            server.sendInfo(p,"SetInfo:HP:"+n);
+            players[p].lifePoints+=n;
+        }
     }
 }
