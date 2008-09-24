@@ -2,6 +2,7 @@ package ucbang.network;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.AbstractTableModel;
@@ -36,7 +37,7 @@ public class ServerBrowser extends JFrame implements ActionListener{
 	ArrayList<ServerInfo> servers = new ArrayList<ServerInfo>();
 	JTable servertable;
 	JScrollPane scrollPane;
-	JButton choose, refresh;
+	JButton create, join, refresh;
 	ServerTableModel tm;
 	public ServerBrowser(){
 		downloadList();
@@ -55,21 +56,28 @@ public class ServerBrowser extends JFrame implements ActionListener{
 		gbc.weighty=1;
 		gbc.gridx=1;
 		gbc.gridheight=4;
-		gbc.gridwidth=2;
+		gbc.gridwidth=3;
 		gbc.fill=GridBagConstraints.BOTH;
 		this.add(scrollPane,gbc);
 		gbc.fill=GridBagConstraints.HORIZONTAL;
 		gbc.weighty=0;
 		gbc.gridy=5;
 
-		gbc.gridx=2;
+		gbc.gridx=1;
 		gbc.gridheight=1;
 		gbc.gridwidth=1;
-		choose = new JButton("Choose");
-		this.add(choose,gbc);
-		choose.addActionListener(this);
-		gbc.gridx=1;
+		join = new JButton("Join");
+		join.setMnemonic(java.awt.event.KeyEvent.VK_J);
+		this.add(join,gbc);
+		join.addActionListener(this);
+		create = new JButton("Create Server");
+		create.setMnemonic(java.awt.event.KeyEvent.VK_C);
+		gbc.gridx=2;
+		create.addActionListener(this);
+		this.add(create,gbc);
+		gbc.gridx=3;
 		refresh = new JButton("Refresh");
+		refresh.setMnemonic(java.awt.event.KeyEvent.VK_R);
 		refresh.addActionListener(this);
 		this.add(refresh,gbc);
 		this.pack();
@@ -142,10 +150,18 @@ public class ServerBrowser extends JFrame implements ActionListener{
 			downloadList();
 			tm.setData(servers);
 			tm.fireTableDataChanged();
-		}else if(e.getSource().equals(choose)){
+		}else if(e.getSource().equals(join)){
 			int i=servertable.getSelectedRow();
-			System.out.println("Joining "+servers.get(i).ip);
-			new Client(servers.get(i).ip, true);
+			if(i>=0){
+				System.out.println("Joining "+servers.get(i).ip);
+				new Client(servers.get(i).ip, true);
+				this.dispose();
+			}else{
+				JOptionPane.showMessageDialog(this, "Choose a server!");
+			}
+		}else if(e.getSource().equals(create)){
+			new Server(12345);
+			new Client("localhost", true, "Host");
 			this.dispose();
 		}
 		
