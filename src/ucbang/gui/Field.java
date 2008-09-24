@@ -40,6 +40,27 @@ public class Field implements MouseListener, MouseMotionListener{
 	public void add(Card card, int x, int y){
 		cards.put(card, new cardSpace(card, new Rectangle(x,y,55,85)));
 	}
+	int textHeight(String message, Graphics2D graphics){
+		int lineheight=(int)graphics.getFont().getStringBounds("|", graphics.getFontRenderContext()).getHeight();
+		return message.split("\n").length*lineheight;
+	}
+	int textWidth(String message, Graphics2D graphics){
+		String[] lines = message.split("\n");
+		int width=0;
+		for(int i=0;i<lines.length;i++){
+			int w=(int)graphics.getFont().getStringBounds(lines[i], graphics.getFontRenderContext()).getWidth();
+			if(width<w)
+				width=w;
+		}
+		return width;
+	}
+	void improvedDrawString(String message, int x, int y, Graphics2D graphics){
+		int lineheight=(int)graphics.getFont().getStringBounds("|", graphics.getFontRenderContext()).getHeight();
+		String[] lines = message.split("\n");
+		for(int i=0;i<lines.length;i++){
+			graphics.drawString(lines[i], x, y+i*lineheight);
+		}
+	}
 	public void paint(Graphics2D graphics){
 		Iterator<cardSpace> iter = cards.values().iterator();
 		while(iter.hasNext()){
@@ -50,9 +71,9 @@ public class Field implements MouseListener, MouseMotionListener{
 			Rectangle2D bounds=graphics.getFont().getStringBounds(description, graphics.getFontRenderContext());
 			Color temp=graphics.getColor();
 			graphics.setColor(Color.YELLOW);
-			graphics.fill3DRect(describeWhere.x, describeWhere.y-(int)bounds.getHeight()+2, (int)bounds.getWidth(), (int)bounds.getHeight(),false);
+			graphics.fill3DRect(describeWhere.x, describeWhere.y-(int)bounds.getHeight()+2, textWidth(description, graphics), textHeight(description, graphics),false);
 			graphics.setColor(Color.BLACK);
-			graphics.drawString(description, describeWhere.x, describeWhere.y);
+			improvedDrawString(description, describeWhere.x, describeWhere.y,graphics);
 			graphics.setColor(temp);
 		}
 	}
