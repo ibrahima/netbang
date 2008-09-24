@@ -111,6 +111,9 @@ public class Bang {
                             if(players[server.choice.get(0)[0][0]].hand.get(server.choice.get(0)[0][1]).effect==Card.play.DRAW.ordinal()){
                                 playerDrawCard(server.choice.get(0)[0][0], players[server.choice.get(0)[0][0]].hand.get(server.choice.get(0)[0][1]).range);
                             }
+                            if(players[server.choice.get(0)[0][0]].hand.get(server.choice.get(0)[0][1]).effect==Card.play.HEAL.ordinal()){
+                                changeLifePoints(server.choice.get(0)[0][0], players[server.choice.get(0)[0][1]].hand.get(server.choice.get(0)[0][1]).range);
+                            }
                             playerDiscardCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]); //replace server.choice.get(0)[0][0] with turn%numPlayers?
                         }
                     }
