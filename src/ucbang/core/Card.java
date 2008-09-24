@@ -117,10 +117,12 @@ public class Card {
 			case DODGE:
 				type = 4;
 				effect = play.MISS.ordinal();
+                                effect2 = play.DRAW.ordinal();
 				break;
 			case BIBLE:
 				type = 3;
 				effect = play.MISS.ordinal();
+                                effect2 = play.DRAW.ordinal();
 				break;
 			case IRON_PLATE:
 				type = 3;
@@ -194,30 +196,34 @@ public class Card {
 			case BEER:
 				type = 2;
 				target = 1;
+                                range = 1;
 				special = 1;
 				effect = play.HEAL.ordinal();
 				break;
 			case TEQUILA:
 				type = 2;
 				target = 2;
+                                range = 1;
 				discardToPlay = true;
 				effect = play.HEAL.ordinal();
 				break;
 			case WHISKY:
 				type = 2;
 				target = 1;
-				range = 1;
+				range = 2;
 				discardToPlay = true;
 				effect = play.HEAL.ordinal();
 				break; // special case: heals 2 hp, so i guess i'll use "range"
 			case CANTEEN:
 				type = 3;
 				target = 1;
+                                range = 1;
 				effect = play.HEAL.ordinal();
 				break;
 			case SALOON:
 				type = 2;
 				target = 3;
+                                range = 1;
 				effect = play.HEAL.ordinal();
 				break;
 

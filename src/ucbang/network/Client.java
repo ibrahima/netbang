@@ -330,7 +330,12 @@ class ClientThread extends Thread {
 							System.out.println("MOVED TO DISCARD:"
 									+ c.player.hand.remove((int) Integer
 											.valueOf(temp1[1])).name);
-						} else if (temp1[0].equals("id")) {
+						} else if (temp1[0].equals("CardPlayed")) {
+                                                        String s = "";
+                                                        s = "Player "+temp1[1]+" played "+temp1[2]+(temp1.length==4?" at player "+temp1[3]:"");
+							c.gui.appendText(s);
+						}
+                                                else if (temp1[0].equals("id")) {
 							c.id = Integer.valueOf(temp1[1]);
 						}
                                                 else {
