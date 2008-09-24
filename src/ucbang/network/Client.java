@@ -2,6 +2,7 @@ package ucbang.network;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
@@ -127,8 +128,6 @@ public class Client extends Thread {
 			} catch (InterruptedException e) {
 			}
 		}
-		if(id==0)
-			outMsgs.add("/shutdown");
 		gui.dispose();
 		gui = null;
 		System.out.println("Exiting");
@@ -376,6 +375,10 @@ class ClientThread extends Thread {
 
 	protected void finalize() throws Throwable {
 		try {
+			if(c.id==0){
+				out.write("/shutdown");
+				out.flush();		
+			}
 			in.close();
 			out.close();
 			server.close();

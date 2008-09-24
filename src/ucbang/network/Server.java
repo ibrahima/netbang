@@ -334,10 +334,10 @@ class ServerThread extends Thread {
 							}
 						}
 					} else if(temp[0].equals("/shutdown")){
-						if(id==0){
+						//if(id==0){
 							server.running=false;
 							System.out.println("Server shutting down");
-						}
+						//}
 					} else if (temp[0].equals("Chat")) {
 						if (temp[1].charAt(0) == '/') {
 							// TODO: Send commands
@@ -430,6 +430,7 @@ class ServerThread extends Thread {
 					e.printStackTrace();
 			}
 		}
+		System.out.println("Tried to quit");
 		try {
 			this.finalize();
 		} catch (Throwable e) {
