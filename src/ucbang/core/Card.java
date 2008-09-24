@@ -5,7 +5,7 @@ import java.util.Arrays;
 import java.util.Collection;
 
 public class Card {
-
+	public String description;
 	public static enum play {
 		DAMAGE, HEAL, MISS, DRAW, STEAL, DISCARD, DUEL, JAIL
 	}; // played cards

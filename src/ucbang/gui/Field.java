@@ -106,7 +106,7 @@ public class Field implements MouseListener, MouseMotionListener{
                 else
                     return;
         		if(e.getButton()==MouseEvent.BUTTON3){
-        			System.out.println("Insert description of card here");
+        			System.out.println(cs.card.description);
         		}else
                 if(client.prompting && pick.contains(cs.card)){
                     System.out.println("sending prompt...");
