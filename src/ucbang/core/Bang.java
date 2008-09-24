@@ -61,24 +61,36 @@ public class Bang {
                                 server.sendInfo("SetInfo:CardPlayed:"+server.choice.get(0)[0][0]+":"+players[server.choice.get(0)[0][0]].hand.get(server.choice.get(0)[0][1]).name+":"+server.choice.get(1)[0][1]);
                                 System.out.println("Player "+server.choice.get(1)[0][0]+" is targetting "+server.choice.get(1)[0][1]);
                                 if(players[server.choice.get(0)[0][0]].hand.get(server.choice.get(0)[0][1]).discardToPlay==true){
-                                    if(server.choice.get(1).length==1){ //has not been asked to discard yet
-                                        System.out.println("THIS CARD REQUIRES A DISCARD TO PLAY AS WELL");
-                                        server.choice.set(1, new int[][]{server.choice.get(1)[0],{server.choice.get(0)[0][0],-2}});
-                                        server.prompt(server.choice.get(0)[0][0], "PlayCard", false); //TODO: play card from hand only
-                                        System.out.println(server.choice.size()+" "+server.choice.get(1).length);
-                                        return;
-                                    }
-                                    if(server.choice.get(1).length==2){ //has  been asked to discard yet
-                                        if(server.choice.get(1)[1][1]==server.choice.get(0)[0][1]){
-                                            System.out.println("Cannot discard the card you are playing");
+                                    if(players[server.choice.get(0)[0][0]].hand.size()>1){
+                                        if(server.choice.get(1).length==1){ //has not been asked to discard yet
+                                            System.out.println("THIS CARD REQUIRES A DISCARD TO PLAY AS WELL");
                                             server.choice.set(1, new int[][]{server.choice.get(1)[0],{server.choice.get(0)[0][0],-2}});
                                             server.prompt(server.choice.get(0)[0][0], "PlayCard", false); //TODO: play card from hand only
+                                            System.out.println(server.choice.size()+" "+server.choice.get(1).length);
                                             return;
                                         }
-                                        else{
-                                            System.out.println("DISCARD OK.");
-                                            playerDiscardCard(server.choice.get(0)[0][0], server.choice.get(1)[1][1]); 
+                                        if(server.choice.get(1).length==2){ //has  been asked to discard
+                                            if(server.choice.get(1)[1][1]==server.choice.get(0)[0][1]){
+                                                System.out.println("Cannot discard the card you are playing");
+                                                server.choice.set(1, new int[][]{server.choice.get(1)[0],{server.choice.get(0)[0][0],-2}});
+                                                server.prompt(server.choice.get(0)[0][0], "PlayCard", false); //TODO: play card from hand only
+                                                return;
+                                            }
+                                            else{
+                                                System.out.println("DISCARD OK.");
+                                                //may need to reorder the cards;
+                                                if(server.choice.get(0)[0][1]>server.choice.get(1)[1][1]){
+                                                    server.choice.get(0)[0][1]--;
+                                                }
+                                                playerDiscardCard(server.choice.get(0)[0][0], server.choice.get(1)[1][1]);
+                                            }
                                         }
+                                    }
+                                    else{
+                                        server.choice.remove(server.choice.size()-1);
+                                        server.prompt(turn%numPlayers, "PlayCardUnforced", true);
+                                        System.out.println("Cannot play that card: you need another card to discard");
+                                        return;
                                     }
                                 }
                                 if(players[server.choice.get(0)[0][0]].hand.get(server.choice.get(0)[0][1]).effect==Card.play.DAMAGE.ordinal()){
@@ -133,7 +145,7 @@ public class Bang {
                             }
                             playerDiscardCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]);
                         }
-                        if(players[server.choice.get(0)[0][0]].hand.get(server.choice.get(0)[0][1]).effect==Card.play.DRAW.ordinal()){
+                        else if(players[server.choice.get(0)[0][0]].hand.get(server.choice.get(0)[0][1]).effect==Card.play.DRAW.ordinal()){
                             for(int n = 0; n<numPlayers; n++){
                                 playerDrawCard(n, 1);
                             }
@@ -145,8 +157,8 @@ public class Bang {
                     
                     }
                     else if(players[server.choice.get(0)[0][0]].hand.get(server.choice.get(0)[0][1]).target==4||(players[server.choice.get(0)[0][0]].hand.get(server.choice.get(0)[0][1]).type==3&&false)){ //replace the false with a check of whether the card is played from field
-                        if(false){
-                            
+                        if(true){
+                            playerDiscardCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]); //replace server.choice.get(0)[0][0] with turn%numPlayers?
                         }
                         else{
                             System.out.println("Don't think there's any other card that does this....");
