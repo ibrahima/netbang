@@ -16,6 +16,8 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.MenuBar;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.PrintWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
@@ -30,7 +32,7 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-public class ServerBrowser extends JFrame{
+public class ServerBrowser extends JFrame implements ActionListener{
 	ArrayList<ServerInfo> servers = new ArrayList<ServerInfo>();
 	JTable servertable;
 	JScrollPane scrollPane;
@@ -63,8 +65,10 @@ public class ServerBrowser extends JFrame{
 		gbc.gridwidth=1;
 		choose = new JButton("Choose");
 		this.add(choose,gbc);
+		choose.addActionListener(this);
 		gbc.gridx=1;
 		refresh = new JButton("Refresh");
+		refresh.addActionListener(this);
 		this.add(refresh,gbc);
 		this.pack();
 		this.setVisible(true);
@@ -78,6 +82,7 @@ public class ServerBrowser extends JFrame{
 	}
 
 	public void downloadList() {
+		servers.clear();
 		URL url;
 		try {
 			url = new URL("http://cardgameservers.appspot.com/xml");
@@ -129,7 +134,17 @@ public class ServerBrowser extends JFrame{
 			recPrint(a);
 		}
 	}
-
+	public void actionPerformed(ActionEvent e) {
+		// TODO Auto-generated method stub
+		if(e.getSource().equals(refresh)){
+			downloadList();
+		}else if(e.getSource().equals(choose)){
+			int i=servertable.getSelectedRow();
+			System.out.println("Joining "+servers.get(i).ip);
+			new Client(servers.get(i).ip, true);
+		}
+		
+	}
 	private static class MyErrorHandler implements ErrorHandler {
 
 		private PrintWriter out;
@@ -209,5 +224,6 @@ public class ServerBrowser extends JFrame{
 	        return data[row][col];
 	    }
     }
+
 
 }
