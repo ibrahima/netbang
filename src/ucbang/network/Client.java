@@ -249,15 +249,12 @@ class ClientThread extends Thread {
 															"Start game?"));
 							c.gui
 									.appendText("Host has requested the game be started");
-						} else if (temp[1].equals("PlayCard")) { // play one
-																	// card
+						} else if (temp[1].equals("PlayCard")) {
 							c.gui.promptChooseCard(c.player.hand, "", "", true);
 							// c.outMsgs.add("Prompt:"+a);
 							//System.out.println("PLAYING CARD"+c.player.hand.get
 							// (a).name);
-						} else if (temp[1].equals("PlayCardUnforced")) { // play
-																			// one
-																			// card
+						} else if (temp[1].equals("PlayCardUnforced")) {
 							c.gui
 									.promptChooseCard(c.player.hand, "", "",
 											false);
@@ -265,11 +262,11 @@ class ClientThread extends Thread {
 							// if(a>=0)
 							//System.out.println("PLAYING CARD"+c.player.hand.get
 							// (a).name);
-						} else if (temp[1].equals("ChooseCharacter")) { // play
-																		// one
-																		// card
+						} else if (temp[1].equals("ChooseCharacter")) {
 							c.gui.promptChooseCard(c.player.hand, "", "", true);
-						}
+						} else if (temp[1].equals("PickTarget")) {
+                                                        c.outMsgs.add("Prompt:"+(1-c.id));
+                                                }
 					} else if (temp[0].equals("Draw")) {
 						String[] temp1 = temp[1].split(":");
 						int n = temp1.length;

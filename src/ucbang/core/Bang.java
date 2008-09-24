@@ -36,7 +36,8 @@ public class Bang {
             start2();
         }
         else{
-            if(server.choice.size()==1){
+            System.out.println("PROCESS");
+            if(server.choice.size()>=1){
                 if(server.choice.size()==1){
                     System.out.println("You played "+server.choice.get(0)[0][1]+". You have "+(players[server.choice.get(0)[0][0]].hand.size()-1)+" cards left in your hand.");
                 }
@@ -46,16 +47,15 @@ public class Bang {
                         if(server.choice.size()==1){
                             //TODO: prompt to pick a target
                             {
-                            //TODO: oops, this should be in client, but i have class
-                                if(server.choice.get(0)[0][0]==0)
-                                    server.choice.add(new int[][]{{0,1}});
-                                else
-                                    server.choice.add(new int[][]{{1,0}});
+                                server.prompt(turn%numPlayers,"PickTarget", true);
+                                System.out.println("pick target....");
                             }
                         }
-                        else if(isCardLegal(players[server.choice.get(0)[0][0]].hand.get(server.choice.get(0)[0][1]), players[server.choice.get(0)[0][0]], players[server.choice.get(1)[0][1]])){
-                            server.choice.remove(server.choice.size()-1);
-                            playerDiscardCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]); //replace server.choice.get(0)[0][0] with turn%numPlayers?
+                        else{ 
+                            if(isCardLegal(players[server.choice.get(0)[0][0]].hand.get(server.choice.get(0)[0][1]), players[server.choice.get(0)[0][0]], players[server.choice.get(1)[0][1]])){
+                                server.choice.remove(server.choice.size()-1);
+                                playerDiscardCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]); //replace server.choice.get(0)[0][0] with turn%numPlayers?
+                            }
                         }
                     }
                     else{
