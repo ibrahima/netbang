@@ -54,6 +54,7 @@ public class ClientGUI extends JFrame implements KeyListener {
 			}
 			public void windowClosing(WindowEvent e){
 				((ClientGUI)(e.getWindow())).client.running=false;
+                                System.exit(0);
 			}
 		});
 	}
@@ -164,7 +165,7 @@ public class ClientGUI extends JFrame implements KeyListener {
 	 * @return
 	 */
 	public void promptChooseCard(ArrayList<Card> al, String str1, String str2,boolean force) {
-                System.out.println(al.size()+" "+client.player.hand.size());
+                System.out.println(client.id+" received prompt.");
                 client.field.pick = al;
                 client.prompting = true;
                 client.forceDecision = force;

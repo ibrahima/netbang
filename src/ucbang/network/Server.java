@@ -235,7 +235,7 @@ public class Server extends Thread {
 		if (prompting == 0) {
 			prompting = 1;
 		}
-		System.out.println(messages.get(names.get(player)) == null);
+		System.out.println("Sending prompt to player "+player+" : "+s);
 		messages.get(names.get(player)).add("Prompt:" + s);
 	}
 }

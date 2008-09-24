@@ -18,7 +18,7 @@ import ucbang.gui.Field;
 
 public class Client extends Thread {
 	String name = "";
-	int id;
+	public int id;
 	public int numPlayers = 0;// should be deprecated soon in favor of
 	// players.size()
 	Socket socket = null;
@@ -265,7 +265,7 @@ class ClientThread extends Thread {
 						} else if (temp[1].equals("ChooseCharacter")) {
 							c.gui.promptChooseCard(c.player.hand, "", "", true);
 						} else if (temp[1].equals("PickTarget")) {
-                                                        System.out.println("I am player " + c.id);
+                                                        System.out.println("I am player " + c.id+", prompting = "+c.prompting);
                                                         c.outMsgs.add("Prompt:"+(1-c.id));
                                                 }
 					} else if (temp[0].equals("Draw")) {
@@ -314,7 +314,11 @@ class ClientThread extends Thread {
 							c.field.clear();
 							c.player.maxLifePoints += Integer.valueOf(temp1[1]);
                                                         c.player.lifePoints = c.player.maxLifePoints;
-						} else if (temp1[0].equals("turn")) {
+                                                        
+						} else if (temp1[0].equals("HP")) {
+							c.player.lifePoints += Integer.valueOf(temp1[1]);
+                                                        System.out.println("Player "+c.id+" life points changed by "+temp1[1]);
+                                                } else if (temp1[0].equals("turn")) {
 							c.turn = Integer.valueOf(temp1[1]);
 							if (c.turn % c.numPlayers == 0) {
 								c.gui.appendText("hay guyz, iz my turn");
