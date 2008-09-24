@@ -5,7 +5,9 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionAdapter;
+import java.awt.event.MouseMotionListener;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -20,7 +22,7 @@ import ucbang.core.Deck.CardName;
 
 import ucbang.network.Client;
 
-public class Field extends MouseMotionAdapter{
+public class Field implements MouseListener, MouseMotionListener{
 	Client client;
 	public BSHashMap<Card, cardSpace> cards = new BSHashMap<Card, cardSpace>();
 	CardDisplayer cd;
@@ -103,7 +105,9 @@ public class Field extends MouseMotionAdapter{
                     System.out.println("Clicked on "+cs.card.name);
                 else
                     return;
-                    
+        		if(e.getButton()==MouseEvent.BUTTON3){
+        			System.out.println("Insert description of card here");
+        		}else
                 if(client.prompting && pick.contains(cs.card)){
                     System.out.println("sending prompt...");
                     if(cs.card.type==1){
@@ -128,6 +132,7 @@ public class Field extends MouseMotionAdapter{
 	}
 
 	public void mousePressed(MouseEvent e) {
+
 	    movingCard = binarySearchCardAtPoint(e.getPoint());
             if(movingCard!=null){
                 pointOnCard = new Point(e.getPoint().x-movingCard.rect.x, e.getPoint().y-movingCard.rect.y);
@@ -200,4 +205,20 @@ public class Field extends MouseMotionAdapter{
                 return ((Integer)rect.getLocation().x).compareTo(((cardSpace)o).rect.getLocation().x);
         }
     }
+
+	@Override
+	public void mouseEntered(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void mouseExited(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void mouseMoved(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
 }
