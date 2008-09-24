@@ -37,12 +37,13 @@ public class ServerBrowser extends JFrame implements ActionListener{
 	JTable servertable;
 	JScrollPane scrollPane;
 	JButton choose, refresh;
+	ServerTableModel tm;
 	public ServerBrowser(){
 		downloadList();
 		setPreferredSize(new Dimension(480, 320));
 		setSize(new Dimension(480, 320));
 		this.setTitle("Server Browser");
-		ServerTableModel tm = new ServerTableModel(servers);
+		tm = new ServerTableModel(servers);
 		servertable=new JTable(tm);
 		scrollPane = new JScrollPane(servertable);
 		servertable.setFillsViewportHeight(true);
@@ -138,6 +139,8 @@ public class ServerBrowser extends JFrame implements ActionListener{
 		// TODO Auto-generated method stub
 		if(e.getSource().equals(refresh)){
 			downloadList();
+			tm.setData(servers);
+			tm.fireTableDataChanged();
 		}else if(e.getSource().equals(choose)){
 			int i=servertable.getSelectedRow();
 			System.out.println("Joining "+servers.get(i).ip);
@@ -207,7 +210,18 @@ public class ServerBrowser extends JFrame implements ActionListener{
 	    		i++;
 	    	}
 	    }
-
+	    public void setData(ArrayList<ServerInfo> list){
+	    	data = new String[list.size()][3];
+	    	Iterator<ServerInfo> iter = list.iterator();
+	    	int i=0;
+	    	while(iter.hasNext()){
+	    		ServerInfo temp = iter.next();
+	    		data[i][0]=temp.name;
+	    		data[i][1]=temp.ip;
+	    		data[i][2]=temp.type;
+	    		i++;
+	    	}
+	    }
 	    public int getColumnCount() {
 	        return columns.length;
 	    }
