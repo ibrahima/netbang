@@ -265,6 +265,7 @@ class ClientThread extends Thread {
 						} else if (temp[1].equals("ChooseCharacter")) {
 							c.gui.promptChooseCard(c.player.hand, "", "", true);
 						} else if (temp[1].equals("PickTarget")) {
+                                                        System.out.println("I am player " + c.id);
                                                         c.outMsgs.add("Prompt:"+(1-c.id));
                                                 }
 					} else if (temp[0].equals("Draw")) {
@@ -303,6 +304,7 @@ class ClientThread extends Thread {
 						if (temp1[0].equals("newPlayer")) {
 							c.player = new Player(Integer.valueOf(temp1[1]),
 									c.name);
+                                                        c.id = Integer.valueOf(temp1[1]);
 							c.numPlayers = Integer.valueOf(temp1[2]);
 						} else if (temp1[0].equals("role")) {
 							c.field.clear();
@@ -323,7 +325,10 @@ class ClientThread extends Thread {
 							System.out.println("MOVED TO DISCARD:"
 									+ c.player.hand.remove((int) Integer
 											.valueOf(temp1[1])).name);
-						} else {
+						} else if (temp1[0].equals("id")) {
+							c.id = Integer.valueOf(temp1[1]);
+						}
+                                                else {
 							System.out.println("WTF do i do with " + temp1[0]
 									+ ":" + temp1[1]);
 						}

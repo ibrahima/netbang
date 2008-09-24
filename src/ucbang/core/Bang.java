@@ -43,7 +43,7 @@ public class Bang {
                 }
 
                 if(server.choice.get(0)[0][1]!=-1){
-                    if(players[server.choice.get(0)[0][0]].hand.get(server.choice.get(0)[0][1]).target==2){
+                    if(players[server.choice.get(0)[0][0]].hand.get(server.choice.get(0)[0][1]).target==2||(players[server.choice.get(0)[0][0]].hand.get(server.choice.get(0)[0][1]).type==3&&false)){ //replace the false with a check of whether the card is played from field
                         if(server.choice.size()==1){
                             //TODO: prompt to pick a target
                             {
@@ -51,11 +51,19 @@ public class Bang {
                                 System.out.println("pick target....");
                             }
                         }
-                        else{ 
-                            if(isCardLegal(players[server.choice.get(0)[0][0]].hand.get(server.choice.get(0)[0][1]), players[server.choice.get(0)[0][0]], players[server.choice.get(1)[0][1]])){
+                        else if(server.choice.size()==2){
+                            if(server.choice.get(1)[0][1]==-1){
+                                System.out.println("Cancelled");
                                 server.choice.remove(server.choice.size()-1);
-                                playerDiscardCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]); //replace server.choice.get(0)[0][0] with turn%numPlayers?
                             }
+                            else if(isCardLegal(players[server.choice.get(0)[0][0]].hand.get(server.choice.get(0)[0][1]), players[server.choice.get(0)[0][0]], players[server.choice.get(1)[0][1]])){
+                                server.prompt(server.choice.get(1)[0][1], "PlayCard", true);
+                                System.out.println("Player "+server.choice.get(1)[0][0]+" is targetting "+server.choice.get(1)[0][1]);
+                            }
+                        }
+                        else if(server.choice.size()==3){
+                            server.choice.remove(server.choice.size()-1);
+                            playerDiscardCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]); //replace server.choice.get(0)[0][0] with turn%numPlayers?
                         }
                     }
                     else{
@@ -89,19 +97,26 @@ public class Bang {
         }
         //the rules
         if(server.choice.size()==1){ //cards that can be played at the start of a turn
+            if(c.type==3&&false){ //replace false with some indicator of whether the card is on field
+                
+            }
             if(c.type==2){
                 if(c.effect==Card.play.HEAL.ordinal()){
                     if(c.target==1&&p1.lifePoints==p1.maxLifePoints){ //can't beer self with max hp
                         System.out.println("ILLEGAL CARD: you are already at maxhp");   
                         return false;
                     }
-                    /*else if(c.target==2&&p2.lifePoints==p2.maxLifePoints){
+                    else if(c.target==2&&p2.lifePoints==p2.maxLifePoints){
                         System.out.println("ILLEGAL CARD: target is already at maxhp");   
                         return false;
-                    }*/
+                    }
+                }
+                else if(c.effect==Card.play.DAMAGE.ordinal()&&p1==p2){
+                    System.out.println("ILLEGAL CARD: why would you shoot yourself?");
+                    return false;
                 }
             }
-            if(c.type==4&&c.effect==Card.play.MISS.ordinal()){     //can't play miss
+            else if(c.type==4&&c.effect==Card.play.MISS.ordinal()){     //can't play miss
                 System.out.println("ILLEGAL CARD: can't play miss on turn");   
                 return false;
             }
