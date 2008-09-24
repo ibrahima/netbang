@@ -5,8 +5,7 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
+import java.awt.event.MouseMotionAdapter;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -21,7 +20,7 @@ import ucbang.core.Deck.CardName;
 
 import ucbang.network.Client;
 
-public class Field implements MouseListener, MouseMotionListener{
+public class Field extends MouseMotionAdapter{
 	Client client;
 	public BSHashMap<Card, cardSpace> cards = new BSHashMap<Card, cardSpace>();
 	CardDisplayer cd;
@@ -91,7 +90,6 @@ public class Field implements MouseListener, MouseMotionListener{
         
 	public void mouseClicked(MouseEvent e) {
 		Point ep=e.getPoint();
-                
                 ////the ugly proxy skip turn button
                 if(new Rectangle(760, 560, 40, 40).contains(ep)){
                     if(client.prompting&&!client.forceDecision){
@@ -128,10 +126,7 @@ public class Field implements MouseListener, MouseMotionListener{
                     }
                 }
 	}
-	public void mouseEntered(MouseEvent e) {
-	}
-	public void mouseExited(MouseEvent e) {
-	}
+
 	public void mousePressed(MouseEvent e) {
 	    movingCard = binarySearchCardAtPoint(e.getPoint());
             if(movingCard!=null){
@@ -154,9 +149,6 @@ public class Field implements MouseListener, MouseMotionListener{
             else{
                 //System.out.println("not dragging");
             }
-        }
-
-        public void mouseMoved(MouseEvent e) {
         }
 
     public class BSHashMap<K,V> extends HashMap<K,V>{
