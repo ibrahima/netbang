@@ -1,6 +1,8 @@
 package ucbang.network;
 
+import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.AbstractTableModel;
 import javax.xml.parsers.DocumentBuilder;
@@ -11,6 +13,9 @@ import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.*;
 
 import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.MenuBar;
 import java.io.PrintWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
@@ -28,6 +33,8 @@ import org.w3c.dom.NodeList;
 public class ServerBrowser extends JFrame{
 	ArrayList<ServerInfo> servers = new ArrayList<ServerInfo>();
 	JTable servertable;
+	JScrollPane scrollPane;
+	JButton choose, refresh;
 	public ServerBrowser(){
 		downloadList();
 		setPreferredSize(new Dimension(480, 320));
@@ -35,7 +42,30 @@ public class ServerBrowser extends JFrame{
 		this.setTitle("Server Browser");
 		ServerTableModel tm = new ServerTableModel(servers);
 		servertable=new JTable(tm);
-		this.add(servertable);
+		scrollPane = new JScrollPane(servertable);
+		servertable.setFillsViewportHeight(true);
+		this.setLayout(new GridBagLayout());
+		GridBagConstraints gbc = new GridBagConstraints();
+		gbc.gridy=1;
+		gbc.weightx=1;
+		gbc.weighty=1;
+		gbc.gridx=1;
+		gbc.gridheight=4;
+		gbc.gridwidth=2;
+		gbc.fill=GridBagConstraints.BOTH;
+		this.add(scrollPane,gbc);
+		gbc.fill=GridBagConstraints.HORIZONTAL;
+		gbc.weighty=0;
+		gbc.gridy=5;
+
+		gbc.gridx=2;
+		gbc.gridheight=1;
+		gbc.gridwidth=1;
+		choose = new JButton("Choose");
+		this.add(choose,gbc);
+		gbc.gridx=1;
+		refresh = new JButton("Refresh");
+		this.add(refresh,gbc);
 		this.pack();
 		this.setVisible(true);
 	}
