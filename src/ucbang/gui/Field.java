@@ -8,6 +8,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionAdapter;
 import java.awt.event.MouseMotionListener;
+import java.awt.geom.Rectangle2D;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -26,11 +27,12 @@ public class Field implements MouseListener, MouseMotionListener{
 	Client client;
 	public BSHashMap<Card, cardSpace> cards = new BSHashMap<Card, cardSpace>();
 	CardDisplayer cd;
-        Point pointOnCard;
-        cardSpace movingCard;
-        Card clicked;
-        ArrayList<Card> pick;
-        
+	Point pointOnCard;
+	cardSpace movingCard;
+	Card clicked;
+	ArrayList<Card> pick;
+    String description;
+    Point describeWhere;
 	public Field(CardDisplayer cd, Client c) {
 		this.cd=cd;
                 client = c;
@@ -43,6 +45,15 @@ public class Field implements MouseListener, MouseMotionListener{
 		while(iter.hasNext()){
 			cardSpace temp= iter.next();
 			cd.paint(temp.card.name ,graphics, temp.rect.x, temp.rect.y);
+		}
+		if(description!=null){
+			Rectangle2D bounds=graphics.getFont().getStringBounds(description, graphics.getFontRenderContext());
+			Color temp=graphics.getColor();
+			graphics.setColor(Color.YELLOW);
+			graphics.fill3DRect(describeWhere.x, describeWhere.y-(int)bounds.getHeight()+2, (int)bounds.getWidth(), (int)bounds.getHeight(),false);
+			graphics.setColor(Color.BLACK);
+			graphics.drawString(description, describeWhere.x, describeWhere.y);
+			graphics.setColor(temp);
 		}
 	}
         public cardSpace binarySearchCardAtPoint(Point ep){
@@ -107,6 +118,8 @@ public class Field implements MouseListener, MouseMotionListener{
                     return;
         		if(e.getButton()==MouseEvent.BUTTON3){
         			System.out.println(cs.card.description);
+        			description=cs.card.description;
+        			describeWhere=ep;
         		}else
                 if(client.prompting && pick.contains(cs.card)){
                     System.out.println("sending prompt...");
@@ -144,6 +157,7 @@ public class Field implements MouseListener, MouseMotionListener{
                 //System.out.println("card dropped");
             }
             movingCard = null;
+            description = null;
 	}
 
         public void mouseDragged(MouseEvent e) {

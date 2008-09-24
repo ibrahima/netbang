@@ -41,6 +41,9 @@ public class Card {
 				range = 1;
 				target = 2;
 				effect = play.DAMAGE.ordinal();
+				description = "BANG! cards are the main method to reduce other players' life points. \n" +
+						"If you want to play a BANG! card to hit one of the players, determine: a) what \n" +
+						"the distance to that player is, and b) if your weapon is capable of reaching that distance. ";
 				break;
 			case PUNCH:
 				type = 2;
