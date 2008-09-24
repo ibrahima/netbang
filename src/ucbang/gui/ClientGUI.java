@@ -99,7 +99,9 @@ public class ClientGUI extends JFrame implements KeyListener {
 		while (iter.hasNext()) {
 			graphics.drawString(iter.next(), 30, 60 + 15 * n++);
 		}
-
+		if(client.player!=null){
+			graphics.drawString(player.lifePoints+"HP", 300, 40);
+		}
 		graphics.dispose();
 		// paint backbuffer to window
 		strategy.show();

@@ -50,22 +50,30 @@ public class Card {
 				target = 2;
 				range = 1;
 				effect = play.DAMAGE.ordinal();
+				description="This cards has same effect as BANG! card, but on distance 1.\n" +
+						" This cards isnt count as BANG!";
 				break;
 			case GATLING:
 				type = 2;
 				target = 4;
 				effect = play.DAMAGE.ordinal();
+				description="The symbols show: a BANG! to all the other players.";
 				break;
 			case HOWITZER:
 				type = 3;
 				target = 4;
 				effect = play.DAMAGE.ordinal();
+				description="The current player play a Howitzer card in front of him.\n" +
+						"Starting with the next player's turn, he can discard it for BANG!\n" +
+						"effect to all players.. This card is not count as BANG!.";
 				break;
 			case INDIANS:
 				type = 2;
 				special = 2;
 				target = 4;
 				effect = play.DAMAGE.ordinal();
+				description="Each player, excluding the one who played this card, may discard a BANG!\n" +
+						" card, or lose a life point. Neither Missed! nor Barrel has effect in this case.";
 				break;
 			case KNIFE:
 				type = 2;
