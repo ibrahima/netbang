@@ -26,7 +26,6 @@ public class ClientGUI extends JFrame implements KeyListener {
 	 */
 	private static final long serialVersionUID = 4377855794895936467L;
 	BufferStrategy strategy;
-	public Player player;
 	int p;
 	StringBuilder chat;
 	boolean chatting = false;
@@ -100,7 +99,7 @@ public class ClientGUI extends JFrame implements KeyListener {
 			graphics.drawString(iter.next(), 30, 60 + 15 * n++);
 		}
 		if(client.player!=null){
-			graphics.drawString(player.lifePoints+"HP", 300, 40);
+			graphics.drawString(client.player.lifePoints+"HP", 300, 40);
 		}
 		graphics.dispose();
 		// paint backbuffer to window
