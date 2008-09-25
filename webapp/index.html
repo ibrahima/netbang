@@ -11,13 +11,17 @@
 				<td>Name</td>
 				<td>IP Address</td>
 				<td>Game Type</td>
-				<td>Updated</td>
+				<td>Players</td>
+				<td>Started</td>
+				<td>Updated</td>								
 			</tr>
 			{% for server in servers %}
 			<tr>
 				<td>{{ server.gamename|escape }}</td>
 				<td>{{ server.ip|escape }}</td>
 				<td>{{ server.type|escape }}</td>
+				<td>{{ server.players }}</td>
+				<td>{{ server.started }}</td>				
 				<td>{{ server.date|escape }}</td>
 			</tr>
 			{% endfor %}

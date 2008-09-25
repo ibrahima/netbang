@@ -78,6 +78,8 @@ public class Server extends Thread {
 					if (client != null) {
 						new ServerThread(client, this);
 						numPlayers++;
+						adder.setPlayers(numPlayers);
+						adder.addToServerList();
 					}
 				} catch (SocketTimeoutException e) {}
 				catch (Exception e) {e.printStackTrace();
@@ -121,6 +123,8 @@ public class Server extends Thread {
 						} else if (gameInProgress == 2) { // game has started
 							game.process(); // less bleh
 							gameInProgress++;
+							adder.setStarted(true);
+							adder.addToServerList();
 						} else if (gameInProgress == 3) {
 							game.process();
 						}

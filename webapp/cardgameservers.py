@@ -2,6 +2,7 @@ import cgi
 import os
 import hashlib
 import datetime
+import string
 
 from google.appengine.api import users
 from google.appengine.ext import webapp
@@ -14,6 +15,8 @@ class Server(db.Model):
     gamename = db.StringProperty()
     type = db.StringProperty()
     date = db.DateTimeProperty(auto_now_add=True)
+    players = db.IntegerProperty()
+    started = db.BooleanProperty()
     
 class MainPage(webapp.RequestHandler):
   def get(self):
@@ -50,24 +53,6 @@ class Xml(webapp.RequestHandler):
       
       path = os.path.join(os.path.dirname(__file__), 'list.xml')
       self.response.out.write(template.render(path, template_values))    
-class AddServer(webapp.RequestHandler):
-  def get(self):
-    self.response.out.write("""
-      <html>
-        <head>
-        <title>Card Game Servers - Add Server</title>
-        </head>
-        <body>
-          <form action="/sign" method="post">
-            <div>
-                Name: <input type="text" name="gamename"></input><br />
-                Game Type: <input type="text" name="type"></input><br />
-                SHA-1 Hash: <input type="text" name="hash"></input><br />
-            </div>
-            <div><input type="submit" value="Add Server"></div>
-          </form>
-        </body>
-      </html>""")
 
 
 class AddToServerList(webapp.RequestHandler):
@@ -77,6 +62,8 @@ class AddToServerList(webapp.RequestHandler):
       server.ip = os.environ['REMOTE_ADDR']
       server.gamename = self.request.get('gamename')
       server.type = self.request.get('type')
+      server.players = string.atoi(self.request.get('players'))
+      server.started = (self.request.get('started')=='true')
       sh.update(server.gamename)
       sh.update(server.type)
       if sh.hexdigest()==self.request.get('hash'):
@@ -112,7 +99,6 @@ application = webapp.WSGIApplication(
                                      [('/', MainPage),
                                       ('/xml', Xml),
                                       ('/ip', GetIP),
-                                      ('/addform', AddServer),
                                       ('/add', AddToServerList),
                                       ('/remove', RemoveFromServerList)],
                                      debug=True)

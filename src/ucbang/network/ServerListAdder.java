@@ -12,11 +12,12 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 public class ServerListAdder {
-	String address = "http://cardgameservers.appspot.com/";
+	String address = "http://localhost:8080/";
 	String hash;
 	final String type = "bang";
 	private String name;
-
+	int players=1;
+	boolean started=false;
 	public ServerListAdder() {
 		name = "NameMePlz";
 		try {
@@ -42,7 +43,12 @@ public class ServerListAdder {
 			e.printStackTrace();
 		}
 	}
-
+	public void setPlayers(int pl){
+		players=pl;
+	}
+	public void setStarted(boolean value){
+		started=value;
+	}
 	public void setName(String name) {
 		this.name = name;
 		MessageDigest md;
@@ -78,7 +84,7 @@ public class ServerListAdder {
 
 			PrintStream ps = new PrintStream(hConnection.getOutputStream());
 			ps.print("gamename=" + name + "&amp;type=" + type + "&amp;hash="
-					+ hash);
+					+ hash + "&amp;players="+ players + "&amp;started="+ started);
 			ps.close();
 			hConnection.connect();
 
