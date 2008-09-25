@@ -12,7 +12,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 public class ServerListAdder {
-	String address = "http://localhost:8080/";
+	String address = "http://cardgameservers.appspot.com/";
 	String hash;
 	final String type = "bang";
 	private String name;

@@ -5,5 +5,7 @@
 		<name>{{ server.gamename|escape }}</name>
 		<ip>{{ server.ip|escape }}</ip>
 		<type>{{ server.type|escape }}</type>
+		<players>{{ server.players }}</players>
+		<started>{{ server.started }}</started>
 	</server>{% endfor %}
 </serverlist>

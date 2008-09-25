@@ -120,11 +120,11 @@ public class Server extends Thread {
 							}
 							game = new Bang(numPlayers, this);// FLAG: game
 							game.process();
+							adder.setStarted(true);
+							adder.addToServerList();							
 						} else if (gameInProgress == 2) { // game has started
 							game.process(); // less bleh
 							gameInProgress++;
-							adder.setStarted(true);
-							adder.addToServerList();
 						} else if (gameInProgress == 3) {
 							game.process();
 						}

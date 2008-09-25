@@ -133,7 +133,8 @@ public class ServerBrowser extends JFrame implements ActionListener{
 	ServerInfo processServerNode(Node n) {
 		NodeList ns = n.getChildNodes();
 		return new ServerInfo(ns.item(1).getTextContent(), ns.item(3)
-				.getTextContent(), ns.item(5).getTextContent());
+				.getTextContent(), ns.item(5).getTextContent(),
+				Integer.parseInt(ns.item(7).getTextContent()), Boolean.parseBoolean(ns.item(9).getTextContent()));
 	}
 
 	void recPrint(Node n) {
@@ -202,11 +203,14 @@ public class ServerBrowser extends JFrame implements ActionListener{
 		String name;
 		String ip;
 		String type;
-
-		public ServerInfo(String name, String ip, String type) {
+		int players;
+		boolean started;
+		public ServerInfo(String name, String ip, String type, int players, boolean started) {
 			this.name = name;
 			this.ip = ip;
 			this.type = type;
+			this.players = players;
+			this.started = started;
 		}
 
 		public String toString() {
@@ -214,10 +218,10 @@ public class ServerBrowser extends JFrame implements ActionListener{
 		}
 	}
 	class ServerTableModel extends AbstractTableModel {
-		String[] columns = {"Name","IP Address", "Game Type"};
+		String[] columns = {"Name","IP Address", "Game Type", "Players", "Started"};
 	    private String[][] data;
 	    public ServerTableModel(ArrayList<ServerInfo> list){
-	    	data = new String[list.size()][3];
+	    	data = new String[list.size()][5];
 	    	Iterator<ServerInfo> iter = list.iterator();
 	    	int i=0;
 	    	while(iter.hasNext()){
@@ -225,11 +229,13 @@ public class ServerBrowser extends JFrame implements ActionListener{
 	    		data[i][0]=temp.name;
 	    		data[i][1]=temp.ip;
 	    		data[i][2]=temp.type;
+	    		data[i][3]=temp.players+"";
+	    		data[i][4]=temp.started+"";
 	    		i++;
 	    	}
 	    }
 	    public void setData(ArrayList<ServerInfo> list){
-	    	data = new String[list.size()][3];
+	    	data = new String[list.size()][5];
 	    	Iterator<ServerInfo> iter = list.iterator();
 	    	int i=0;
 	    	while(iter.hasNext()){
@@ -237,6 +243,8 @@ public class ServerBrowser extends JFrame implements ActionListener{
 	    		data[i][0]=temp.name;
 	    		data[i][1]=temp.ip;
 	    		data[i][2]=temp.type;
+	    		data[i][3]=temp.players+"";
+	    		data[i][4]=temp.started+"";
 	    		i++;
 	    	}
 	    }
