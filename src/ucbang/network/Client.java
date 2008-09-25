@@ -30,7 +30,7 @@ public class Client extends Thread {
 	public LinkedList<String> outMsgs = new LinkedList<String>();
 	ClientGUI gui;
 	public Player player;
-	public LinkedList<String> players = new LinkedList<String>();
+	public LinkedList<Player> players = new LinkedList<Player>();
 	public Field field;
 	ClientThread t;
 	int turn;
@@ -228,11 +228,11 @@ class ClientThread extends Thread {
 						String[] ppl = temp[1].split(",");
 						for (int i = 0; i < ppl.length; i++) {
 							if (ppl[i] != null && !ppl[i].isEmpty()) {
-								c.players.add(ppl[i]);
+								c.players.add(new Player(c.players.size(), ppl[i]));
 							}
 						}
 					} else if (temp[0].equals("PlayerJoin")) {
-						c.players.add(temp[1]);
+						c.players.add(new Player(c.players.size(), temp[1]));
 					} else if (temp[0].equals("PlayerLeave")) {
 						c.players.remove(temp[1]);
 					} else if (temp[0].equals("Prompt")) {

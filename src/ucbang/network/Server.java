@@ -24,29 +24,29 @@ import ucbang.core.Bang;
 import ucbang.core.Player;
 
 public class Server extends Thread {
+	public static void main(String Args[]) {
+		new Server(12345);
+	}
 	protected HashMap<String, LinkedList<String>> messages = new HashMap<String, LinkedList<String>>();
 	static int numPlayers;
 	ServerSocket me;
 	public int gameInProgress; // 1 = attempting to start game, 2 = game started
 	// for realz lawl
 	public int prompting; // flag for whether people are still being prompting
-	// for something 0 = no, 1 = prompting with no
+										// for something 0 = no, 1 = prompting with no
 	// unchecked updates, 2 = unchecked prompt
-	public ArrayList<int[][]> choice; // int[m][n], where m is player and n is
+	public ArrayList<int[][]> choice; 	// int[m][n], where m is player and n is
 										// option
+	
 	public int[][] ready;
-
 	Bang game; // just insert game stuff here
-	public ArrayList<String> names = new ArrayList<String>();
+	public LinkedList<String> names = new LinkedList<String>();
 	ServerListAdder adder = new ServerListAdder(JOptionPane
 			.showInputDialog("Input server name"));
 	long listLastUpdated;
+
 	public boolean running;
-
-	void print(Object stuff) {
-		System.out.println("Server:" + stuff);
-	}
-
+	public ArrayList<Player> players = new ArrayList<Player>();
 	public Server(int port) {
 		running = true;
 		try {
@@ -62,9 +62,73 @@ public class Server extends Thread {
 		this.start();
 	}
 
-	public static void main(String Args[]) {
-		new Server(12345);
+	void addChat(String string) {
+		Iterator<String> keyter = messages.keySet().iterator();
+		while (keyter.hasNext()) {
+			messages.get(keyter.next()).add("Chat:" + string);
+		}
 	}
+
+	void playerJoin(String player) {
+		names.add(player);
+		Iterator<String> keyter = messages.keySet().iterator();
+		while (keyter.hasNext()) {
+			messages.get(keyter.next()).add("PlayerJoin:" + player);
+		}
+	}
+
+	void playerLeave(String player) {
+		names.remove(player);
+		messages.remove(player);
+		Iterator<String> keyter = messages.keySet().iterator();
+		while (keyter.hasNext()) {
+			messages.get(keyter.next()).add("PlayerLeave:" + player);
+		}
+	}
+
+	void print(Object stuff) {
+		System.out.println("Server:" + stuff);
+	}
+
+	public void prompt(int player, String s, boolean one) {
+		if (one) {
+			choice.add(new int[][] { { player, -2 } });
+		}
+		if (prompting == 0) {
+			prompting = 1;
+		}
+		System.out.println("Sending prompt to player "+player+" : "+s);
+		messages.get(names.get(player)).add("Prompt:" + s);
+	}
+
+	public void promptAll(String s) {
+		prompting = 1;
+		choice.add(new int[numPlayers][2]);
+		for (int n = 0; n < numPlayers; n++) {
+			choice.get(choice.size() - 1)[n][0] = n;
+			choice.get(choice.size() - 1)[n][1] = -2;
+		}
+		for (int n = 0; n < numPlayers; n++) {
+			prompt(n, s, false);
+		}
+	}
+
+	/**
+     * Prompt the players in the gives int array.
+     * @param p
+     * @param s
+     */
+        public void promptPlayers(int[] p, String s) {
+                prompting = 1;
+                choice.add(new int[numPlayers][2]);
+                for (int n = 0; n < p.length; n++) {
+                        choice.get(choice.size() - 1)[n][0] = p[n];
+                        choice.get(choice.size() - 1)[n][1] = -2;
+                }
+                for (int n = 0; n < numPlayers; n++) {
+                        prompt(n, s, false);
+                }
+        }
 
 	public void run() {
 		while (running) {
@@ -140,12 +204,6 @@ public class Server extends Thread {
 		System.exit(0);
 	}
 
-	public void sendInfo(String info) {
-		for (int n = 0; n < numPlayers; n++) {
-			sendInfo(n, info);
-		}
-	}
-
 	public void sendInfo(int player, String info) { // info can be sent to
 													// multiple people at the
 													// same time, unlike prompts
@@ -165,31 +223,11 @@ public class Server extends Thread {
 		}
 		messages.get(names.get(player)).add(info);
 	}
-
-	void addChat(String string) {
-		Iterator<String> keyter = messages.keySet().iterator();
-		while (keyter.hasNext()) {
-			messages.get(keyter.next()).add("Chat:" + string);
+     public void sendInfo(String info) {
+		for (int n = 0; n < numPlayers; n++) {
+			sendInfo(n, info);
 		}
 	}
-
-	void playerJoin(String player) {
-		names.add(player);
-		Iterator<String> keyter = messages.keySet().iterator();
-		while (keyter.hasNext()) {
-			messages.get(keyter.next()).add("PlayerJoin:" + player);
-		}
-	}
-
-	void playerLeave(String player) {
-		names.remove(player);
-		messages.remove(player);
-		Iterator<String> keyter = messages.keySet().iterator();
-		while (keyter.hasNext()) {
-			messages.get(keyter.next()).add("PlayerLeave:" + player);
-		}
-	}
-
 	void startGame(int host, String name) {
 		gameInProgress = 1;
 		try {
@@ -217,44 +255,6 @@ public class Server extends Thread {
 				messages.get(s).add("Prompt:Start");
 		}
 	}
-
-	public void promptAll(String s) {
-		prompting = 1;
-		choice.add(new int[numPlayers][2]);
-		for (int n = 0; n < numPlayers; n++) {
-			choice.get(choice.size() - 1)[n][0] = n;
-			choice.get(choice.size() - 1)[n][1] = -2;
-		}
-		for (int n = 0; n < numPlayers; n++) {
-			prompt(n, s, false);
-		}
-	}
-     /**
-     * Prompt the players in the gives int array.
-     * @param p
-     * @param s
-     */
-        public void promptPlayers(int[] p, String s) {
-                prompting = 1;
-                choice.add(new int[numPlayers][2]);
-                for (int n = 0; n < p.length; n++) {
-                        choice.get(choice.size() - 1)[n][0] = p[n];
-                        choice.get(choice.size() - 1)[n][1] = -2;
-                }
-                for (int n = 0; n < numPlayers; n++) {
-                        prompt(n, s, false);
-                }
-        }
-	public void prompt(int player, String s, boolean one) {
-		if (one) {
-			choice.add(new int[][] { { player, -2 } });
-		}
-		if (prompting == 0) {
-			prompting = 1;
-		}
-		System.out.println("Sending prompt to player "+player+" : "+s);
-		messages.get(names.get(player)).add("Prompt:" + s);
-	}
 }
 
 class ServerThread extends Thread {
@@ -268,10 +268,6 @@ class ServerThread extends Thread {
 	String buffer;
 	boolean connected = false;
 	LinkedList<String> newMsgs = new LinkedList<String>();
-
-	void print(Object stuff) {
-		System.out.println("Server:" + stuff);
-	}
 
 	public ServerThread(Socket theClient, Server myServer) {
 		client = theClient;
@@ -298,6 +294,22 @@ class ServerThread extends Thread {
 			e.printStackTrace();
 		}
 		this.start();
+	}
+
+	protected void finalize() throws Throwable {
+		print(name + "(" + client.getInetAddress() + ") has left the game.");
+		server.playerLeave(name);
+		try {
+			in.close();
+			out.close();
+			client.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	void print(Object stuff) {
+		System.out.println("Server:" + stuff);
 	}
 
 	public synchronized void run() {
@@ -439,18 +451,6 @@ class ServerThread extends Thread {
 			this.finalize();
 		} catch (Throwable e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-
-	protected void finalize() throws Throwable {
-		print(name + "(" + client.getInetAddress() + ") has left the game.");
-		server.playerLeave(name);
-		try {
-			in.close();
-			out.close();
-			client.close();
-		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}

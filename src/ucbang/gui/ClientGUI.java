@@ -93,10 +93,10 @@ public class ClientGUI extends JFrame implements KeyListener {
 			client.field.paint(graphics);
 		graphics.setColor(Color.DARK_GRAY);
 		graphics.drawString("Players", 25, 40);
-		Iterator<String> iter = client.players.iterator();
+		Iterator<Player> iter = client.players.iterator();
 		int n = 0;
 		while (iter.hasNext()) {
-			graphics.drawString(iter.next(), 30, 60 + 15 * n++);
+			graphics.drawString(iter.next().name, 30, 60 + 15 * n++);
 		}
 		if(client.player!=null){
 			graphics.drawString(client.player.lifePoints+"HP", 300, 40);

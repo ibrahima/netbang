@@ -203,7 +203,7 @@ public class Field implements MouseListener, MouseMotionListener{
             ArrayList<V> al = new ArrayList<V>();
             Collections.sort(occupied, new Comparator(){
                         public int compare(Object o1, Object o2) {
-                            return ((Comparable)o1).compareTo(o2);
+                            return ((Comparable<Object>)o1).compareTo(o2);
                         }
                     });
             al.addAll(occupied);

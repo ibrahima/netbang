@@ -24,4 +24,7 @@ public class Player {
 	public int lifePoints;
 	public int specialDraw;
 	public int character = -1; // default -1 = no character
+	public String toString(){
+		return name;
+	}
 }
