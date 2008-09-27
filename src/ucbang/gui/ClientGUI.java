@@ -31,6 +31,7 @@ public class ClientGUI extends JFrame implements KeyListener {
 	boolean chatting = false;
 
 	ArrayList<String> text = new ArrayList<String>();
+        ArrayList<Color> textColor = new ArrayList<Color>();
 	int textIndex = -1; // the bottom line of the text
 	Client client;
 	public ClientGUI(int p, Client client) {
@@ -83,10 +84,10 @@ public class ClientGUI extends JFrame implements KeyListener {
 			graphics.drawString("Chatting: " + chat.toString(), 20, 420);
 		}
 		if (textIndex >= 0) { // there is text to display, must draw it
-			graphics.setColor(Color.WHITE);
 			for (int n = textIndex; n >= (textIndex < 9 ? 0 : textIndex - 9); n--) {
-				graphics
-						.drawString(text.get(n), 20, 580 - 15 * (textIndex - n));
+                                graphics.setColor(textColor.get(n));
+				graphics.drawString(text.get(n), 20, 580 - 15 * (textIndex - n));
+                                graphics.setColor(Color.WHITE);
 			}
 		}
 		if(client.field!=null)
@@ -113,7 +114,7 @@ public class ClientGUI extends JFrame implements KeyListener {
 	 * @param c
 	 */
 	public void appendText(String str) {
-		appendText(str, Color.BLACK);
+		appendText(str, Color.BLUE);
 	}
 
 	/**
@@ -126,6 +127,7 @@ public class ClientGUI extends JFrame implements KeyListener {
 		// TODO: actually do something with color
 		textIndex++;
 		text.add(str);
+                textColor.add(c);
 		paint(getGraphics());
 	}
 
