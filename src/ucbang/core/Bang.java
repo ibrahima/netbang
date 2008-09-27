@@ -181,7 +181,7 @@ public class Bang {
                                 }
                                 else{
                                     System.out.println("SOMEONE DID NOT PLAY A LEGAL CARD");
-                                    al.add(n[0]);
+                                    al.add(n[0]);   
                                 }
                             }
                             if(al.size()==0) //all the players have done something
@@ -317,11 +317,13 @@ public class Bang {
         }
         for(int n=0; n<numPlayers; n++){
             int role = roles.remove((int)(Math.random()*roles.size())).ordinal();
-            server.sendInfo(n,"SetInfo:role:"+role);
-            players[n].role = Deck.Role.values()[Integer.valueOf(role)];
             if(role==0){
                 changeMaxLifePoints(n, 1);
+                server.sendInfo("SetInfo:role:"+n+":"+role);
             }
+            else
+                server.sendInfo(n,"SetInfo:role:"+n+":"+role);
+            players[n].role = Deck.Role.values()[Integer.valueOf(role)];
         }
         
         deck = new Deck();
@@ -517,14 +519,21 @@ public class Bang {
         if(n<=0)
             return; //must draw at least 1
         Card c = drawCard();
-        String s = "Draw:"+(c.type==1?"Character:":"Game:")+c.name+":"; //need this to get the card type
+        String s = "Draw:"+p+":"+(c.type==1?"Character:":"Game:")+c.name+":"; //need this to get the card type
         players[p].hand.add(c);
         for(int m=1; m<n; m++){
             c = drawCard();
             s = s+c.name+":";
-            players[p].hand.add(c);            
+            players[p].hand.add(c);
         }
         server.sendInfo(p, s);
+        if(c.type!=1){
+            for(int m=0; m<numPlayers; m++){
+                if(m!=p){
+                    server.sendInfo(m, "Draw:"+p+":"+n);
+                }
+            }
+        }
     }
 
     /**

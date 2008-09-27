@@ -114,7 +114,7 @@ public class ClientGUI extends JFrame implements KeyListener {
 	 * @param c
 	 */
 	public void appendText(String str) {
-		appendText(str, Color.BLUE);
+		appendText(str, Color.WHITE);
 	}
 
 	/**
