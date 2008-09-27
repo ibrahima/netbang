@@ -125,7 +125,7 @@ public class Server extends Thread {
                         choice.get(choice.size() - 1)[n][0] = p[n];
                         choice.get(choice.size() - 1)[n][1] = -2;
                 }
-                for (int n = 0; n < numPlayers; n++) {
+                for (int n:p) {
                         prompt(n, s, false);
                 }
         }
