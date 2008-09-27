@@ -336,15 +336,23 @@ new BufferedWriter(new OutputStreamWriter(server.getOutputStream()));
                             }
                         } else if (temp1[0].equals("maxHP")) {
                             c.field.clear();
-                            c.player.maxLifePoints += 
-                                    Integer.valueOf(temp1[1]);
-                            c.player.lifePoints = c.player.maxLifePoints;
-
+                            if(c.id==Integer.valueOf(temp1[1])){
+                                c.player.maxLifePoints += 
+                                        Integer.valueOf(temp1[2]);
+                                c.player.lifePoints = c.player.maxLifePoints;
+                            }
+                            else{
+                                c.gui.appendText("Player "+temp1[1]+" has a maxHP of "+temp1[2], Color.RED);
+                            }
                         } else if (temp1[0].equals("HP")) {
-                            c.player.lifePoints += Integer.valueOf(temp1[1]);
-                            System.out.println("Player " + c.id + 
-                                               " life points changed by " + 
-                                               temp1[1]);
+                            if(c.id==Integer.valueOf(temp1[1])){
+                                c.player.lifePoints += Integer.valueOf(temp1[2]);
+                            }
+                            else{
+                                c.gui.appendText("Player " + temp1[1] + 
+                                    " life points changed by " + 
+                                        temp1[2], Color.RED);
+                            }
                         } else if (temp1[0].equals("turn")) {
                             c.turn = Integer.valueOf(temp1[1]);
                             if (c.turn % c.numPlayers == 0) {

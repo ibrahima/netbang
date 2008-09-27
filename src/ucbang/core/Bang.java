@@ -17,6 +17,8 @@ public class Bang {
     public int turn;
     public Deck deck;
     
+    public int sheriff;
+    
     public Bang(int p, Server s) {
         server = s;
         numPlayers = p;
@@ -318,7 +320,7 @@ public class Bang {
         for(int n=0; n<numPlayers; n++){
             int role = roles.remove((int)(Math.random()*roles.size())).ordinal();
             if(role==0){
-                changeMaxLifePoints(n, 1);
+                sheriff = n;
                 server.sendInfo("SetInfo:role:"+n+":"+role);
             }
             else
@@ -342,7 +344,7 @@ public class Bang {
     public void start2(){
         for(int n=0; n<server.choice.get(server.choice.size()-1).length; n++){
             players[n].character = players[n].hand.get(server.choice.get(server.choice.size()-1)[n][1]).ordinal;
-            changeMaxLifePoints(n, players[n].hand.get(server.choice.get(server.choice.size()-1)[n][1]).special);
+            changeMaxLifePoints(n, players[n].hand.get(server.choice.get(server.choice.size()-1)[n][1]).special+(n==sheriff?1:0));
         }
     
         deck.fillGameCards();
@@ -601,7 +603,7 @@ public class Bang {
     }
     
     void changeMaxLifePoints(int p, int n){
-        server.sendInfo(p,"SetInfo:maxHP:"+n);
+        server.sendInfo("SetInfo:maxHP:"+p+":"+n);
         players[p].maxLifePoints+=n;
         players[p].lifePoints=players[p].maxLifePoints;
     }
@@ -609,11 +611,11 @@ public class Bang {
         if(players[p].lifePoints+n>players[p].maxLifePoints){
             System.out.println("Player "+p+" is now at max hp.");
             n = players[p].maxLifePoints - players[p].lifePoints;
-            server.sendInfo(p,"SetInfo:HP:"+n);
+            server.sendInfo("SetInfo:HP:"+p+n);
             players[p].lifePoints+=n;
         }
         else{
-            server.sendInfo(p,"SetInfo:HP:"+n);
+            server.sendInfo("SetInfo:HP:"+p+":"+n);
             players[p].lifePoints+=n;
         }
     }
