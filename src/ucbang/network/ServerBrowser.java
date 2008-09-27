@@ -40,7 +40,6 @@ public class ServerBrowser extends JFrame implements ActionListener{
 	JButton create, join, refresh;
 	ServerTableModel tm;
 	public ServerBrowser(){
-		downloadList();
 		setPreferredSize(new Dimension(480, 320));
 		setSize(new Dimension(480, 320));
 		this.setTitle("Server Browser");
@@ -82,6 +81,9 @@ public class ServerBrowser extends JFrame implements ActionListener{
 		this.add(refresh,gbc);
 		this.pack();
 		this.setVisible(true);
+		downloadList();
+		tm.setData(servers);
+		tm.fireTableDataChanged();
 	}
 	public String chooseServer(){
 		//TODO: Work out a choosing thing.
