@@ -40,6 +40,15 @@ public class Field implements MouseListener, MouseMotionListener{
 	public void add(Card card, int x, int y, int player){
 		cards.put(card, new cardSpace(card, new Rectangle(x,y,60,90), player));
 	}
+	public void add(Card card, int player){
+		if(card.type==1){//this a character card
+			double theta = player*(2*Math.PI/client.numPlayers);
+			int x=(int) (Math.sin(theta)*400)+400;
+			int y=(int) (Math.cos(theta)*300)+300;
+			cards.put(card, new cardSpace(card, new Rectangle(x, y,60,90), player));
+			System.out.println("Field added a character");
+		}
+	}
 	int textHeight(String message, Graphics2D graphics){
 		int lineheight=(int)graphics.getFont().getStringBounds("|", graphics.getFontRenderContext()).getHeight();
 		return message.split("\n").length*lineheight;

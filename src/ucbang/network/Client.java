@@ -387,6 +387,7 @@ new BufferedWriter(new OutputStreamWriter(server.getOutputStream()));
                             String s = "";
                             s = "Player " + temp1[1] + " played " + temp1[2] + (temp1.length == 4 ? " at player " + temp1[3] : "");
                             c.gui.appendText(s);
+                            //TODO: Need to remove this card.
                         } else if (temp1[0].equals("id")) {
                             c.id = Integer.valueOf(temp1[1]);
 
@@ -396,7 +397,9 @@ new BufferedWriter(new OutputStreamWriter(server.getOutputStream()));
                             }
                             else {
                                 c.gui.appendText("Player " + temp1[1] + " chose " + Deck.Characters.values()[Integer.valueOf(temp1[2])], Color.YELLOW);
-                                c.players.get(Integer.valueOf(temp[1])).character=Integer.valueOf(temp1[2]);
+                                System.out.println(temp1[1]+temp1[2]);
+                                //c.players.get(Integer.valueOf(temp[1])).character=Integer.valueOf(temp1[2]);
+                                c.field.add(new Card(Deck.Characters.values()[Integer.valueOf(temp1[2])]), Integer.valueOf(temp1[1]));
                             }
                         } else {
                             System.out.println("WTF do i do with " + temp1[0] + ":" + temp1[1]);
