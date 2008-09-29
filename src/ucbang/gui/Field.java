@@ -55,13 +55,13 @@ public class Field implements MouseListener, MouseMotionListener{
 			xoffset = 30*client.players.get(player).hand.size();
 		}
 		if(card.type==1){//this a character card
-			int x=(int) (Math.sin(theta)*350)+400;
-			int y=(int) (Math.cos(theta)*250)+300;
+			int x=(int) (Math.sin(theta)*350)+350;
+			int y=(int) (Math.cos(theta)*250)+200;
 			cards.put(card, new cardSpace(card, new Rectangle(x, y,60,90), player));
 			System.out.println("Field added a character");
 		}else{
 			int x=(int) (Math.sin(theta)*350)+400+xoffset;
-			int y=(int) (Math.cos(theta)*250)+300;
+			int y=(int) (Math.cos(theta)*250)+200;
 			cards.put(card, new cardSpace(card, new Rectangle(x, y,60,90), player));		
 			System.out.println("Field added a card on its own! Magic!");
 		}
