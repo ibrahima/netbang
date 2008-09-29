@@ -393,7 +393,6 @@ new BufferedWriter(new OutputStreamWriter(server.getOutputStream()));
                         } else if (temp1[0].equals("character")) {
                             if (Integer.valueOf(temp1[1]) == c.id){
                                 c.player.character = Integer.valueOf(temp1[2]);
-                                System.out.println("asdf");
                             }
                             else {
                                 c.gui.appendText("Player " + temp1[1] + " chose " + Deck.Characters.values()[Integer.valueOf(temp1[2])], Color.YELLOW);
