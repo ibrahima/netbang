@@ -11,6 +11,7 @@ import java.io.OutputStreamWriter;
 import java.net.Socket;
 
 import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.Deque;
 import java.util.LinkedList;
 import java.util.Random;
@@ -37,7 +38,7 @@ public class Client extends Thread {
     public LinkedList<String> outMsgs = new LinkedList<String>();
     ClientGUI gui;
     public Player player;
-    public Deque<Player> players = new ArrayDeque<Player>();
+    public ArrayList<Player> players = new ArrayList<Player>();
     public Field field;
     ClientThread t;
     int turn;
@@ -307,6 +308,12 @@ new BufferedWriter(new OutputStreamWriter(server.getOutputStream()));
                         } else {
                             c.gui.appendText("Player " + temp1[0] + " drew " + 
                                              temp1[1] + "cards.", Color.GREEN);
+                            for(int i=0;i<Integer.valueOf(temp1[1]);i++){
+                            	c.field.add(new Card(Deck.CardName.BACK),                                                 80 + (int)(400 * Math.random()), 
+                                        80 + 
+                                        (int)(400 * Math.random()), Integer.valueOf(temp1[0]));
+                            	c.players.get(Integer.valueOf(temp1[0])).hand.add(new Card(Deck.CardName.BACK));
+                            }
                         }
                         c.outMsgs.add("Ready");
                     } else if (temp[0].equals("GetInfo")) {
@@ -356,6 +363,7 @@ new BufferedWriter(new OutputStreamWriter(server.getOutputStream()));
                                 c.gui.appendText("Player " + temp1[1] + 
                                                  " has a maxHP of " + temp1[2], 
                                                  Color.RED);
+                                c.players.get(Integer.valueOf(temp1[1])).maxLifePoints=Integer.valueOf(temp1[2]);
                             }
                         } else if (temp1[0].equals("HP")) {
                             if (c.id == Integer.valueOf(temp1[1])) {
@@ -365,6 +373,7 @@ new BufferedWriter(new OutputStreamWriter(server.getOutputStream()));
                                 c.gui.appendText("Player " + temp1[1] + 
                                                  " life points changed by " + 
                                                  temp1[2], Color.RED);
+                                c.players.get(Integer.valueOf(temp1[1])).lifePoints+=Integer.valueOf(temp1[2]);
                             }
                         } else if (temp1[0].equals("turn")) {
                             c.turn = Integer.valueOf(temp1[1]);
@@ -388,6 +397,7 @@ new BufferedWriter(new OutputStreamWriter(server.getOutputStream()));
                             }
                             else {
                                 c.gui.appendText("Player " + temp1[1] + " chose " + Deck.Characters.values()[Integer.valueOf(temp1[2])], Color.YELLOW);
+                                c.players.get(Integer.valueOf(temp[1])).character=Integer.valueOf(temp1[2]);
                             }
                         } else {
                             System.out.println("WTF do i do with " + temp1[0] + ":" + temp1[1]);
