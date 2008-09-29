@@ -32,9 +32,11 @@ public class Field implements MouseListener, MouseMotionListener{
 	Card clicked;
 	ArrayList<Card> pick;
         
+        ArrayList<cardSpace> handPlacer = new ArrayList(); //to avoid npe
         
-    String description;
-    Point describeWhere;
+        String description;
+        Point describeWhere;
+        
 	public Field(CardDisplayer cd, Client c) {
 		this.cd=cd;
                 client = c;
@@ -43,27 +45,15 @@ public class Field implements MouseListener, MouseMotionListener{
 		cards.put(card, new cardSpace(card, new Rectangle(x,y,60,90), player));
 	}
 	public void add(Card card, int player){
-		double theta;
-		int xoffset;
-		if(player==client.id){
-			//ugly way of doing things, the angle's are going to overlap with players>2
-			//also doesn't seem to be working.
-			System.out.println("The card being added to field is owned by the local player");
-			theta = Math.PI*3/2;
-			xoffset = 30*client.player.hand.size();
-		}
-		else{
-			theta = player*(2*Math.PI/client.numPlayers);
-			xoffset = 30*client.players.get(player).hand.size();
-		}
+		int xoffset = 30*(client.player.hand.size()-1);
 		if(card.type==1){//this a character card
-			int x=(int) (Math.sin(theta)*350)+350;
-			int y=(int) (Math.cos(theta)*250)+200;
+			int x=350;
+			int y=200;
 			cards.put(card, new cardSpace(card, new Rectangle(x, y,60,90), player));
 			System.out.println("Field added a character");
 		}else{
-			int x=(int) (Math.sin(theta)*350)+400+xoffset;
-			int y=(int) (Math.cos(theta)*250)+200;
+			int x=(int) handPlacer.get(player).rect.x+handPlacer.get(player).rect.width+xoffset;
+			int y=(int) handPlacer.get(player).rect.y;
 			cards.put(card, new cardSpace(card, new Rectangle(x, y,60,90), player));		
 			System.out.println("Field added a card on its own! Magic!");
 		}
@@ -90,6 +80,8 @@ public class Field implements MouseListener, MouseMotionListener{
 		}
 	}
 	public void paint(Graphics2D graphics){
+                for(cardSpace cs : handPlacer)
+                    graphics.draw(cs.rect);
 		Iterator<cardSpace> iter = cards.values().iterator();
 		while(iter.hasNext()){
 			cardSpace temp = iter.next();
@@ -116,7 +108,6 @@ public class Field implements MouseListener, MouseMotionListener{
              int end;
 
              ArrayList<cardSpace> al = cards.values(); //search the values arrayList for...
-
 
              int a = 0, b = al.size(), index = al.size() / 2;
 
@@ -149,6 +140,24 @@ public class Field implements MouseListener, MouseMotionListener{
              }
              return null;
         }
+        public void start2(){
+            handPlacer = new ArrayList<cardSpace>(client.numPlayers);
+            double theta;
+            for(int player = 0; player<client.numPlayers; player++){
+                if(player==client.id){
+                        //ugly way of doing things, the angle's are going to overlap with players>2
+                        //also doesn't seem to be working.
+                        System.out.println("The card being added to field is owned by the local player");
+                        theta = Math.PI*3/2;
+                }
+                else{
+                        theta = player*(2*Math.PI/client.numPlayers);
+                }
+                handPlacer.add(new cardSpace(null, new Rectangle(500,500,10,10), player));
+            }
+            
+            clear();
+        }
         public void clear(){
             Point pointOnCard = null;
             cardSpace movingCard = null;
@@ -166,7 +175,8 @@ public class Field implements MouseListener, MouseMotionListener{
                     return;
                 }
                 cardSpace cs = binarySearchCardAtPoint(ep);
-                if(cs != null)
+
+                if(cs != null&& cs.card!= null)
                     System.out.println("Clicked on "+cs.card.name);
                 else
                     return;
@@ -199,8 +209,14 @@ public class Field implements MouseListener, MouseMotionListener{
 	}
 
 	public void mousePressed(MouseEvent e) {
-
 	    movingCard = binarySearchCardAtPoint(e.getPoint());
+	    
+	    if(movingCard==null){//placer handler
+	        for(cardSpace cs : handPlacer)
+                    if(cs.rect.contains(e.getPoint())){
+                        movingCard=cs;
+	        }
+	    }
             if(movingCard!=null){
                 pointOnCard = new Point(e.getPoint().x-movingCard.rect.x, e.getPoint().y-movingCard.rect.y);
                 //System.out.println("picked up card");

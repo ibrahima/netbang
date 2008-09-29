@@ -343,7 +343,7 @@ new BufferedWriter(new OutputStreamWriter(server.getOutputStream()));
                                                      Color.YELLOW);
                             }
                         } else if (temp1[0].equals("maxHP")) {
-                            c.field.clear();
+                            c.field.start2();
                             if (c.id == Integer.valueOf(temp1[1])) {
                                 c.player.maxLifePoints += 
                                         Integer.valueOf(temp1[2]);

@@ -27,7 +27,8 @@ public class Player {
 	public String toString(){
 		return name;
 	}
-        public boolean hasFieldEffect(Card.field e){
-            return false;
+        
+        public int hasFieldEffect(Card.field e){
+            return 0;
         }
 }
