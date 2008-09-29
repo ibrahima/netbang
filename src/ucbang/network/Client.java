@@ -31,7 +31,7 @@ public class Client extends Thread {
     // players.size()
     Socket socket = null;
     Random r = new Random();
-    int port = 80;
+    int port = 12345;
     String host = "127.0.0.1";
     boolean connected = false;
     public LinkedList<String> outMsgs = new LinkedList<String>();
