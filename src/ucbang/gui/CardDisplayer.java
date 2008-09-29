@@ -25,6 +25,7 @@ public class CardDisplayer {
 	}
 
 	private void loadImages() {
+                cards.put("BACK", null);
 		cards.put("APPALOOSA", Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("images/cards/bang/appalossa.jpg")));
 		cards.put("BANG", Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("images/cards/bang/bang.jpg")));
 		cards.put("BARREL", Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("images/cards/bang/barel.jpg")));
