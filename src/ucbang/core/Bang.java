@@ -392,7 +392,11 @@ public class Bang {
      * @return int of how far they are apart
      */
     public int getRangeBetweenPlayers(Player p1, Player p2) {
-        return Math.min(1, 1);
+        int naturalRange = Math.min(Math.abs(p1.id - p2.id), Math.abs(numPlayers-1-Math.max(p1.id, p2.id)+Math.min(p1.id, p2.id)));//seating order
+        if(p1.hasFieldEffect(Card.field.BARREL)){
+            
+        }
+        return Math.min(1, 1); 
     }
 
     /**
