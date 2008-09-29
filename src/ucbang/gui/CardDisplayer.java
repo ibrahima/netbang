@@ -25,7 +25,7 @@ public class CardDisplayer {
 	}
 
 	private void loadImages() {
-                cards.put("BACK", null);
+		cards.put("BACK", Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("images/cards/bang/back.jpg")));
 		cards.put("APPALOOSA", Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("images/cards/bang/appalossa.jpg")));
 		cards.put("BANG", Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("images/cards/bang/bang.jpg")));
 		cards.put("BARREL", Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("images/cards/bang/barel.jpg")));
@@ -63,7 +63,7 @@ public class CardDisplayer {
 		cards.put("SILVER", Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("images/cards/dodge/silver.jpg")));
 		cards.put("SOMBRERO", Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("images/cards/dodge/z_sombrero.jpg")));
 		cards.put("SPRINGFIELD", Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("images/cards/dodge/springfield.jpg")));
-		cards.put("STAGECOACH", Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("images/cards/bang/dostavnik.jpg")));//TODO
+		cards.put("STAGECOACH", Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("images/cards/bang/dostavnik.jpg")));
 		cards.put("TEN_GALLON_HAT", Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("images/cards/dodge/z_gallonhat.jpg")));
 		cards.put("TEQUILA", Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("images/cards/dodge/tequila.jpg")));
 		cards.put("VOLCANIC", Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("images/cards/bang/b_vulcanic.jpg")));

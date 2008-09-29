@@ -450,7 +450,6 @@ class ServerThread extends Thread {
 		try {
 			this.finalize();
 		} catch (Throwable e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
