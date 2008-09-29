@@ -19,7 +19,7 @@ public class Player {
 	public int realRange; // also counts for Panics, etc.
 	public int distance; // your protection against other player's Bang!s
 	public ArrayList<Card> hand = new ArrayList<Card>();
-	public ArrayList<Field> field;
+	public ArrayList<Card> field = new ArrayList<Card>();
 
 	public int lifePoints;
 	public int specialDraw;
