@@ -65,7 +65,7 @@ public class Field implements MouseListener, MouseMotionListener{
 		Iterator<cardSpace> iter = cards.values().iterator();
 		while(iter.hasNext()){
 			cardSpace temp = iter.next();
-			cd.paint(temp.card.name ,graphics, temp.rect.x, temp.rect.y, (temp.card.location==0?Color.BLACK:(temp.card.location==1?(temp.card.type==5?new Color(100,100,200):new Color(100,200,100)):new Color(200,100,100))));
+			cd.paint(temp.card.name ,graphics, temp.rect.x, temp.rect.y, (temp.card.location==0?Color.BLACK:(temp.card.location==1?(temp.card.type==5?new Color(100,100,200):new Color(100,200,100)):new Color(200,100,100))), client.id==1?Color.RED:Color.BLUE); //replace this last parameter
 		}
 		if(description!=null){
 			Rectangle2D bounds=graphics.getFont().getStringBounds(description, graphics.getFontRenderContext());
