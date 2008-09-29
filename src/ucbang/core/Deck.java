@@ -73,8 +73,8 @@ public class Deck {
         Arrays.fill(cards, 118, 119, CardName.WHISKY);
         Arrays.fill(cards, 119, 120, CardName.WINCHESTER);
         
-        /*Arrays.fill(cards, 0, 60, CardName.INDIANS);
-        Arrays.fill(cards, 60, 120, CardName.BANG);*/
+        /*Arrays.fill(cards, 0, 20, CardName.DUEL);
+        Arrays.fill(cards, 20, 120, CardName.BANG);*/
         
         ArrayList<Enum> allCards = new ArrayList<Enum>();
         for(Enum e: cards)

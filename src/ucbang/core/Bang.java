@@ -197,7 +197,7 @@ public class Bang {
                             else if(players[server.choice.get(0)[0][0]].hand.get(server.choice.get(0)[0][1]).effect == Card.play.DUEL.ordinal()){
                                 if(server.choice.get(server.choice.size()-1)[0][1]==-1){
                                     changeLifePoints(server.choice.get(server.choice.size()-1)[0][0], -1);
-                                    playerDiscardCard(server.choice.get(0)[0][0],server.choice.get(0)[0][1]);
+                                    playerDiscardCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]);
                                     server.choice.remove(server.choice.size() - 1);
                                     server.choice.remove(server.choice.size() - 1);
                                     if(server.choice.size()==4){
@@ -207,14 +207,20 @@ public class Bang {
                                 else if(players[server.choice.get(server.choice.size()-1)[0][0]].hand.get(server.choice.get(server.choice.size()-1)[0][1]).effect == Card.play.DAMAGE.ordinal() && players[server.choice.get(server.choice.size()-1)[0][0]].hand.get(server.choice.get(server.choice.size()-1)[0][1]).special==1){
                                     if(server.choice.size() == 4){
                                         playerDiscardCard(server.choice.get(server.choice.size()-1)[0][0], server.choice.get(server.choice.size()-1)[0][1]);
+                                        if(server.choice.get(server.choice.size()-1)[0][1]<server.choice.get(0)[0][1])
+                                            server.choice.get(0)[0][1]--;
+                                        server.choice.remove(server.choice.size() - 1);
                                         server.choice.remove(server.choice.size() - 1);
                                         server.prompt(server.choice.get(1)[0][1], "PlayCardUnforced", true);
                                         return;
                                     }
-                                    else{
+                                    else if(server.choice.size()==3){
                                         playerDiscardCard(server.choice.get(server.choice.size()-1)[0][0], server.choice.get(server.choice.size()-1)[0][1]);
-                                        server.choice.remove(server.choice.size() - 1);
                                         server.prompt(server.choice.get(1)[0][0], "PlayCardUnforced", true);
+                                        return;
+                                    }
+                                    else{
+                                        System.out.println("AWEJFAWKFJ@K~$!@#%!!@#RFQFAWEFAWEFA@@#%!&$*#%*#@!$@#%!@#$#YTRQRGDDDZVCX");
                                         return;
                                     }
                                 } else{
