@@ -58,7 +58,7 @@ public class Client extends Thread {
         int x = 70;
         int y = 30;
         for (int i = 0; i < cards.length; i++) {
-            field.add(new Card(cards[i]), x, y);
+            field.add(new Card(cards[i]), x, y, 0);
             x += 60;
             if (x > 750) {
                 y += 90;
@@ -85,7 +85,7 @@ public class Client extends Thread {
         int x = 70;
         int y = 30;
         for (int i = 0; i < cards.length; i++) {
-            field.add(new Card(cards[i]), x, y);
+            field.add(new Card(cards[i]), x, y, 0);
             x += 60;
             if (x > 750) {
                 y += 90;
@@ -98,7 +98,7 @@ public class Client extends Thread {
 
     public static void main(String[] Args) {
         if (Args.length == 0)
-            new Client("75.37.42.104", true);
+            new Client("127.0.0.1", true);
         else if (Args.length == 1)
             new Client(Args[0], true);
         else if (Args.length == 2)
@@ -290,7 +290,8 @@ new BufferedWriter(new OutputStreamWriter(server.getOutputStream()));
                                     c.field.add(card, 
                                                 80 + (int)(400 * Math.random()), 
                                                 80 + 
-                                                (int)(400 * Math.random()));
+                                                (int)(400 * Math.random()),
+                                                c.id);
                                 } else {
                                     Card card = 
                                         new Card(Deck.CardName.valueOf(temp1[m]));
@@ -298,7 +299,9 @@ new BufferedWriter(new OutputStreamWriter(server.getOutputStream()));
                                     c.field.add(card, 
                                                 80 + (int)(400 * Math.random()), 
                                                 80 + 
-                                                (int)(400 * Math.random()));
+                                                (int)(400 * Math.random()),
+                                                c.id
+                                                );
                                 }
                             }
                         } else {

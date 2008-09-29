@@ -35,6 +35,8 @@ public class Card {
 
 			switch ((Deck.CardName) e) {
 			// put all direct damage cards here
+			case BACK:
+				break;
 			case BANG:
 				type = 2;
 				special = 1;

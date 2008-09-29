@@ -37,8 +37,8 @@ public class Field implements MouseListener, MouseMotionListener{
 		this.cd=cd;
                 client = c;
 	}
-	public void add(Card card, int x, int y){
-		cards.put(card, new cardSpace(card, new Rectangle(x,y,60,90)));
+	public void add(Card card, int x, int y, int player){
+		cards.put(card, new cardSpace(card, new Rectangle(x,y,60,90), player));
 	}
 	int textHeight(String message, Graphics2D graphics){
 		int lineheight=(int)graphics.getFont().getStringBounds("|", graphics.getFontRenderContext()).getHeight();
@@ -227,10 +227,11 @@ public class Field implements MouseListener, MouseMotionListener{
         public Rectangle rect;
         public Card card;
         public int location; //position of card on field or in hand
-        
-        public cardSpace(Card c, Rectangle r){
+        public int playerid;
+        public cardSpace(Card c, Rectangle r, int player){
             card = c;
             rect = r;
+            playerid = player;
         }
         
         public int compareTo(Object o) {
