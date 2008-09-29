@@ -41,12 +41,29 @@ public class Field implements MouseListener, MouseMotionListener{
 		cards.put(card, new cardSpace(card, new Rectangle(x,y,60,90), player));
 	}
 	public void add(Card card, int player){
+		double theta;
+		int xoffset;
+		if(player==client.id){
+			//ugly way of doing things, the angle's are going to overlap with players>2
+			//also doesn't seem to be working.
+			System.out.println("The card being added to field is owned by the local player");
+			theta = Math.PI*3/2;
+			xoffset = 30*client.player.hand.size();
+		}
+		else{
+			theta = player*(2*Math.PI/client.numPlayers);
+			xoffset = 30*client.players.get(player).hand.size();
+		}
 		if(card.type==1){//this a character card
-			double theta = player*(2*Math.PI/client.numPlayers);
-			int x=(int) (Math.sin(theta)*400)+400;
-			int y=(int) (Math.cos(theta)*300)+300;
+			int x=(int) (Math.sin(theta)*350)+400;
+			int y=(int) (Math.cos(theta)*250)+300;
 			cards.put(card, new cardSpace(card, new Rectangle(x, y,60,90), player));
 			System.out.println("Field added a character");
+		}else{
+			int x=(int) (Math.sin(theta)*350)+400+xoffset;
+			int y=(int) (Math.cos(theta)*250)+300;
+			cards.put(card, new cardSpace(card, new Rectangle(x, y,60,90), player));		
+			System.out.println("Field added a card on its own! Magic!");
 		}
 	}
 	int textHeight(String message, Graphics2D graphics){
@@ -74,7 +91,12 @@ public class Field implements MouseListener, MouseMotionListener{
 		Iterator<cardSpace> iter = cards.values().iterator();
 		while(iter.hasNext()){
 			cardSpace temp = iter.next();
-			cd.paint(temp.card.name ,graphics, temp.rect.x, temp.rect.y, (temp.card.location==0?Color.BLACK:(temp.card.location==1?(temp.card.type==5?new Color(100,100,200):new Color(100,200,100)):new Color(200,100,100))), client.id==1?Color.RED:Color.BLUE); //replace this last parameter
+			cd.paint(temp.card.name ,graphics, temp.rect.x, temp.rect.y,
+					(temp.card.location==0?Color.BLACK:(temp.card.location==1?(temp.card.type==5?new Color(100,100,200):new Color(100,200,100)):new Color(200,100,100))),
+					client.id==1?Color.RED:Color.BLUE); //replace this last parameter
+			//this thing is really ugly, please make it less so. Readability of code is good. Just because ? exists
+			//doesn't mean you have to use it for stuff like this, lol. Please define the colors above with nested
+			//ifs or switches or soemthing, and then use them.
 		}
 		if(description!=null){
 			Rectangle2D bounds=graphics.getFont().getStringBounds(description, graphics.getFontRenderContext());

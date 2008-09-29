@@ -288,30 +288,19 @@ new BufferedWriter(new OutputStreamWriter(server.getOutputStream()));
                                     Card card = 
                                         new Card(Deck.Characters.valueOf(temp1[m]));
                                     c.player.hand.add(card);
-                                    c.field.add(card, 
-                                                80 + (int)(400 * Math.random()), 
-                                                80 + 
-                                                (int)(400 * Math.random()),
-                                                c.id);
+                                    c.field.add(card, 150+80*m, 200, c.id);
                                 } else {
                                     Card card = 
                                         new Card(Deck.CardName.valueOf(temp1[m]));
                                     c.player.hand.add(card);
-                                    c.field.add(card, 
-                                                80 + (int)(400 * Math.random()), 
-                                                80 + 
-                                                (int)(400 * Math.random()),
-                                                c.id
-                                                );
+                                    c.field.add(card, c.id);
                                 }
                             }
                         } else {
                             c.gui.appendText("Player " + temp1[0] + " drew " + 
                                              temp1[1] + "cards.", Color.GREEN);
                             for(int i=0;i<Integer.valueOf(temp1[1]);i++){
-                            	c.field.add(new Card(Deck.CardName.BACK),                                                 80 + (int)(400 * Math.random()), 
-                                        80 + 
-                                        (int)(400 * Math.random()), Integer.valueOf(temp1[0]));
+                            	c.field.add(new Card(Deck.CardName.BACK), Integer.valueOf(temp1[0]));
                             	c.players.get(Integer.valueOf(temp1[0])).hand.add(new Card(Deck.CardName.BACK));
                             }
                         }
