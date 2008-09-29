@@ -1,5 +1,6 @@
 package ucbang.gui;
 
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Toolkit;
@@ -101,10 +102,11 @@ public class CardDisplayer {
                 cards.put("VERA_CUSTER", Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("images/char/dodge/veracuster.jpg")));
 	}
 
-	public void paint(String card, Graphics2D graphics, int x, int y){
+	public void paint(String card, Graphics2D graphics, int x, int y, Color c){
+                graphics.setColor(c);
 		if(cards.containsKey(card)){
-			graphics.drawRoundRect(x, y, 55, 85, 5, 5);
-			graphics.drawImage(cards.get(card), x, y, null);
+			graphics.fillRoundRect(x, y, 60, 90, 8, 8);
+			graphics.drawImage(cards.get(card), x+2, y+3, null);
 		}else{
 			System.out.println("Card "+card+" not found");
 		}

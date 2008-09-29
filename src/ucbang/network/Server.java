@@ -120,7 +120,7 @@ public class Server extends Thread {
      */
         public void promptPlayers(int[] p, String s) {
                 prompting = 1;
-                choice.add(new int[numPlayers][2]);
+                choice.add(new int[p.length][2]);
                 for (int n = 0; n < p.length; n++) {
                         choice.get(choice.size() - 1)[n][0] = p[n];
                         choice.get(choice.size() - 1)[n][1] = -2;

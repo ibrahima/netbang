@@ -38,7 +38,7 @@ public class Field implements MouseListener, MouseMotionListener{
                 client = c;
 	}
 	public void add(Card card, int x, int y){
-		cards.put(card, new cardSpace(card, new Rectangle(x,y,55,85)));
+		cards.put(card, new cardSpace(card, new Rectangle(x,y,60,90)));
 	}
 	int textHeight(String message, Graphics2D graphics){
 		int lineheight=(int)graphics.getFont().getStringBounds("|", graphics.getFontRenderContext()).getHeight();
@@ -64,8 +64,8 @@ public class Field implements MouseListener, MouseMotionListener{
 	public void paint(Graphics2D graphics){
 		Iterator<cardSpace> iter = cards.values().iterator();
 		while(iter.hasNext()){
-			cardSpace temp= iter.next();
-			cd.paint(temp.card.name ,graphics, temp.rect.x, temp.rect.y);
+			cardSpace temp = iter.next();
+			cd.paint(temp.card.name ,graphics, temp.rect.x, temp.rect.y, (temp.card.location==0?Color.BLACK:(temp.card.location==1?(temp.card.type==5?new Color(100,100,200):new Color(100,200,100)):new Color(200,100,100))));
 		}
 		if(description!=null){
 			Rectangle2D bounds=graphics.getFont().getStringBounds(description, graphics.getFontRenderContext());

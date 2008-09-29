@@ -68,10 +68,12 @@ public class ClientGUI extends JFrame implements KeyListener {
 			return;
 		}
 		// fill background w/ dark green
-		graphics.setColor(Color.GREEN);
-		graphics.fillRect(0, 0, 800, 400);
-		graphics.setColor(new Color(100, 0, 0));
-		graphics.fillRect(0, 400, 800, 600);
+		//graphics.setColor(Color.GREEN);
+		//graphics.fillRect(0, 0, 800, 400);
+		//graphics.setColor(new Color(100, 0, 0));
+		//graphics.fillRect(0, 400, 800, 600);
+		 graphics.setColor(new Color(175, 150, 50));
+		 graphics.fillRect(0, 0, 800, 600);
                 
                 //the ugly proxy skip turn button: this is coded for in Field.java
                 graphics.setColor(new Color(255, 255, 255));

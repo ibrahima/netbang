@@ -166,7 +166,7 @@ public class Card {
 				break;
 
 			case BARREL:
-				type = 3;
+				type = 5;
 				effect = field.BARREL.ordinal();
 				break;
 
@@ -198,26 +198,26 @@ public class Card {
 				break; //TODO: fix general store
 
 			case JAIL:
-				type = 2;
+				type = 2; //TODO: make special case for jail
 				range = -1;
 				effect = play.JAIL.ordinal();
 				break; // special case: even though jail remains on the field of
 						// a player, it is "played"
 
 			case APPALOOSA:
-				type = 3;
+				type = 5;
 				effect = field.HORSE_CHASE.ordinal();
 				break;
 			case SILVER:
-				type = 3;
+				type = 5;
 				effect = field.HORSE_CHASE.ordinal();
 				break;
 			case MUSTANG:
-				type = 3;
+				type = 5;
 				effect = field.HORSE_RUN.ordinal();
 				break;
 			case HIDEOUT:
-				type = 3;
+				type = 5;
 				effect = field.HORSE_RUN.ordinal();
 				break; // you heard me: a hideout is a horse.
 
@@ -288,28 +288,28 @@ public class Card {
 				break;
 
 			case VOLCANIC:
-				type = 3;
+				type = 5;
 				special = 1;
 				range = 1;
 				effect = field.GUN.ordinal();
 				break;
 			case SCHOFIELD:
-				type = 3;
+				type = 5;
 				range = 2;
 				effect = field.GUN.ordinal();
 				break;
 			case REMINGTON:
-				type = 3;
+				type = 5;
 				range = 3;
 				effect = field.GUN.ordinal();
 				break;
 			case REV_CARBINE:
-				type = 3;
+				type = 5;
 				range = 4;
 				effect = field.GUN.ordinal();
 				break;
 			case WINCHESTER:
-				type = 3;
+				type = 5;
 				range = 5;
 				effect = field.GUN.ordinal();
 				break;
@@ -319,14 +319,29 @@ public class Card {
 						// break; //all cards left untreated are treated as
 						// bangs
 			}
+                        if(type==3||type==5){ //TODO: remove this debug feature
+                            setLocation((int)(2*Math.random()));
+                        }
+                        else{
+                            setLocation((int)(2*Math.random())==0?0:2);
+                        }
 		}
 	}
+        
+        //for display purposes only:
+        public static Card playedCard(Enum e){
+            return null;
+        }
+        
+        public void setLocation(int i){
+            location = i;
+        }
 
 	public Enum e;
 	public String name;
 	public int ordinal;
 
-	public int type; // 1 = char, 2 = play, 3 = field, 4 = miss
+	public int type; // 1 = char, 2 = play, 3 = greenfield, 4 = miss, 5 = bluefield
 	public int target; // 1 = self, 2 = choose 1 player, 3 = all, 4 = all others
 	public int effect; // 1 = deal damage, 2 = heal, 3 = miss, 4 = draw
 	public int effect2; // secondary effects only affect player
@@ -334,6 +349,9 @@ public class Card {
 						// and bangs, 1 for miss, 2 for dodge
 	public boolean discardToPlay; // cards that need a discard to play
 	public int range; // used for guns and panic and #cards drawn
+        
+        public int location; //0 = in hand, 1 = on field, 2 = played
+        
 	public String toString(){
 		return name;
 	}
