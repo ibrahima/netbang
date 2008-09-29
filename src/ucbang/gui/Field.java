@@ -31,6 +31,8 @@ public class Field implements MouseListener, MouseMotionListener{
 	cardSpace movingCard;
 	Card clicked;
 	ArrayList<Card> pick;
+        
+        
     String description;
     Point describeWhere;
 	public Field(CardDisplayer cd, Client c) {
@@ -102,9 +104,9 @@ public class Field implements MouseListener, MouseMotionListener{
 			Rectangle2D bounds=graphics.getFont().getStringBounds(description, graphics.getFontRenderContext());
 			Color temp=graphics.getColor();
 			graphics.setColor(Color.YELLOW);
-			graphics.fill3DRect(describeWhere.x, describeWhere.y-(int)bounds.getHeight()+2, textWidth(description, graphics), textHeight(description, graphics),false);
+			graphics.fill3DRect(describeWhere.x, describeWhere.y-(int)bounds.getHeight()+32, textWidth(description, graphics), textHeight(description, graphics),false);
 			graphics.setColor(Color.BLACK);
-			improvedDrawString(description, describeWhere.x, describeWhere.y,graphics);
+			improvedDrawString(description, describeWhere.x, describeWhere.y+30,graphics);
 			graphics.setColor(temp);
 		}
 	}
