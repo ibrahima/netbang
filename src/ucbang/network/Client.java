@@ -370,6 +370,7 @@ new BufferedWriter(new OutputStreamWriter(server.getOutputStream()));
                             String s = "";
                             s = "Player " + temp1[1] + " played " + temp1[2] + (temp1.length == 4 ? " at player " + temp1[3] : "");
                             c.gui.appendText(s);
+                            c.field.removeLast(Integer.valueOf(temp1[1]));
                             //TODO: Need to remove this card.
                         } else if (temp1[0].equals("id")) {
                             c.id = Integer.valueOf(temp1[1]);

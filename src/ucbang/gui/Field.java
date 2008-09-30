@@ -31,15 +31,16 @@ public class Field implements MouseListener, MouseMotionListener{
 	ArrayList<CardSpace> characters = new ArrayList<CardSpace>();
 	String description;
 	Point describeWhere;
-	HandSpace test;
 	public Field(CardDisplayer cd, Client c) {
 		this.cd=cd;
-                client = c;
+		client = c;
 	}
 	public void add(Card card, int x, int y, int player){
 		cards.put(card, new CardSpace(card, new Rectangle(x,y,60,90), player));
 	}
-
+	public void removeLast(int player){
+		System.out.println("Removed "+cards.remove(handPlacer.get(player).removeLast()));
+	}
 	public void add(Card card, int player){
 		int xoffset = (player==client.id?30*(client.player.hand.size()-1):30*(client.players.get(player).hand.size()-1));
                 
@@ -168,8 +169,6 @@ public class Field implements MouseListener, MouseMotionListener{
             	if(client.players.get(i).character>=0)
             		System.out.println(i+":"+Deck.Characters.values()[client.players.get(i).character]);
             }
-        	test = new HandSpace(new Rectangle(30, 500, 30, 30), 0);
-        	cards.put(new Card(Deck.CardName.BACK), test);
         }
         public void clear(){
             Point pointOnCard = null;
@@ -307,6 +306,9 @@ public class Field implements MouseListener, MouseMotionListener{
     	}
     	public void addCard(CardSpace card){
     		cards.add(card);
+    	}
+    	public CardSpace removeLast(){
+    		return cards.remove(cards.size()-1);
     	}
     	public void move(int x, int y){
     		int dx = x-rect.x;
