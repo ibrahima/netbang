@@ -27,7 +27,7 @@ public class Field implements MouseListener, MouseMotionListener{
 	Card clicked;
 	ArrayList<Card> pick;
         
-	ArrayList<CardSpace> handPlacer = new ArrayList<CardSpace>(); //to avoid npe
+	ArrayList<HandSpace> handPlacer = new ArrayList<HandSpace>(); //to avoid npe
 	ArrayList<CardSpace> characters = new ArrayList<CardSpace>();
 	String description;
 	Point describeWhere;
@@ -47,12 +47,12 @@ public class Field implements MouseListener, MouseMotionListener{
 			int x=350;
 			int y=200;
 			cards.put(card, new CardSpace(card, new Rectangle(x, y,60,90), player));
-			System.out.println("Field added a character");
 		}else{
 			int x=(int) handPlacer.get(player).rect.x+handPlacer.get(player).rect.width+xoffset;
 			int y=(int) handPlacer.get(player).rect.y;
-			cards.put(card, new CardSpace(card, new Rectangle(x, y,60,90), player));		
-			System.out.println("Field added a card on its own! Magic!");
+			CardSpace cs = new CardSpace(card, new Rectangle(x, y,60,90), player);
+			cards.put(card, cs);
+			handPlacer.get(player).addCard(cs);
 		}
 	}
 	int textHeight(String message, Graphics2D graphics){
@@ -77,8 +77,8 @@ public class Field implements MouseListener, MouseMotionListener{
 		}
 	}
 	public void paint(Graphics2D graphics){
-        for(CardSpace cs : handPlacer)
-            graphics.draw(cs.rect);
+        for(HandSpace hs : handPlacer)
+            graphics.draw(hs.rect);
 		Iterator<Clickable> iter = cards.values().iterator();
 		while(iter.hasNext()){
 			Clickable temp = iter.next();
@@ -100,8 +100,12 @@ public class Field implements MouseListener, MouseMotionListener{
 				}
 				Color outer=client.id==1?Color.RED:Color.BLUE;
 				cd.paint(crd.card.name ,graphics, temp.rect.x, temp.rect.y,inner,outer);
+			}else if(temp instanceof HandSpace){
+				HandSpace hs = (HandSpace)temp;
+				graphics.draw3DRect(hs.rect.x, hs.rect.y, hs.rect.width, hs.rect.height, true);
+			}else{
+				System.out.println("WTF");
 			}
-
 		}
 		if(description!=null){
 			Rectangle2D bounds=graphics.getFont().getStringBounds(description, graphics.getFontRenderContext());
@@ -152,19 +156,20 @@ public class Field implements MouseListener, MouseMotionListener{
              return null;
         }
         public void start2(){
-        	test = new HandSpace(new Rectangle(30, 500, 30, 30), 0);
-        	cards.put(null, test);
-            handPlacer = new ArrayList<CardSpace>(client.numPlayers);
+
+            handPlacer = new ArrayList<HandSpace>(client.numPlayers);
             double theta;
             for(int player = 0; player<client.numPlayers; player++){
                 theta = (player-client.id)*(2*Math.PI/client.numPlayers)-Math.PI/2;
-                handPlacer.add(new CardSpace(null, new Rectangle(350+(int)(250*Math.cos(theta)),280-(int)(220*Math.sin(theta)),10,10), player));  
+                handPlacer.add(new HandSpace(new Rectangle(350+(int)(250*Math.cos(theta)),280-(int)(220*Math.sin(theta)),10,10), player));  
             }
             clear();
             for(int i=0;i<client.players.size();i++){
             	if(client.players.get(i).character>=0)
             		System.out.println(i+":"+Deck.Characters.values()[client.players.get(i).character]);
             }
+        	test = new HandSpace(new Rectangle(30, 500, 30, 30), 0);
+        	cards.put(new Card(Deck.CardName.BACK), test);
         }
         public void clear(){
             Point pointOnCard = null;
@@ -224,7 +229,7 @@ public class Field implements MouseListener, MouseMotionListener{
 	    movingCard = binarySearchCardAtPoint(e.getPoint());
 	    
 	    if(movingCard==null){//placer handler
-	        for(CardSpace cs : handPlacer)
+	        for(HandSpace cs : handPlacer)
                     if(cs.rect.contains(e.getPoint())){
                         movingCard=cs;
 	        }
@@ -304,10 +309,12 @@ public class Field implements MouseListener, MouseMotionListener{
     		cards.add(card);
     	}
     	public void move(int x, int y){
+    		int dx = x-rect.x;
+    		int dy = y-rect.y;
     		super.move(x, y);
     		Iterator<CardSpace> iter = cards.iterator();
     		while(iter.hasNext()){
-    			iter.next().move(x, y);
+    			iter.next().translate(dx, dy);
     		}
     	}
     }
@@ -323,6 +330,9 @@ public class Field implements MouseListener, MouseMotionListener{
         }
         public void move(int x, int y){
         	rect.setLocation(x, y);
+        }
+        public void translate(int dx, int dy){
+        	rect.translate(dx, dy);
         }
     }
 
