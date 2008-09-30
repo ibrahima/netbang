@@ -1,6 +1,7 @@
 package ucbang.launchers;
 
-import ucbang.network.*;
+import ucbang.network.Client;
+import ucbang.network.Server;
 
 public class Test2 {
 	public static void main(String args[]) {

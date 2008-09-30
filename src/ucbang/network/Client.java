@@ -1,26 +1,20 @@
 package ucbang.network;
 
 import java.awt.Color;
-
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-
 import java.net.Socket;
-
-import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.Deque;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Random;
 
-import java.util.Iterator;
-
-import ucbang.core.*;
+import ucbang.core.Card;
+import ucbang.core.Deck;
+import ucbang.core.Player;
 import ucbang.core.Deck.CardName;
-
 import ucbang.gui.CardDisplayer;
 import ucbang.gui.ClientGUI;
 import ucbang.gui.Field;

@@ -4,13 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Toolkit;
-import java.io.IOException;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
-
-import javax.imageio.ImageIO;
-
-import ucbang.core.*;
 
 public class CardDisplayer {
 	boolean faceup=false;
