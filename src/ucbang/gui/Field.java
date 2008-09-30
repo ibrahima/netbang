@@ -31,7 +31,7 @@ public class Field implements MouseListener, MouseMotionListener{
 	ArrayList<CardSpace> characters = new ArrayList<CardSpace>();
 	String description;
 	Point describeWhere;
-        
+	HandSpace test;
 	public Field(CardDisplayer cd, Client c) {
 		this.cd=cd;
                 client = c;
@@ -77,8 +77,8 @@ public class Field implements MouseListener, MouseMotionListener{
 		}
 	}
 	public void paint(Graphics2D graphics){
-                for(CardSpace cs : handPlacer)
-                    graphics.draw(cs.rect);
+        for(CardSpace cs : handPlacer)
+            graphics.draw(cs.rect);
 		Iterator<Clickable> iter = cards.values().iterator();
 		while(iter.hasNext()){
 			Clickable temp = iter.next();
@@ -152,6 +152,8 @@ public class Field implements MouseListener, MouseMotionListener{
              return null;
         }
         public void start2(){
+        	test = new HandSpace(new Rectangle(30, 500, 30, 30), 0);
+        	cards.put(null, test);
             handPlacer = new ArrayList<CardSpace>(client.numPlayers);
             double theta;
             for(int player = 0; player<client.numPlayers; player++){
@@ -160,10 +162,8 @@ public class Field implements MouseListener, MouseMotionListener{
             }
             clear();
             for(int i=0;i<client.players.size();i++){
-            	if(i!=client.id)
+            	if(client.players.get(i).character>=0)
             		System.out.println(i+":"+Deck.Characters.values()[client.players.get(i).character]);
-            	else
-            		System.out.println(i+":"+Deck.Characters.values()[client.player.character]);
             }
         }
         public void clear(){
