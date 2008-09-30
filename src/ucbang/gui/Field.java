@@ -45,7 +45,8 @@ public class Field implements MouseListener, MouseMotionListener{
 		cards.put(card, new cardSpace(card, new Rectangle(x,y,60,90), player));
 	}
 	public void add(Card card, int player){
-		int xoffset = 30*(client.players.get(player).hand.size()-1);
+		int xoffset = (player==client.id?30*(client.player.hand.size()-1):30*(client.players.get(player).hand.size()-1));
+                
 		if(card.type==1){//this a character card
 			int x=350;
 			int y=200;
