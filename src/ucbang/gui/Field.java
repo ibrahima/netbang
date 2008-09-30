@@ -20,15 +20,15 @@ import ucbang.network.Client;
 
 public class Field implements MouseListener, MouseMotionListener{
 	Client client;
-	public BSHashMap<Card, cardSpace> cards = new BSHashMap<Card, cardSpace>();
+	public BSHashMap<Card, Clickable> cards = new BSHashMap<Card, Clickable>();
 	CardDisplayer cd;
 	Point pointOnCard;
-	cardSpace movingCard;
+	Clickable movingCard;
 	Card clicked;
 	ArrayList<Card> pick;
         
-	ArrayList<cardSpace> handPlacer = new ArrayList<cardSpace>(); //to avoid npe
-	ArrayList<cardSpace> characters = new ArrayList<cardSpace>();
+	ArrayList<CardSpace> handPlacer = new ArrayList<CardSpace>(); //to avoid npe
+	ArrayList<CardSpace> characters = new ArrayList<CardSpace>();
 	String description;
 	Point describeWhere;
         
@@ -37,7 +37,7 @@ public class Field implements MouseListener, MouseMotionListener{
                 client = c;
 	}
 	public void add(Card card, int x, int y, int player){
-		cards.put(card, new cardSpace(card, new Rectangle(x,y,60,90), player));
+		cards.put(card, new CardSpace(card, new Rectangle(x,y,60,90), player));
 	}
 
 	public void add(Card card, int player){
@@ -46,12 +46,12 @@ public class Field implements MouseListener, MouseMotionListener{
 		if(card.type==1){//this a character card
 			int x=350;
 			int y=200;
-			cards.put(card, new cardSpace(card, new Rectangle(x, y,60,90), player));
+			cards.put(card, new CardSpace(card, new Rectangle(x, y,60,90), player));
 			System.out.println("Field added a character");
 		}else{
 			int x=(int) handPlacer.get(player).rect.x+handPlacer.get(player).rect.width+xoffset;
 			int y=(int) handPlacer.get(player).rect.y;
-			cards.put(card, new cardSpace(card, new Rectangle(x, y,60,90), player));		
+			cards.put(card, new CardSpace(card, new Rectangle(x, y,60,90), player));		
 			System.out.println("Field added a card on its own! Magic!");
 		}
 	}
@@ -77,17 +77,21 @@ public class Field implements MouseListener, MouseMotionListener{
 		}
 	}
 	public void paint(Graphics2D graphics){
-                for(cardSpace cs : handPlacer)
+                for(CardSpace cs : handPlacer)
                     graphics.draw(cs.rect);
-		Iterator<cardSpace> iter = cards.values().iterator();
+		Iterator<Clickable> iter = cards.values().iterator();
 		while(iter.hasNext()){
-			cardSpace temp = iter.next();
-			cd.paint(temp.card.name ,graphics, temp.rect.x, temp.rect.y,
-					(temp.card.location==0?Color.BLACK:(temp.card.location==1?(temp.card.type==5?new Color(100,100,200):new Color(100,200,100)):new Color(200,100,100))),
-					client.id==1?Color.RED:Color.BLUE); //replace this last parameter
-			//this thing is really ugly, please make it less so. Readability of code is good. Just because ? exists
-			//doesn't mean you have to use it for stuff like this, lol. Please define the colors above with nested
-			//ifs or switches or soemthing, and then use them.
+			Clickable temp = iter.next();
+			if(temp instanceof CardSpace){
+				CardSpace crd = (CardSpace)temp;
+				cd.paint(crd.card.name ,graphics, temp.rect.x, temp.rect.y,
+						(crd.card.location==0?Color.BLACK:(crd.card.location==1?(crd.card.type==5?new Color(100,100,200):new Color(100,200,100)):new Color(200,100,100))),
+						client.id==1?Color.RED:Color.BLUE); //replace this last parameter
+				//this thing is really ugly, please make it less so. Readability of code is good. Just because ? exists
+				//doesn't mean you have to use it for stuff like this, lol. Please define the colors above with nested
+				//ifs or switches or soemthing, and then use them.			
+			}
+
 		}
 		if(description!=null){
 			Rectangle2D bounds=graphics.getFont().getStringBounds(description, graphics.getFontRenderContext());
@@ -99,12 +103,12 @@ public class Field implements MouseListener, MouseMotionListener{
 			graphics.setColor(temp);
 		}
 	}
-        public cardSpace binarySearchCardAtPoint(Point ep){
+        public Clickable binarySearchCardAtPoint(Point ep){
             //bsearch method
              int start;
              int end;
 
-             ArrayList<cardSpace> al = cards.values(); //search the values arrayList for...
+             ArrayList<Clickable> al = cards.values(); //search the values arrayList for...
 
              int a = 0, b = al.size(), index = al.size() / 2;
 
@@ -130,7 +134,7 @@ public class Field implements MouseListener, MouseMotionListener{
              }
              end = a - 1;
              for (int n = end; n>= start; n--) {
-                 cardSpace s = al.get(n);
+                 Clickable s = al.get(n);
                  if (s.rect.contains(ep.x, ep.y)) {
                      return al.get(n);
                  }
@@ -138,11 +142,11 @@ public class Field implements MouseListener, MouseMotionListener{
              return null;
         }
         public void start2(){
-            handPlacer = new ArrayList<cardSpace>(client.numPlayers);
+            handPlacer = new ArrayList<CardSpace>(client.numPlayers);
             double theta;
             for(int player = 0; player<client.numPlayers; player++){
                 theta = (player-client.id)*(2*Math.PI/client.numPlayers)-Math.PI/2;
-                handPlacer.add(new cardSpace(null, new Rectangle(350+(int)(250*Math.cos(theta)),280-(int)(220*Math.sin(theta)),10,10), player));  
+                handPlacer.add(new CardSpace(null, new Rectangle(350+(int)(250*Math.cos(theta)),280-(int)(220*Math.sin(theta)),10,10), player));  
             }
             clear();
             for(int i=0;i<client.players.size();i++){
@@ -154,7 +158,7 @@ public class Field implements MouseListener, MouseMotionListener{
         }
         public void clear(){
             Point pointOnCard = null;
-            cardSpace movingCard = null;
+            CardSpace movingCard = null;
             cards.clear();
         }
         
@@ -168,45 +172,49 @@ public class Field implements MouseListener, MouseMotionListener{
                     }
                     return;
                 }
-                cardSpace cs = binarySearchCardAtPoint(ep);
+                Clickable cl = binarySearchCardAtPoint(ep);
 
-                if(cs != null&& cs.card!= null)
-                    System.out.println("Clicked on "+cs.card.name);
-                else
-                    return;
-        		if(e.getButton()==MouseEvent.BUTTON3){
-        			System.out.println(cs.card.description);
-        			description=cs.card.description;
-        			describeWhere=ep;
-        		}else
-                if(client.prompting && pick.contains(cs.card)){
-                    System.out.println("sending prompt...");
-                    if(cs.card.type==1){
-                        client.outMsgs.add("Prompt:"+ pick.indexOf(cs.card));
-                        client.player.hand.clear(); //you just picked a character card
-                        clear();
-                    }
-                    else{
-                        client.outMsgs.add("Prompt:"+ pick.indexOf(cs.card));
-                    }
-                    client.prompting = false;
-                }
-                else{ //TODO: debug stuff
-                    if(client.prompting){
-                        System.out.println("i was prompting");
-                        if(!client.player.hand.contains(cs.card)){
-                            System.out.println("but the arraylist didn't contain the card i was looking for!");
-                            System.out.println(cs.card+" "+client.player.hand);
-                        }
-                    }
-                }
+                if (cl instanceof CardSpace) {
+                	CardSpace cs = (CardSpace) cl;
+					if (cs != null && cs.card != null)
+						System.out.println("Clicked on " + cs.card.name);
+					else
+						return;
+					if (e.getButton() == MouseEvent.BUTTON3) {
+						System.out.println(cs.card.description);
+						description = cs.card.description;
+						describeWhere = ep;
+					} else if (client.prompting && pick.contains(cs.card)) {
+						System.out.println("sending prompt...");
+						if (cs.card.type == 1) {
+							client.outMsgs.add("Prompt:"
+									+ pick.indexOf(cs.card));
+							client.player.hand.clear(); //you just picked a character card
+							clear();
+						} else {
+							client.outMsgs.add("Prompt:"
+									+ pick.indexOf(cs.card));
+						}
+						client.prompting = false;
+					} else { //TODO: debug stuff
+						if (client.prompting) {
+							System.out.println("i was prompting");
+							if (!client.player.hand.contains(cs.card)) {
+								System.out
+										.println("but the arraylist didn't contain the card i was looking for!");
+								System.out.println(cs.card + " "
+										+ client.player.hand);
+							}
+						}
+					}
+				}
 	}
 
 	public void mousePressed(MouseEvent e) {
 	    movingCard = binarySearchCardAtPoint(e.getPoint());
 	    
 	    if(movingCard==null){//placer handler
-	        for(cardSpace cs : handPlacer)
+	        for(CardSpace cs : handPlacer)
                     if(cs.rect.contains(e.getPoint())){
                         movingCard=cs;
 	        }
@@ -227,7 +235,7 @@ public class Field implements MouseListener, MouseMotionListener{
         public void mouseDragged(MouseEvent e) {
             //System.out.println("dragging");
             if(movingCard!=null){
-                movingCard.rect.setLocation(Math.max(0, Math.min(e.getPoint().x-pointOnCard.x,745)),Math.max(0, Math.min(e.getPoint().y-pointOnCard.y,515))); //replace boundaries with width()/height() of frame?
+                movingCard.move(Math.max(0, Math.min(e.getPoint().x-pointOnCard.x,745)),Math.max(0, Math.min(e.getPoint().y-pointOnCard.y,515))); //replace boundaries with width()/height() of frame?
             }
             else{
                 //System.out.println("not dragging");
@@ -266,18 +274,32 @@ public class Field implements MouseListener, MouseMotionListener{
         /*
          * Contains a card and a rectangle
          */
-    private class cardSpace extends Clickable{
+    private class CardSpace extends Clickable{
         public Card card;
 
-        public cardSpace(Card c, Rectangle r, int player){
+        public CardSpace(Card c, Rectangle r, int player){
             card = c;
             rect = r;
             playerid = player;
         }
         
     }
-    private class handSpace extends Clickable{
-    	
+    private class HandSpace extends Clickable{
+    	ArrayList<CardSpace> cards = new ArrayList<CardSpace>();
+    	public HandSpace(Rectangle r, int player){
+    		rect=r;
+    		playerid=player;
+    	}
+    	public void addCard(CardSpace card){
+    		cards.add(card);
+    	}
+    	public void move(int x, int y){
+    		super.move(x, y);
+    		Iterator<CardSpace> iter = cards.iterator();
+    		while(iter.hasNext()){
+    			iter.next().move(x, y);
+    		}
+    	}
     }
     private abstract class Clickable implements Comparable<Clickable>{
         public Rectangle rect;
@@ -289,18 +311,12 @@ public class Field implements MouseListener, MouseMotionListener{
             else
                 return ((Integer)rect.getLocation().x).compareTo(o.rect.getLocation().x);
         }
+        public void move(int x, int y){
+        	rect.setLocation(x, y);
+        }
     }
 
-	public void mouseEntered(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-	public void mouseExited(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-	public void mouseMoved(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void mouseEntered(MouseEvent e) {}
+	public void mouseExited(MouseEvent e) {}
+	public void mouseMoved(MouseEvent e) {}
 }
