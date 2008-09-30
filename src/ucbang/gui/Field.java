@@ -45,7 +45,7 @@ public class Field implements MouseListener, MouseMotionListener{
 		cards.put(card, new cardSpace(card, new Rectangle(x,y,60,90), player));
 	}
 	public void add(Card card, int player){
-		int xoffset = 30*(client.player.hand.size()-1);
+		int xoffset = 30*(client.players.get(player).hand.size()-1);
 		if(card.type==1){//this a character card
 			int x=350;
 			int y=200;
@@ -153,7 +153,7 @@ public class Field implements MouseListener, MouseMotionListener{
                 else{
                         theta = player*(2*Math.PI/client.numPlayers);
                 }
-                handPlacer.add(new cardSpace(null, new Rectangle(500,500,10,10), player));
+                handPlacer.add(new cardSpace(null, new Rectangle(400,300,10,10), player));  
             }
             
             clear();
