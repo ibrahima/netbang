@@ -32,10 +32,10 @@ public class Field implements MouseListener, MouseMotionListener{
 	Card clicked;
 	ArrayList<Card> pick;
         
-        ArrayList<cardSpace> handPlacer = new ArrayList(); //to avoid npe
-        
-        String description;
-        Point describeWhere;
+	ArrayList<cardSpace> handPlacer = new ArrayList<cardSpace>(); //to avoid npe
+	ArrayList<cardSpace> characters = new ArrayList<cardSpace>();
+	String description;
+	Point describeWhere;
         
 	public Field(CardDisplayer cd, Client c) {
 		this.cd=cd;
@@ -145,18 +145,9 @@ public class Field implements MouseListener, MouseMotionListener{
             handPlacer = new ArrayList<cardSpace>(client.numPlayers);
             double theta;
             for(int player = 0; player<client.numPlayers; player++){
-                if(player==client.id){
-                        //ugly way of doing things, the angle's are going to overlap with players>2
-                        //also doesn't seem to be working.
-                        System.out.println("The card being added to field is owned by the local player");
-                        theta = Math.PI*3/2;
-                }
-                else{
-                        theta = player*(2*Math.PI/client.numPlayers);
-                }
-                handPlacer.add(new cardSpace(null, new Rectangle(400,300,10,10), player));  
+                theta = (player-client.id)*(2*Math.PI/client.numPlayers);
+                handPlacer.add(new cardSpace(null, new Rectangle(350+(int)(350*Math.cos(theta)),200+(int)(250*Math.sin(theta)),10,10), player));  
             }
-            
             clear();
         }
         public void clear(){
