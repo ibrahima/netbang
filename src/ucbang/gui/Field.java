@@ -18,6 +18,7 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 
 import ucbang.core.Card;
+import ucbang.core.Deck;
 import ucbang.core.Player;
 import ucbang.core.Deck.CardName;
 
@@ -44,6 +45,7 @@ public class Field implements MouseListener, MouseMotionListener{
 	public void add(Card card, int x, int y, int player){
 		cards.put(card, new cardSpace(card, new Rectangle(x,y,60,90), player));
 	}
+
 	public void add(Card card, int player){
 		int xoffset = (player==client.id?30*(client.player.hand.size()-1):30*(client.players.get(player).hand.size()-1));
                 
@@ -145,10 +147,16 @@ public class Field implements MouseListener, MouseMotionListener{
             handPlacer = new ArrayList<cardSpace>(client.numPlayers);
             double theta;
             for(int player = 0; player<client.numPlayers; player++){
-                theta = (player-client.id)*(2*Math.PI/client.numPlayers);
-                handPlacer.add(new cardSpace(null, new Rectangle(350+(int)(350*Math.cos(theta)),200+(int)(250*Math.sin(theta)),10,10), player));  
+                theta = (player-client.id)*(2*Math.PI/client.numPlayers)-Math.PI/2;
+                handPlacer.add(new cardSpace(null, new Rectangle(350+(int)(250*Math.cos(theta)),280-(int)(220*Math.sin(theta)),10,10), player));  
             }
             clear();
+            for(int i=0;i<client.players.size();i++){
+            	if(i!=client.id)
+            		System.out.println(i+":"+Deck.Characters.values()[client.players.get(i).character]);
+            	else
+            		System.out.println(i+":"+Deck.Characters.values()[client.player.character]);
+            }
         }
         public void clear(){
             Point pointOnCard = null;

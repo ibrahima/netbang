@@ -386,8 +386,7 @@ new BufferedWriter(new OutputStreamWriter(server.getOutputStream()));
                             }
                             else {
                                 c.gui.appendText("Player " + temp1[1] + " chose " + Deck.Characters.values()[Integer.valueOf(temp1[2])], Color.YELLOW);
-                                System.out.println(temp1[1]+temp1[2]);
-                                //c.players.get(Integer.valueOf(temp[1])).character=Integer.valueOf(temp1[2]);
+                                c.players.get(Integer.valueOf(temp1[1])).character=Integer.valueOf(temp1[2]);
                                 c.field.add(new Card(Deck.Characters.values()[Integer.valueOf(temp1[2])]), Integer.valueOf(temp1[1]));
                             }
                         } else {
