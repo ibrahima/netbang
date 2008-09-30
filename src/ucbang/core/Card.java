@@ -4,6 +4,20 @@ import java.util.Arrays;
 
 public class Card {
 	public String description;
+	public Enum e;
+	public String name;
+	public int ordinal;
+
+	public int type; // 1 = char, 2 = play, 3 = greenfield, 4 = miss, 5 = bluefield
+	public int target; // 1 = self, 2 = choose 1 player, 3 = all, 4 = all others
+	public int effect; // 1 = deal damage, 2 = heal, 3 = miss, 4 = draw
+	public int effect2; // secondary effects only affect player
+	public int special; // HP for char cards, ???? for other cards, 1 for beer
+						// and bangs, 1 for miss, 2 for dodge
+	public boolean discardToPlay; // cards that need a discard to play
+	public int range; // used for guns and panic and #cards drawn
+        
+	public int location; //0 = in hand, 1 = on field, 2 = played
 	public static enum play {
 		DAMAGE, HEAL, MISS, DRAW, STEAL, DISCARD, DUEL, JAIL
 	}; // played cards
@@ -327,30 +341,15 @@ public class Card {
                         }
 		}
 	}
-        
-        //for display purposes only:
-        public static Card playedCard(Enum e){
-            return null;
-        }
-        
-        public void setLocation(int i){
-            location = i;
-        }
 
-	public Enum e;
-	public String name;
-	public int ordinal;
-
-	public int type; // 1 = char, 2 = play, 3 = greenfield, 4 = miss, 5 = bluefield
-	public int target; // 1 = self, 2 = choose 1 player, 3 = all, 4 = all others
-	public int effect; // 1 = deal damage, 2 = heal, 3 = miss, 4 = draw
-	public int effect2; // secondary effects only affect player
-	public int special; // HP for char cards, ???? for other cards, 1 for beer
-						// and bangs, 1 for miss, 2 for dodge
-	public boolean discardToPlay; // cards that need a discard to play
-	public int range; // used for guns and panic and #cards drawn
-        
-        public int location; //0 = in hand, 1 = on field, 2 = played
+    //for display purposes only:
+    public static Card playedCard(Enum e){
+        return null;
+    }
+    
+    public void setLocation(int i){
+        location = i;
+    }
         
 	public String toString(){
 		return name;

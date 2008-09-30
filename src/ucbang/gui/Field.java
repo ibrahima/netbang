@@ -84,12 +84,22 @@ public class Field implements MouseListener, MouseMotionListener{
 			Clickable temp = iter.next();
 			if(temp instanceof CardSpace){
 				CardSpace crd = (CardSpace)temp;
-				cd.paint(crd.card.name ,graphics, temp.rect.x, temp.rect.y,
-						(crd.card.location==0?Color.BLACK:(crd.card.location==1?(crd.card.type==5?new Color(100,100,200):new Color(100,200,100)):new Color(200,100,100))),
-						client.id==1?Color.RED:Color.BLUE); //replace this last parameter
-				//this thing is really ugly, please make it less so. Readability of code is good. Just because ? exists
-				//doesn't mean you have to use it for stuff like this, lol. Please define the colors above with nested
-				//ifs or switches or soemthing, and then use them.			
+				Color inner;
+				switch(crd.card.location){
+					case 0:
+						inner=Color.BLACK;
+						break;
+					case 1:
+						if(crd.card.type==5)
+							inner=new Color(100,100,200);
+						else
+							inner=new Color(100,200,100);
+						break;
+					default:
+						inner=new Color(200,100,100);
+				}
+				Color outer=client.id==1?Color.RED:Color.BLUE;
+				cd.paint(crd.card.name ,graphics, temp.rect.x, temp.rect.y,inner,outer);
 			}
 
 		}

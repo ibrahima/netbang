@@ -106,11 +106,11 @@ public class CardDisplayer {
 			System.out.println("Card "+card+" not found");
 		}
 	}
-        public void paint(String card, Graphics2D graphics, int x, int y, Color c, Color player){ //TODO: replace player with an int
+        public void paint(String card, Graphics2D graphics, int x, int y, Color inner, Color player){ //TODO: replace player with an int
                 if(cards.containsKey(card)){
                         graphics.setColor(player);
                         graphics.fillRoundRect(x, y, 60, 90, 7, 7);
-                        graphics.setColor(c);
+                        graphics.setColor(inner);
                         graphics.fillRoundRect(x+1, y+1, 58, 88, 6, 6);
                         graphics.drawImage(cards.get(card), x+2, y+3, null);
                 }else{
