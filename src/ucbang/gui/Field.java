@@ -266,22 +266,28 @@ public class Field implements MouseListener, MouseMotionListener{
         /*
          * Contains a card and a rectangle
          */
-    private class cardSpace implements Comparable{
-        public Rectangle rect;
+    private class cardSpace extends Clickable{
         public Card card;
-        public int location; //position of card on field or in hand
-        public int playerid;
+
         public cardSpace(Card c, Rectangle r, int player){
             card = c;
             rect = r;
             playerid = player;
         }
         
-        public int compareTo(Object o) {
-            if(((cardSpace)o).rect.getLocation().y!=rect.getLocation().y)
-                return ((Integer)rect.getLocation().y).compareTo(((cardSpace)o).rect.getLocation().y);
+    }
+    private class handSpace extends Clickable{
+    	
+    }
+    private abstract class Clickable implements Comparable<Clickable>{
+        public Rectangle rect;
+        public int location; //position of card on field or in hand
+        public int playerid;
+        public int compareTo(Clickable o) {
+            if(o.rect.getLocation().y!=rect.getLocation().y)
+                return ((Integer)rect.getLocation().y).compareTo(o.rect.getLocation().y);
             else
-                return ((Integer)rect.getLocation().x).compareTo(((cardSpace)o).rect.getLocation().x);
+                return ((Integer)rect.getLocation().x).compareTo(o.rect.getLocation().x);
         }
     }
 
