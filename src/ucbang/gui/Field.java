@@ -100,7 +100,10 @@ public class Field implements MouseListener, MouseMotionListener{
 						inner=new Color(200,100,100);
 				}
 				Color outer=client.id==1?Color.RED:Color.BLUE;
-				cd.paint(crd.card.name ,graphics, temp.rect.x, temp.rect.y,inner,outer);
+				if(crd.card.name.equals("BULLETBACK"))
+					cd.paint(crd.card.name ,graphics, temp.rect.x, temp.rect.y,Color.RED, Math.PI/2);
+				else
+					cd.paint(crd.card.name ,graphics, temp.rect.x, temp.rect.y,inner,outer);
 			}else if(temp instanceof HandSpace){
 				HandSpace hs = (HandSpace)temp;
 				graphics.draw3DRect(hs.rect.x, hs.rect.y, hs.rect.width, hs.rect.height, true);

@@ -4,22 +4,20 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Toolkit;
+import java.awt.geom.AffineTransform;
 import java.util.LinkedHashMap;
 
 public class CardDisplayer {
 	boolean faceup=false;
 	LinkedHashMap<String,Image> cards = new LinkedHashMap<String,Image>();
+	AffineTransform rotate = AffineTransform.getRotateInstance(Math.PI/2);//initialized to PI/2 rotation
 	public CardDisplayer() {
 		loadImages();
-		/*try {
-			image = ImageIO.read(url);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}*/
 	}
 
 	private void loadImages() {
 		cards.put("BACK", Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("images/cards/bang/back.jpg")));
+		cards.put("BULLETBACK", Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("images/cards/bang/bulletback.jpg")));
 		cards.put("APPALOOSA", Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("images/cards/bang/appalossa.jpg")));
 		cards.put("BANG", Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("images/cards/bang/bang.jpg")));
 		cards.put("BARREL", Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("images/cards/bang/barel.jpg")));
@@ -64,57 +62,78 @@ public class CardDisplayer {
 		cards.put("WELLS_FARGO", Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("images/cards/bang/wellsfargo.jpg")));
 		cards.put("WHISKY", Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("images/cards/dodge/whisky.jpg")));
 		cards.put("WINCHESTER", Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("images/cards/bang/b_winchester.jpg")));
-                cards.put("BART_CASSIDY", Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("images/char/bang/bartcassidy.jpg")));
-                cards.put("BLACK_JACK", Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("images/char/bang/blackjack.jpg")));
-                cards.put("CALAMITY_JANET",Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("images/char/bang/calamityjanet.jpg")));
-                cards.put("EL_GRINGO", Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("images/char/bang/elgringo.jpg")));
-                cards.put("JESSE_JONES", Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("images/char/bang/jessejones.jpg")));
-                cards.put("JOURDONNAIS", Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("images/char/bang/jourdonnais.jpg")));
-                cards.put("KIT_CARLSON", Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("images/char/bang/kitcarlson.jpg")));
-                cards.put("LUCKY_DUKE", Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("images/char/bang/luckyduke.jpg")));
-                cards.put("PAUL_REGRET", Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("images/char/bang/paulregret.jpg")));
-                cards.put("PEDRO_RAMIREZ", Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("images/char/bang/pedroramirez.jpg")));
-                cards.put("ROSE_DOOLAN", Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("images/char/bang/rosedoolan.jpg")));
-                cards.put("SID_KETCHUM", Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("images/char/bang/sidketchum.jpg")));
-                cards.put("SLAB_THE_KILLER", Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("images/char/bang/slabthekiller.jpg")));
-                cards.put("SUZY_LAFAYETTE", Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("images/char/bang/suzylafayette.jpg")));
-                cards.put("VULTURE_SAM", Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("images/char/bang/vulturesam.jpg")));
-                cards.put("WILLY_THE_KID", Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("images/char/bang/willythekid.jpg")));
-                cards.put("APACHE_KID", Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("images/char/dodge/apachekid.jpg")));
-                cards.put("BELLE_STAR", Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("images/char/dodge/bellestar.jpg")));
-                cards.put("BILL_NOFACE", Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("images/char/dodge/billnoface.jpg")));
-                cards.put("CHUCK_WENGAM", Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("images/char/dodge/chuckwengam.jpg")));
-                cards.put("DOC_HOLYDAY", Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("images/char/dodge/docholyday.jpg")));
-                cards.put("ELENA_FUENTE", Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("images/char/dodge/elenafuente.jpg")));
-                cards.put("GREG_DIGGER", Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("images/char/dodge/gregdigger.jpg")));
-                cards.put("HERB_HUNTER", Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("images/char/dodge/herbhunter.jpg")));
-                cards.put("JOSE_DELGADO", Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("images/char/dodge/josedelgado.jpg")));
-                cards.put("MOLLY_STARK", Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("images/char/dodge/mollystark.jpg")));
-                cards.put("PAT_BRENNAN", Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("images/char/dodge/patbrennan.jpg")));
-                cards.put("PIXIE_PETE", Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("images/char/dodge/pixiepete.jpg")));
-                cards.put("SEAN_MALLORY", Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("images/char/dodge/seanmallory.jpg")));
-                cards.put("TEQUILA_JOE", Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("images/char/dodge/tequilajoe.jpg")));
-                cards.put("VERA_CUSTER", Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("images/char/dodge/veracuster.jpg")));
+		cards.put("BART_CASSIDY", Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("images/char/bang/bartcassidy.jpg")));
+		cards.put("BLACK_JACK", Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("images/char/bang/blackjack.jpg")));
+		cards.put("CALAMITY_JANET",Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("images/char/bang/calamityjanet.jpg")));
+		cards.put("EL_GRINGO", Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("images/char/bang/elgringo.jpg")));
+		cards.put("JESSE_JONES", Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("images/char/bang/jessejones.jpg")));
+		cards.put("JOURDONNAIS", Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("images/char/bang/jourdonnais.jpg")));
+		cards.put("KIT_CARLSON", Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("images/char/bang/kitcarlson.jpg")));
+		cards.put("LUCKY_DUKE", Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("images/char/bang/luckyduke.jpg")));
+		cards.put("PAUL_REGRET", Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("images/char/bang/paulregret.jpg")));
+		cards.put("PEDRO_RAMIREZ", Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("images/char/bang/pedroramirez.jpg")));
+		cards.put("ROSE_DOOLAN", Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("images/char/bang/rosedoolan.jpg")));
+		cards.put("SID_KETCHUM", Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("images/char/bang/sidketchum.jpg")));
+		cards.put("SLAB_THE_KILLER", Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("images/char/bang/slabthekiller.jpg")));
+		cards.put("SUZY_LAFAYETTE", Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("images/char/bang/suzylafayette.jpg")));
+		cards.put("VULTURE_SAM", Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("images/char/bang/vulturesam.jpg")));
+		cards.put("WILLY_THE_KID", Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("images/char/bang/willythekid.jpg")));
+		cards.put("APACHE_KID", Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("images/char/dodge/apachekid.jpg")));
+		cards.put("BELLE_STAR", Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("images/char/dodge/bellestar.jpg")));
+		cards.put("BILL_NOFACE", Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("images/char/dodge/billnoface.jpg")));
+		cards.put("CHUCK_WENGAM", Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("images/char/dodge/chuckwengam.jpg")));
+		cards.put("DOC_HOLYDAY", Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("images/char/dodge/docholyday.jpg")));
+		cards.put("ELENA_FUENTE", Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("images/char/dodge/elenafuente.jpg")));
+		cards.put("GREG_DIGGER", Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("images/char/dodge/gregdigger.jpg")));
+		cards.put("HERB_HUNTER", Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("images/char/dodge/herbhunter.jpg")));
+		cards.put("JOSE_DELGADO", Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("images/char/dodge/josedelgado.jpg")));
+		cards.put("MOLLY_STARK", Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("images/char/dodge/mollystark.jpg")));
+		cards.put("PAT_BRENNAN", Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("images/char/dodge/patbrennan.jpg")));
+		cards.put("PIXIE_PETE", Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("images/char/dodge/pixiepete.jpg")));
+		cards.put("SEAN_MALLORY", Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("images/char/dodge/seanmallory.jpg")));
+		cards.put("TEQUILA_JOE", Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("images/char/dodge/tequilajoe.jpg")));
+		cards.put("VERA_CUSTER", Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("images/char/dodge/veracuster.jpg")));
 	}
 
 	public void paint(String card, Graphics2D graphics, int x, int y, Color c){
-                graphics.setColor(c);
+		Color temp = graphics.getColor();
+		graphics.setColor(c);
 		if(cards.containsKey(card)){
 			graphics.fillRoundRect(x, y, 60, 90, 8, 8);
 			graphics.drawImage(cards.get(card), x+2, y+3, null);
 		}else{
 			System.out.println("Card "+card+" not found");
 		}
+		graphics.setColor(temp);
 	}
-        public void paint(String card, Graphics2D graphics, int x, int y, Color inner, Color player){ //TODO: replace player with an int
-                if(cards.containsKey(card)){
-                        graphics.setColor(player);
-                        graphics.fillRoundRect(x, y, 60, 90, 7, 7);
-                        graphics.setColor(inner);
-                        graphics.fillRoundRect(x+1, y+1, 58, 88, 6, 6);
-                        graphics.drawImage(cards.get(card), x+2, y+3, null);
-                }else{
-                        System.out.println("Card "+card+" not found");
-                }
-        }
+	public void paint(String card, Graphics2D graphics, int x, int y, Color c, double theta){
+		Color temp = graphics.getColor();
+		AffineTransform old = graphics.getTransform();
+		rotate = AffineTransform.getRotateInstance(theta, x+30,y+45);
+		graphics.setTransform(rotate);
+		graphics.setColor(c);
+		if(cards.containsKey(card)){
+			graphics.fillRoundRect(x, y, 60, 90, 8, 8);
+			graphics.drawImage(cards.get(card), x+2, y+3, null);
+			System.out.println("Drew something rotated!");
+		}else{
+			System.out.println("Card "+card+" not found");
+		}
+		graphics.setColor(temp);
+		graphics.setTransform(old);
+	}
+	public void paint(String card, Graphics2D graphics, int x, int y,
+			Color inner, Color player) { // TODO: replace player with an int
+		Color temp = graphics.getColor();
+		if (cards.containsKey(card)) {
+			graphics.setColor(player);
+			graphics.fillRoundRect(x, y, 60, 90, 7, 7);
+			graphics.setColor(inner);
+			graphics.fillRoundRect(x + 1, y + 1, 58, 88, 6, 6);
+			graphics.drawImage(cards.get(card), x + 2, y + 3, null);
+		} else {
+			System.out.println("Card " + card + " not found");
+		}
+		graphics.setColor(temp);
+	}
 }
