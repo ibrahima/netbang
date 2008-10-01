@@ -103,7 +103,7 @@ public class Field implements MouseListener, MouseMotionListener{
 				}
 				Color outer=client.id==1?Color.RED:Color.BLUE;
 				cd.paint(crd.card.name, graphics, crd.rect.x, crd.rect.y, crd.rect.width, temp.rect.height, 
-							inner,outer,crd.at);
+							inner,outer);
 				if(crd.card.name.equals("BULLETBACK"))crd.rotate(1);
 			}else if(temp instanceof HandSpace){
 				HandSpace hs = (HandSpace)temp;
@@ -345,7 +345,7 @@ public class Field implements MouseListener, MouseMotionListener{
 			int realrotation=quadrant-oldrotation;
 			if(realrotation>0 && realrotation<4){
 				if(this instanceof CardSpace){
-					cd.rotateImage(((CardSpace)this).card.name, quadrant*90);
+					cd.rotateImage(((CardSpace)this).card.name, quadrant);
 				}
 				at = AffineTransform.getQuadrantRotateInstance(realrotation, rect.x+rect.width/2, rect.y+rect.height/2);
 				oldrotation=quadrant;

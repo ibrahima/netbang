@@ -5,7 +5,9 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.geom.AffineTransform;
+import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
+import java.awt.image.BufferedImageOp;
 import java.io.IOException;
 import java.util.LinkedHashMap;
 
@@ -121,35 +123,27 @@ public class CardDisplayer {
 		graphics.setTransform(old);
 	}
 
-	public void rotateImage(String card, int angle){
+	public void rotateImage(String card, int quadrant){
 		BufferedImage img = cards.get(card);
 		int w = img.getWidth();  
 		int h = img.getHeight();
 		BufferedImage dimg = new BufferedImage(h, w, ((BufferedImage) img).getType());  
 		Graphics2D graphics = (Graphics2D)dimg.getGraphics();
-		graphics.rotate(Math.toRadians(angle), w/2, h/2);
-		graphics.drawImage(img, null, 0, 0);
+		graphics.drawImage(img, new AffineTransformOp(AffineTransform.getQuadrantRotateInstance(quadrant, w/2, h/2), 
+				AffineTransformOp.TYPE_BICUBIC), 16,-15);
 		cards.put(card, dimg);
 		graphics.dispose();
 	}
 	public void paint(String card, Graphics2D graphics, int x, int y, int width, int height,
-			Color inner, Color player, AffineTransform at) { // TODO: replace player with an int
+			Color inner, Color player) { // TODO: replace player with an int
 		Color temp = graphics.getColor();
 		if (cards.containsKey(card)) {
-			AffineTransform old=null;
-			if(at!=null){
-				old = graphics.getTransform();
-				graphics.setTransform(at);
-			}
 			graphics.setColor(player);
 			graphics.fillRoundRect(x, y, width, height, 7, 7);
 			graphics.setColor(inner);
 			graphics.fillRoundRect(x + 1, y + 1, width-2, height-2, 6, 6);
 			graphics.drawImage(cards.get(card), x + 2, y + 3, null);
-			if(old!=null)
-				graphics.setTransform(old);
-
-		} else {
+		}else {
 			System.out.println("Card " + card + " not found");
 		}
 		graphics.setColor(temp);
