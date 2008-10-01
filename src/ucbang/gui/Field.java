@@ -170,9 +170,23 @@ public class Field implements MouseListener, MouseMotionListener{
 		}
 		clear();
 		for(int i=0;i<client.players.size();i++){
-			if(client.players.get(i).character>=0)
+			if(client.players.get(i).character>=0){
 				System.out.println(i+":"+Deck.Characters.values()[client.players.get(i).character]);
+				Card chara = new Card(Deck.Characters.values()[client.players.get(i).character]);
+				int x=(int) handPlacer.get(i).rect.x-60;
+				int y=(int) handPlacer.get(i).rect.y;
+				CardSpace csp = new CardSpace(chara,new Rectangle(x,y,60,90), i);
+				cards.put(chara, csp);
+			}else if(client.id==i){
+				System.out.println(i+":"+Deck.Characters.values()[client.player.character]);
+				Card chara = new Card(Deck.Characters.values()[client.player.character]);
+				int x=(int) handPlacer.get(i).rect.x-60;
+				int y=(int) handPlacer.get(i).rect.y;
+				CardSpace csp = new CardSpace(chara,new Rectangle(x,y,60,90), i);
+				cards.put(chara, csp);
+			}
 		}
+		
 	}
 	public void clear(){
 		Point pointOnCard = null;
@@ -330,6 +344,7 @@ public class Field implements MouseListener, MouseMotionListener{
 		public int playerid;
 		public AffineTransform at;
 		int oldrotation=0;
+		public boolean draggable=true;
 		public int compareTo(Clickable o) {
 			if(o.rect.getLocation().y!=rect.getLocation().y)
 				return ((Integer)rect.getLocation().y).compareTo(o.rect.getLocation().y);
