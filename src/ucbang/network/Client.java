@@ -233,7 +233,7 @@ new BufferedWriter(new OutputStreamWriter(server.getOutputStream()));
                                 c.players.add(new Player(c.players.size(), 
                                                          ppl[i]));
                             }
-                        }
+                        }//conflict here?
                     } else if (temp[0].equals("PlayerJoin")) {
                         c.players.add(new Player(c.players.size(), temp[1]));
                     } else if (temp[0].equals("PlayerLeave")) {
@@ -378,6 +378,7 @@ new BufferedWriter(new OutputStreamWriter(server.getOutputStream()));
                         } else if (temp1[0].equals("character")) {
                             if (Integer.valueOf(temp1[1]) == c.id){
                                 c.player.character = Integer.valueOf(temp1[2]);
+                                c.players.get(Integer.valueOf(temp1[1])).character=Integer.valueOf(temp1[2]);
                             }
                             else {
                                 c.gui.appendText("Player " + temp1[1] + " chose " + Deck.Characters.values()[Integer.valueOf(temp1[2])], Color.YELLOW);

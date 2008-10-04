@@ -161,7 +161,6 @@ public class Field implements MouseListener, MouseMotionListener{
 		return null;
 	}
 	public void start2(){
-
 		handPlacer = new ArrayList<HandSpace>(client.numPlayers);
 		double theta;
 		for(int player = 0; player<client.numPlayers; player++){
@@ -208,8 +207,9 @@ public class Field implements MouseListener, MouseMotionListener{
 
 		if (cl instanceof CardSpace) {
 			CardSpace cs = (CardSpace) cl;
-			if (cs != null && cs.card != null)
-				System.out.println("Clicked on " + cs.card.name);
+			if (cs != null && cs.card != null){
+				System.out.println("Clicked on " + cs.card.name + "whose index is " + pick.indexOf(cs.card));
+                        }
 			else
 				return;
 			if (e.getButton() == MouseEvent.BUTTON3) {

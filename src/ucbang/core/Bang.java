@@ -488,7 +488,10 @@ public class Bang {
     public void start2() {
         for (int n = 0; n < server.choice.get(server.choice.size() - 1).length; n++) {
             players[n].character = players[n].hand.get(server.choice.get(server.choice.size() - 1)[n][1]).ordinal;
+            System.out.println("WTWTFWTFWTWFWTWFWTWTWFWTWFAWTWTFwr:"+players[n].hand.get(server.choice.get(server.choice.size() - 1)[n][1]).ordinal);
             server.sendInfo("SetInfo:character:"+n+":"+ players[n].hand.get(server.choice.get(server.choice.size() - 1)[n][1]).ordinal);
+        }
+        for (int n = 0; n < server.choice.get(server.choice.size() - 1).length; n++) {
             changeMaxLifePoints(n, players[n].hand.get(server.choice.get(server.choice.size() - 1)[n][1]).special + (n == sheriff ? 1 : 0));
         }
 

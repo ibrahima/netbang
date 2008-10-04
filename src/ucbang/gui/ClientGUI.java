@@ -168,8 +168,7 @@ public class ClientGUI extends JFrame implements KeyListener {
 	 * @param al
 	 * @return
 	 */
-	public void promptChooseCard(ArrayList<Card> al, String str1, String str2,boolean force) {
-                System.out.println(client.id+" received prompt.");
+	public void promptChooseCard(ArrayList<Card> al, String str1, String str2, boolean force) {
                 client.field.pick = al;
                 client.prompting = true;
                 client.forceDecision = force;

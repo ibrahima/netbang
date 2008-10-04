@@ -402,6 +402,7 @@ class ServerThread extends Thread {
 							}
 							server.choice.get(server.choice.size() - 1)[n][1] = Integer
 									.valueOf(temp[1]);
+                                                        System.out.println("ASDFASDFASFASFASFSDF Player "+n+" returned "+temp[1]);
 							server.prompting = 2;
 						} else {
 							System.out.println("Received prompt from player when not prompted!");
