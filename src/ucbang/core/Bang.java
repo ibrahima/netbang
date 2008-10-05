@@ -303,7 +303,8 @@ public class Bang {
                     } 
                     else if(players[server.choice.get(0)[0][0]].hand.get(server.choice.get(0)[0][1]).type == 3 || players[server.choice.get(0)[0][0]].hand.get(server.choice.get(0)[0][1]).type == 5){
                         server.sendInfo("SetInfo:PutInField:"+server.choice.get(0)[0][0]+":"+
-                                    players[server.choice.get(0)[0][0]].hand.get(server.choice.get(0)[0][1]).name);
+                                    players[server.choice.get(0)[0][0]].hand.get(server.choice.get(0)[0][1]).name+":"+
+                                    server.choice.get(0)[0][1]);
                         players[server.choice.get(0)[0][0]].field.add(players[server.choice.get(0)[0][0]].hand.get(server.choice.get(0)[0][1]));
                         players[server.choice.get(0)[0][0]].hand.remove(server.choice.get(0)[0][1]);
                     } else { //self targetting

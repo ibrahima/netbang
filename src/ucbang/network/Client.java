@@ -360,7 +360,14 @@ new BufferedWriter(new OutputStreamWriter(server.getOutputStream()));
                                 c.players.get(Integer.valueOf(temp1[1])).lifePoints+=Integer.valueOf(temp1[2]);
                             //}
                         } else if (temp1[0].equals("PutInField")) {
-                            System.out.println("Player "+temp1[1]+" added "+temp1[2]+" to the field.");
+                                c.gui.appendText("Player "+temp1[1]+" added "+temp1[2]+" to the field.");
+                                if(Integer.valueOf(temp1[1])==c.id){
+                                    c.players.get(Integer.valueOf(temp1[1])).field.add(c.players.get(Integer.valueOf(temp1[1])).hand.get(Integer.valueOf(temp1[3])));
+                                    c.field.cards.remove(c.players.get(c.id).hand.get((int)Integer.valueOf(temp1[3])));
+                                    c.players.get(Integer.valueOf(temp1[1])).hand.remove(Integer.valueOf(temp1[3]));
+                                }
+                                else
+                                    c.players.get(Integer.valueOf(temp1[1])).field.add(new Card(CardName.valueOf(temp1[2])));
                         } else if (temp1[0].equals("turn")) {
                             c.turn = Integer.valueOf(temp1[1]);
                             if (c.turn % c.numPlayers == c.id) {
@@ -377,7 +384,6 @@ new BufferedWriter(new OutputStreamWriter(server.getOutputStream()));
                             //TODO: Need to remove this card.
                         } else if (temp1[0].equals("id")) {
                             c.id = Integer.valueOf(temp1[1]);
-
                         } else if (temp1[0].equals("character")) {
                             /*if (Integer.valueOf(temp1[1]) == c.id){
                                 c.player.character = Integer.valueOf(temp1[2]);
