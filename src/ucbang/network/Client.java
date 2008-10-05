@@ -303,8 +303,8 @@ new BufferedWriter(new OutputStreamWriter(server.getOutputStream()));
                         if (temp1[0].equals("newPlayer")) {
                             c.player = new Player(Integer.valueOf(temp1[1]), c.name); 
                             //TODO: c.players.set
-                            c.id = Integer.valueOf(temp1[1]);
                             c.numPlayers = Integer.valueOf(temp1[2]);
+                            c.id = Integer.valueOf(temp1[1]);
                         } else if (temp1[0].equals("role")) {
                             if (Integer.valueOf(temp1[1]) == c.id) {
                                 c.field.clear();
