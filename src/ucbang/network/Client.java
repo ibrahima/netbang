@@ -64,7 +64,7 @@ public class Client extends Thread {
 
         promptName();
         this.start();
-        players.set(id, new Player(id, "name"));
+        players.set(id, new Player(id, name));
     }
 
     public Client(String host, boolean guiEnabled, String name) {
@@ -90,7 +90,7 @@ public class Client extends Thread {
             }
         }
         this.start();
-        players.set(id, new Player(id, "name"));
+        players.set(id, new Player(id, name));
     }
 
     public static void main(String[] Args) {

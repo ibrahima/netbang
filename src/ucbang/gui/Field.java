@@ -206,7 +206,7 @@ public class Field implements MouseListener, MouseMotionListener{
 		if (cl instanceof CardSpace) {
 			CardSpace cs = (CardSpace) cl;
 			if (cs != null && cs.card != null){
-				System.out.println("Clicked on " + cs.card.name + "whose index is " + pick.indexOf(cs.card));
+				System.out.println("Clicked on " + cs.card.name + (pick!=null?"whose index is " + pick.indexOf(cs.card):"; not picking"));
                         }
 			else
 				return;
@@ -226,6 +226,7 @@ public class Field implements MouseListener, MouseMotionListener{
 					client.outMsgs.add("Prompt:"
 							+ pick.indexOf(cs.card));
 				}
+                                pick = null;
 				client.prompting = false;
 			} else { //TODO: debug stuff
 				if (client.prompting) {
