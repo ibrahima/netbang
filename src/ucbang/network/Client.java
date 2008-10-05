@@ -226,15 +226,24 @@ new BufferedWriter(new OutputStreamWriter(server.getOutputStream()));
                         c.gui.appendText(temp[1]);
                     } else if (temp[0].equals("Players")) {
                         String[] ppl = temp[1].split(",");
-                        for (int i = 0; i < ppl.length; i++) {
-                            if (ppl[i] != null && !ppl[i].isEmpty()) {
+                        int index = 0;
+                        for (int i = c.id+1; i < ppl.length; i++, index++) {
+                            if (ppl[index] != null && !ppl[index].isEmpty()) {
                                 if(i!=c.id)
                                     c.players.add(new Player(c.players.size(), 
-                                                         ppl[i]));
-                                else
-                                    c.players.add(c.player);
+                                                         ppl[index]));
                             }
-                        }//conflict here?
+                        }
+                        for (int i = 0; i <= c.id; i++, index++) {
+                            if (ppl[index] != null && !ppl[index].isEmpty()) {
+                                if(i!=c.id)
+                                    c.players.add(new Player(c.players.size(), 
+                                                         ppl[index]));
+                                else{
+                                    c.players.add(c.player);
+                                }
+                            }
+                        }
                     } else if (temp[0].equals("PlayerJoin")) {
                         c.players.add(new Player(c.players.size(), temp[1]));
                     } else if (temp[0].equals("PlayerLeave")) {
