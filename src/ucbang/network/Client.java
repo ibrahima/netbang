@@ -54,7 +54,7 @@ public class Client extends Thread {
         int x = 70;
         int y = 30;
         for (int i = 0; i < cards.length; i++) {
-            field.add(new Card(cards[i]), x, y, 0);
+            field.add(new Card(cards[i]), x, y, 0, false);
             x += 60;
             if (x > 750) {
                 y += 90;
@@ -82,7 +82,7 @@ public class Client extends Thread {
         int x = 70;
         int y = 30;
         for (int i = 0; i < cards.length; i++) {
-            field.add(new Card(cards[i]), x, y, 0);
+            field.add(new Card(cards[i]), x, y, 0, false);
             x += 60;
             if (x > 750) {
                 y += 90;
@@ -284,19 +284,19 @@ new BufferedWriter(new OutputStreamWriter(server.getOutputStream()));
                                     Card card = 
                                         new Card(Deck.Characters.valueOf(temp1[m]));
                                     c.players.get(c.id).hand.add(card);
-                                    c.field.add(card, 150+80*m, 200, c.id);
+                                    c.field.add(card, 150+80*m, 200, c.id, false);
                                 } else {
                                     Card card = 
                                         new Card(Deck.CardName.valueOf(temp1[m]));
                                     c.players.get(c.id).hand.add(card);
-                                    c.field.add(card, c.id);
+                                    c.field.add(card, c.id, false);
                                 }
                             }
                         } else {
                             c.gui.appendText("Player " + temp1[0] + " drew " + 
                                              temp1[1] + "cards.", Color.GREEN);
                             for(int i=0;i<Integer.valueOf(temp1[1]);i++){
-                            	c.field.add(new Card(Deck.CardName.BACK), Integer.valueOf(temp1[0]));
+                            	c.field.add(new Card(Deck.CardName.BACK), Integer.valueOf(temp1[0]), false);
                             	c.players.get(Integer.valueOf(temp1[0])).hand.add(new Card(Deck.CardName.BACK));
                             }
                         }
@@ -361,13 +361,19 @@ new BufferedWriter(new OutputStreamWriter(server.getOutputStream()));
                             //}
                         } else if (temp1[0].equals("PutInField")) {
                                 c.gui.appendText("Player "+temp1[1]+" added "+temp1[2]+" to the field.");
+                                Card card;
                                 if(Integer.valueOf(temp1[1])==c.id){
-                                    c.players.get(Integer.valueOf(temp1[1])).field.add(c.players.get(Integer.valueOf(temp1[1])).hand.get(Integer.valueOf(temp1[3])));
-                                    c.field.cards.remove(c.players.get(c.id).hand.get((int)Integer.valueOf(temp1[3])));
+                                    card = c.players.get(Integer.valueOf(temp1[1])).hand.get(Integer.valueOf(temp1[3]));
+                                    c.field.cards.remove(c.players.get(Integer.valueOf(temp1[1])).hand.get((int)Integer.valueOf(temp1[3])));
+                                    c.players.get(Integer.valueOf(temp1[1])).field.add(card);
                                     c.players.get(Integer.valueOf(temp1[1])).hand.remove(Integer.valueOf(temp1[3]));
                                 }
-                                else
-                                    c.players.get(Integer.valueOf(temp1[1])).field.add(new Card(CardName.valueOf(temp1[2])));
+                                else{
+                                    card = new Card(CardName.valueOf(temp1[2]));
+                                    c.field.cards.remove(c.players.get(Integer.valueOf(temp1[1])).hand.get((int)Integer.valueOf(temp1[3])));
+                                    c.players.get(Integer.valueOf(temp1[1])).field.add(card);
+                                }
+                                c.field.add(card, 200, 200, Integer.valueOf(temp1[1]), true);
                         } else if (temp1[0].equals("turn")) {
                             c.turn = Integer.valueOf(temp1[1]);
                             if (c.turn % c.numPlayers == c.id) {
@@ -392,7 +398,7 @@ new BufferedWriter(new OutputStreamWriter(server.getOutputStream()));
                             else {*/
                                 c.gui.appendText("Player " + temp1[1] + " chose " + Deck.Characters.values()[Integer.valueOf(temp1[2])], Color.YELLOW);
                                 c.players.get(Integer.valueOf(temp1[1])).character=Integer.valueOf(temp1[2]);
-                                c.field.add(new Card(Deck.Characters.values()[Integer.valueOf(temp1[2])]), Integer.valueOf(temp1[1]));
+                                c.field.add(new Card(Deck.Characters.values()[Integer.valueOf(temp1[2])]), Integer.valueOf(temp1[1]), false);
                             //}
                         } else {
                             System.out.println("WTF do i do with " + temp1[0] + ":" + temp1[1]);

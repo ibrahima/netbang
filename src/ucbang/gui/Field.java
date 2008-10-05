@@ -37,23 +37,22 @@ public class Field implements MouseListener, MouseMotionListener{
 		this.cd=cd;
 		client = c;
 	}
-	public void add(Card card, int x, int y, int player){
-		cards.put(card, new CardSpace(card, new Rectangle(x,y,60,90), player));
+	public void add(Card card, int x, int y, int player, boolean field){
+		cards.put(card, new CardSpace(card, new Rectangle(x,y,60,90), player, field));
 	}
 	public void removeLast(int player){
 		//System.out.println("Removed "+cards.remove(handPlacer.get(player).removeLast()));
 	}
-	public void add(Card card, int player){
+	public void add(Card card, int player, boolean field){
 		int xoffset = (player==client.id?30*(client.players.get(client.id).hand.size()-1):30*(client.players.get(player).hand.size()-1));
-
 		if(card.type==1){//this a character card
 			int x=350;
 			int y=200;
-			cards.put(card, new CardSpace(card, new Rectangle(x, y,60,90), player));
+			cards.put(card, new CardSpace(card, new Rectangle(x, y,60,90), player, false));
 		}else{
 			int x=(int) handPlacer.get(player).rect.x+handPlacer.get(player).rect.width+xoffset;
 			int y=(int) handPlacer.get(player).rect.y;
-			CardSpace cs = new CardSpace(card, new Rectangle(x, y,60,90), player);
+			CardSpace cs = new CardSpace(card, new Rectangle(x, y,60,90), player, field);
 			cards.put(card, cs);
 			handPlacer.get(player).addCard(cs);
 		}
@@ -174,18 +173,17 @@ public class Field implements MouseListener, MouseMotionListener{
 				Card chara = new Card(Deck.Characters.values()[client.players.get(i).character]);
 				int x=(int) handPlacer.get(i).rect.x-60;
 				int y=(int) handPlacer.get(i).rect.y;
-				CardSpace csp = new CardSpace(chara,new Rectangle(x,y,60,90), i);
+				CardSpace csp = new CardSpace(chara,new Rectangle(x,y,60,90), i, false);
 				cards.put(chara, csp);
 			}else if(client.id==i){
 				System.out.println(i+":"+Deck.Characters.values()[client.players.get(client.id).character]);
 				Card chara = new Card(Deck.Characters.values()[client.players.get(client.id).character]);
 				int x=(int) handPlacer.get(i).rect.x-60;
 				int y=(int) handPlacer.get(i).rect.y;
-				CardSpace csp = new CardSpace(chara,new Rectangle(x,y,60,90), i);
+				CardSpace csp = new CardSpace(chara,new Rectangle(x,y,60,90), i, false);
 				cards.put(chara, csp);
 			}
 		}
-		
 	}
 	public void clear(){
 		Point pointOnCard = null;
@@ -217,6 +215,7 @@ public class Field implements MouseListener, MouseMotionListener{
 				description = cs.card.description;
 				describeWhere = ep;
 			} else if (client.prompting && pick.contains(cs.card)) {
+                            System.out.println("000000000000000000000000000000 "+pick.size()+" "+client.players.get(client.id).hand.size());
 				System.out.println("sending prompt...");
 				if (cs.card.type == 1) {
 					client.outMsgs.add("Prompt:"
@@ -308,13 +307,14 @@ public class Field implements MouseListener, MouseMotionListener{
 	 */
 	private class CardSpace extends Clickable{
 		public Card card;
+                public boolean field;
 
-		public CardSpace(Card c, Rectangle r, int player){
+		public CardSpace(Card c, Rectangle r, int player, boolean f){
 			card = c;
 			rect = r;
 			playerid = player;
+                        field = f;
 		}
-
 	}
 	private class HandSpace extends Clickable{
 		ArrayList<CardSpace> cards = new ArrayList<CardSpace>();
