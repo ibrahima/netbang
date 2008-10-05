@@ -251,9 +251,12 @@ public class ClientGUI extends JFrame implements KeyListener {
                         appendText(String.valueOf(client.numPlayers));
                     }
                     if((char)e.getKeyChar()=='s'){
-                        appendText(String.valueOf(client.id));
+                        appendText(String.valueOf(client.players.size()));
                     }
                     if((char)e.getKeyChar()=='d'){
+                        appendText(String.valueOf(client.id));
+                    }
+                    if((char)e.getKeyChar()=='f'){
                         appendText(String.valueOf(client.player.id));
                     }
                 }

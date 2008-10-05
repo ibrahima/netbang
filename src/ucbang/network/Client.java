@@ -228,8 +228,11 @@ new BufferedWriter(new OutputStreamWriter(server.getOutputStream()));
                         String[] ppl = temp[1].split(",");
                         for (int i = 0; i < ppl.length; i++) {
                             if (ppl[i] != null && !ppl[i].isEmpty()) {
-                                c.players.add(new Player(c.players.size(), 
+                                if(i!=c.id)
+                                    c.players.add(new Player(c.players.size(), 
                                                          ppl[i]));
+                                else
+                                    c.players.add(c.player);
                             }
                         }//conflict here?
                     } else if (temp[0].equals("PlayerJoin")) {
