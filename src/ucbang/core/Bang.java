@@ -301,8 +301,11 @@ public class Bang {
                             }
                         }
                     } 
-                    else if(players[server.choice.get(0)[0][0]].hand.get(server.choice.get(0)[0][1]).type == 3){
-                        playerDiscardCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]); //replace server.choice.get(0)[0][0] with turn%numPlayers?
+                    else if(players[server.choice.get(0)[0][0]].hand.get(server.choice.get(0)[0][1]).type == 3 || players[server.choice.get(0)[0][0]].hand.get(server.choice.get(0)[0][1]).type == 5){
+                        server.sendInfo("SetInfo:PutInField:"+server.choice.get(0)[0][0]+":"+
+                                    players[server.choice.get(0)[0][0]].hand.get(server.choice.get(0)[0][1]).name);
+                        players[server.choice.get(0)[0][0]].field.add(players[server.choice.get(0)[0][0]].hand.get(server.choice.get(0)[0][1]));
+                        players[server.choice.get(0)[0][0]].hand.remove(server.choice.get(0)[0][1]);
                     } else { //self targetting
                         if (isCardLegal(players[server.choice.get(0)[0][0]].hand.get(server.choice.get(0)[0][1]), 
                                         players[server.choice.get(0)[0][0]], 
@@ -488,7 +491,6 @@ public class Bang {
     public void start2() {
         for (int n = 0; n < server.choice.get(server.choice.size() - 1).length; n++) {
             players[n].character = players[n].hand.get(server.choice.get(server.choice.size() - 1)[n][1]).ordinal;
-            System.out.println("WTWTFWTFWTWFWTWFWTWTWFWTWFAWTWTFwr:"+players[n].hand.get(server.choice.get(server.choice.size() - 1)[n][1]).ordinal);
             server.sendInfo("SetInfo:character:"+n+":"+ players[n].hand.get(server.choice.get(server.choice.size() - 1)[n][1]).ordinal);
         }
         for (int n = 0; n < server.choice.get(server.choice.size() - 1).length; n++) {

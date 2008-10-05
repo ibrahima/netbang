@@ -34,6 +34,8 @@ public class ClientGUI extends JFrame implements KeyListener {
 	int textIndex = -1; // the bottom line of the text
 	Client client;
 	public ClientGUI(int p, Client client) {
+                this.client = client;
+                //while(client.players.size()==0){}
 		this.p = p;
 		chat = new StringBuilder();
 		// set window sizes
@@ -46,7 +48,6 @@ public class ClientGUI extends JFrame implements KeyListener {
 		this.requestFocus(true);
 		this.createBufferStrategy(2);
 		strategy = this.getBufferStrategy();
-		this.client = client;
 		this.setTitle("UCBang");
 		addWindowListener(new WindowAdapter() {
 			public void windowActivated(WindowEvent e) {
@@ -98,10 +99,12 @@ public class ClientGUI extends JFrame implements KeyListener {
 		Iterator<Player> iter = client.players.iterator();
 		int n = 0;
 		while (iter.hasNext()) {
-			graphics.drawString(iter.next().name, 30, 60 + 15 * n++);
+                    Player temp = iter.next();
+                    if(temp!=null)
+                        graphics.drawString(temp.name, 30, 60 + 15 * n++);
 		}
-		if(client.player!=null){
-			graphics.drawString(client.player.lifePoints+"HP", 300, 40);
+		if(client.players.get(client.id)!=null){
+			graphics.drawString(client.players.get(client.id).lifePoints+"HP", 300, 40);
 		}
 		graphics.dispose();
 		// paint backbuffer to window

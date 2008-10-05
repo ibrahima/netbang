@@ -44,7 +44,7 @@ public class Field implements MouseListener, MouseMotionListener{
 		//System.out.println("Removed "+cards.remove(handPlacer.get(player).removeLast()));
 	}
 	public void add(Card card, int player){
-		int xoffset = (player==client.id?30*(client.player.hand.size()-1):30*(client.players.get(player).hand.size()-1));
+		int xoffset = (player==client.id?30*(client.players.get(client.id).hand.size()-1):30*(client.players.get(player).hand.size()-1));
 
 		if(card.type==1){//this a character card
 			int x=350;
@@ -177,8 +177,8 @@ public class Field implements MouseListener, MouseMotionListener{
 				CardSpace csp = new CardSpace(chara,new Rectangle(x,y,60,90), i);
 				cards.put(chara, csp);
 			}else if(client.id==i){
-				System.out.println(i+":"+Deck.Characters.values()[client.player.character]);
-				Card chara = new Card(Deck.Characters.values()[client.player.character]);
+				System.out.println(i+":"+Deck.Characters.values()[client.players.get(client.id).character]);
+				Card chara = new Card(Deck.Characters.values()[client.players.get(client.id).character]);
 				int x=(int) handPlacer.get(i).rect.x-60;
 				int y=(int) handPlacer.get(i).rect.y;
 				CardSpace csp = new CardSpace(chara,new Rectangle(x,y,60,90), i);
@@ -221,7 +221,7 @@ public class Field implements MouseListener, MouseMotionListener{
 				if (cs.card.type == 1) {
 					client.outMsgs.add("Prompt:"
 							+ pick.indexOf(cs.card));
-					client.player.hand.clear(); //you just picked a character card
+					client.players.get(client.id).hand.clear(); //you just picked a character card
 					clear();
 				} else {
 					client.outMsgs.add("Prompt:"
@@ -231,11 +231,11 @@ public class Field implements MouseListener, MouseMotionListener{
 			} else { //TODO: debug stuff
 				if (client.prompting) {
 					System.out.println("i was prompting");
-					if (!client.player.hand.contains(cs.card)) {
+					if (!client.players.get(client.id).hand.contains(cs.card)) {
 						System.out
 						.println("but the arraylist didn't contain the card i was looking for!");
 						System.out.println(cs.card + " "
-								+ client.player.hand);
+								+ client.players.get(client.id).hand);
 					}
 				}
 			}
