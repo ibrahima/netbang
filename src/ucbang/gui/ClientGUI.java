@@ -6,6 +6,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowAdapter;
@@ -21,7 +22,7 @@ import ucbang.core.Card;
 import ucbang.core.Player;
 import ucbang.network.Client;
 
-public class ClientGUI extends JFrame implements KeyListener {
+public class ClientGUI extends JFrame implements KeyListener, ComponentListener{
 	/**
 	 * 
 	 */
@@ -33,9 +34,9 @@ public class ClientGUI extends JFrame implements KeyListener {
 	public int width = 800;
 	public int height = 600;
 	ArrayList<String> text = new ArrayList<String>();
-        ArrayList<Color> textColor = new ArrayList<Color>();
+	ArrayList<Color> textColor = new ArrayList<Color>();
 	int textIndex = -1; // the bottom line of the text
-	Client client;
+	public Client client;
 	public ClientGUI(int p, Client client) {
                 this.client = client;
 		this.p = p;
@@ -59,12 +60,7 @@ public class ClientGUI extends JFrame implements KeyListener {
 				((ClientGUI)(e.getWindow())).client.running=false;
 			}
 		});
-		this.addComponentListener(new ComponentAdapter(){
-			public void componentResized(ComponentEvent e){
-				height=e.getComponent().getHeight();
-				width=e.getComponent().getWidth();
-			}
-		});
+		this.addComponentListener(this);
 	}
         
 
@@ -275,5 +271,29 @@ public class ClientGUI extends JFrame implements KeyListener {
                     }
                 }
 		paint(getGraphics());
+	}
+
+
+	public void componentHidden(ComponentEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	public void componentMoved(ComponentEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void componentResized(ComponentEvent e){
+		height=e.getComponent().getHeight();
+		width=e.getComponent().getWidth();
+		if(client.field!=null)client.field.resize(width, height);
+	}
+
+
+	public void componentShown(ComponentEvent e) {
+		// TODO Auto-generated method stub
+		
 	}
 }

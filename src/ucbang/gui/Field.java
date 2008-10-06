@@ -406,4 +406,8 @@ public class Field implements MouseListener, MouseMotionListener{
 	public void mouseEntered(MouseEvent e) {}
 	public void mouseExited(MouseEvent e) {}
 	public void mouseMoved(MouseEvent e) {}
+	public void resize(int width, int height) {
+		// TODO Auto-generated method stub
+		
+	}
 }
