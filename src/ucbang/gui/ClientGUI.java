@@ -4,6 +4,8 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowAdapter;
@@ -28,7 +30,8 @@ public class ClientGUI extends JFrame implements KeyListener {
 	int p;
 	StringBuilder chat;
 	boolean chatting = false;
-
+	public int width = 800;
+	public int height = 600;
 	ArrayList<String> text = new ArrayList<String>();
         ArrayList<Color> textColor = new ArrayList<Color>();
 	int textIndex = -1; // the bottom line of the text
@@ -38,8 +41,8 @@ public class ClientGUI extends JFrame implements KeyListener {
 		this.p = p;
 		chat = new StringBuilder();
 		// set window sizes
-		setPreferredSize(new Dimension(800, 600));
-		setSize(new Dimension(800, 600));
+		setPreferredSize(new Dimension(width, height));
+		setSize(new Dimension(width, height));
 		//setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		addKeyListener(this);
 		this.setIgnoreRepaint(true);
@@ -56,6 +59,12 @@ public class ClientGUI extends JFrame implements KeyListener {
 				((ClientGUI)(e.getWindow())).client.running=false;
 			}
 		});
+		this.addComponentListener(new ComponentAdapter(){
+			public void componentResized(ComponentEvent e){
+				height=e.getComponent().getHeight();
+				width=e.getComponent().getWidth();
+			}
+		});
 	}
         
 
@@ -68,11 +77,11 @@ public class ClientGUI extends JFrame implements KeyListener {
 		}
 		// fill background w/ dark green
 		//graphics.setColor(Color.GREEN);
-		//graphics.fillRect(0, 0, 800, 400);
+		//graphics.fillRect(0, 0, width, 400);
 		//graphics.setColor(new Color(100, 0, 0));
-		//graphics.fillRect(0, 400, 800, 600);
+		//graphics.fillRect(0, 400, width, height);
 		 graphics.setColor(new Color(175, 150, 50));
-		 graphics.fillRect(0, 0, 800, 600);
+		 graphics.fillRect(0, 0, width, height);
                 
                 //the ugly proxy skip turn button: this is coded for in Field.java
                 graphics.setColor(new Color(255, 255, 255));
