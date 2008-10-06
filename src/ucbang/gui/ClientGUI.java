@@ -35,7 +35,6 @@ public class ClientGUI extends JFrame implements KeyListener {
 	Client client;
 	public ClientGUI(int p, Client client) {
                 this.client = client;
-                //while(client.players.size()==0){}
 		this.p = p;
 		chat = new StringBuilder();
 		// set window sizes
@@ -260,7 +259,10 @@ public class ClientGUI extends JFrame implements KeyListener {
                         appendText(String.valueOf(client.player.id));
                     }
                     if((char)e.getKeyChar()=='g'){
-                        appendText(client.players.get(0)+" "+client.players.get(1)+" "+client.player);
+                        appendText(client.players.get(client.id)+" "+client.player+" "+client.id);
+                    }
+                    if((char)e.getKeyChar()=='h'){
+                        appendText(client.players.get(client.id).hand.size()+""+client.player.hand.size());
                     }
                 }
 		paint(getGraphics());

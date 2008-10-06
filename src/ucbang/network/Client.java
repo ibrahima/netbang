@@ -226,22 +226,9 @@ new BufferedWriter(new OutputStreamWriter(server.getOutputStream()));
                         c.gui.appendText(temp[1]);
                     } else if (temp[0].equals("Players")) {
                         String[] ppl = temp[1].split(",");
-                        int index = 0;
-                        for (int i = c.id+1; i < ppl.length; i++, index++) {
-                            if (ppl[index] != null && !ppl[index].isEmpty()) {
-                                if(i!=c.id)
-                                    c.players.add(new Player(c.players.size(), 
-                                                         ppl[index]));
-                            }
-                        }
-                        for (int i = 0; i <= c.id; i++, index++) {
-                            if (ppl[index] != null && !ppl[index].isEmpty()) {
-                                if(i!=c.id)
-                                    c.players.add(new Player(c.players.size(), 
-                                                         ppl[index]));
-                                else{
-                                    c.players.add(c.player);
-                                }
+                        for (int i = 0; i < ppl.length; i++) {
+                            if (ppl[i] != null && !ppl[i].isEmpty()) {
+                                c.players.add(new Player(i, ppl[i]));
                             }
                         }
                     } else if (temp[0].equals("PlayerJoin")) {
@@ -317,6 +304,7 @@ new BufferedWriter(new OutputStreamWriter(server.getOutputStream()));
                             //TODO: c.players.set
                             c.numPlayers = Integer.valueOf(temp1[2]);
                             c.id = Integer.valueOf(temp1[1]);
+                            c.players.set(c.id, c.player);
                         } else if (temp1[0].equals("role")) {
                             if (Integer.valueOf(temp1[1]) == c.id) {
                                 c.field.clear();
@@ -363,7 +351,9 @@ new BufferedWriter(new OutputStreamWriter(server.getOutputStream()));
                                 c.gui.appendText("Player "+temp1[1]+" added "+temp1[2]+" to the field.");
                                 Card card;
                                 if(Integer.valueOf(temp1[1])==c.id){
-                                    card = c.players.get(Integer.valueOf(temp1[1])).hand.get(Integer.valueOf(temp1[3]));
+                                    c.gui.appendText("ASDFASFASFas");
+                                    //card = c.players.get(Integer.valueOf(temp1[1])).hand.get(Integer.valueOf(temp1[3])); WHY DOESN'T THIS WORK?
+                                    card = c.player.hand.get(Integer.valueOf(temp1[3]));
                                     c.field.cards.remove(c.players.get(Integer.valueOf(temp1[1])).hand.get((int)Integer.valueOf(temp1[3])));
                                     c.players.get(Integer.valueOf(temp1[1])).field.add(card);
                                     c.players.get(Integer.valueOf(temp1[1])).hand.remove(Integer.valueOf(temp1[3]));
@@ -389,6 +379,7 @@ new BufferedWriter(new OutputStreamWriter(server.getOutputStream()));
                             c.field.removeLast(Integer.valueOf(temp1[1]));
                             //TODO: Need to remove this card.
                         } else if (temp1[0].equals("id")) {
+                            System.out.println("ASDFASDFASDFASFASFASDFASDFAS"); //just realized this one is never called....
                             c.id = Integer.valueOf(temp1[1]);
                         } else if (temp1[0].equals("character")) {
                             if (Integer.valueOf(temp1[1]) == c.id){
