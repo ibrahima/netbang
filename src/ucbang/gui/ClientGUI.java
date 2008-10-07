@@ -288,8 +288,14 @@ public class ClientGUI extends JFrame implements KeyListener, ComponentListener{
 	public void componentResized(ComponentEvent e){
 		int oldw = width;
 		int oldh = height;
+		
 		height = e.getComponent().getHeight();
 		width = e.getComponent().getWidth();
+		if(height<600)
+			height=600;
+		if(width<800)
+			width=800;
+		e.getComponent().setSize(width, height);
 		if(client.field!=null)client.field.resize(oldw, oldh, width, height);
 	}
 
