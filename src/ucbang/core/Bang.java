@@ -307,6 +307,8 @@ public class Bang {
                                     server.choice.get(0)[0][1]);
                         players[server.choice.get(0)[0][0]].field.add(players[server.choice.get(0)[0][0]].hand.get(server.choice.get(0)[0][1]));
                         players[server.choice.get(0)[0][0]].hand.remove(server.choice.get(0)[0][1]);
+                        //server.choice.remove(server.choice.size() - 1);
+                        //server.prompt(turn % numPlayers, "PlayCardUnforced", true);
                     } else { //self targetting
                         if (isCardLegal(players[server.choice.get(0)[0][0]].hand.get(server.choice.get(0)[0][1]), 
                                         players[server.choice.get(0)[0][0]], 

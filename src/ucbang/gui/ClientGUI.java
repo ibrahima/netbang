@@ -269,6 +269,13 @@ public class ClientGUI extends JFrame implements KeyListener, ComponentListener{
                     if((char)e.getKeyChar()=='h'){
                         appendText(client.players.get(client.id).hand.size()+""+client.player.hand.size());
                     }
+                    if((char)e.getKeyChar()=='j'){
+                        String s = "";
+                        for(Card c:client.player.hand){
+                            s+=c.name+" ";
+                        }
+                        appendText(s);
+                    }
                 }
 		paint(getGraphics());
 	}

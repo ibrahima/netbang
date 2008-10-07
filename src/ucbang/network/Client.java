@@ -351,10 +351,9 @@ new BufferedWriter(new OutputStreamWriter(server.getOutputStream()));
                                 c.gui.appendText("Player "+temp1[1]+" added "+temp1[2]+" to the field.");
                                 Card card;
                                 if(Integer.valueOf(temp1[1])==c.id){
-                                    c.gui.appendText("ASDFASFASFas");
-                                    //card = c.players.get(Integer.valueOf(temp1[1])).hand.get(Integer.valueOf(temp1[3])); WHY DOESN'T THIS WORK?
                                     card = c.player.hand.get(Integer.valueOf(temp1[3]));
-                                    c.field.cards.remove(c.players.get(Integer.valueOf(temp1[1])).hand.get((int)Integer.valueOf(temp1[3])));
+                                    c.field.cards.remove(card);
+                                    c.player.hand.remove(card);
                                     c.players.get(Integer.valueOf(temp1[1])).field.add(card);
                                     c.players.get(Integer.valueOf(temp1[1])).hand.remove(Integer.valueOf(temp1[3]));
                                 }
