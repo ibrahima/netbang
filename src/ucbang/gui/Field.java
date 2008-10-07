@@ -28,7 +28,6 @@ public class Field implements MouseListener, MouseMotionListener{
 	Clickable movingCard;
 	Card clicked;
 	ArrayList<Card> pick;
-
 	ArrayList<HandSpace> handPlacer = new ArrayList<HandSpace>(); //to avoid npe
 	ArrayList<CardSpace> characters = new ArrayList<CardSpace>();
 	String description;
@@ -406,8 +405,13 @@ public class Field implements MouseListener, MouseMotionListener{
 	public void mouseEntered(MouseEvent e) {}
 	public void mouseExited(MouseEvent e) {}
 	public void mouseMoved(MouseEvent e) {}
-	public void resize(int width, int height) {
-		// TODO Auto-generated method stub
+	public void resize(int width, int height, int width2, int height2) {
+		ArrayList<Clickable> stuff = cards.values();
+		Iterator<Clickable> iter = stuff.iterator();
+		while(iter.hasNext()){
+			Clickable temp = iter.next();
+			temp.move(temp.rect.x*width2/width, temp.rect.y*height2/height);
+		}
 		
 	}
 }
