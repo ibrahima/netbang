@@ -213,31 +213,30 @@ public class Field implements MouseListener, MouseMotionListener{
 				System.out.println(cs.card.description);
 				description = cs.card.description;
 				describeWhere = ep;
-			} else if (client.prompting && pick.contains(cs.card)) {
-                            System.out.println("000000000000000000000000000000 "+pick.size()+" "+client.player.hand.size());
-				System.out.println("sending prompt...");
-				if (cs.card.type == 1) {
-					client.outMsgs.add("Prompt:"
-							+ pick.indexOf(cs.card));
-					client.player.hand.clear(); //you just picked a character card
-					clear();
-				} else {
-					client.outMsgs.add("Prompt:"
-							+ pick.indexOf(cs.card));
-				}
+			} if (client.prompting){
+                            if(pick.contains(cs.card)) {
+                                System.out.println("000000000000000000000000000000 "+pick.size()+" "+client.player.hand.size());
+                                System.out.println("sending prompt...");
+                                if (cs.card.type == 1) {
+                                        client.outMsgs.add("Prompt:"
+                                                        + pick.indexOf(cs.card));
+                                        client.player.hand.clear(); //you just picked a character card
+                                        clear();
+                                } else {
+                                        client.outMsgs.add("Prompt:" + pick.indexOf(cs.card));
+                                }
                                 pick = null;
-				client.prompting = false;
-			} else { //TODO: debug stuff
-				if (client.prompting) {
-					System.out.println("i was prompting");
-					if (!client.player.hand.contains(cs.card)) {
-						System.out
-						.println("but the arraylist didn't contain the card i was looking for!");
-						System.out.println(cs.card + " "
-								+ client.player.hand);
-					}
-				}
-			}
+                                client.prompting = false;
+                            } else if(client.forceDecision==false){
+                                client.gui.appendText("INDEX IN FIELD OF CARD IS"+client.player.field.indexOf(cs.card));
+                                client.outMsgs.add("Prompt:" + -(client.player.field.indexOf(cs.card)+3));
+                                pick = null;
+                                client.prompting = false;
+                            }
+                            else{
+                                    System.out.println("i was prompting, but a bad card was given");
+                            }
+                        }
 		}
 	}
 

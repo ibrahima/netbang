@@ -29,7 +29,7 @@ public class Client extends Thread {
     String host = "127.0.0.1";
     boolean connected = false;
     public LinkedList<String> outMsgs = new LinkedList<String>();
-    ClientGUI gui;
+    public ClientGUI gui;
     public ArrayList<Player> players = new ArrayList<Player>();
     public Player player;
     public Field field;

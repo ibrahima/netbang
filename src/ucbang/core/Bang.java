@@ -358,9 +358,8 @@ public class Bang {
         //the rules
         if (server.choice.size() == 
             1) { //cards that can be played at the start of a turn
-            if (c.type == 3 && 
-                c.location == 1) { //replace false with some indicator of whether the card is on field
-
+            if (c.type == 3 && players[server.choice.get(0)[0][0]].field.contains(c)) { //replace false with some indicator of whether the card is on field
+                    System.out.println("CLICKED ON A GREEN CARD ON FIELD, not implemented yet");
             }
             if (c.type == 2) {
                 if (c.effect == Card.play.HEAL.ordinal()) {

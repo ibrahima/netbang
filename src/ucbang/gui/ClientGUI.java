@@ -178,39 +178,6 @@ public class ClientGUI extends JFrame implements KeyListener, ComponentListener{
                 client.field.pick = al;
                 client.prompting = true;
                 client.forceDecision = force;
-                //TODO: remove this junk
-                /*Card[] temp = new Card[al.size()];
-		temp = al.toArray(temp);
-		String[] options = new String[temp.length];
-		for (int i = 0; i < temp.length; i++) {
-			options[i] = ((Card) temp[i]).name;
-		}
-		
-                int n = -1;
-                if(al.get(0).type==1){
-                    if (forceDecision) {
-                            while (n == -1)
-                                    n = JOptionPane
-                                                    .showOptionDialog(this, str1, str2,
-                                                                    JOptionPane.YES_NO_OPTION,
-                                                                    JOptionPane.QUESTION_MESSAGE, null, options,
-                                                                    options[0]);
-                            return n;
-                    } else
-                            return JOptionPane.showOptionDialog(this, str1, str2,
-                                            JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE,
-                                            null, options, options[0]);
-                }
-                else{
-                    if(forceDecision){
-                        while(client.field.clicked==null){}
-                        return al.indexOf(client.field.clicked);
-                    }
-                    else{ //TODO: add a way of skipping turns
-                        while(client.field.clicked==null){}
-                        return al.indexOf(client.field.clicked);
-                    }
-                }*/
 	}
 
 	public void keyPressed(KeyEvent e) {
