@@ -360,6 +360,7 @@ new BufferedWriter(new OutputStreamWriter(server.getOutputStream()));
                                 else{
                                     card = new Card(CardName.valueOf(temp1[2]));
                                     c.field.cards.remove(c.players.get(Integer.valueOf(temp1[1])).hand.get((int)Integer.valueOf(temp1[3])));
+                                    c.field.removeLast(Integer.valueOf(temp1[1]));
                                     c.players.get(Integer.valueOf(temp1[1])).field.add(card);
                                 }
                                 c.field.add(card, Integer.valueOf(temp1[1]), true);
