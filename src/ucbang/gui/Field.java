@@ -40,7 +40,7 @@ public class Field implements MouseListener, MouseMotionListener{
 		cards.put(card, new CardSpace(card, new Rectangle(x,y,60,90), player, field));
 	}
 	public void removeLast(int player){
-		//System.out.println("Removed "+cards.remove(handPlacer.get(player).removeLast()));
+                cards.remove(handPlacer.get(player).removeLast().card);
 	}
 	public void add(Card card, int player, boolean field){
 		int xoffset = (player==client.id?30*(client.player.hand.size()-1):30*(client.players.get(player).hand.size()-1));
