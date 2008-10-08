@@ -50,10 +50,11 @@ public class Field implements MouseListener, MouseMotionListener{
 			cards.put(card, new CardSpace(card, new Rectangle(x, y,60,90), player, false));
 		}else{
 			int x=(int) handPlacer.get(player).rect.x+handPlacer.get(player).rect.width+xoffset;
-			int y=(int) handPlacer.get(player).rect.y;
+			int y=(int) handPlacer.get(player).rect.y+(field?(player==client.id?-100:100):0); //more trinarytrinary fun!
 			CardSpace cs = new CardSpace(card, new Rectangle(x, y,60,90), player, field);
 			cards.put(card, cs);
-			handPlacer.get(player).addCard(cs);
+                        if(field == false)
+                            handPlacer.get(player).addCard(cs);
 		}
 	}
 	int textHeight(String message, Graphics2D graphics){

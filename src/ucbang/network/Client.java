@@ -362,7 +362,7 @@ new BufferedWriter(new OutputStreamWriter(server.getOutputStream()));
                                     c.field.cards.remove(c.players.get(Integer.valueOf(temp1[1])).hand.get((int)Integer.valueOf(temp1[3])));
                                     c.players.get(Integer.valueOf(temp1[1])).field.add(card);
                                 }
-                                c.field.add(card, 200, 200, Integer.valueOf(temp1[1]), true);
+                                c.field.add(card, Integer.valueOf(temp1[1]), true);
                         } else if (temp1[0].equals("turn")) {
                             c.turn = Integer.valueOf(temp1[1]);
                             if (c.turn % c.numPlayers == c.id) {
