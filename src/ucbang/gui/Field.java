@@ -255,33 +255,35 @@ public class Field implements MouseListener, MouseMotionListener{
 			CardSpace cs = (CardSpace) cl;
 			if (cs != null && cs.card != null){
 				System.out.println("Clicked on " + cs.card.name + (pick!=null?"whose index is " + pick.indexOf(cs.card):"; not picking"));
-                        }
+			}
 			else
 				return;
-			if (client.prompting){
-                            if(pick.contains(cs.card)) {
-                                System.out.println("000000000000000000000000000000 "+pick.size()+" "+client.player.hand.size());
-                                System.out.println("sending prompt...");
-                                if (cs.card.type == 1) {
-                                        client.outMsgs.add("Prompt:"
-                                                        + pick.indexOf(cs.card));
-                                        client.player.hand.clear(); //you just picked a character card
-                                        clear();
-                                } else {
-                                        client.outMsgs.add("Prompt:" + pick.indexOf(cs.card));
-                                }
-                                pick = null;
-                                client.prompting = false;
-                            } else if(client.forceDecision==false){
-                                client.gui.appendText("INDEX IN FIELD OF CARD IS"+client.player.field.indexOf(cs.card));
-                                client.outMsgs.add("Prompt:" + -(client.player.field.indexOf(cs.card)+3));
-                                pick = null;
-                                client.prompting = false;
-                            }
-                            else{
-                                    System.out.println("i was prompting, but a bad card was given");
-                            }
-                        }
+			if (e.getButton() == MouseEvent.BUTTON3) {
+				//Put right click stuff here, or not
+			}else if (client.prompting){
+				if(pick.contains(cs.card)) {
+					System.out.println("000000000000000000000000000000 "+pick.size()+" "+client.player.hand.size());
+					System.out.println("sending prompt...");
+					if (cs.card.type == 1) {
+						client.outMsgs.add("Prompt:"
+								+ pick.indexOf(cs.card));
+						client.player.hand.clear(); //you just picked a character card
+						clear();
+					} else {
+						client.outMsgs.add("Prompt:" + pick.indexOf(cs.card));
+					}
+					pick = null;
+					client.prompting = false;
+				} else if(client.forceDecision==false){
+					client.gui.appendText("INDEX IN FIELD OF CARD IS"+client.player.field.indexOf(cs.card));
+					client.outMsgs.add("Prompt:" + -(client.player.field.indexOf(cs.card)+3));
+					pick = null;
+					client.prompting = false;
+				}
+				else{
+					System.out.println("i was prompting, but a bad card was given");
+				}
+			}
 		}
 	}
 
