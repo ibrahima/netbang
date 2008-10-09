@@ -168,7 +168,7 @@ public class Field implements MouseListener, MouseMotionListener{
 		int end;
 
 		ArrayList<Clickable> al = clickies.values(); //search the values arrayList for...
-
+		if(al.isEmpty())return null;
 		int a = 0, b = al.size(), index = al.size() / 2;
 
 		while (a != b) {
