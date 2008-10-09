@@ -62,12 +62,7 @@ public class Bang {
                             } else if (isCardLegal(players[server.choice.get(0)[0][0]].hand.get(server.choice.get(0)[0][1]), 
                                                    players[server.choice.get(0)[0][0]], 
                                                    players[server.choice.get(1)[0][1]])) {
-                                server.sendInfo("SetInfo:CardPlayed:" + 
-                                                server.choice.get(0)[0][0] + 
-                                                ":" + 
-                                                players[server.choice.get(0)[0][0]].hand.get(server.choice.get(0)[0][1]).name + 
-                                                ":" + 
-                                                server.choice.get(1)[0][1]);
+                                server.sendInfo("SetInfo:CardPlayed:" + server.choice.get(0)[0][0] + ":" + players[server.choice.get(0)[0][0]].hand.get(server.choice.get(0)[0][1]).name + ":" + server.choice.get(1)[0][1]);
                                 System.out.println("Player " + 
                                                    server.choice.get(1)[0][0] + 
                                                    " is targetting " + 
@@ -165,10 +160,7 @@ public class Bang {
                                            Card.play.MISS.ordinal() && 
                                            players[server.choice.get(1)[0][1]].hand.get(server.choice.get(2)[0][1]).type == 
                                            4) {
-                                    server.sendInfo("SetInfo:CardPlayed:" + 
-                                                    server.choice.get(1)[0][1] + 
-                                                    ":" + 
-                                                    players[server.choice.get(1)[0][1]].hand.get(server.choice.get(2)[0][1]).name);
+                                    server.sendInfo("SetInfo:CardPlayed:" + server.choice.get(1)[0][1] + ":" + players[server.choice.get(1)[0][1]].hand.get(server.choice.get(2)[0][1]).name);
                                     if (players[server.choice.get(1)[0][1]].hand.get(server.choice.get(2)[0][1]).effect2 == 
                                         Card.play.DRAW.ordinal()) {
                                         playerDrawCard(server.choice.get(1)[0][1], 
@@ -259,10 +251,9 @@ public class Bang {
                                 if (m == turn % numPlayers) {
                                     m++;
                                 }
-                                //System.out.println("ASDFASFASFASFASDF prompting:" + m);
                                 p[n] = m;
                             }
-                            server.promptPlayers(p, "PlayCardUnforced");
+                            server.promptPlayers(p, "PlayCardUnforced"); //this is for damage cards only!!! need to implement BRAWL here.
                             return;
                         } else if (server.choice.size() == 2) {
                             ArrayList<Integer> al = new ArrayList<Integer>();
@@ -280,6 +271,7 @@ public class Bang {
                                         Card.play.DRAW.ordinal()) {
                                         playerDrawCard(n[0], 1);
                                     }
+                                    server.sendInfo("SetInfo:CardPlayed:" + n[0] + ":" + players[n[0]].hand.get(n[1]).name + ":" + n[1]);
                                     playerDiscardCard(n[0], n[1]);
                                 } else {
                                     System.out.println("SOMEONE DID NOT PLAY A LEGAL CARD");

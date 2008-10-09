@@ -376,8 +376,8 @@ new BufferedWriter(new OutputStreamWriter(server.getOutputStream()));
                             String s = "";
                             s = "Player " + temp1[1] + " played " + temp1[2] + (temp1.length == 4 ? " at player " + temp1[3] : "");
                             c.gui.appendText(s);
-                            c.field.removeLast(Integer.valueOf(temp1[1]));
-                            //TODO: Need to remove this card.
+                            if(Integer.valueOf(temp1[1])!=c.id) //client would have already removed it
+                                c.field.removeLast(Integer.valueOf(temp1[1]));
                         } else if (temp1[0].equals("id")) {
                             System.out.println("ASDFASDFASDFASFASFASDFASDFAS"); //just realized this one is never called....
                             c.id = Integer.valueOf(temp1[1]);
