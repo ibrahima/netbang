@@ -54,8 +54,8 @@ public class Field implements MouseListener, MouseMotionListener{
 			int y=(int) handPlacer.get(player).rect.y+(field?(player==client.id?-100:100):0); //more trinarytrinary fun!
 			CardSpace cs = new CardSpace(card, new Rectangle(x, y,60,90), player, field);
 			cards.put(card, cs);
-                        if(field == false)
-                            handPlacer.get(player).addCard(cs);
+            if(field == false)
+            	handPlacer.get(player).addCard(cs);
 		}
 	}
 	int textHeight(String message, Graphics2D graphics){
@@ -166,7 +166,13 @@ public class Field implements MouseListener, MouseMotionListener{
 		}
 		return null;
 	}
+	boolean start2ed=false;
 	public void start2(){
+		if(start2ed){
+			System.out.println("WTF");
+			return;
+		}
+		start2ed=true;
 		handPlacer = new ArrayList<HandSpace>(client.numPlayers);
 		double theta;
 		for(int player = 0; player<client.numPlayers; player++){
@@ -192,6 +198,7 @@ public class Field implements MouseListener, MouseMotionListener{
 				Card hp = new Card(Deck.CardName.BULLETBACK);
 				CardSpace hps = new CardSpace(hp, new Rectangle(x+
 						10 * client.players.get(i).maxLifePoints,y+30,90,60),i, false);
+				System.out.println("Generated HP Card for "+chara.name);
 				hps.draggable=false;
 				hpcards.add(hps);
 			}
