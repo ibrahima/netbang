@@ -33,7 +33,7 @@ public class Field implements MouseListener, MouseMotionListener{
 	ArrayList<CardSpace> hpcards = new ArrayList<CardSpace>();
 	String description;
 	Point describeWhere;
-	long lastMouseMoved = 0;
+	long lastMouseMoved = System.currentTimeMillis();
 	int tooltipWidth = 0;
 	int tooltipHeight = 0;
 	Point ep;

@@ -3,7 +3,7 @@ package ucbang.core;
 import java.util.Arrays;
 
 public class Card {
-	public String description;
+	public String description="";
 	public Enum e;
 	public String name;
 	public int ordinal;
