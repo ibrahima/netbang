@@ -36,7 +36,7 @@ public class Field implements MouseListener, MouseMotionListener{
 	long lastMouseMoved = System.currentTimeMillis();
 	int tooltipWidth = 0;
 	int tooltipHeight = 0;
-	Point ep;
+	Point hoverpoint;
 	public Field(CardDisplayer cd, Client c) {
 		this.cd=cd;
 		client = c;
@@ -142,13 +142,13 @@ public class Field implements MouseListener, MouseMotionListener{
 		}
 		if(description==null&&System.currentTimeMillis()-lastMouseMoved>2000){
 			//create description
-			Clickable cl = binarySearchCardAtPoint(ep);
+			Clickable cl = binarySearchCardAtPoint(hoverpoint);
 			if (cl instanceof CardSpace) {
 				CardSpace cs = (CardSpace) cl;
 				if (cs != null && cs.card != null){
 					System.out.println(cs.card.description);
 					description = cs.card.description;
-					describeWhere = ep;
+					describeWhere = hoverpoint;
 				}
 			}
 		}
@@ -168,7 +168,7 @@ public class Field implements MouseListener, MouseMotionListener{
 		int end;
 
 		ArrayList<Clickable> al = clickies.values(); //search the values arrayList for...
-		if(al.isEmpty())return null;
+		if(al.isEmpty()||ep==null)return null;
 		int a = 0, b = al.size(), index = al.size() / 2;
 
 		while (a != b) {
@@ -240,7 +240,7 @@ public class Field implements MouseListener, MouseMotionListener{
 	}
 
 	public void mouseClicked(MouseEvent e) {
-		ep=e.getPoint();
+		Point ep=e.getPoint();
 		////the ugly proxy skip turn button
 		if(new Rectangle(760, 560, 40, 40).contains(ep)){
 			if(client.prompting&&!client.forceDecision){
@@ -457,7 +457,7 @@ public class Field implements MouseListener, MouseMotionListener{
 	public void mouseExited(MouseEvent e) {}
 	public void mouseMoved(MouseEvent e) {
 		lastMouseMoved = System.currentTimeMillis();
-		ep=e.getPoint();
+		hoverpoint=e.getPoint();
 		description=null;
 	}
 	public void resize(int width, int height, int width2, int height2) {
