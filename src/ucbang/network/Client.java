@@ -299,14 +299,15 @@ new BufferedWriter(new OutputStreamWriter(server.getOutputStream()));
                         // that amount
                         // set information about hand and stuff
                         String[] temp1 = temp[1].split(":");
+                    	int tid = Integer.valueOf(temp1[1]);
                         if (temp1[0].equals("newPlayer")) {
-                            c.player = new Player(Integer.valueOf(temp1[1]), c.name); 
-                            //TODO: c.players.set
+                            c.player = new Player(tid, c.name); 
                             c.numPlayers = Integer.valueOf(temp1[2]);
-                            c.id = Integer.valueOf(temp1[1]);
+                            c.id = tid;
                             c.players.set(c.id, c.player);
+                            //Err, why does it use the client's player object to initialize all the others?
                         } else if (temp1[0].equals("role")) {
-                            if (Integer.valueOf(temp1[1]) == c.id) {
+                            if (tid == c.id) {
                                 c.field.clear();
                                 c.player.role = 
                                         Deck.Role.values()[Integer.valueOf(temp1[2])];
@@ -326,70 +327,74 @@ new BufferedWriter(new OutputStreamWriter(server.getOutputStream()));
                                                      Color.YELLOW);
                             }
                         } else if (temp1[0].equals("maxHP")) {
-                            if (c.id == Integer.valueOf(temp1[1])) {
+                            if (c.id == tid) {
                                 c.player.maxLifePoints += 
                                         Integer.valueOf(temp1[2]);
                                 c.player.lifePoints = c.player.maxLifePoints;
-                                c.field.start2();
                             } else {
                                 c.gui.appendText("Player " + temp1[1] + 
                                                  " has a maxHP of " + temp1[2], 
                                                  Color.RED);
-                                c.players.get(Integer.valueOf(temp1[1])).maxLifePoints=Integer.valueOf(temp1[2]);
+                                c.players.get(tid).maxLifePoints=Integer.valueOf(temp1[2]);
+                                c.players.get(tid).lifePoints=Integer.valueOf(temp1[2]);
+                                //this should match the above block
                             }
+                            if(tid+1==c.numPlayers)
+                            	c.field.start2();
+
                         } else if (temp1[0].equals("HP")) {
-                            if (c.id == Integer.valueOf(temp1[1])) {
+                            if (c.id == tid) {
                                 c.player.lifePoints += 
                                         Integer.valueOf(temp1[2]);
                             } else {
                                 c.gui.appendText("Player " + temp1[1] + 
                                                  " life points changed by " + 
                                                  temp1[2], Color.RED);
-                                c.players.get(Integer.valueOf(temp1[1])).lifePoints+=Integer.valueOf(temp1[2]);
+                                c.players.get(tid).lifePoints+=Integer.valueOf(temp1[2]);
                             }
                         } else if (temp1[0].equals("PutInField")) {
                                 c.gui.appendText("Player "+temp1[1]+" added "+temp1[2]+" to the field.");
                                 Card card;
-                                if(Integer.valueOf(temp1[1])==c.id){
+                                if(tid==c.id){
                                     card = c.player.hand.get(Integer.valueOf(temp1[3]));
                                     c.field.cards.remove(card);
                                     c.player.hand.remove(card);
-                                    c.players.get(Integer.valueOf(temp1[1])).field.add(card);
-                                    c.players.get(Integer.valueOf(temp1[1])).hand.remove(Integer.valueOf(temp1[3]));
+                                    c.players.get(tid).field.add(card);
+                                    c.players.get(tid).hand.remove(Integer.valueOf(temp1[3]));
                                 }
                                 else{
                                     card = new Card(CardName.valueOf(temp1[2]));
-                                    c.field.cards.remove(c.players.get(Integer.valueOf(temp1[1])).hand.get((int)Integer.valueOf(temp1[3])));
-                                    c.field.removeLast(Integer.valueOf(temp1[1]));
-                                    c.players.get(Integer.valueOf(temp1[1])).field.add(card);
+                                    c.field.cards.remove(c.players.get(tid).hand.get((int)Integer.valueOf(temp1[3])));
+                                    c.field.removeLast(tid);
+                                    c.players.get(tid).field.add(card);
                                 }
-                                c.field.add(card, Integer.valueOf(temp1[1]), true);
+                                c.field.add(card, tid, true);
                         } else if (temp1[0].equals("turn")) {
-                            c.turn = Integer.valueOf(temp1[1]);
+                            c.turn = tid;
                             if (c.turn % c.numPlayers == c.id) {
                                 c.gui.appendText("It's your move!!!!!! Time to d-d-d-d-d-duel!", Color.CYAN);
                             }
                         } else if (temp1[0].equals("discard")) {
-                            c.field.cards.remove(c.player.hand.get((int)Integer.valueOf(temp1[1])));
-                            System.out.println("MOVED TO DISCARD:" + c.player.hand.remove((int)Integer.valueOf(temp1[1])).name);
+                            c.field.cards.remove(c.player.hand.get((int)tid));
+                            System.out.println("MOVED TO DISCARD:" + c.player.hand.remove((int)tid).name);
                         } else if (temp1[0].equals("CardPlayed")) {
                             String s = "";
                             s = "Player " + temp1[1] + " played " + temp1[2] + (temp1.length == 4 ? " at player " + temp1[3] : "");
                             c.gui.appendText(s);
-                            if(Integer.valueOf(temp1[1])!=c.id) //client would have already removed it
-                                c.field.removeLast(Integer.valueOf(temp1[1]));
+                            if(tid!=c.id) //client would have already removed it
+                                c.field.removeLast(tid);
                         } else if (temp1[0].equals("id")) {
                             System.out.println("ASDFASDFASDFASFASFASDFASDFAS"); //just realized this one is never called....
-                            c.id = Integer.valueOf(temp1[1]);
+                            c.id = tid;
                         } else if (temp1[0].equals("character")) {
-                            if (Integer.valueOf(temp1[1]) == c.id){
+                            if (tid == c.id){
                                 c.player.character = Integer.valueOf(temp1[2]);
-                                c.players.get(Integer.valueOf(temp1[1])).character=Integer.valueOf(temp1[2]);
+                                c.players.get(tid).character=Integer.valueOf(temp1[2]);
                             }
                             else {
                                 c.gui.appendText("Player " + temp1[1] + " chose " + Deck.Characters.values()[Integer.valueOf(temp1[2])], Color.YELLOW);
-                                c.players.get(Integer.valueOf(temp1[1])).character=Integer.valueOf(temp1[2]);
-                                c.field.add(new Card(Deck.Characters.values()[Integer.valueOf(temp1[2])]), Integer.valueOf(temp1[1]), false);
+                                c.players.get(tid).character=Integer.valueOf(temp1[2]);
+                                c.field.add(new Card(Deck.Characters.values()[Integer.valueOf(temp1[2])]), tid, false);
                             }
                         } else {
                             System.out.println("WTF do i do with " + temp1[0] + ":" + temp1[1]);
