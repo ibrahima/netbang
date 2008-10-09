@@ -300,12 +300,17 @@ new BufferedWriter(new OutputStreamWriter(server.getOutputStream()));
                         // set information about hand and stuff
                         String[] temp1 = temp[1].split(":");
                     	int tid = Integer.valueOf(temp1[1]);
+                    	Player ptemp = null;
+                    	if(c.id == tid){
+                    		ptemp = c.player;
+                    	}else if(tid<c.players.size()){
+                    		ptemp = c.players.get(tid);
+                    	}
                         if (temp1[0].equals("newPlayer")) {
                             c.player = new Player(tid, c.name); 
                             c.numPlayers = Integer.valueOf(temp1[2]);
                             c.id = tid;
                             c.players.set(c.id, c.player);
-                            //Err, why does it use the client's player object to initialize all the others?
                         } else if (temp1[0].equals("role")) {
                             if (tid == c.id) {
                                 c.field.clear();
@@ -327,31 +332,20 @@ new BufferedWriter(new OutputStreamWriter(server.getOutputStream()));
                                                      Color.YELLOW);
                             }
                         } else if (temp1[0].equals("maxHP")) {
-                            if (c.id == tid) {
-                                c.player.maxLifePoints += 
-                                        Integer.valueOf(temp1[2]);
-                                c.player.lifePoints = c.player.maxLifePoints;
-                            } else {
-                                c.gui.appendText("Player " + temp1[1] + 
-                                                 " has a maxHP of " + temp1[2], 
-                                                 Color.RED);
-                                c.players.get(tid).maxLifePoints=Integer.valueOf(temp1[2]);
-                                c.players.get(tid).lifePoints=Integer.valueOf(temp1[2]);
+                            c.gui.appendText("Player " + temp1[1] + 
+                                             " has a maxHP of " + temp1[2], 
+                                             Color.RED);
+                            ptemp.maxLifePoints=Integer.valueOf(temp1[2]);
+                            ptemp.lifePoints=Integer.valueOf(temp1[2]);
                                 //this should match the above block
-                            }
                             if(tid+1==c.numPlayers)
                             	c.field.start2();
-
                         } else if (temp1[0].equals("HP")) {
-                            if (c.id == tid) {
-                                c.player.lifePoints += 
-                                        Integer.valueOf(temp1[2]);
-                            } else {
-                                c.gui.appendText("Player " + temp1[1] + 
-                                                 " life points changed by " + 
-                                                 temp1[2], Color.RED);
-                                c.players.get(tid).lifePoints+=Integer.valueOf(temp1[2]);
-                            }
+                            c.gui.appendText("Player " + temp1[1] + 
+                                             " life points changed by " + 
+                                             temp1[2], Color.RED);
+                            ptemp.lifePoints+=Integer.valueOf(temp1[2]);
+                            c.field.setHP(tid,ptemp.lifePoints);
                         } else if (temp1[0].equals("PutInField")) {
                                 c.gui.appendText("Player "+temp1[1]+" added "+temp1[2]+" to the field.");
                                 Card card;

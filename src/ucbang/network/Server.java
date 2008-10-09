@@ -57,6 +57,10 @@ public class Server extends Thread {
 		this.start();
 	}
 
+	/**
+	 * Sends a chat message to all players.
+	 * @param string The message to be sent to all players
+	 */
 	void addChat(String string) {
 		Iterator<String> keyter = messages.keySet().iterator();
 		while (keyter.hasNext()) {
@@ -64,6 +68,10 @@ public class Server extends Thread {
 		}
 	}
 
+	/**
+	 * Notifies all clients of a new player joining the game
+	 * @param player The name of the new player
+	 */
 	void playerJoin(String player) {
 		names.add(player);
 		Iterator<String> keyter = messages.keySet().iterator();
@@ -72,6 +80,10 @@ public class Server extends Thread {
 		}
 	}
 
+	/**
+	 * Notifies all clients of a player leaving the game
+	 * @param player The name of the player who left
+	 */
 	void playerLeave(String player) {
 		names.remove(player);
 		messages.remove(player);
@@ -85,6 +97,12 @@ public class Server extends Thread {
 		System.out.println("Server:" + stuff);
 	}
 
+	/**
+	 * Sends a prompt to the specified player
+	 * @param player The player to send the prompt to
+	 * @param s The prompt message
+	 * @param one Wait, what? Please explain
+	 */
 	public void prompt(int player, String s, boolean one) {
 		if (one) {
 			choice.add(new int[][] { { player, -2 } });
@@ -96,6 +114,10 @@ public class Server extends Thread {
 		messages.get(names.get(player)).add("Prompt:" + s);
 	}
 
+	/**
+	 * Sends the same prompt to all players
+	 * @param s The prompt message
+	 */
 	public void promptAll(String s) {
 		prompting = 1;
 		choice.add(new int[numPlayers][2]);
@@ -109,9 +131,9 @@ public class Server extends Thread {
 	}
 
 	/**
-     * Prompt the players in the gives int array.
-     * @param p
-     * @param s
+     * Prompt the players in the given int array.
+     * @param p The players to prompt
+     * @param s The prompt message
      */
         public void promptPlayers(int[] p, String s) {
                 prompting = 1;
@@ -199,6 +221,11 @@ public class Server extends Thread {
 		System.exit(0);
 	}
 
+	/**
+	 * Sends some character or game information to a player
+	 * @param player The player to send information to
+	 * @param info The information to send
+	 */
 	public void sendInfo(int player, String info) { // info can be sent to
 													// multiple people at the
 													// same time, unlike prompts
@@ -218,7 +245,11 @@ public class Server extends Thread {
 		}
 		messages.get(names.get(player)).add(info);
 	}
-     public void sendInfo(String info) {
+     /**
+      * Sends some character or game information to all players
+     * @param info The information to send
+     */
+    public void sendInfo(String info) {
 		for (int n = 0; n < numPlayers; n++) {
 			sendInfo(n, info);
 		}
