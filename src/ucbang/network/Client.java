@@ -207,37 +207,39 @@ new BufferedWriter(new OutputStreamWriter(server.getOutputStream()));
                 if (in.ready()) {
                     buffer = (String)in.readLine();
                     String[] temp = buffer.split(":", 2);
-                    if (temp[0].equals("Connection")) {
-                        System.out.println(temp[1]);
+                    String messagetype = temp[0];
+					String messagevalue = temp[1];
+					if (messagetype.equals("Connection")) {
+                        System.out.println(messagevalue);
                         if (!c.connected && 
-                            temp[1].equals("Successfully connected.")) {
+                            messagevalue.equals("Successfully connected.")) {
                             c.connected = true;
                             c.gui.setTitle("UCBang - " + c.name + 
                                            " - Connected to server on " + 
                                            server.getInetAddress());
                         } else if (!c.connected && 
-                                   temp[1].equals("Name taken!")) {
+                                   messagevalue.equals("Name taken!")) {
                             System.out.println(this + 
                                                ": Connection refused because name was taken");
                             namesent = false;
                             c.promptName();
                         }
-                    } else if (temp[0].equals("Chat")) {
-                        c.gui.appendText(temp[1]);
-                    } else if (temp[0].equals("Players")) {
-                        String[] ppl = temp[1].split(",");
+                    } else if (messagetype.equals("Chat")) {
+                        c.gui.appendText(messagevalue);
+                    } else if (messagetype.equals("Players")) {
+                        String[] ppl = messagevalue.split(",");
                         for (int i = 0; i < ppl.length; i++) {
                             if (ppl[i] != null && !ppl[i].isEmpty()) {
                                 c.players.add(new Player(i, ppl[i]));
                             }
                         }
-                    } else if (temp[0].equals("PlayerJoin")) {
-                        c.players.add(new Player(c.players.size(), temp[1]));
-                    } else if (temp[0].equals("PlayerLeave")) {
-                        c.players.remove(temp[1]);
-                    } else if (temp[0].equals("Prompt")) {
+                    } else if (messagetype.equals("PlayerJoin")) {
+                        c.players.add(new Player(c.players.size(), messagevalue));
+                    } else if (messagetype.equals("PlayerLeave")) {
+                        c.players.remove(messagevalue);
+                    } else if (messagetype.equals("Prompt")) {
                         // received a prompt from host
-                        if (temp[1].equals("Start")) { // will waiting for
+                        if (messagevalue.equals("Start")) { // will waiting for
                             // response here cause
                             // client to desync with
                             // server?
@@ -246,25 +248,25 @@ new BufferedWriter(new OutputStreamWriter(server.getOutputStream()));
                                                             "Start game?"));
                             c.gui.appendText("Host has requested the game be started", 
                                              Color.BLUE);
-                        } else if (temp[1].equals("PlayCard")) {
+                        } else if (messagevalue.equals("PlayCard")) {
                             c.gui.promptChooseCard(c.player.hand, "", "", 
                                                    true);
-                        } else if (temp[1].equals("PlayCardUnforced")) {
+                        } else if (messagevalue.equals("PlayCardUnforced")) {
                             c.gui.promptChooseCard(c.player.hand, "", "", 
                                                    false);
-                        } else if (temp[1].equals("ChooseCharacter")) {
+                        } else if (messagevalue.equals("ChooseCharacter")) {
                             c.gui.promptChooseCard(c.player.hand, "", "", 
                                                    true);
-                        } else if (temp[1].equals("PickTarget")) {
+                        } else if (messagevalue.equals("PickTarget")) {
                             System.out.println("I am player " + c.id + 
                                                ", prompting = " + c.prompting);
                             c.outMsgs.add("Prompt:" + (1 - c.id));
                         } else {
-                            System.out.println("WTF do i do with " + temp[1]);
+                            System.out.println("WTF do i do with " + messagevalue);
                         }
 
-                    } else if (temp[0].equals("Draw")) {
-                        String[] temp1 = temp[1].split(":");
+                    } else if (messagetype.equals("Draw")) {
+                        String[] temp1 = messagevalue.split(":");
                         int n = temp1.length;
                         if (Integer.valueOf(temp1[0]) == c.id) {
                             for (int m = 2; m < n; m++) {
@@ -289,16 +291,13 @@ new BufferedWriter(new OutputStreamWriter(server.getOutputStream()));
                             }
                         }
                         c.outMsgs.add("Ready");
-                    } else if (temp[0].equals("GetInfo")) {
+                    } else if (messagetype.equals("GetInfo")) {
                         String[] temp1 = buffer.split(":", 2);
                         c.outMsgs.add("Ready");
-                    } else if (temp[0].equals("SetInfo")) { // note: a bit of a
-                        // misnomer for
-                        // lifepoints, just
-                        // adds or subtracts
-                        // that amount
+                    } else if (messagetype.equals("SetInfo")) { // note: a bit of a
+                        // misnomer for lifepoints, just adds or subtracts that amount
                         // set information about hand and stuff
-                        String[] temp1 = temp[1].split(":");
+                        String[] temp1 = messagevalue.split(":");
                     	int tid = Integer.valueOf(temp1[1]);
                     	Player ptemp = null;
                     	if(c.id == tid){
@@ -306,12 +305,13 @@ new BufferedWriter(new OutputStreamWriter(server.getOutputStream()));
                     	}else if(tid<c.players.size()){
                     		ptemp = c.players.get(tid);
                     	}
-                        if (temp1[0].equals("newPlayer")) {
+                        String infotype = temp1[0];
+						if (infotype.equals("newPlayer")) {
                             c.player = new Player(tid, c.name); 
                             c.numPlayers = Integer.valueOf(temp1[2]);
                             c.id = tid;
                             c.players.set(c.id, c.player);
-                        } else if (temp1[0].equals("role")) {
+                        } else if (infotype.equals("role")) {
                             if (tid == c.id) {
                                 c.field.clear();
                                 c.player.role = 
@@ -331,7 +331,7 @@ new BufferedWriter(new OutputStreamWriter(server.getOutputStream()));
                                                      Deck.Role.values()[Integer.valueOf(temp1[2])].name(), 
                                                      Color.YELLOW);
                             }
-                        } else if (temp1[0].equals("maxHP")) {
+                        } else if (infotype.equals("maxHP")) {
                             c.gui.appendText("Player " + temp1[1] + 
                                              " has a maxHP of " + temp1[2], 
                                              Color.RED);
@@ -340,47 +340,47 @@ new BufferedWriter(new OutputStreamWriter(server.getOutputStream()));
                                 //this should match the above block
                             if(tid+1==c.numPlayers)
                             	c.field.start2();
-                        } else if (temp1[0].equals("HP")) {
+                        } else if (infotype.equals("HP")) {
                             c.gui.appendText("Player " + temp1[1] + 
                                              " life points changed by " + 
                                              temp1[2], Color.RED);
                             ptemp.lifePoints+=Integer.valueOf(temp1[2]);
                             c.field.setHP(tid,ptemp.lifePoints);
-                        } else if (temp1[0].equals("PutInField")) {
+                        } else if (infotype.equals("PutInField")) {
                                 c.gui.appendText("Player "+temp1[1]+" added "+temp1[2]+" to the field.");
                                 Card card;
                                 if(tid==c.id){
                                     card = c.player.hand.get(Integer.valueOf(temp1[3]));
-                                    c.field.cards.remove(card);
+                                    c.field.clickies.remove(card);
                                     c.player.hand.remove(card);
                                     c.players.get(tid).field.add(card);
                                     c.players.get(tid).hand.remove(Integer.valueOf(temp1[3]));
                                 }
                                 else{
                                     card = new Card(CardName.valueOf(temp1[2]));
-                                    c.field.cards.remove(c.players.get(tid).hand.get((int)Integer.valueOf(temp1[3])));
+                                    c.field.clickies.remove(c.players.get(tid).hand.get((int)Integer.valueOf(temp1[3])));
                                     c.field.removeLast(tid);
                                     c.players.get(tid).field.add(card);
                                 }
                                 c.field.add(card, tid, true);
-                        } else if (temp1[0].equals("turn")) {
+                        } else if (infotype.equals("turn")) {
                             c.turn = tid;
                             if (c.turn % c.numPlayers == c.id) {
                                 c.gui.appendText("It's your move!!!!!! Time to d-d-d-d-d-duel!", Color.CYAN);
                             }
-                        } else if (temp1[0].equals("discard")) {
-                            c.field.cards.remove(c.player.hand.get((int)tid));
-                            System.out.println("MOVED TO DISCARD:" + c.player.hand.remove((int)tid).name);
-                        } else if (temp1[0].equals("CardPlayed")) {
+                        } else if (infotype.equals("discard")) {
+                            c.field.clickies.remove(c.player.hand.get(tid));
+                            System.out.println("MOVED TO DISCARD:" + c.player.hand.remove(tid).name);
+                        } else if (infotype.equals("CardPlayed")) {
                             String s = "";
                             s = "Player " + temp1[1] + " played " + temp1[2] + (temp1.length == 4 ? " at player " + temp1[3] : "");
                             c.gui.appendText(s);
                             if(tid!=c.id) //client would have already removed it
                                 c.field.removeLast(tid);
-                        } else if (temp1[0].equals("id")) {
+                        } else if (infotype.equals("id")) {
                             System.out.println("ASDFASDFASDFASFASFASDFASDFAS"); //just realized this one is never called....
                             c.id = tid;
-                        } else if (temp1[0].equals("character")) {
+                        } else if (infotype.equals("character")) {
                             if (tid == c.id){
                                 c.player.character = Integer.valueOf(temp1[2]);
                                 c.players.get(tid).character=Integer.valueOf(temp1[2]);
@@ -391,7 +391,7 @@ new BufferedWriter(new OutputStreamWriter(server.getOutputStream()));
                                 c.field.add(new Card(Deck.Characters.values()[Integer.valueOf(temp1[2])]), tid, false);
                             }
                         } else {
-                            System.out.println("WTF do i do with " + temp1[0] + ":" + temp1[1]);
+                            System.out.println("WTF do i do with " + infotype + ":" + temp1[1]);
                         }
                         c.outMsgs.add("Ready");
                     }
