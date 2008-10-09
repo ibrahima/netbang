@@ -30,6 +30,7 @@ public class Field implements MouseListener, MouseMotionListener{
 	ArrayList<Card> pick;
 	ArrayList<HandSpace> handPlacer = new ArrayList<HandSpace>(); //to avoid npe
 	ArrayList<CardSpace> characters = new ArrayList<CardSpace>();
+	ArrayList<CardSpace> hpcards = new ArrayList<CardSpace>();
 	String description;
 	Point describeWhere;
 	public Field(CardDisplayer cd, Client c) {
@@ -81,6 +82,12 @@ public class Field implements MouseListener, MouseMotionListener{
 	public void paint(Graphics2D graphics){
 		for(HandSpace hs : handPlacer)
 			graphics.draw(hs.rect);
+		//draw HP cards first
+		Iterator<CardSpace> it = hpcards.iterator();
+		while(it.hasNext()){
+			CardSpace hp = it.next();
+			cd.paint("BULLETBACK", graphics, hp.rect.x, hp.rect.y, hp.rect.width, hp.rect.height, Color.BLUE, Color.GRAY);
+		}
 		Iterator<Clickable> iter = cards.values().iterator();
 		while(iter.hasNext()){
 			Clickable temp = iter.next();
@@ -168,20 +175,25 @@ public class Field implements MouseListener, MouseMotionListener{
 		}
 		clear();
 		for(int i=0;i<client.players.size();i++){
+			Card chara=null;
 			if(client.players.get(i).character>=0){
 				System.out.println(i+":"+Deck.Characters.values()[client.players.get(i).character]);
-				Card chara = new Card(Deck.Characters.values()[client.players.get(i).character]);
-				int x=(int) handPlacer.get(i).rect.x-60;
-				int y=(int) handPlacer.get(i).rect.y;
-				CardSpace csp = new CardSpace(chara,new Rectangle(x,y,60,90), i, false);
-				cards.put(chara, csp);
+				chara = new Card(Deck.Characters.values()[client.players.get(i).character]);
 			}else if(client.id==i){
 				System.out.println(i+":"+Deck.Characters.values()[client.player.character]);
-				Card chara = new Card(Deck.Characters.values()[client.player.character]);
+				chara = new Card(Deck.Characters.values()[client.player.character]);
+			}
+			if(chara!=null){
 				int x=(int) handPlacer.get(i).rect.x-60;
 				int y=(int) handPlacer.get(i).rect.y;
 				CardSpace csp = new CardSpace(chara,new Rectangle(x,y,60,90), i, false);
 				cards.put(chara, csp);
+				//generate HP card
+				Card hp = new Card(Deck.CardName.BULLETBACK);
+				CardSpace hps = new CardSpace(hp, new Rectangle(x+
+						10 * client.players.get(i).maxLifePoints,y+30,90,60),i, false);
+				hps.draggable=false;
+				hpcards.add(hps);
 			}
 		}
 	}
