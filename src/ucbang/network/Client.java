@@ -326,11 +326,11 @@ new BufferedWriter(new OutputStreamWriter(server.getOutputStream()));
                                                      Color.YELLOW);
                             }
                         } else if (temp1[0].equals("maxHP")) {
-                            c.field.start2();
                             if (c.id == Integer.valueOf(temp1[1])) {
                                 c.player.maxLifePoints += 
                                         Integer.valueOf(temp1[2]);
                                 c.player.lifePoints = c.player.maxLifePoints;
+                                c.field.start2();
                             } else {
                                 c.gui.appendText("Player " + temp1[1] + 
                                                  " has a maxHP of " + temp1[2], 
