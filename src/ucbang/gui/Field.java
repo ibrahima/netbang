@@ -229,7 +229,8 @@ public class Field implements MouseListener, MouseMotionListener{
 				Card hp = new Card(Deck.CardName.BULLETBACK);
 				CardSpace hps = new CardSpace(hp, new Rectangle(x+
 						10 * client.players.get(player).maxLifePoints,y+30,90,60),player, false);
-				hps.setParent(false, csp);
+				hps.setPartner(csp);
+				csp.setPartner(hps);
 				//hps.rotate(1);
 				clickies.put(hp, hps);
 				hs.setCharHP(csp, hps);
@@ -362,7 +363,7 @@ public class Field implements MouseListener, MouseMotionListener{
 		 * @param r The bounds of the card
 		 * @param player The player who owns the card
 		 * @param f Whether the card is on the field
-		 * @param parent The parent container of the card
+		 * @param partner The parent container of the card
 		 */
 		public CardSpace(Card c, Rectangle r, int player, boolean f){
 			super(r);
@@ -417,8 +418,7 @@ public class Field implements MouseListener, MouseMotionListener{
 		public int playerid;
 		public AffineTransform at;
 		private int oldrotation=0;
-		private boolean draggable=true;
-		private Clickable parent;
+		private Clickable partner;
 		public Clickable(Rectangle r){
 			rect=r;
 		}
@@ -431,15 +431,14 @@ public class Field implements MouseListener, MouseMotionListener{
 		public void move(int x, int y){
 			if(at!=null)at.translate(rect.x-x, rect.y-y);
 				rect.setLocation(x, y);
-			if(parent!=null){
+			if(partner!=null){
 				int dx = x-rect.x;
 				int dy = y-rect.y;
-				parent.translate(dx, dy);
+				partner.translate(dx, dy);
 			}
 		}
-		public void setParent(boolean drag, Clickable parent){
-			draggable=drag;
-			this.parent=parent;
+		public void setPartner(Clickable partner){
+			this.partner=partner;
 		}
 		public void rotate(int quadrant){//rotates in terms of 90 degree increments. call with 0 to reset.
 			int realrotation=quadrant-oldrotation;
@@ -484,6 +483,10 @@ public class Field implements MouseListener, MouseMotionListener{
 		}
 		public void translate(int dx, int dy){
 			rect.translate(dx, dy);
+			if(partner!=null){
+				System.out.println(partner);
+				//partner.translate(dx, dy);
+			}
 		}
 	}
 
