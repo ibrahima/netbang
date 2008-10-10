@@ -29,8 +29,6 @@ public class Field implements MouseListener, MouseMotionListener{
 	Card clicked;
 	ArrayList<Card> pick;
 	ArrayList<HandSpace> handPlacer = new ArrayList<HandSpace>(); //to avoid npe
-	//ArrayList<CardSpace> characters = new ArrayList<CardSpace>();
-	ArrayList<CardSpace> hpcards = new ArrayList<CardSpace>();
 	String description;
 	Point describeWhere;
 	long lastMouseMoved = System.currentTimeMillis();
@@ -52,7 +50,7 @@ public class Field implements MouseListener, MouseMotionListener{
 	 * @param field Whether the card is in the field or not
 	 */
 	public void add(Card card, int x, int y, int player, boolean field){
-		clickies.put(card, new CardSpace(card, new Rectangle(x,y,60,90), player, field));
+		clickies.put(card, new CardSpace(card, new Rectangle(x,y,60,90), player, field, null));
 	}
 	public void removeLast(int player){
                 clickies.remove(handPlacer.get(player).removeLast().card);
@@ -70,14 +68,15 @@ public class Field implements MouseListener, MouseMotionListener{
 		if(card.type==1){//this a character card
 			int x=350;
 			int y=200;
-			clickies.put(card, new CardSpace(card, new Rectangle(x, y,60,90), player, false));
+			clickies.put(card, new CardSpace(card, new Rectangle(x, y,60,90), player, false,null));
 		}else{
-			int x=(int) handPlacer.get(player).rect.x+handPlacer.get(player).rect.width+xoffset;
-			int y=(int) handPlacer.get(player).rect.y+(field?(player==client.id?-100:100):0); //more trinarytrinary fun!
-			CardSpace cs = new CardSpace(card, new Rectangle(x, y,60,90), player, field);
+			HandSpace hs = handPlacer.get(player);
+			int x=(int) hs.rect.x+hs.rect.width+xoffset;
+			int y=(int) hs.rect.y+(field?(player==client.id?-100:100):0); //more trinarytrinary fun!
+			CardSpace cs = new CardSpace(card, new Rectangle(x, y,60,90), player, field, hs);
 			clickies.put(card, cs);
                         if(field == false)
-                            handPlacer.get(player).addCard(cs);
+                            hs.addCard(cs);
 		}
 	}
 	int textHeight(String message, Graphics2D graphics){
@@ -105,11 +104,11 @@ public class Field implements MouseListener, MouseMotionListener{
 		for(HandSpace hs : handPlacer)
 			graphics.draw(hs.rect);
 		//draw HP cards first
-		Iterator<CardSpace> it = hpcards.iterator();
+		/*Iterator<CardSpace> it = hpcards.iterator();
 		while(it.hasNext()){
 			CardSpace hp = it.next();
 			cd.paint("BULLETBACK", graphics, hp.rect.x, hp.rect.y, hp.rect.width, hp.rect.height, Color.BLUE, Color.GRAY);
-		}
+		}*/
 		Iterator<Clickable> iter = clickies.values().iterator();
 		while(iter.hasNext()){
 			Clickable temp = iter.next();
@@ -132,7 +131,6 @@ public class Field implements MouseListener, MouseMotionListener{
 				Color outer=client.id==1?Color.RED:Color.BLUE;
 				cd.paint(crd.card.name, graphics, crd.rect.x, crd.rect.y, crd.rect.width, temp.rect.height, 
 							inner,outer);
-				if(crd.card.name.equals("BULLETBACK"))crd.rotate(1);
 			}else if(temp instanceof HandSpace){
 				HandSpace hs = (HandSpace)temp;
 				graphics.draw3DRect(hs.rect.x, hs.rect.y, hs.rect.width, hs.rect.height, true);
@@ -140,15 +138,19 @@ public class Field implements MouseListener, MouseMotionListener{
 				System.out.println("WTF");
 			}
 		}
-		if(description==null&&System.currentTimeMillis()-lastMouseMoved>2000){
+		if(description==null&&System.currentTimeMillis()-lastMouseMoved>1000){
 			//create description
 			Clickable cl = binarySearchCardAtPoint(hoverpoint);
 			if (cl instanceof CardSpace) {
 				CardSpace cs = (CardSpace) cl;
 				if (cs != null && cs.card != null){
-					System.out.println(cs.card.description);
-					description = cs.card.description;
+					if(cs.card.description.equals(""))
+						description = cs.card.name.replace('_', ' ');
+					else
+						description = cs.card.name+" - "+cs.card.description;
 					describeWhere = hoverpoint;
+					tooltipWidth = textWidth(description, graphics);
+					tooltipHeight = textHeight(description, graphics);
 				}
 			}
 		}
@@ -156,7 +158,7 @@ public class Field implements MouseListener, MouseMotionListener{
 			Rectangle2D bounds=graphics.getFont().getStringBounds(description, graphics.getFontRenderContext());
 			Color temp=graphics.getColor();
 			graphics.setColor(Color.YELLOW);
-			graphics.fill3DRect(describeWhere.x, describeWhere.y-(int)bounds.getHeight()+32, textWidth(description, graphics), textHeight(description, graphics),false);
+			graphics.fill3DRect(describeWhere.x, describeWhere.y-(int)bounds.getHeight()+32, tooltipWidth, tooltipHeight,false);
 			graphics.setColor(Color.BLACK);
 			improvedDrawString(description, describeWhere.x, describeWhere.y+30,graphics);
 			graphics.setColor(temp);
@@ -221,14 +223,16 @@ public class Field implements MouseListener, MouseMotionListener{
 			if(chara!=null){
 				int x=(int) hs.rect.x-90;
 				int y=(int) hs.rect.y;
-				CardSpace csp = new CardSpace(chara,new Rectangle(x,y,60,90), player, false);
+				CardSpace csp = new CardSpace(chara,new Rectangle(x,y,60,90), player, false, hs);
+				csp.setParent(false, hs);
 				clickies.put(chara, csp);
 				//generate HP card
 				Card hp = new Card(Deck.CardName.BULLETBACK);
 				CardSpace hps = new CardSpace(hp, new Rectangle(x+
-						10 * client.players.get(player).maxLifePoints,y+30,90,60),player, false);
-				hps.draggable=false;
-				hpcards.add(hps);
+						10 * client.players.get(player).maxLifePoints,y+30,90,60),player, false, hs);
+				hps.setParent(false, hs);
+				hps.rotate(1);
+				clickies.put(hp, hps);
 				hs.setCharHP(csp, hps);
 			}
 		}
@@ -353,20 +357,28 @@ public class Field implements MouseListener, MouseMotionListener{
 	 */
 	private class CardSpace extends Clickable{
 		public Card card;
-                public boolean field;
-
-		public CardSpace(Card c, Rectangle r, int player, boolean f){
+		public boolean field;
+		/**
+		 * @param c The card this CardSpace describes
+		 * @param r The bounds of the card
+		 * @param player The player who owns the card
+		 * @param f Whether the card is on the field
+		 * @param parent The parent container of the card
+		 */
+		public CardSpace(Card c, Rectangle r, int player, boolean f, HandSpace parent){
+			super(r);
 			card = c;
 			rect = r;
 			playerid = player;
-                        field = f;
+			field = f;
 		}
 	}
+
 	private class HandSpace extends Clickable{
 		ArrayList<CardSpace> cards = new ArrayList<CardSpace>();
 		CardSpace character, hp;
 		public HandSpace(Rectangle r, int player){
-			rect = r;
+			super(r);
 			playerid = player;
 		}
 		public void setCharHP(CardSpace character, CardSpace hp){
@@ -387,6 +399,17 @@ public class Field implements MouseListener, MouseMotionListener{
 			while(iter.hasNext()){
 				iter.next().translate(dx, dy);
 			}
+			if(character!=null)character.translate(dx, dy);
+			if(hp!=null)hp.translate(dx, dy);
+		}
+		public void translate(int dx, int dy){
+			super.translate(dx, dy);
+			Iterator<CardSpace> iter = cards.iterator();
+			while(iter.hasNext()){
+				iter.next().translate(dx, dy);
+			}
+			if(character!=null)character.translate(dx, dy);
+			if(hp!=null)hp.translate(dx, dy);
 		}
 	}
 	private abstract class Clickable implements Comparable<Clickable>{
@@ -394,8 +417,12 @@ public class Field implements MouseListener, MouseMotionListener{
 		public int location; //position of card on field or in hand
 		public int playerid;
 		public AffineTransform at;
-		int oldrotation=0;
-		public boolean draggable=true;
+		private int oldrotation=0;
+		private boolean draggable=true;
+		private Clickable parent;
+		public Clickable(Rectangle r){
+			rect=r;
+		}
 		public int compareTo(Clickable o) {
 			if(o.rect.getLocation().y!=rect.getLocation().y)
 				return ((Integer)rect.getLocation().y).compareTo(o.rect.getLocation().y);
@@ -403,10 +430,19 @@ public class Field implements MouseListener, MouseMotionListener{
 				return ((Integer)rect.getLocation().x).compareTo(o.rect.getLocation().x);
 		}
 		public void move(int x, int y){
-			if(at!=null)at.translate(rect.x-x, rect.y-y);
-			rect.setLocation(x, y);
+			if(draggable){
+				if(at!=null)at.translate(rect.x-x, rect.y-y);
+				rect.setLocation(x, y);
+			}else if(parent!=null){
+				int dx = x-rect.x;
+				int dy = y-rect.y;
+				parent.translate(dx, dy);
+			}
 		}
-
+		public void setParent(boolean drag, Clickable parent){
+			draggable=drag;
+			this.parent=parent;
+		}
 		public void rotate(int quadrant){//rotates in terms of 90 degree increments. call with 0 to reset.
 			int realrotation=quadrant-oldrotation;
 			if(realrotation>0 && realrotation<4){
@@ -470,7 +506,7 @@ public class Field implements MouseListener, MouseMotionListener{
 		
 	}
 	public void setHP(int playerid, int lifePoints) {
-		CardSpace hpc = hpcards.get(playerid);
+		CardSpace hpc = handPlacer.get(playerid).hp;
 		hpc.move(hpc.rect.x-10*lifePoints, hpc.rect.y);
 	}
 }

@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -163,6 +164,13 @@ public class Server extends Thread {
 						adder.addToServerList();
 					}
 				} catch (SocketTimeoutException e) {}
+				catch(SocketException e){
+					if(e.getMessage().equals("socket closed")){
+						
+					}else{
+						e.printStackTrace();
+					}
+				}
 				catch (Exception e) {e.printStackTrace();
 				}
 			} else {
