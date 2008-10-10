@@ -315,6 +315,7 @@ public class Field implements MouseListener, MouseMotionListener{
 
 	public void mouseDragged(MouseEvent e) {
 		//System.out.println("dragging");
+                lastMouseMoved = System.currentTimeMillis();
 		if(movingCard!=null){
 			movingCard.move(Math.max(0, Math.min(e.getPoint().x-pointOnCard.x,745)),Math.max(0, Math.min(e.getPoint().y-pointOnCard.y,515))); //replace boundaries with width()/height() of frame?
 		}
