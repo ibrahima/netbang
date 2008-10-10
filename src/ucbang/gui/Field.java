@@ -350,7 +350,7 @@ public class Field implements MouseListener, MouseMotionListener{
 		//System.out.println("dragging");
                 lastMouseMoved = System.currentTimeMillis();
 		if(movingCard!=null){
-			movingCard.move(Math.max(0, Math.min(e.getPoint().x-pointOnCard.x,745)),Math.max(0, Math.min(e.getPoint().y-pointOnCard.y,515))); //replace boundaries with width()/height() of frame?
+			movingCard.move(Math.max(0, Math.min(e.getPoint().x-pointOnCard.x,client.gui.getWidth()-55)),Math.max(0, Math.min(e.getPoint().y-pointOnCard.y,client.gui.getHeight()-85))); //replace boundaries with width()/height() of frame?
 		}
 		else{
 			//System.out.println("not dragging");
