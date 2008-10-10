@@ -131,13 +131,28 @@ public class Field implements MouseListener, MouseMotionListener{
                                     case 1:
                                             if(crd.card.type==5)
                                                     inner=new Color(100,100,200);
-                                            else
-                                                    inner=new Color(100,200,100);
+                                            else{
+                                                    inner = (crd.card.name!="DYNAMITE"?inner=new Color(100,200,100):new Color(100,100,200));
+                                            }
                                             break;
                                     default:
                                             inner=new Color(200,100,100);
                                     }
-                                    Color outer=client.id==1?Color.RED:Color.BLUE;
+                                    //Color outer=client.id==1?Color.RED:Color.BLUE;
+                                    Color outer;
+                                    switch(crd.playerid){
+                                        case 0: outer = Color.RED; break;
+                                        case 1: outer = Color.BLUE; break;
+                                        case 2: outer = Color.CYAN; break;
+                                        case 3: outer = Color.MAGENTA; break;
+                                        case 4: outer = Color.YELLOW; break;
+                                        case 5: outer = Color.ORANGE; break;
+                                        case 6: outer = Color.GREEN; break;
+                                        case 7: outer = Color.LIGHT_GRAY; break;
+                                        case 8: outer = Color.WHITE; break;
+                                        case 9: outer = Color.PINK; break;
+                                        default: outer = Color.BLACK; break;
+                                    }
                                     cd.paint(crd.card.name, graphics, crd.rect.x, crd.rect.y, crd.rect.width, temp.rect.height, 
                                                             inner,outer);
                                 }

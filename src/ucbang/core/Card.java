@@ -333,12 +333,12 @@ public class Card {
 						// break; //all cards left untreated are treated as
 						// bangs
 			}
-                        if(type==3||type==5){ //TODO: remove this debug feature
+                        /*if(type==3||type==5){ //TODO: remove this debug feature
                             setLocation((int)(2*Math.random()));
                         }
                         else{
                             setLocation((int)(2*Math.random())==0?0:2);
-                        }
+                        }*/
 		}
 	}
 
