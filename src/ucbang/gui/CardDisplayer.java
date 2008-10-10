@@ -100,6 +100,7 @@ public class CardDisplayer {
 			cards.put("SEAN_MALLORY", ImageIO.read(ClassLoader.getSystemResource("images/char/dodge/seanmallory.jpg")));
 			cards.put("TEQUILA_JOE", ImageIO.read(ClassLoader.getSystemResource("images/char/dodge/tequilajoe.jpg")));
 			cards.put("VERA_CUSTER", ImageIO.read(ClassLoader.getSystemResource("images/char/dodge/veracuster.jpg")));
+			this.rotateImage("BULLETBACK",1);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

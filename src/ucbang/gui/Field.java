@@ -50,7 +50,7 @@ public class Field implements MouseListener, MouseMotionListener{
 	 * @param field Whether the card is in the field or not
 	 */
 	public void add(Card card, int x, int y, int player, boolean field){
-		clickies.put(card, new CardSpace(card, new Rectangle(x,y,60,90), player, field, null));
+		clickies.put(card, new CardSpace(card, new Rectangle(x,y,60,90), player, field));
 	}
 	public void removeLast(int player){
                 clickies.remove(handPlacer.get(player).removeLast().card);
@@ -68,12 +68,12 @@ public class Field implements MouseListener, MouseMotionListener{
 		if(card.type==1){//this a character card
 			int x=350;
 			int y=200;
-			clickies.put(card, new CardSpace(card, new Rectangle(x, y,60,90), player, false,null));
+			clickies.put(card, new CardSpace(card, new Rectangle(x, y,60,90), player, false));
 		}else{
 			HandSpace hs = handPlacer.get(player);
 			int x=(int) hs.rect.x+hs.rect.width+xoffset;
 			int y=(int) hs.rect.y+(field?(player==client.id?-100:100):0); //more trinarytrinary fun!
-			CardSpace cs = new CardSpace(card, new Rectangle(x, y,60,90), player, field, hs);
+			CardSpace cs = new CardSpace(card, new Rectangle(x, y,60,90), player, field);
 			clickies.put(card, cs);
                         if(field == false)
                             hs.addCard(cs);
@@ -223,15 +223,14 @@ public class Field implements MouseListener, MouseMotionListener{
 			if(chara!=null){
 				int x=(int) hs.rect.x-90;
 				int y=(int) hs.rect.y;
-				CardSpace csp = new CardSpace(chara,new Rectangle(x,y,60,90), player, false, hs);
-				csp.setParent(false, hs);
+				CardSpace csp = new CardSpace(chara,new Rectangle(x,y,60,90), player, false);
 				clickies.put(chara, csp);
 				//generate HP card
 				Card hp = new Card(Deck.CardName.BULLETBACK);
 				CardSpace hps = new CardSpace(hp, new Rectangle(x+
-						10 * client.players.get(player).maxLifePoints,y+30,90,60),player, false, hs);
-				hps.setParent(false, hs);
-				hps.rotate(1);
+						10 * client.players.get(player).maxLifePoints,y+30,90,60),player, false);
+				hps.setParent(false, csp);
+				//hps.rotate(1);
 				clickies.put(hp, hps);
 				hs.setCharHP(csp, hps);
 			}
@@ -365,7 +364,7 @@ public class Field implements MouseListener, MouseMotionListener{
 		 * @param f Whether the card is on the field
 		 * @param parent The parent container of the card
 		 */
-		public CardSpace(Card c, Rectangle r, int player, boolean f, HandSpace parent){
+		public CardSpace(Card c, Rectangle r, int player, boolean f){
 			super(r);
 			card = c;
 			rect = r;
@@ -430,10 +429,9 @@ public class Field implements MouseListener, MouseMotionListener{
 				return ((Integer)rect.getLocation().x).compareTo(o.rect.getLocation().x);
 		}
 		public void move(int x, int y){
-			if(draggable){
-				if(at!=null)at.translate(rect.x-x, rect.y-y);
+			if(at!=null)at.translate(rect.x-x, rect.y-y);
 				rect.setLocation(x, y);
-			}else if(parent!=null){
+			if(parent!=null){
 				int dx = x-rect.x;
 				int dy = y-rect.y;
 				parent.translate(dx, dy);
