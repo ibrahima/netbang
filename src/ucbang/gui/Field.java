@@ -64,7 +64,7 @@ public class Field implements MouseListener, MouseMotionListener{
 	 * @param field
 	 */
 	public void add(Card card, int player, boolean field){
-		int xoffset = (player==client.id?30*(client.player.hand.size()-1):30*(client.players.get(player).hand.size()-1));
+		int xoffset = 30*(client.players.get(player).hand.size()); //I don't know why we need a special case for the client's player!
 		if(card.type==1){//this a character card
 			int x=350;
 			int y=200;
