@@ -110,27 +110,37 @@ public class Field implements MouseListener, MouseMotionListener{
 			cd.paint("BULLETBACK", graphics, hp.rect.x, hp.rect.y, hp.rect.width, hp.rect.height, Color.BLUE, Color.GRAY);
 		}*/
 		Iterator<Clickable> iter = clickies.values().iterator();
+                ArrayList<CardSpace> Char = new ArrayList<CardSpace>();
+                ArrayList<CardSpace> Bullet = new ArrayList<CardSpace>();
 		while(iter.hasNext()){
 			Clickable temp = iter.next();
 			if(temp instanceof CardSpace){
 				CardSpace crd = (CardSpace)temp;
-				Color inner;
-				switch(crd.card.location){
-				case 0:
-					inner=Color.BLACK;
-					break;
-				case 1:
-					if(crd.card.type==5)
-						inner=new Color(100,100,200);
-					else
-						inner=new Color(100,200,100);
-					break;
-				default:
-					inner=new Color(200,100,100);
-				}
-				Color outer=client.id==1?Color.RED:Color.BLUE;
-				cd.paint(crd.card.name, graphics, crd.rect.x, crd.rect.y, crd.rect.width, temp.rect.height, 
-							inner,outer);
+                                if(crd.card.name=="BULLETBACK"){
+                                    Bullet.add(crd);
+                                }
+                                else if(crd.card.type==1){
+                                    Char.add(crd);
+                                }
+                                else{
+                                    Color inner;
+                                    switch(crd.card.location){
+                                    case 0:
+                                            inner=Color.BLACK;
+                                            break;
+                                    case 1:
+                                            if(crd.card.type==5)
+                                                    inner=new Color(100,100,200);
+                                            else
+                                                    inner=new Color(100,200,100);
+                                            break;
+                                    default:
+                                            inner=new Color(200,100,100);
+                                    }
+                                    Color outer=client.id==1?Color.RED:Color.BLUE;
+                                    cd.paint(crd.card.name, graphics, crd.rect.x, crd.rect.y, crd.rect.width, temp.rect.height, 
+                                                            inner,outer);
+                                }
 			}else if(temp instanceof HandSpace){
 				HandSpace hs = (HandSpace)temp;
 				graphics.draw3DRect(hs.rect.x, hs.rect.y, hs.rect.width, hs.rect.height, true);
@@ -138,6 +148,14 @@ public class Field implements MouseListener, MouseMotionListener{
 				System.out.println("WTF");
 			}
 		}
+                
+                for(CardSpace crd:Bullet){
+                    cd.paint(crd.card.name, graphics, crd.rect.x, crd.rect.y, crd.rect.width, crd.rect.height, Color.BLACK, Color.BLACK);
+                }
+                for(CardSpace crd:Char){
+                    cd.paint(crd.card.name, graphics, crd.rect.x, crd.rect.y, crd.rect.width, crd.rect.height, Color.BLACK, Color.BLACK);
+                }
+                
 		if(description==null&&System.currentTimeMillis()-lastMouseMoved>1000){
 			//create description
 			Clickable cl = binarySearchCardAtPoint(hoverpoint);
