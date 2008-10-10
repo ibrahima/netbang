@@ -273,13 +273,13 @@ new BufferedWriter(new OutputStreamWriter(server.getOutputStream()));
                                 if (temp1[1].equals("Character")) {
                                     Card card = 
                                         new Card(Deck.Characters.valueOf(temp1[m]));
-                                    c.player.hand.add(card);
                                     c.field.add(card, 150+80*m, 200, c.id, false);
+                                    c.player.hand.add(card);
                                 } else {
                                     Card card = 
                                         new Card(Deck.CardName.valueOf(temp1[m]));
-                                    c.player.hand.add(card);
                                     c.field.add(card, c.id, false);
+                                    c.player.hand.add(card);
                                 }
                             }
                         } else {
@@ -351,6 +351,7 @@ new BufferedWriter(new OutputStreamWriter(server.getOutputStream()));
                                 Card card;
                                 if(tid==c.id){
                                     card = c.player.hand.get(Integer.valueOf(temp1[3]));
+                                    card.location = 1;
                                     c.field.clickies.remove(card);
                                     c.player.hand.remove(card);
                                     c.players.get(tid).field.add(card);
