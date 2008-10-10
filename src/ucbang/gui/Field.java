@@ -538,6 +538,6 @@ public class Field implements MouseListener, MouseMotionListener{
 	}
 	public void setHP(int playerid, int lifePoints) {
 		CardSpace hpc = handPlacer.get(playerid).hp;
-		hpc.move(hpc.rect.x-10*lifePoints, hpc.rect.y);
+		hpc.translate(-10*lifePoints, 0);
 	}
 }
