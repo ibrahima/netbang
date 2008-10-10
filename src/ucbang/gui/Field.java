@@ -224,7 +224,6 @@ public class Field implements MouseListener, MouseMotionListener{
 				int x=(int) hs.rect.x-90;
 				int y=(int) hs.rect.y;
 				CardSpace csp = new CardSpace(chara,new Rectangle(x,y,60,90), player, false);
-				clickies.put(chara, csp);
 				//generate HP card
 				Card hp = new Card(Deck.CardName.BULLETBACK);
 				CardSpace hps = new CardSpace(hp, new Rectangle(x+
@@ -233,6 +232,7 @@ public class Field implements MouseListener, MouseMotionListener{
 				csp.setPartner(hps);
 				//hps.rotate(1);
 				clickies.put(hp, hps);
+				clickies.put(chara, csp);
 				hs.setCharHP(csp, hps);
 			}
 		}
@@ -429,11 +429,11 @@ public class Field implements MouseListener, MouseMotionListener{
 				return ((Integer)rect.getLocation().x).compareTo(o.rect.getLocation().x);
 		}
 		public void move(int x, int y){
+			int dx = x-rect.x;
+			int dy = y-rect.y;
 			if(at!=null)at.translate(rect.x-x, rect.y-y);
 				rect.setLocation(x, y);
 			if(partner!=null){
-				int dx = x-rect.x;
-				int dy = y-rect.y;
 				partner.translate(dx, dy);
 			}
 		}
@@ -483,10 +483,6 @@ public class Field implements MouseListener, MouseMotionListener{
 		}
 		public void translate(int dx, int dy){
 			rect.translate(dx, dy);
-			if(partner!=null){
-				System.out.println(partner);
-				//partner.translate(dx, dy);
-			}
 		}
 	}
 
