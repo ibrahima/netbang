@@ -38,6 +38,7 @@ public class Client extends Thread {
     public boolean running;
     public boolean prompting;
     public boolean forceDecision;
+    public int nextPrompt = -1; //this value will be returned the next time the client is prompted to do something
 
     public Client(String host, boolean guiEnabled) {
         running = true;
