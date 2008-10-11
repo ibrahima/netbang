@@ -338,8 +338,8 @@ public class Bang {
      * 
      */
     public boolean isCardLegal(Card c, Player p1, 
-                               Player p2) { //p2 can be null!!!
-        //programming malfunction check
+                               Player p2) {
+        System.out.println(p1.id + " asjdlasjdlajdaljdasjdasjlasdjkljasldkajdldjadasdkaldja " + p2.id+" "+c.name);
         if (c.target != 2 && p2 != null) {
             System.out.println("NON-TARGETING CARD HAS TARGET");
             return false;
@@ -348,8 +348,7 @@ public class Bang {
             return false;
         }
         //the rules
-        if (server.choice.size() == 
-            1) { //cards that can be played at the start of a turn
+        if (true) { //no idea why i had a condition here
             if (c.type == 3 && players[server.choice.get(0)[0][0]].field.contains(c)) { //replace false with some indicator of whether the card is on field
                     System.out.println("CLICKED ON A GREEN CARD ON FIELD, not implemented yet");
             }

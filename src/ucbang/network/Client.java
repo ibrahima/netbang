@@ -38,6 +38,7 @@ public class Client extends Thread {
     public boolean running;
     public boolean prompting;
     public boolean forceDecision;
+    public boolean targetingPlayer;
     public int nextPrompt = -1; //this value will be returned the next time the client is prompted to do something
 
     public Client(String host, boolean guiEnabled) {
@@ -255,13 +256,17 @@ new BufferedWriter(new OutputStreamWriter(server.getOutputStream()));
                         } else if (messagevalue.equals("PlayCardUnforced")) {
                             c.gui.promptChooseCard(c.player.hand, "", "", 
                                                    false);
+                        } else if (messagevalue.equals("PickCardTarget")) {
+                            c.gui.promptTargetCard("", "", //null should be ALL cards.
+                                                   false);
                         } else if (messagevalue.equals("ChooseCharacter")) {
                             c.gui.promptChooseCard(c.player.hand, "", "", 
                                                    true);
                         } else if (messagevalue.equals("PickTarget")) {
-                            System.out.println("I am player " + c.id + 
-                                               ", prompting = " + c.prompting);
-                            c.outMsgs.add("Prompt:" + (1 - c.id));
+                            //System.out.println("I am player " + c.id + ", prompting = " + c.prompting);
+                            //c.outMsgs.add("Prompt:" + (1 - c.id));
+                            c.gui.promptChooseCard(null, "", "", false);
+                            c.targetingPlayer = true;
                         } else {
                             System.out.println("WTF do i do with " + messagevalue);
                         }
@@ -377,7 +382,7 @@ new BufferedWriter(new OutputStreamWriter(server.getOutputStream()));
                             String s = "";
                             s = "Player " + temp1[1] + " played " + temp1[2] + (temp1.length == 4 ? " at player " + temp1[3] : "");
                             c.gui.appendText(s);
-                            if(tid!=c.id) //client would have already removed it
+                            if(tid!=c.id && !temp1[3].equals("no miss")) //client would have already removed it
                                 c.field.removeLast(tid);
                         } else if (infotype.equals("id")) {
                             System.out.println("ASDFASDFASDFASFASFASDFASDFAS"); //just realized this one is never called....
