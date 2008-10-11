@@ -179,6 +179,16 @@ public class ClientGUI extends JFrame implements KeyListener, ComponentListener{
                 client.prompting = true;
                 client.forceDecision = force;
 	}
+        /**
+         * Adds one bool, then does promptChooseCard
+         * @param al
+         * @param str1
+         * @param str2
+         * @param force
+         */
+        public void promptTargetCard(String str1, String str2, boolean force) {
+                promptChooseCard(null, str1, str2, force);
+        }
 
 	public void keyPressed(KeyEvent e) {
 		// TODO Auto-generated method stub

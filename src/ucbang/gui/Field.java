@@ -289,7 +289,7 @@ public class Field implements MouseListener, MouseMotionListener{
 			return;
 		}
 		Clickable cl = binarySearchCardAtPoint(ep);
-
+                //System.out.println(cl.playerid+" "+((cl instanceof CardSpace)?String.valueOf(((CardSpace)cl).card.type==1):""));
 		if (cl instanceof CardSpace) {
 			CardSpace cs = (CardSpace) cl;
 			if (cs != null && cs.card != null){
@@ -300,7 +300,7 @@ public class Field implements MouseListener, MouseMotionListener{
 			if (e.getButton() == MouseEvent.BUTTON3) {
 				//Put right click stuff here, or not
 			}else if (client.prompting){
-				if(pick.contains(cs.card)) {
+				if(pick!= null && pick.contains(cs.card)) {
 					System.out.println("000000000000000000000000000000 "+pick.size()+" "+client.player.hand.size());
 					System.out.println("sending prompt...");
 					if (cs.card.type == 1) {
@@ -314,10 +314,21 @@ public class Field implements MouseListener, MouseMotionListener{
 					pick = null;
 					client.prompting = false;
 				} else if(client.forceDecision==false){
-					client.gui.appendText("INDEX IN FIELD OF CARD IS"+client.player.field.indexOf(cs.card));
-					client.outMsgs.add("Prompt:" + -(client.player.field.indexOf(cs.card)+3));
-					pick = null;
-					client.prompting = false;
+					//it's your turn
+                                        if(client.targetingPlayer){
+                                            if(cs.card.type==1){
+                                                client.targetingPlayer = false;   
+                                                client.prompting = false;
+                                                client.outMsgs.add("Prompt:" + cs.playerid);
+                                            }
+                                            //otherwise do nothing
+                                        }
+                                        else{
+                                            client.gui.appendText("INDEX IN FIELD OF CARD IS"+client.player.field.indexOf(cs.card));
+                                            client.outMsgs.add("Prompt:" + -(client.player.field.indexOf(cs.card)+3));
+                                            pick = null;
+                                            client.prompting = false;
+                                        }
 				}
 				else{
 					System.out.println("i was prompting, but a bad card was given");
