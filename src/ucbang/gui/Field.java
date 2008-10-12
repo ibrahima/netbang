@@ -18,6 +18,8 @@ import java.util.Iterator;
 
 import ucbang.core.Card;
 import ucbang.core.Deck;
+import ucbang.core.Player;
+
 import ucbang.network.Client;
 
 public class Field implements MouseListener, MouseMotionListener{
@@ -293,7 +295,7 @@ public class Field implements MouseListener, MouseMotionListener{
 		if (cl instanceof CardSpace) {
 			CardSpace cs = (CardSpace) cl;
 			if (cs != null && cs.card != null){
-				System.out.println("Clicked on " + cs.card.name + (pick!=null?"whose index is " + pick.indexOf(cs.card):"; not picking"));
+				//client.gui.appendText(client.players.get(1).hand.contains(cs.card)+" "+client.players.get(0).hand.contains(cs.card)+" "+client.players.get(cs.playerid).hand.indexOf(cs.card));
 			}
 			else
 				return;
@@ -321,11 +323,22 @@ public class Field implements MouseListener, MouseMotionListener{
                                                 client.prompting = false;
                                                 client.outMsgs.add("Prompt:" + cs.playerid);
                                             }
-                                            //otherwise do nothing
+                                        }
+                                        else if(client.nextPrompt==-1){
+                                            Player p = client.players.get(cs.playerid);
+                                            System.out.println("asdjflasldfjaslfjaslfska12893041893249128340128401284091284jfslfjasfas "+p.id);
+                                            if(cs.card.location==0){
+                                                client.nextPrompt = p.hand.indexOf(cs.card);
+                                                System.out.println(client.nextPrompt);
+                                            }
+                                            else{
+                                                client.nextPrompt = (-client.player.field.indexOf(cs.card)-3);
+                                            }
+                                            client.outMsgs.add("Prompt:"+p.id);
                                         }
                                         else{
                                             client.gui.appendText("INDEX IN FIELD OF CARD IS"+client.player.field.indexOf(cs.card));
-                                            client.outMsgs.add("Prompt:" + -(client.player.field.indexOf(cs.card)+3));
+                                            client.outMsgs.add("Prompt:" + (-client.player.field.indexOf(cs.card)-3));
                                             pick = null;
                                             client.prompting = false;
                                         }
@@ -461,7 +474,7 @@ public class Field implements MouseListener, MouseMotionListener{
 	}
 	private abstract class Clickable implements Comparable<Clickable>{
 		public Rectangle rect;
-		public int location; //position of card on field or in hand
+		//public int location; //position of card on field or in hand
 		public int playerid;
 		public AffineTransform at;
 		private int oldrotation=0;

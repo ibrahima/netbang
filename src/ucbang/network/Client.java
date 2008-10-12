@@ -39,7 +39,7 @@ public class Client extends Thread {
     public boolean prompting;
     public boolean forceDecision;
     public boolean targetingPlayer;
-    public int nextPrompt = -1; //this value will be returned the next time the client is prompted to do something
+    public int nextPrompt = -2; //this value will be returned the next time the client is prompted to do something
 
     public Client(String host, boolean guiEnabled) {
         running = true;
@@ -240,8 +240,13 @@ new BufferedWriter(new OutputStreamWriter(server.getOutputStream()));
                     } else if (messagetype.equals("PlayerLeave")) {
                         c.players.remove(messagevalue);
                     } else if (messagetype.equals("Prompt")) {
+                        if(c.nextPrompt!=-2){
+                            System.out.println("AUTOAUTOAUTOAUTOAUTOAUTOAUTOAUTOAUTO");
+                            c.outMsgs.add("Prompt:" + c.nextPrompt);
+                            c.nextPrompt = -2;
+                        }
                         // received a prompt from host
-                        if (messagevalue.equals("Start")) { // will waiting for
+                        else if (messagevalue.equals("Start")) { // will waiting for
                             // response here cause
                             // client to desync with
                             // server?
@@ -259,6 +264,7 @@ new BufferedWriter(new OutputStreamWriter(server.getOutputStream()));
                         } else if (messagevalue.equals("PickCardTarget")) {
                             c.gui.promptTargetCard("", "", //null should be ALL cards.
                                                    false);
+                            c.nextPrompt = -1;
                         } else if (messagevalue.equals("ChooseCharacter")) {
                             c.gui.promptChooseCard(c.player.hand, "", "", 
                                                    true);
@@ -292,8 +298,9 @@ new BufferedWriter(new OutputStreamWriter(server.getOutputStream()));
                             c.gui.appendText("Player " + temp1[0] + " drew " + 
                                              temp1[1] + "cards.", Color.GREEN);
                             for(int i=0;i<Integer.valueOf(temp1[1]);i++){
-                            	c.field.add(new Card(Deck.CardName.BACK), Integer.valueOf(temp1[0]), false);
-                            	c.players.get(Integer.valueOf(temp1[0])).hand.add(new Card(Deck.CardName.BACK));
+                                Card card = new Card(Deck.CardName.BACK);
+                            	c.field.add(card, Integer.valueOf(temp1[0]), false);
+                            	c.players.get(Integer.valueOf(temp1[0])).hand.add(card);
                             }
                         }
                         c.outMsgs.add("Ready");
@@ -376,9 +383,20 @@ new BufferedWriter(new OutputStreamWriter(server.getOutputStream()));
                                 c.gui.appendText("It's your move!!!!!! Time to d-d-d-d-d-duel!", Color.CYAN);
                             }
                         } else if (infotype.equals("discard")) {
-                            c.field.clickies.remove(c.player.hand.get(tid));
-                            System.out.println("MOVED TO DISCARD:" + c.player.hand.remove(tid).name);
-                        } else if (infotype.equals("CardPlayed")) {
+                            if(tid==c.id){
+                                c.field.clickies.remove(c.player.hand.get(Integer.valueOf(temp1[2])));
+                                c.gui.appendText("You discarded:" + c.player.hand.remove(Integer.valueOf(temp1[2]).intValue()).name);
+                            }
+                            else{
+                                c.field.clickies.remove(c.players.get(tid).hand.get(Integer.valueOf(temp1[2])));
+                                c.players.get(tid).hand.remove(Integer.valueOf(temp1[2]));
+                                c.gui.appendText("Player "+tid+" discarded:" + temp1[3]);
+                            }
+                        } else if (infotype.equals("fieldDiscard")) {
+                            c.field.clickies.remove(c.player.field.get(tid));
+                            System.out.println("MOVED TO DISCARD:" + c.player.field.remove(tid).name);
+                        }
+                        else if (infotype.equals("CardPlayed")) {
                             String s = "";
                             s = "Player " + temp1[1] + " played " + temp1[2] + (temp1.length == 4 ? " at player " + temp1[3] : "");
                             c.gui.appendText(s);

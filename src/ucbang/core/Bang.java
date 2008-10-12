@@ -50,8 +50,13 @@ public class Bang {
                         if (server.choice.size() == 1) {
                             //TODO: prompt to pick a target
                             {
-                                server.prompt(turn % numPlayers, "PickTarget", 
-                                              true);
+                                if (players[server.choice.get(0)[0][0]].hand.get(server.choice.get(0)[0][1]).effect == Card.play.STEAL.ordinal() ||
+                                 players[server.choice.get(0)[0][0]].hand.get(server.choice.get(0)[0][1]).effect == Card.play.DISCARD.ordinal()){
+                                    System.out.println("ASDFASFASDFASFASDFSFAFASDFASDFASDFASDFASFSFFASFAFKWR!#$!$!$!!$$ 1");
+                                    server.prompt(turn % numPlayers, "PickCardTarget", true);
+                                }
+                                else
+                                    server.prompt(turn % numPlayers, "PickTarget", true);
                                 System.out.println("pick target....");
                                 return;
                             }
@@ -65,8 +70,7 @@ public class Bang {
                                 if (players[server.choice.get(0)[0][0]].hand.get(server.choice.get(0)[0][1]).discardToPlay == 
                                     true) {
                                     if (players[server.choice.get(0)[0][0]].hand.size() > 1) {
-                                        if (server.choice.get(1).length == 
-                                            1) { //has not been asked to discard yet
+                                        if (server.choice.get(1).length == 1) { //has not been asked to discard yet
                                             System.out.println("THIS CARD REQUIRES A DISCARD TO PLAY AS WELL");
                                             server.choice.set(1, 
                                                               new int[][] { server.choice.get(1)[0], 
@@ -119,7 +123,15 @@ public class Bang {
                                                    server.choice.get(1)[0][0] + 
                                                    " is targetting " + 
                                                    server.choice.get(1)[0][1]);
-                                if (players[server.choice.get(0)[0][0]].hand.get(server.choice.get(0)[0][1]).effect == Card.play.DAMAGE.ordinal() ||
+                                if (players[server.choice.get(0)[0][0]].hand.get(server.choice.get(0)[0][1]).effect == Card.play.STEAL.ordinal() ||
+                                    players[server.choice.get(0)[0][0]].hand.get(server.choice.get(0)[0][1]).effect == Card.play.DISCARD.ordinal()){
+                                    System.out.println("ASDFASFASDFASFASDFSFAFASDFASDFASDFASDFASFSFFASFAFKWR!#$!$!$!!$$ 2");
+                                        server.prompt(turn % numPlayers, 
+                                                      "PickCardTarget", 
+                                                      true);
+                                        return;
+                                }
+                                else if (players[server.choice.get(0)[0][0]].hand.get(server.choice.get(0)[0][1]).effect == Card.play.DAMAGE.ordinal() ||
                                     players[server.choice.get(0)[0][0]].hand.get(server.choice.get(0)[0][1]).effect == Card.play.DUEL.ordinal() ) {
                                     server.prompt(server.choice.get(1)[0][1], 
                                                   "PlayCardUnforced", 
@@ -217,7 +229,24 @@ public class Bang {
                                     server.prompt(i, "PlayCardUnforced", true);
                                 }
                             }
+                            else if (players[server.choice.get(0)[0][0]].hand.get(server.choice.get(0)[0][1]).effect == Card.play.STEAL.ordinal() ||
+                                players[server.choice.get(0)[0][0]].hand.get(server.choice.get(0)[0][1]).effect == Card.play.DISCARD.ordinal()){
+                                    System.out.println("ASDFASFASDFASFASDFSFAFASDFASDFASDFASDFASFSFFASFAFKWR!#$!$!$!!$$ 3");
+                                    int temp = server.choice.get(2)[0][1];
+                                    if(temp>-1){
+                                        playerDiscardCard(server.choice.get(1)[0][1], temp);
+                                    }
+                                    else{
+                                        temp = (-temp)-3;
+                                        playerFieldDiscardCard(server.choice.get(1)[0][1], temp);
+                                    }
+                                    server.choice.remove(server.choice.size() - 1);
+                                    server.choice.remove(server.choice.size() - 1);
+                                    playerDiscardCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]);
+                            }
                         }
+                        
+                        
                     } else if (players[server.choice.get(0)[0][0]].hand.get(server.choice.get(0)[0][1]).target == 
                                3 &&
                                (players[server.choice.get(0)[0][0]].hand.get(server.choice.get(0)[0][1]).type == 
@@ -711,9 +740,24 @@ public class Bang {
         if (c.type == 1) {
             //players[p].hand.remove(n);
         } else {
-            server.sendInfo(p, "SetInfo:discard:" + n);
+            server.sendInfo(p, "SetInfo:discard:"+p+":"+n);
             deck.discardPile.add(c);
+            for (int m = 0; m < numPlayers; m++) {
+                if (m != p) {
+                    server.sendInfo(m, "SetInfo:discard:"+p+":"+n+":"+ c.name);
+                }
+            }
         }
+    }
+    /**
+     * Discards card n in Player p's field
+     */
+    public void playerFieldDiscardCard(int p, int n) {
+        Card c = players[p].field.get(n);
+        //is card a character card
+        players[p].field.remove(c);
+        server.sendInfo(p, "SetInfo:fieldDiscard:" + n);
+        deck.discardPile.add(c);
     }
     
     /**
