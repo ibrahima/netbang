@@ -382,7 +382,7 @@ new BufferedWriter(new OutputStreamWriter(server.getOutputStream()));
                             String s = "";
                             s = "Player " + temp1[1] + " played " + temp1[2] + (temp1.length == 4 ? " at player " + temp1[3] : "");
                             c.gui.appendText(s);
-                            if(tid!=c.id && !temp1[3].equals("no miss")) //client would have already removed it
+                            if(tid!=c.id && (temp1.length==4?!temp1[3].equals("no miss"):true)) //client would have already removed it
                                 c.field.removeLast(tid);
                         } else if (infotype.equals("id")) {
                             System.out.println("ASDFASDFASDFASFASFASDFASDFAS"); //just realized this one is never called....

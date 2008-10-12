@@ -62,11 +62,6 @@ public class Bang {
                             } else if (isCardLegal(players[server.choice.get(0)[0][0]].hand.get(server.choice.get(0)[0][1]), 
                                                    players[server.choice.get(0)[0][0]], 
                                                    players[server.choice.get(1)[0][1]])) {
-                                server.sendInfo("SetInfo:CardPlayed:" + server.choice.get(0)[0][0] + ":" + players[server.choice.get(0)[0][0]].hand.get(server.choice.get(0)[0][1]).name + ":" + server.choice.get(1)[0][1]);
-                                System.out.println("Player " + 
-                                                   server.choice.get(1)[0][0] + 
-                                                   " is targetting " + 
-                                                   server.choice.get(1)[0][1]);
                                 if (players[server.choice.get(0)[0][0]].hand.get(server.choice.get(0)[0][1]).discardToPlay == 
                                     true) {
                                     if (players[server.choice.get(0)[0][0]].hand.size() > 1) {
@@ -119,6 +114,11 @@ public class Bang {
                                         return;
                                     }
                                 }
+                                server.sendInfo("SetInfo:CardPlayed:" + server.choice.get(0)[0][0] + ":" + players[server.choice.get(0)[0][0]].hand.get(server.choice.get(0)[0][1]).name + ":" + server.choice.get(1)[0][1]);
+                                System.out.println("Player " + 
+                                                   server.choice.get(1)[0][0] + 
+                                                   " is targetting " + 
+                                                   server.choice.get(1)[0][1]);
                                 if (players[server.choice.get(0)[0][0]].hand.get(server.choice.get(0)[0][1]).effect == Card.play.DAMAGE.ordinal() ||
                                     players[server.choice.get(0)[0][0]].hand.get(server.choice.get(0)[0][1]).effect == Card.play.DUEL.ordinal() ) {
                                     server.prompt(server.choice.get(1)[0][1], 
@@ -339,7 +339,6 @@ public class Bang {
      */
     public boolean isCardLegal(Card c, Player p1, 
                                Player p2) {
-        System.out.println(p1.id + " asjdlasjdlajdaljdasjdasjlasdjkljasldkajdldjadasdkaldja " + p2.id+" "+c.name);
         if (c.target != 2 && p2 != null) {
             System.out.println("NON-TARGETING CARD HAS TARGET");
             return false;
