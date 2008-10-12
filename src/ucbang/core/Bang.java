@@ -238,6 +238,7 @@ public class Bang {
                                     }
                                     else{
                                         temp = (-temp)-3;
+                                        System.out.println("LOOKING FOR A CARD IN FIELD");
                                         playerFieldDiscardCard(server.choice.get(1)[0][1], temp);
                                     }
                                     server.choice.remove(server.choice.size() - 1);
@@ -756,9 +757,18 @@ public class Bang {
         Card c = players[p].field.get(n);
         //is card a character card
         players[p].field.remove(c);
-        server.sendInfo(p, "SetInfo:fieldDiscard:" + n);
-        deck.discardPile.add(c);
-    }
+        if (c.type == 1) {
+            //players[p].hand.remove(n);
+        } else {
+            server.sendInfo(p, "SetInfo:fieldDiscard:"+p+":"+n);
+            deck.discardPile.add(c);
+            for (int m = 0; m < numPlayers; m++) {
+                if (m != p) {
+                    server.sendInfo(m, "SetInfo:fieldDiscard:"+p+":"+n+":"+ c.name);
+                }
+            }
+        }
+        }
     
     /**
      * Moves a card from p's hand to his field

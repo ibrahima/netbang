@@ -295,7 +295,7 @@ public class Field implements MouseListener, MouseMotionListener{
 		if (cl instanceof CardSpace) {
 			CardSpace cs = (CardSpace) cl;
 			if (cs != null && cs.card != null){
-				//client.gui.appendText(client.players.get(1).hand.contains(cs.card)+" "+client.players.get(0).hand.contains(cs.card)+" "+client.players.get(cs.playerid).hand.indexOf(cs.card));
+                            //client.gui.appendText(String.valueOf(client.players.get(cs.playerid).field.indexOf(cs.card)));
 			}
 			else
 				return;
@@ -332,13 +332,14 @@ public class Field implements MouseListener, MouseMotionListener{
                                                 System.out.println(client.nextPrompt);
                                             }
                                             else{
-                                                client.nextPrompt = (-client.player.field.indexOf(cs.card)-3);
+                                                client.nextPrompt = ((0-client.players.get(cs.playerid).field.indexOf(cs.card))-3);
+                                                client.gui.appendText("lol "+client.nextPrompt);
                                             }
                                             client.outMsgs.add("Prompt:"+p.id);
                                         }
                                         else{
                                             client.gui.appendText("INDEX IN FIELD OF CARD IS"+client.player.field.indexOf(cs.card));
-                                            client.outMsgs.add("Prompt:" + (-client.player.field.indexOf(cs.card)-3));
+                                            client.outMsgs.add("Prompt:" + ((0-client.player.field.indexOf(cs.card))-3));
                                             pick = null;
                                             client.prompting = false;
                                         }

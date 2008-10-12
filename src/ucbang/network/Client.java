@@ -372,6 +372,7 @@ new BufferedWriter(new OutputStreamWriter(server.getOutputStream()));
                                 }
                                 else{
                                     card = new Card(CardName.valueOf(temp1[2]));
+                                    card.location = 1;
                                     c.field.clickies.remove(c.players.get(tid).hand.get((int)Integer.valueOf(temp1[3])));
                                     c.field.removeLast(tid);
                                     c.players.get(tid).field.add(card);
@@ -393,8 +394,15 @@ new BufferedWriter(new OutputStreamWriter(server.getOutputStream()));
                                 c.gui.appendText("Player "+tid+" discarded:" + temp1[3]);
                             }
                         } else if (infotype.equals("fieldDiscard")) {
-                            c.field.clickies.remove(c.player.field.get(tid));
-                            System.out.println("MOVED TO DISCARD:" + c.player.field.remove(tid).name);
+                            if(tid==c.id){
+                                c.field.clickies.remove(c.player.field.get(Integer.valueOf(temp1[2])));
+                                c.gui.appendText("You discarded:" + c.player.field.remove(Integer.valueOf(temp1[2]).intValue()).name);
+                            }
+                            else{
+                                c.field.clickies.remove(c.players.get(tid).field.get(Integer.valueOf(temp1[2])));
+                                c.players.get(tid).field.remove(Integer.valueOf(temp1[2]));
+                                c.gui.appendText("Player "+tid+" discarded:" + temp1[3]);
+                            }
                         }
                         else if (infotype.equals("CardPlayed")) {
                             String s = "";
