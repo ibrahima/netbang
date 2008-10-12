@@ -55,7 +55,7 @@ public class Field implements MouseListener, MouseMotionListener{
 		clickies.put(card, new CardSpace(card, new Rectangle(x,y,60,90), player, field));
 	}
 	public void removeLast(int player){
-                clickies.remove(handPlacer.get(player).removeLast().card);
+		clickies.remove(handPlacer.get(player).removeLast().card);
 	}
 	/**
 	 * Adds a card to the field owned by the specified player
@@ -67,8 +67,8 @@ public class Field implements MouseListener, MouseMotionListener{
 	 */
 	public void add(Card card, int player, boolean field){
 		int xoffset = 30*(client.players.get(player).hand.size()); //I don't know why we need a special case for the client's player!
-                if(client.id==player)
-                    System.out.println("Client has "+client.player.hand.size()+"cards in his hand.");
+		if(client.id==player)
+			System.out.println("Client has "+client.player.hand.size()+"cards in his hand.");
 		if(card.type==1){//this a character card
 			int x=350;
 			int y=200;
@@ -79,8 +79,8 @@ public class Field implements MouseListener, MouseMotionListener{
 			int y=(int) hs.rect.y+(field?(player==client.id?-100:100):0); //more trinarytrinary fun!
 			CardSpace cs = new CardSpace(card, new Rectangle(x, y,60,90), player, field);
 			clickies.put(card, cs);
-                        if(field == false)
-                            hs.addCard(cs);
+			if(field == false)
+				hs.addCard(cs);
 		}
 	}
 	int textHeight(String message, Graphics2D graphics){
@@ -114,52 +114,52 @@ public class Field implements MouseListener, MouseMotionListener{
 			cd.paint("BULLETBACK", graphics, hp.rect.x, hp.rect.y, hp.rect.width, hp.rect.height, Color.BLUE, Color.GRAY);
 		}*/
 		Iterator<Clickable> iter = clickies.values().iterator();
-                ArrayList<CardSpace> Char = new ArrayList<CardSpace>();
-                ArrayList<CardSpace> Bullet = new ArrayList<CardSpace>();
+		ArrayList<CardSpace> Char = new ArrayList<CardSpace>();
+		ArrayList<CardSpace> Bullet = new ArrayList<CardSpace>();
 		while(iter.hasNext()){
 			Clickable temp = iter.next();
 			if(temp instanceof CardSpace){
 				CardSpace crd = (CardSpace)temp;
-                                if(crd.card.name=="BULLETBACK"){
-                                    Bullet.add(crd);
-                                }
-                                else if(crd.card.type==1){
-                                    Char.add(crd);
-                                }
-                                else{
-                                    Color inner;
-                                    switch(crd.card.location){
-                                    case 0:
-                                            inner=Color.BLACK;
-                                            break;
-                                    case 1:
-                                            if(crd.card.type==5)
-                                                    inner=new Color(100,100,200);
-                                            else{
-                                                    inner = (crd.card.name!="DYNAMITE"?inner=new Color(100,200,100):new Color(100,100,200));
-                                            }
-                                            break;
-                                    default:
-                                            inner=new Color(200,100,100);
-                                    }
-                                    //Color outer=client.id==1?Color.RED:Color.BLUE;
-                                    Color outer;
-                                    switch(crd.playerid){
-                                        case 0: outer = Color.RED; break;
-                                        case 1: outer = Color.BLUE; break;
-                                        case 2: outer = Color.CYAN; break;
-                                        case 3: outer = Color.MAGENTA; break;
-                                        case 4: outer = Color.YELLOW; break;
-                                        case 5: outer = Color.ORANGE; break;
-                                        case 6: outer = Color.GREEN; break;
-                                        case 7: outer = Color.LIGHT_GRAY; break;
-                                        case 8: outer = Color.WHITE; break;
-                                        case 9: outer = Color.PINK; break;
-                                        default: outer = Color.BLACK; break;
-                                    }
-                                    cd.paint(crd.card.name, graphics, crd.rect.x, crd.rect.y, crd.rect.width, temp.rect.height, 
-                                                            inner,outer);
-                                }
+				if(crd.card.name=="BULLETBACK"){
+					Bullet.add(crd);
+				}
+				else if(crd.card.type==1){
+					Char.add(crd);
+				}
+				else{
+					Color inner;
+					switch(crd.card.location){
+					case 0:
+						inner=Color.BLACK;
+						break;
+					case 1:
+						if(crd.card.type==5)
+							inner=new Color(100,100,200);
+						else{
+							inner = (crd.card.name!="DYNAMITE"?inner=new Color(100,200,100):new Color(100,100,200));
+						}
+						break;
+					default:
+						inner=new Color(200,100,100);
+					}
+					//Color outer=client.id==1?Color.RED:Color.BLUE;
+					Color outer;
+					switch(crd.playerid){
+					case 0: outer = Color.RED; break;
+					case 1: outer = Color.BLUE; break;
+					case 2: outer = Color.CYAN; break;
+					case 3: outer = Color.MAGENTA; break;
+					case 4: outer = Color.YELLOW; break;
+					case 5: outer = Color.ORANGE; break;
+					case 6: outer = Color.GREEN; break;
+					case 7: outer = Color.LIGHT_GRAY; break;
+					case 8: outer = Color.WHITE; break;
+					case 9: outer = Color.PINK; break;
+					default: outer = Color.BLACK; break;
+					}
+					cd.paint(crd.card.name, graphics, crd.rect.x, crd.rect.y, crd.rect.width, temp.rect.height, 
+							inner,outer);
+				}
 			}else if(temp instanceof HandSpace){
 				HandSpace hs = (HandSpace)temp;
 				graphics.draw3DRect(hs.rect.x, hs.rect.y, hs.rect.width, hs.rect.height, true);
@@ -167,14 +167,14 @@ public class Field implements MouseListener, MouseMotionListener{
 				System.out.println("WTF");
 			}
 		}
-                
-                for(CardSpace crd:Bullet){
-                    cd.paint(crd.card.name, graphics, crd.rect.x, crd.rect.y, crd.rect.width, crd.rect.height, Color.BLACK, Color.BLACK);
-                }
-                for(CardSpace crd:Char){
-                    cd.paint(crd.card.name, graphics, crd.rect.x, crd.rect.y, crd.rect.width, crd.rect.height, Color.BLACK, Color.BLACK);
-                }
-                
+
+		for(CardSpace crd:Bullet){
+			cd.paint(crd.card.name, graphics, crd.rect.x, crd.rect.y, crd.rect.width, crd.rect.height, Color.BLACK, Color.BLACK);
+		}
+		for(CardSpace crd:Char){
+			cd.paint(crd.card.name, graphics, crd.rect.x, crd.rect.y, crd.rect.width, crd.rect.height, Color.BLACK, Color.BLACK);
+		}
+
 		if(description==null&&System.currentTimeMillis()-lastMouseMoved>1000){
 			//create description
 			Clickable cl = binarySearchCardAtPoint(hoverpoint);
@@ -245,7 +245,7 @@ public class Field implements MouseListener, MouseMotionListener{
 		HandSpace hs = null;
 		clear();
 		for(int player = 0; player<client.numPlayers; player++){
-			theta = (player-client.id)*(2*Math.PI/client.numPlayers)-Math.PI/2;
+			theta = -(player-client.id)*(2*Math.PI/client.numPlayers)-Math.PI/2;
 			hs=new HandSpace(new Rectangle((client.gui.width-100)/2+(int)((client.gui.width-300)*Math.cos(theta)),
 					280-(int)(220*Math.sin(theta)),10,10), player);
 			handPlacer.add(hs);
@@ -291,11 +291,11 @@ public class Field implements MouseListener, MouseMotionListener{
 			return;
 		}
 		Clickable cl = binarySearchCardAtPoint(ep);
-                //System.out.println(cl.playerid+" "+((cl instanceof CardSpace)?String.valueOf(((CardSpace)cl).card.type==1):""));
+		//System.out.println(cl.playerid+" "+((cl instanceof CardSpace)?String.valueOf(((CardSpace)cl).card.type==1):""));
 		if (cl instanceof CardSpace) {
 			CardSpace cs = (CardSpace) cl;
 			if (cs != null && cs.card != null){
-                            //client.gui.appendText(String.valueOf(client.players.get(cs.playerid).field.indexOf(cs.card)));
+				//client.gui.appendText(String.valueOf(client.players.get(cs.playerid).field.indexOf(cs.card)));
 			}
 			else
 				return;
@@ -317,32 +317,32 @@ public class Field implements MouseListener, MouseMotionListener{
 					client.prompting = false;
 				} else if(client.forceDecision==false){
 					//it's your turn
-                                        if(client.targetingPlayer){
-                                            if(cs.card.type==1){
-                                                client.targetingPlayer = false;   
-                                                client.prompting = false;
-                                                client.outMsgs.add("Prompt:" + cs.playerid);
-                                            }
-                                        }
-                                        else if(client.nextPrompt==-1){
-                                            Player p = client.players.get(cs.playerid);
-                                            System.out.println("asdjflasldfjaslfjaslfska12893041893249128340128401284091284jfslfjasfas "+p.id);
-                                            if(cs.card.location==0){
-                                                client.nextPrompt = p.hand.indexOf(cs.card);
-                                                System.out.println(client.nextPrompt);
-                                            }
-                                            else{
-                                                client.nextPrompt = ((0-client.players.get(cs.playerid).field.indexOf(cs.card))-3);
-                                                client.gui.appendText("lol "+client.nextPrompt);
-                                            }
-                                            client.outMsgs.add("Prompt:"+p.id);
-                                        }
-                                        else{
-                                            client.gui.appendText("INDEX IN FIELD OF CARD IS"+client.player.field.indexOf(cs.card));
-                                            client.outMsgs.add("Prompt:" + ((0-client.player.field.indexOf(cs.card))-3));
-                                            pick = null;
-                                            client.prompting = false;
-                                        }
+					if(client.targetingPlayer){
+						if(cs.card.type==1){
+							client.targetingPlayer = false;   
+							client.prompting = false;
+							client.outMsgs.add("Prompt:" + cs.playerid);
+						}
+					}
+					else if(client.nextPrompt==-1){
+						Player p = client.players.get(cs.playerid);
+						System.out.println("asdjflasldfjaslfjaslfska12893041893249128340128401284091284jfslfjasfas "+p.id);
+						if(cs.card.location==0){
+							client.nextPrompt = p.hand.indexOf(cs.card);
+							System.out.println(client.nextPrompt);
+						}
+						else{
+							client.nextPrompt = ((0-client.players.get(cs.playerid).field.indexOf(cs.card))-3);
+							client.gui.appendText("lol "+client.nextPrompt);
+						}
+						client.outMsgs.add("Prompt:"+p.id);
+					}
+					else{
+						client.gui.appendText("INDEX IN FIELD OF CARD IS"+client.player.field.indexOf(cs.card));
+						client.outMsgs.add("Prompt:" + ((0-client.player.field.indexOf(cs.card))-3));
+						pick = null;
+						client.prompting = false;
+					}
 				}
 				else{
 					System.out.println("i was prompting, but a bad card was given");
@@ -375,7 +375,7 @@ public class Field implements MouseListener, MouseMotionListener{
 
 	public void mouseDragged(MouseEvent e) {
 		//System.out.println("dragging");
-                lastMouseMoved = System.currentTimeMillis();
+		lastMouseMoved = System.currentTimeMillis();
 		if(movingCard!=null){
 			movingCard.move(Math.max(0, Math.min(e.getPoint().x-pointOnCard.x,client.gui.getWidth()-55)),Math.max(0, Math.min(e.getPoint().y-pointOnCard.y,client.gui.getHeight()-85))); //replace boundaries with width()/height() of frame?
 		}
@@ -493,7 +493,7 @@ public class Field implements MouseListener, MouseMotionListener{
 			int dx = x-rect.x;
 			int dy = y-rect.y;
 			if(at!=null)at.translate(rect.x-x, rect.y-y);
-				rect.setLocation(x, y);
+			rect.setLocation(x, y);
 			if(partner!=null){
 				partner.translate(dx, dy);
 			}
@@ -561,7 +561,7 @@ public class Field implements MouseListener, MouseMotionListener{
 			Clickable temp = iter.next();
 			temp.move(temp.rect.x*width2/width, temp.rect.y*height2/height);
 		}
-		
+
 	}
 	public void setHP(int playerid, int lifePoints) {
 		CardSpace hpc = handPlacer.get(playerid).hp;
