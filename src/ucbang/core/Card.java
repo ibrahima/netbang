@@ -90,7 +90,7 @@ public class Card {
 						" card, or lose a life point. Neither Missed! nor Barrel has effect in this case.";
 				break;
 			case KNIFE:
-				type = 2;
+				type = 3;
 				target = 2;
 				range = 1;
 				effect = play.DAMAGE.ordinal();
