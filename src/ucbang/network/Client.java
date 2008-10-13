@@ -368,13 +368,13 @@ new BufferedWriter(new OutputStreamWriter(server.getOutputStream()));
                                     c.field.clickies.remove(card);
                                     c.player.hand.remove(card);
                                     c.players.get(tid).field.add(card);
-                                    c.players.get(tid).hand.remove(Integer.valueOf(temp1[3]));
+                                    c.players.get(tid).hand.remove(Integer.valueOf(temp1[3]).intValue());
                                 }
                                 else{
                                     card = new Card(CardName.valueOf(temp1[2]));
                                     card.location = 1;
                                     c.field.clickies.remove(c.players.get(tid).hand.get((int)Integer.valueOf(temp1[3])));
-                                    c.field.removeLast(tid);
+                                    c.players.get(tid).hand.remove((int)Integer.valueOf(temp1[3]));
                                     c.players.get(tid).field.add(card);
                                 }
                                 c.field.add(card, tid, true);
@@ -390,8 +390,8 @@ new BufferedWriter(new OutputStreamWriter(server.getOutputStream()));
                             }
                             else{
                                 c.field.clickies.remove(c.players.get(tid).hand.get(Integer.valueOf(temp1[2])));
-                                c.players.get(tid).hand.remove(Integer.valueOf(temp1[2]));
-                                c.gui.appendText("Player "+tid+" discarded:" + temp1[3]);
+                                c.players.get(tid).hand.remove(Integer.valueOf(temp1[2]).intValue());
+                                c.gui.appendText("Player "+tid+" discarded:" + (temp1.length==4?temp1[3]:"card #"+temp1[2]));
                             }
                         } else if (infotype.equals("fieldDiscard")) {
                             if(tid==c.id){
@@ -400,7 +400,7 @@ new BufferedWriter(new OutputStreamWriter(server.getOutputStream()));
                             }
                             else{
                                 c.field.clickies.remove(c.players.get(tid).field.get(Integer.valueOf(temp1[2])));
-                                c.players.get(tid).field.remove(Integer.valueOf(temp1[2]));
+                                c.players.get(tid).field.remove(Integer.valueOf(temp1[2]).intValue());
                                 c.gui.appendText("Player "+tid+" discarded:" + temp1[3]);
                             }
                         }
@@ -408,8 +408,8 @@ new BufferedWriter(new OutputStreamWriter(server.getOutputStream()));
                             String s = "";
                             s = "Player " + temp1[1] + " played " + temp1[2] + (temp1.length == 4 ? " at player " + temp1[3] : "");
                             c.gui.appendText(s);
-                            if(tid!=c.id && (temp1.length==4?!temp1[3].equals("no miss"):true)) //client would have already removed it
-                                c.field.removeLast(tid);
+                            //if(tid!=c.id && (temp1.length==4?!temp1[3].equals("no miss"):true)) //client would have already removed it
+                                //c.field.removeLast(tid);
                         } else if (infotype.equals("id")) {
                             System.out.println("ASDFASDFASDFASFASFASDFASDFAS"); //just realized this one is never called....
                             c.id = tid;

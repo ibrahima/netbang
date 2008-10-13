@@ -228,6 +228,10 @@ public class ClientGUI extends JFrame implements KeyListener, ComponentListener{
 			else
 				chat.append(e.getKeyChar());
 		} else{
+                    if(Character.isDigit(e.getKeyChar())){
+                        int f = ((Character)e.getKeyChar())%48;
+                        appendText(client.players.get(1-client.id).hand.get(f).name);
+                    }
                     if((char)e.getKeyChar()=='a'){
                         appendText(String.valueOf(client.numPlayers));
                     }

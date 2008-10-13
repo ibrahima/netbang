@@ -105,7 +105,7 @@ public class Bang {
                                                     server.choice.get(0)[0][1]--;
                                                 }
                                                 playerDiscardCard(server.choice.get(0)[0][0], 
-                                                                  server.choice.get(1)[1][1]);
+                                                                  server.choice.get(1)[1][1], true);
                                             }
                                         }
                                     } else {
@@ -140,7 +140,7 @@ public class Bang {
                                 } else {
                                     System.out.println("NOT A BANG, SO TARGET DOES NOT CHOOSE (Unimplemented targetting card)");
                                     playerDiscardCard(server.choice.get(0)[0][0], 
-                                                      server.choice.get(0)[0][1]);
+                                                      server.choice.get(0)[0][1], true);
                                     server.choice.remove(server.choice.size() - 
                                                          1);
                                 }
@@ -167,7 +167,7 @@ public class Bang {
                                     server.choice.remove(server.choice.size() - 
                                                          1);
                                     playerDiscardCard(server.choice.get(0)[0][0], 
-                                                      server.choice.get(0)[0][1]);
+                                                      server.choice.get(0)[0][1], true);
                                 } else if (players[server.choice.get(1)[0][1]].hand.get(server.choice.get(2)[0][1]).effect == 
                                            Card.play.MISS.ordinal() && 
                                            players[server.choice.get(1)[0][1]].hand.get(server.choice.get(2)[0][1]).type == 
@@ -182,8 +182,8 @@ public class Bang {
                                         Card.play.DRAW.ordinal()) {
                                         playerDrawCard(server.choice.get(1)[0][0], 1);
                                     }
-                                    playerDiscardCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]);
-                                    playerDiscardCard(server.choice.get(1)[0][1], server.choice.get(2)[0][1]);
+                                    playerDiscardCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1], true);
+                                    playerDiscardCard(server.choice.get(1)[0][1], server.choice.get(2)[0][1], true);
                                     server.choice.remove(server.choice.size() - 1);
                                     server.choice.remove(server.choice.size() - 1);
                                 } else { //not a miss card!
@@ -196,7 +196,7 @@ public class Bang {
                             else if(players[server.choice.get(0)[0][0]].hand.get(server.choice.get(0)[0][1]).effect == Card.play.DUEL.ordinal()){
                                 if(server.choice.get(server.choice.size()-1)[0][1]==-1){
                                     changeLifePoints(server.choice.get(server.choice.size()-1)[0][0], -1);
-                                    playerDiscardCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]);
+                                    playerDiscardCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1], true);
                                     server.choice.remove(server.choice.size() - 1);
                                     server.choice.remove(server.choice.size() - 1);
                                     if(server.choice.size()==4){
@@ -205,7 +205,7 @@ public class Bang {
                                 }
                                 else if(players[server.choice.get(server.choice.size()-1)[0][0]].hand.get(server.choice.get(server.choice.size()-1)[0][1]).effect == Card.play.DAMAGE.ordinal() && players[server.choice.get(server.choice.size()-1)[0][0]].hand.get(server.choice.get(server.choice.size()-1)[0][1]).special==1){
                                     if(server.choice.size() == 4){
-                                        playerDiscardCard(server.choice.get(server.choice.size()-1)[0][0], server.choice.get(server.choice.size()-1)[0][1]);
+                                        playerDiscardCard(server.choice.get(server.choice.size()-1)[0][0], server.choice.get(server.choice.size()-1)[0][1], true);
                                         if(server.choice.get(server.choice.size()-1)[0][1]<server.choice.get(0)[0][1])
                                             server.choice.get(0)[0][1]--;
                                         server.choice.remove(server.choice.size() - 1);
@@ -214,7 +214,7 @@ public class Bang {
                                         return;
                                     }
                                     else if(server.choice.size()==3){
-                                        playerDiscardCard(server.choice.get(server.choice.size()-1)[0][0], server.choice.get(server.choice.size()-1)[0][1]);
+                                        playerDiscardCard(server.choice.get(server.choice.size()-1)[0][0], server.choice.get(server.choice.size()-1)[0][1], true);
                                         server.prompt(server.choice.get(1)[0][0], "PlayCardUnforced", true);
                                         return;
                                     }
@@ -231,19 +231,33 @@ public class Bang {
                             }
                             else if (players[server.choice.get(0)[0][0]].hand.get(server.choice.get(0)[0][1]).effect == Card.play.STEAL.ordinal() ||
                                 players[server.choice.get(0)[0][0]].hand.get(server.choice.get(0)[0][1]).effect == Card.play.DISCARD.ordinal()){
-                                    System.out.println("ASDFASFASDFASFASDFSFAFASDFASDFASDFASDFASFSFFASFAFKWR!#$!$!$!!$$ 3");
                                     int temp = server.choice.get(2)[0][1];
-                                    if(temp>-1){
-                                        playerDiscardCard(server.choice.get(1)[0][1], temp);
+                                    if(players[server.choice.get(0)[0][0]].hand.get(server.choice.get(0)[0][1]).effect == Card.play.DISCARD.ordinal()){
+                                        if(temp>-1){
+                                            playerDiscardCard(server.choice.get(1)[0][1], temp, true);
+                                        }
+                                        else{
+                                            temp = (-temp)-3;
+                                            System.out.println("LOOKING FOR A CARD IN FIELD");
+                                            playerFieldDiscardCard(server.choice.get(1)[0][1], temp, true);
+                                        }
                                     }
                                     else{
-                                        temp = (-temp)-3;
-                                        System.out.println("LOOKING FOR A CARD IN FIELD");
-                                        playerFieldDiscardCard(server.choice.get(1)[0][1], temp);
+                                        if(temp>-1){
+                                            server.sendInfo(turn%numPlayers,"Draw:" + turn%numPlayers + ":Game:"+players[(server.choice.get(1)[0][1])].hand.get(temp).name);
+                                            playerDiscardCard(server.choice.get(1)[0][1], temp, false);
+                                        }
+                                        else{
+                                            temp = (-temp)-3;
+                                            server.sendInfo(turn%numPlayers,"Draw:" + turn%numPlayers + ":Game:"+players[(server.choice.get(1)[0][1])].field.get(temp).name);
+                                            playerFieldDiscardCard(server.choice.get(1)[0][1], temp, false);
+                                        }
                                     }
                                     server.choice.remove(server.choice.size() - 1);
                                     server.choice.remove(server.choice.size() - 1);
-                                    playerDiscardCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]);
+                                    //playerDiscardCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1], true);
+                                    //server.prompt(turn%numPlayers, "PlayCardUnforced", true);
+                                    //return;
                             }
                         }
                         
@@ -258,13 +272,13 @@ public class Bang {
                             for (int n = 0; n < numPlayers; n++) {
                                 changeLifePoints(n, 1);
                             }
-                            playerDiscardCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]);
+                            playerDiscardCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1], true);
                         } else if (players[server.choice.get(0)[0][0]].hand.get(server.choice.get(0)[0][1]).effect == 
                                    Card.play.DRAW.ordinal()) {
                             for (int n = 0; n < numPlayers; n++) {
                                 playerDrawCard(n, 1);
                             }
-                            playerDiscardCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]); //TODO: fix general store
+                            playerDiscardCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1], true); //TODO: fix general store
                         } else {
                             System.out.println("Don't think there's any other card that does this....");
                         }
@@ -302,14 +316,14 @@ public class Bang {
                                         playerDrawCard(n[0], 1);
                                     }
                                     server.sendInfo("SetInfo:CardPlayed:" + n[0] + ":" + players[n[0]].hand.get(n[1]).name + ":" + n[1]);
-                                    playerDiscardCard(n[0], n[1]);
+                                    playerDiscardCard(n[0], n[1], true);
                                 } else {
                                     System.out.println("SOMEONE DID NOT PLAY A LEGAL CARD");
                                     al.add(n[0]);
                                 }
                             }
                             if (al.size() == 0){
-                                playerDiscardCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]);
+                                playerDiscardCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1], true);
                                 server.choice.remove(server.choice.size() - 1);
                             }
                             else {
@@ -348,7 +362,7 @@ public class Bang {
                                 changeLifePoints(server.choice.get(0)[0][0], 
                                                  players[server.choice.get(0)[0][1]].hand.get(server.choice.get(0)[0][1]).range);
                             }
-                            playerDiscardCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]); //replace server.choice.get(0)[0][0] with turn%numPlayers?
+                            playerDiscardCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1], true);
                         }
                     }
                     server.choice.remove(server.choice.size() - 1);
@@ -698,9 +712,7 @@ public class Bang {
         //TODO: currently only removes the card from hand and sets it into discard
         return true;
     }**/
-    public
-
-    void playerDrawCard(int p, int n) {
+    public void playerDrawCard(int p, int n) {
         if (n <= 0)
             return; //must draw at least 1
         Card c = drawCard();
@@ -722,19 +734,19 @@ public class Bang {
             }
         }
     }
-
+    
     /**
      * Discards Player p's hand
      */
     public void playerDiscardHand(Player p) {
         for (int n = p.hand.size() - 1; n >= 0; n--)
-            playerDiscardCard(p.id, n);
+            playerDiscardCard(p.id, n, true);
     }
 
     /**
      * Discards card n in Player p's hand
      */
-    public void playerDiscardCard(int p, int n) {
+    public void playerDiscardCard(int p, int n, boolean dp) {
         Card c = players[p].hand.get(n);
         //is card a character card
         players[p].hand.remove(c);
@@ -742,10 +754,19 @@ public class Bang {
             //players[p].hand.remove(n);
         } else {
             server.sendInfo(p, "SetInfo:discard:"+p+":"+n);
-            deck.discardPile.add(c);
-            for (int m = 0; m < numPlayers; m++) {
-                if (m != p) {
-                    server.sendInfo(m, "SetInfo:discard:"+p+":"+n+":"+ c.name);
+            if(dp){
+                deck.discardPile.add(c);
+                for (int m = 0; m < numPlayers; m++) {
+                    if (m != p) {
+                        server.sendInfo(m, "SetInfo:discard:"+p+":"+n+":"+ c.name);
+                    }
+                }
+            }
+            else{
+                for (int m = 0; m < numPlayers; m++) {
+                    if (m != p) {
+                        server.sendInfo(m, "SetInfo:discard:"+p+":"+n);
+                    }
                 }
             }
         }
@@ -753,7 +774,7 @@ public class Bang {
     /**
      * Discards card n in Player p's field
      */
-    public void playerFieldDiscardCard(int p, int n) {
+    public void playerFieldDiscardCard(int p, int n, boolean dp) {
         Card c = players[p].field.get(n);
         //is card a character card
         players[p].field.remove(c);
@@ -761,7 +782,8 @@ public class Bang {
             //players[p].hand.remove(n);
         } else {
             server.sendInfo(p, "SetInfo:fieldDiscard:"+p+":"+n);
-            deck.discardPile.add(c);
+            if(dp)
+                deck.discardPile.add(c);
             for (int m = 0; m < numPlayers; m++) {
                 if (m != p) {
                     server.sendInfo(m, "SetInfo:fieldDiscard:"+p+":"+n+":"+ c.name);
