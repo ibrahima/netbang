@@ -642,6 +642,8 @@ public class Field implements MouseListener, MouseMotionListener{
 
 	}
 	public void setHP(int playerid, int lifePoints) {
+                if(lifePoints == 0) //bug when saloon is played when you have full hp
+                    return;
 		CardSpace hpc = handPlacer.get(playerid).hp;
 		hpc.translate(-10*lifePoints, 0);
 	}
