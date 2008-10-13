@@ -66,7 +66,7 @@ public class Field implements MouseListener, MouseMotionListener{
 	 * @param field
 	 */
 	public void add(Card card, int player, boolean field){
-		int xoffset = 30*(client.players.get(player).hand.size());
+		int xoffset = 30*(!field?client.players.get(player).hand.size():client.players.get(player).field.size());
 		if(client.id==player)
 			System.out.println("Client has "+client.player.hand.size()+"cards in his hand.");
 		if(card.type==1){//this a character card
@@ -80,8 +80,7 @@ public class Field implements MouseListener, MouseMotionListener{
                             int y=(int) hs.rect.y+(field?(player==client.id?-100:100):0);
                             CardSpace cs = new CardSpace(card, new Rectangle(x,y, 60,90), player, field);
                             clickies.put(card, cs);
-                            if(field == false)
-                                    hs.addCard(cs);
+                            hs.addCard(cs);
                             sortHandSpace(hs);
                         }
 			else{
@@ -89,8 +88,7 @@ public class Field implements MouseListener, MouseMotionListener{
                             int y=(int) hs.rect.y+(field?(player==client.id?-100:100):0); //more trinarytrinary fun!
                             CardSpace cs = new CardSpace(card, new Rectangle(x, y,60,90), player, field);
                             clickies.put(card, cs);
-                            if(field == false)
-                                    hs.addCard(cs);
+                            hs.addCard(cs);
                         }
 		}
 	}
@@ -422,6 +420,12 @@ public class Field implements MouseListener, MouseMotionListener{
                 hs.cards.get(n).rect.x = x;
                 hs.cards.get(n).rect.y = y;
             }
+            for(int n = 0; n<hs.fieldCards.size(); n++){
+                int x = (int) hs.rect.x+hs.rect.width+30*n;
+                int y = (int) hs.rect.y+(0) +(player==client.id?-100:100); //more trinarytrinary fun!
+                hs.fieldCards.get(n).rect.x = x;
+                hs.fieldCards.get(n).rect.y = y;
+            }
         }
 
 	public class BSHashMap<K,V> extends HashMap<K,V>{
@@ -451,7 +455,10 @@ public class Field implements MouseListener, MouseMotionListener{
                             System.out.println("WOWWTFWTFWTFWWOW");
                             CardSpace cs =(CardSpace)get(o);
                             if(cs.hs != null){
-                                cs.hs.cards.remove(cs);
+                                if(!cs.field)
+                                    cs.hs.cards.remove(cs);
+                                else
+                                    cs.hs.fieldCards.remove(cs);
                             }
                             if(cs.hs.autoSort){
                                 sortHandSpace(cs.hs);
@@ -491,6 +498,7 @@ public class Field implements MouseListener, MouseMotionListener{
 
 	public class HandSpace extends Clickable{
 		public ArrayList<CardSpace> cards = new ArrayList<CardSpace>();
+                public ArrayList<CardSpace> fieldCards = new ArrayList<CardSpace>();
 		CardSpace character, hp;
                 boolean autoSort = true;
                 
@@ -503,7 +511,10 @@ public class Field implements MouseListener, MouseMotionListener{
 			this.hp = hp;
 		}
 		public void addCard(CardSpace card){
-			cards.add(card);
+			if(!card.field)
+                            cards.add(card);
+                        else
+                            fieldCards.add(card);
 		}
 		public CardSpace removeLast(){
 			return cards.remove(cards.size()-1);
@@ -516,6 +527,12 @@ public class Field implements MouseListener, MouseMotionListener{
 			while(iter.hasNext()){
 				iter.next().translate(dx, dy);
 			}
+                        //add a special boolean here                        
+                        iter = fieldCards.iterator();
+                        while(iter.hasNext()){
+                                iter.next().translate(dx, dy);
+                        }
+                        
 			if(character!=null)character.translate(dx, dy);
 			if(hp!=null)hp.translate(dx, dy);
 		}
@@ -525,6 +542,11 @@ public class Field implements MouseListener, MouseMotionListener{
 			while(iter.hasNext()){
 				iter.next().translate(dx, dy);
 			}
+                        //add a special boolean here                        
+                        iter = fieldCards.iterator();
+                        while(iter.hasNext()){
+                                iter.next().translate(dx, dy);
+                        }
 			if(character!=null)character.translate(dx, dy);
 			if(hp!=null)hp.translate(dx, dy);
 		}
