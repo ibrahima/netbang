@@ -337,10 +337,11 @@ public class Bang {
                             }
                         }
                     } 
-                    else if(getCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]).type == 3 || getCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]).type == 5){
+                    else if((getCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]).type == 3 || getCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]).type == 5) && getCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]).location == 0){
                         server.sendInfo("SetInfo:PutInField:"+server.choice.get(0)[0][0]+":"+
                                     getCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]).name+":"+
                                     server.choice.get(0)[0][1]);
+                        getCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]).location = 2;
                         players[server.choice.get(0)[0][0]].field.add(getCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]));
                         players[server.choice.get(0)[0][0]].hand.remove(server.choice.get(0)[0][1]);
                         //server.choice.remove(server.choice.size() - 1);
@@ -383,6 +384,14 @@ public class Bang {
      */
     public boolean isCardLegal(Card c, Player p1, 
                                Player p2) {
+        if(c.type == 3 && c.location != 1){
+            System.out.println("YOU JUST PLAYED THAT GREEN CARD");
+            return false;
+        }
+        if(c.type == 5 && c.location >= 1){
+            System.out.println("YOU CAN'T DO ANYTHING WITH THAT");
+            return false;
+        }
         if (c.target != 2 && p2 != null) {
             System.out.println("NON-TARGETING CARD HAS TARGET");
             return false;
@@ -390,6 +399,7 @@ public class Bang {
             System.out.println("TARGETING CARD DOES NOT HAVE TARGET");
             return false;
         }
+        
         //the rules
         if (true) { //no idea why i had a condition here
             if (c.type == 3 && players[server.choice.get(0)[0][0]].field.contains(c)) { //replace false with some indicator of whether the card is on field
@@ -572,7 +582,11 @@ public class Bang {
         }
 
         server.sendInfo("SetInfo:turn:" + turn);
-
+        
+        for(Card c : players[turn % numPlayers].field){ //set all green cards played the turn before to 1
+            c.location = 1;
+        }
+        
         //draw two cards
         if (players[turn % numPlayers].specialDraw == 
             0) { //TODO: get rid of specialDraw, move to a direct reference to character cards
@@ -747,6 +761,10 @@ public class Bang {
      * Discards card n in Player p's hand
      */
     public void playerDiscardCard(int p, int n, boolean dp) {
+        if(n<-2){
+            playerFieldDiscardCard(p, -n-3, dp);
+            return;
+        }
         Card c = players[p].hand.get(n);
         //is card a character card
         players[p].hand.remove(c);
@@ -862,6 +880,11 @@ public class Bang {
     }
     
     Card getCard(int p, int n){
-        return players[p].hand.get(n);
+        if(n>-1)
+            return players[p].hand.get(n);
+        if(n<-2)
+            return players[p].field.get(-n-3);
+        System.out.println("ERRORERRORERROR12345");
+        return null;
     }
 }
