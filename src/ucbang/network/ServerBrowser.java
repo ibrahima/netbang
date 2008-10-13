@@ -157,7 +157,7 @@ public class ServerBrowser extends JFrame implements ActionListener{
 				JOptionPane.showMessageDialog(this, "Choose a server!");
 			}
 		}else if(e.getSource().equals(create)){
-			new Server(12345);
+			new Server(12345, false);
 			new Client("localhost", true, "Host");
 			this.dispose();
 		}

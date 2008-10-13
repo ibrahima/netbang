@@ -21,7 +21,7 @@ import ucbang.core.Player;
 
 public class Server extends Thread {
 	public static void main(String Args[]) {
-		new Server(12345);
+		new Server(12345, false);
 	}
 	protected HashMap<String, LinkedList<String>> messages = new HashMap<String, LinkedList<String>>();
 	static int numPlayers;
@@ -29,22 +29,27 @@ public class Server extends Thread {
 	public int gameInProgress; // 1 = attempting to start game, 2 = game started
 	// for realz lawl
 	public int prompting; // flag for whether people are still being prompting
-										// for something 0 = no, 1 = prompting with no
+	// for something 0 = no, 1 = prompting with no
 	// unchecked updates, 2 = unchecked prompt
 	public ArrayList<int[][]> choice; 	// int[m][n], where m is player and n is
-										// option
-	
+	// option
+
 	public int[][] ready;
 	Bang game; // just insert game stuff here
 	public LinkedList<String> names = new LinkedList<String>();
-	ServerListAdder adder = new ServerListAdder(JOptionPane
-			.showInputDialog("Input server name"));
+	ServerListAdder adder;
 	long listLastUpdated;
 
 	public boolean running;
 	public ArrayList<Player> players = new ArrayList<Player>();
-	public Server(int port) {
+	public boolean lan = false;
+
+	public Server(int port, boolean lan){
+		this.lan = lan;
 		running = true;
+		if(!lan)
+			adder = new ServerListAdder(JOptionPane
+					.showInputDialog("Input server name"));
 		try {
 			me = new ServerSocket(port);
 			me.setSoTimeout(1000);
@@ -55,8 +60,7 @@ public class Server extends Thread {
 		}
 		print("Game server is listening to port " + port);
 
-		this.start();
-	}
+		this.start();	}
 
 	/**
 	 * Sends a chat message to all players.
@@ -132,25 +136,25 @@ public class Server extends Thread {
 	}
 
 	/**
-     * Prompt the players in the given int array.
-     * @param p The players to prompt
-     * @param s The prompt message
-     */
-        public void promptPlayers(int[] p, String s) {
-                prompting = 1;
-                choice.add(new int[p.length][2]);
-                for (int n = 0; n < p.length; n++) {
-                        choice.get(choice.size() - 1)[n][0] = p[n];
-                        choice.get(choice.size() - 1)[n][1] = -2;
-                }
-                for (int n:p) {
-                        prompt(n, s, false);
-                }
-        }
+	 * Prompt the players in the given int array.
+	 * @param p The players to prompt
+	 * @param s The prompt message
+	 */
+	public void promptPlayers(int[] p, String s) {
+		prompting = 1;
+		choice.add(new int[p.length][2]);
+		for (int n = 0; n < p.length; n++) {
+			choice.get(choice.size() - 1)[n][0] = p[n];
+			choice.get(choice.size() - 1)[n][1] = -2;
+		}
+		for (int n:p) {
+			prompt(n, s, false);
+		}
+	}
 
 	public void run() {
 		while (running) {
-			if (System.currentTimeMillis() - listLastUpdated > 60000) {
+			if (!lan&&System.currentTimeMillis() - listLastUpdated > 60000) {
 				listLastUpdated = System.currentTimeMillis();
 				adder.addToServerList();
 			}
@@ -160,13 +164,15 @@ public class Server extends Thread {
 					if (client != null) {
 						new ServerThread(client, this);
 						numPlayers++;
-						adder.setPlayers(numPlayers);
-						adder.addToServerList();
+						if(!lan){
+							adder.setPlayers(numPlayers);
+							adder.addToServerList();
+						}
 					}
 				} catch (SocketTimeoutException e) {}
 				catch(SocketException e){
 					if(e.getMessage().equals("socket closed")){
-						
+
 					}else{
 						e.printStackTrace();
 					}
@@ -209,8 +215,10 @@ public class Server extends Thread {
 							}
 							game = new Bang(numPlayers, this);// FLAG: game
 							game.process();
-							adder.setStarted(true);
-							adder.addToServerList();							
+							if (!lan) {
+								adder.setStarted(true);
+								adder.addToServerList();
+							}
 						} else if (gameInProgress == 2) { // game has started
 							game.process(); // less bleh
 							gameInProgress++;
@@ -224,7 +232,8 @@ public class Server extends Thread {
 				}
 			}
 		}
-		adder.RemoveFromServerList();
+		if(!lan)
+			adder.RemoveFromServerList();
 		System.out.println("Server shutting down");
 		System.exit(0);
 	}
@@ -235,8 +244,8 @@ public class Server extends Thread {
 	 * @param info The information to send
 	 */
 	public void sendInfo(int player, String info) { // info can be sent to
-													// multiple people at the
-													// same time, unlike prompts
+		// multiple people at the
+		// same time, unlike prompts
 		if (ready != null) {
 			while (ready[player][1] > 0) {
 			} // wait
@@ -253,11 +262,11 @@ public class Server extends Thread {
 		}
 		messages.get(names.get(player)).add(info);
 	}
-     /**
-      * Sends some character or game information to all players
-     * @param info The information to send
-     */
-    public void sendInfo(String info) {
+	/**
+	 * Sends some character or game information to all players
+	 * @param info The information to send
+	 */
+	public void sendInfo(String info) {
 		for (int n = 0; n < numPlayers; n++) {
 			sendInfo(n, info);
 		}
@@ -273,9 +282,9 @@ public class Server extends Thread {
 		choice = new ArrayList<int[][]>();
 		choice.add(new int[numPlayers - 1][2]);
 		for (int n = 0, m = 0; m < numPlayers - 1; n++, m++) {// this prompt
-																// goes out to
-																// everyone
-																// except host
+			// goes out to
+			// everyone
+			// except host
 			if (n != host) {
 				choice.get(choice.size() - 1)[m][0] = n;
 				choice.get(choice.size() - 1)[m][1] = -2;
@@ -372,7 +381,7 @@ class ServerThread extends Thread {
 								out.newLine();
 								out.flush();
 								Iterator<String> players = server.messages
-										.keySet().iterator();
+								.keySet().iterator();
 								out.write("Players:");
 								while (players.hasNext()) {// give player list
 									// of current
@@ -385,8 +394,8 @@ class ServerThread extends Thread {
 						}
 					} else if(temp[0].equals("/shutdown")){
 						//if(id==0){
-							server.running=false;
-							System.out.println("Server shutting down");
+						server.running=false;
+						System.out.println("Server shutting down");
 						//}
 					} else if (temp[0].equals("Chat")) {
 						if (temp[1].charAt(0) == '/') {
@@ -418,7 +427,7 @@ class ServerThread extends Thread {
 										server.playerJoin(temp1);
 										name = temp1;
 										out
-												.write("Connection:Successfully renamed.");
+										.write("Connection:Successfully renamed.");
 										out.newLine();
 										out.flush();
 									}
@@ -440,8 +449,8 @@ class ServerThread extends Thread {
 							for (n = 0; server.choice.get(server.choice.size() - 1)[n][0] != id||(server.choice.get(server.choice.size() - 1)[n][0] == id && server.choice.get(server.choice.size() - 1)[n][1]>-1); n++) {
 							}
 							server.choice.get(server.choice.size() - 1)[n][1] = Integer
-									.valueOf(temp[1]);
-                                                        System.out.println("Player "+n+" returned "+temp[1]);
+							.valueOf(temp[1]);
+							System.out.println("Player "+n+" returned "+temp[1]);
 							server.prompting = 2;
 						} else {
 							System.out.println("Received prompt from player when not prompted!");
@@ -477,8 +486,8 @@ class ServerThread extends Thread {
 					} catch (Throwable t) {
 						t.printStackTrace();
 					}
-				else
-					e.printStackTrace();
+					else
+						e.printStackTrace();
 			}
 		}
 		System.out.println("Tried to quit");
