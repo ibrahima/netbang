@@ -368,7 +368,7 @@ new BufferedWriter(new OutputStreamWriter(server.getOutputStream()));
                                     c.field.clickies.remove(card);
                                     c.player.hand.remove(card);
                                     c.players.get(tid).field.add(card);
-                                    c.players.get(tid).hand.remove(Integer.valueOf(temp1[3]).intValue());
+                                        //c.players.get(tid).hand.remove(Integer.valueOf(temp1[3]).intValue());
                                 }
                                 else{
                                     card = new Card(CardName.valueOf(temp1[2]));
