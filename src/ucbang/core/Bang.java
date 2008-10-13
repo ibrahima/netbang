@@ -168,10 +168,8 @@ public class Bang {
                                                          1);
                                     playerDiscardCard(server.choice.get(0)[0][0], 
                                                       server.choice.get(0)[0][1], true);
-                                } else if (getCard(server.choice.get(1)[0][1], server.choice.get(2)[0][1]).effect == 
-                                           Card.play.MISS.ordinal() && 
-                                           getCard(server.choice.get(1)[0][1], server.choice.get(2)[0][1]).type == 
-                                           4) {
+                                } else if (getCard(server.choice.get(1)[0][1], server.choice.get(2)[0][1]).effect == Card.play.MISS.ordinal() && 
+                                    (getCard(server.choice.get(1)[0][1], server.choice.get(2)[0][1]).type == 3?getCard(server.choice.get(1)[0][1], server.choice.get(2)[0][1]).location>0:true)) {
                                     server.sendInfo("SetInfo:CardPlayed:" + server.choice.get(1)[0][1] + ":" + getCard(server.choice.get(1)[0][1], server.choice.get(2)[0][1]).name);
                                     if (getCard(server.choice.get(1)[0][1], server.choice.get(2)[0][1]).effect2 == 
                                         Card.play.DRAW.ordinal()) {
@@ -361,7 +359,7 @@ public class Bang {
                             if (getCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]).effect == 
                                 Card.play.HEAL.ordinal()) {
                                 changeLifePoints(server.choice.get(0)[0][0], 
-                                                 getCard(server.choice.get(0)[0][1], server.choice.get(0)[0][1]).range);
+                                                 getCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]).range);
                             }
                             playerDiscardCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1], true);
                         }

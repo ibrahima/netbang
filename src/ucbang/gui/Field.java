@@ -30,7 +30,7 @@ public class Field implements MouseListener, MouseMotionListener{
 	Clickable movingCard;
 	Card clicked;
 	ArrayList<Card> pick;
-	ArrayList<HandSpace> handPlacer = new ArrayList<HandSpace>(); //to avoid npe
+	public ArrayList<HandSpace> handPlacer = new ArrayList<HandSpace>(); //to avoid npe
 	String description;
 	Point describeWhere;
 	long lastMouseMoved = System.currentTimeMillis();
@@ -66,7 +66,7 @@ public class Field implements MouseListener, MouseMotionListener{
 	 * @param field
 	 */
 	public void add(Card card, int player, boolean field){
-		int xoffset = 30*(client.players.get(player).hand.size()); //I don't know why we need a special case for the client's player!
+		int xoffset = 30*(client.players.get(player).hand.size());
 		if(client.id==player)
 			System.out.println("Client has "+client.player.hand.size()+"cards in his hand.");
 		if(card.type==1){//this a character card
@@ -75,12 +75,23 @@ public class Field implements MouseListener, MouseMotionListener{
 			clickies.put(card, new CardSpace(card, new Rectangle(x, y,60,90), player, false));
 		}else{
 			HandSpace hs = handPlacer.get(player);
-			int x=(int) hs.rect.x+hs.rect.width+xoffset;
-			int y=(int) hs.rect.y+(field?(player==client.id?-100:100):0); //more trinarytrinary fun!
-			CardSpace cs = new CardSpace(card, new Rectangle(x, y,60,90), player, field);
-			clickies.put(card, cs);
-			if(field == false)
-				hs.addCard(cs);
+                        if(hs.autoSort){
+                            int x=(int) hs.rect.x+hs.rect.width+xoffset;
+                            int y=(int) hs.rect.y+(field?(player==client.id?-100:100):0);
+                            CardSpace cs = new CardSpace(card, new Rectangle(x,y, 60,90), player, field);
+                            clickies.put(card, cs);
+                            if(field == false)
+                                    hs.addCard(cs);
+                            sortHandSpace(hs);
+                        }
+			else{
+                            int x=(int) hs.rect.x+hs.rect.width+xoffset;
+                            int y=(int) hs.rect.y+(field?(player==client.id?-100:100):0); //more trinarytrinary fun!
+                            CardSpace cs = new CardSpace(card, new Rectangle(x, y,60,90), player, field);
+                            clickies.put(card, cs);
+                            if(field == false)
+                                    hs.addCard(cs);
+                        }
 		}
 	}
 	int textHeight(String message, Graphics2D graphics){
@@ -105,8 +116,12 @@ public class Field implements MouseListener, MouseMotionListener{
 		}
 	}
 	public void paint(Graphics2D graphics){
-		for(HandSpace hs : handPlacer)
-			graphics.draw(hs.rect);
+		for(HandSpace hs : handPlacer){
+                        if(hs.autoSort)
+                            graphics.fill(hs.rect);
+                        else
+                            graphics.draw(hs.rect);
+                }
 		//draw HP cards first
 		/*Iterator<CardSpace> it = hpcards.iterator();
 		while(it.hasNext()){
@@ -291,11 +306,10 @@ public class Field implements MouseListener, MouseMotionListener{
 			return;
 		}
 		Clickable cl = binarySearchCardAtPoint(ep);
-		//System.out.println(cl.playerid+" "+((cl instanceof CardSpace)?String.valueOf(((CardSpace)cl).card.type==1):""));
 		if (cl instanceof CardSpace) {
 			CardSpace cs = (CardSpace) cl;
 			if (cs != null && cs.card != null){
-				client.gui.appendText(String.valueOf(client.players.get(cs.playerid).hand.indexOf(cs.card)));
+				client.gui.appendText(String.valueOf(client.players.get(cs.playerid).hand.indexOf(cs.card))+" "+(cs.hs!=null?String.valueOf(cs.hs.cards.indexOf(cs)):""));
 			}
 			else
 				return;
@@ -348,6 +362,18 @@ public class Field implements MouseListener, MouseMotionListener{
 				}
 			}
 		}
+                else if(cl == null){
+                        for(HandSpace cs : handPlacer)
+                                if(cs.rect.contains(e.getPoint())){
+                                        cl=cs;
+                                }
+                    if(cl!=null){
+                        if(e.getButton()==MouseEvent.BUTTON1)
+                            sortHandSpace((HandSpace)cl);
+                        if(e.getButton()==MouseEvent.BUTTON3)
+                            ((HandSpace)cl).autoSort = !((HandSpace)cl).autoSort;
+                    }
+                }
 	}
 
 	public void mousePressed(MouseEvent e) {
@@ -382,6 +408,21 @@ public class Field implements MouseListener, MouseMotionListener{
 			//System.out.println("not dragging");
 		}
 	}
+        
+        public void sortHandSpace(HandSpace hs){
+            if(hs==null){
+                System.out.println("WTWFWTWFWWTFWTWTWWAFSFASFASFS");
+                return;
+            }
+            client.gui.appendText("Sorting...");
+            int player = hs.playerid;
+            for(int n = 0; n<hs.cards.size(); n++){
+                int x = (int) hs.rect.x+hs.rect.width+30*n;
+                int y = (int) hs.rect.y+(0); //more trinarytrinary fun!
+                hs.cards.get(n).rect.x = x;
+                hs.cards.get(n).rect.y = y;
+            }
+        }
 
 	public class BSHashMap<K,V> extends HashMap<K,V>{
 		ArrayList<V> occupied = new ArrayList<V>();
@@ -406,6 +447,16 @@ public class Field implements MouseListener, MouseMotionListener{
 			super.clear();
 		}
 		public V remove(Object o){
+                        if(o instanceof Card){
+                            System.out.println("WOWWTFWTFWTFWWOW");
+                            CardSpace cs =(CardSpace)get(o);
+                            if(cs.hs != null){
+                                cs.hs.cards.remove(cs);
+                            }
+                            if(cs.hs.autoSort){
+                                sortHandSpace(cs.hs);
+                            }
+                        }                        
 			occupied.remove(get(o));
 			V oo = super.remove(o);
 			return oo;
@@ -418,6 +469,8 @@ public class Field implements MouseListener, MouseMotionListener{
 	private class CardSpace extends Clickable{
 		public Card card;
 		public boolean field;
+                HandSpace hs;
+                
 		/**
 		 * @param c The card this CardSpace describes
 		 * @param r The bounds of the card
@@ -431,12 +484,16 @@ public class Field implements MouseListener, MouseMotionListener{
 			rect = r;
 			playerid = player;
 			field = f;
+                        if(!f && !handPlacer.isEmpty())
+                            hs = handPlacer.get(playerid);
 		}
 	}
 
-	private class HandSpace extends Clickable{
-		ArrayList<CardSpace> cards = new ArrayList<CardSpace>();
+	public class HandSpace extends Clickable{
+		public ArrayList<CardSpace> cards = new ArrayList<CardSpace>();
 		CardSpace character, hp;
+                boolean autoSort = true;
+                
 		public HandSpace(Rectangle r, int player){
 			super(r);
 			playerid = player;
