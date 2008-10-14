@@ -84,7 +84,7 @@ public class Deck {
     }
     
     public void sendCardToDiscard(){
-        
+        //TODO: Use this function for something, or delete it.
     }
     
     public Card draw() throws Exception{

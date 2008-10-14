@@ -33,6 +33,9 @@ public class ServerBrowser extends JFrame implements ActionListener{
 	JScrollPane scrollPane;
 	JButton create, join, refresh;
 	ServerTableModel tm;
+	/**
+	 * Constructs a ServerBrowser
+	 */
 	public ServerBrowser(){
 		setPreferredSize(new Dimension(480, 320));
 		setSize(new Dimension(480, 320));
@@ -79,14 +82,14 @@ public class ServerBrowser extends JFrame implements ActionListener{
 		tm.setData(servers);
 		tm.fireTableDataChanged();
 	}
-	public String chooseServer(){
-		//TODO: Work out a choosing thing.
-		return servers.get(0).ip;
-	}
+
 	public static void main(String args[]) {
 		new ServerBrowser();
 	}
 
+	/**
+	 * Downloads the list of Bang servers from the serverlist website
+	 */
 	public void downloadList() {
 		servers.clear();
 		URL url;

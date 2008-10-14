@@ -54,6 +54,12 @@ public class Field implements MouseListener, MouseMotionListener{
 	public void add(Card card, int x, int y, int player, boolean field){
 		clickies.put(card, new CardSpace(card, new Rectangle(x,y,60,90), player, field));
 	}
+	/**
+	 * Removes the last card in the hand of a player, used when
+	 * the player is an opponent whose hand is unknown and they just
+	 * played a card
+	 * @param player the player whose hand to remove a card from
+	 */
 	public void removeLast(int player){
 		clickies.remove(handPlacer.get(player).removeLast().card);
 	}
@@ -75,21 +81,21 @@ public class Field implements MouseListener, MouseMotionListener{
 			clickies.put(card, new CardSpace(card, new Rectangle(x, y,60,90), player, false));
 		}else{
 			HandSpace hs = handPlacer.get(player);
-                        if(hs.autoSort){
-                            int x=(int) hs.rect.x+hs.rect.width+xoffset;
-                            int y=(int) hs.rect.y+(field?(player==client.id?-100:100):0);
-                            CardSpace cs = new CardSpace(card, new Rectangle(x,y, 60,90), player, field);
-                            clickies.put(card, cs);
-                            hs.addCard(cs);
-                            sortHandSpace(hs);
-                        }
+			if(hs.autoSort){
+				int x=(int) hs.rect.x+hs.rect.width+xoffset;
+				int y=(int) hs.rect.y+(field?(player==client.id?-100:100):0);
+				CardSpace cs = new CardSpace(card, new Rectangle(x,y, 60,90), player, field);
+				clickies.put(card, cs);
+				hs.addCard(cs);
+				sortHandSpace(hs);
+			}
 			else{
-                            int x=(int) hs.rect.x+hs.rect.width+xoffset;
-                            int y=(int) hs.rect.y+(field?(player==client.id?-100:100):0); //more trinarytrinary fun!
-                            CardSpace cs = new CardSpace(card, new Rectangle(x, y,60,90), player, field);
-                            clickies.put(card, cs);
-                            hs.addCard(cs);
-                        }
+				int x=(int) hs.rect.x+hs.rect.width+xoffset;
+				int y=(int) hs.rect.y+(field?(player==client.id?-100:100):0); //more trinarytrinary fun!
+				CardSpace cs = new CardSpace(card, new Rectangle(x, y,60,90), player, field);
+				clickies.put(card, cs);
+				hs.addCard(cs);
+			}
 		}
 	}
 	int textHeight(String message, Graphics2D graphics){
@@ -115,11 +121,11 @@ public class Field implements MouseListener, MouseMotionListener{
 	}
 	public void paint(Graphics2D graphics){
 		for(HandSpace hs : handPlacer){
-                        if(hs.autoSort)
-                            graphics.fill(hs.rect);
-                        else
-                            graphics.draw(hs.rect);
-                }
+			if(hs.autoSort)
+				graphics.fill(hs.rect);
+			else
+				graphics.draw(hs.rect);
+		}
 		//draw HP cards first
 		/*Iterator<CardSpace> it = hpcards.iterator();
 		while(it.hasNext()){
@@ -359,18 +365,18 @@ public class Field implements MouseListener, MouseMotionListener{
 				}
 			}
 		}
-                else if(cl == null){
-                        for(HandSpace cs : handPlacer)
-                                if(cs.rect.contains(e.getPoint())){
-                                        cl=cs;
-                                }
-                    if(cl!=null){
-                        if(e.getButton()==MouseEvent.BUTTON1)
-                            sortHandSpace((HandSpace)cl);
-                        if(e.getButton()==MouseEvent.BUTTON3)
-                            ((HandSpace)cl).autoSort = !((HandSpace)cl).autoSort;
-                    }
-                }
+		else if(cl == null){
+			for(HandSpace cs : handPlacer)
+				if(cs.rect.contains(e.getPoint())){
+					cl=cs;
+				}
+			if(cl!=null){
+				if(e.getButton()==MouseEvent.BUTTON1)
+					sortHandSpace((HandSpace)cl);
+				if(e.getButton()==MouseEvent.BUTTON3)
+					((HandSpace)cl).autoSort = !((HandSpace)cl).autoSort;
+			}
+		}
 	}
 
 	public void mousePressed(MouseEvent e) {
@@ -405,27 +411,27 @@ public class Field implements MouseListener, MouseMotionListener{
 			//System.out.println("not dragging");
 		}
 	}
-        
-        public void sortHandSpace(HandSpace hs){
-            if(hs==null){
-                System.out.println("WTWFWTWFWWTFWTWTWWAFSFASFASFS");
-                return;
-            }
-            client.gui.appendText("Sorting...");
-            int player = hs.playerid;
-            for(int n = 0; n<hs.cards.size(); n++){
-                int x = (int) hs.rect.x+hs.rect.width+30*n;
-                int y = (int) hs.rect.y+(0); //more trinarytrinary fun!
-                hs.cards.get(n).rect.x = x;
-                hs.cards.get(n).rect.y = y;
-            }
-            for(int n = 0; n<hs.fieldCards.size(); n++){
-                int x = (int) hs.rect.x+hs.rect.width+30*n;
-                int y = (int) hs.rect.y+(0) +(player==client.id?-100:100); //more trinarytrinary fun!
-                hs.fieldCards.get(n).rect.x = x;
-                hs.fieldCards.get(n).rect.y = y;
-            }
-        }
+
+	public void sortHandSpace(HandSpace hs){
+		if(hs==null){
+			System.out.println("WTWFWTWFWWTFWTWTWWAFSFASFASFS");
+			return;
+		}
+		client.gui.appendText("Sorting...");
+		int player = hs.playerid;
+		for(int n = 0; n<hs.cards.size(); n++){
+			int x = (int) hs.rect.x+hs.rect.width+30*n;
+			int y = (int) hs.rect.y+(0); //more trinarytrinary fun!
+			hs.cards.get(n).rect.x = x;
+			hs.cards.get(n).rect.y = y;
+		}
+		for(int n = 0; n<hs.fieldCards.size(); n++){
+			int x = (int) hs.rect.x+hs.rect.width+30*n;
+			int y = (int) hs.rect.y+(0) +(player==client.id?-100:100); //more trinarytrinary fun!
+			hs.fieldCards.get(n).rect.x = x;
+			hs.fieldCards.get(n).rect.y = y;
+		}
+	}
 
 	public class BSHashMap<K,V> extends HashMap<K,V>{
 		ArrayList<V> occupied = new ArrayList<V>();
@@ -450,18 +456,18 @@ public class Field implements MouseListener, MouseMotionListener{
 			super.clear();
 		}
 		public V remove(Object o){
-                        if(o instanceof Card){
-                            CardSpace cs =(CardSpace)get(o);
-                            if(cs.hs != null){
-                                if(!cs.field)
-                                    cs.hs.cards.remove(cs);
-                                else
-                                    cs.hs.fieldCards.remove(cs);
-                            }
-                            if(cs.hs.autoSort){
-                                sortHandSpace(cs.hs);
-                            }
-                        }                        
+			if(o instanceof Card){
+				CardSpace cs =(CardSpace)get(o);
+				if(cs.hs != null){
+					if(!cs.field)
+						cs.hs.cards.remove(cs);
+					else
+						cs.hs.fieldCards.remove(cs);
+				}
+				if(cs.hs.autoSort){
+					sortHandSpace(cs.hs);
+				}
+			}                        
 			occupied.remove(get(o));
 			V oo = super.remove(o);
 			return oo;
@@ -474,8 +480,8 @@ public class Field implements MouseListener, MouseMotionListener{
 	private class CardSpace extends Clickable{
 		public Card card;
 		public boolean field;
-                HandSpace hs;
-                
+		HandSpace hs;
+
 		/**
 		 * @param c The card this CardSpace describes
 		 * @param r The bounds of the card
@@ -489,17 +495,17 @@ public class Field implements MouseListener, MouseMotionListener{
 			rect = r;
 			playerid = player;
 			field = f;
-                        if(!f && !handPlacer.isEmpty())
-                            hs = handPlacer.get(playerid);
+			if(!f && !handPlacer.isEmpty())
+				hs = handPlacer.get(playerid);
 		}
 	}
 
 	public class HandSpace extends Clickable{
 		public ArrayList<CardSpace> cards = new ArrayList<CardSpace>();
-                public ArrayList<CardSpace> fieldCards = new ArrayList<CardSpace>();
+		public ArrayList<CardSpace> fieldCards = new ArrayList<CardSpace>();
 		CardSpace character, hp;
-                boolean autoSort = true;
-                
+		boolean autoSort = true;
+
 		public HandSpace(Rectangle r, int player){
 			super(r);
 			playerid = player;
@@ -510,9 +516,9 @@ public class Field implements MouseListener, MouseMotionListener{
 		}
 		public void addCard(CardSpace card){
 			if(!card.field)
-                            cards.add(card);
-                        else
-                            fieldCards.add(card);
+				cards.add(card);
+			else
+				fieldCards.add(card);
 		}
 		public CardSpace removeLast(){
 			return cards.remove(cards.size()-1);
@@ -525,12 +531,12 @@ public class Field implements MouseListener, MouseMotionListener{
 			while(iter.hasNext()){
 				iter.next().translate(dx, dy);
 			}
-                        //add a special boolean here                        
-                        iter = fieldCards.iterator();
-                        while(iter.hasNext()){
-                                iter.next().translate(dx, dy);
-                        }
-                        
+			//add a special boolean here                        
+			iter = fieldCards.iterator();
+			while(iter.hasNext()){
+				iter.next().translate(dx, dy);
+			}
+
 			if(character!=null)character.translate(dx, dy);
 			if(hp!=null)hp.translate(dx, dy);
 		}
@@ -540,15 +546,19 @@ public class Field implements MouseListener, MouseMotionListener{
 			while(iter.hasNext()){
 				iter.next().translate(dx, dy);
 			}
-                        //add a special boolean here                        
-                        iter = fieldCards.iterator();
-                        while(iter.hasNext()){
-                                iter.next().translate(dx, dy);
-                        }
+			//add a special boolean here                        
+			iter = fieldCards.iterator();
+			while(iter.hasNext()){
+				iter.next().translate(dx, dy);
+			}
 			if(character!=null)character.translate(dx, dy);
 			if(hp!=null)hp.translate(dx, dy);
 		}
 	}
+	/**
+	 * @author Ibrahim
+	 *
+	 */
 	private abstract class Clickable implements Comparable<Clickable>{
 		public Rectangle rect;
 		//public int location; //position of card on field or in hand
@@ -565,6 +575,11 @@ public class Field implements MouseListener, MouseMotionListener{
 			else
 				return ((Integer)rect.getLocation().x).compareTo(o.rect.getLocation().x);
 		}
+		/**
+		 * Moves the Clickable to the specified location
+		 * @param x
+		 * @param y
+		 */
 		public void move(int x, int y){
 			int dx = x-rect.x;
 			int dy = y-rect.y;
@@ -574,9 +589,24 @@ public class Field implements MouseListener, MouseMotionListener{
 				partner.translate(dx, dy);
 			}
 		}
+		
+		/**
+		 * Sets the Clickable's partner.
+		 * <p>If a Clickable has a partner defined, moving it will also
+		 * translate the partner so that they move together.</p>
+		 * @param partner the other Clickable to be set as the partner
+		 */
 		public void setPartner(Clickable partner){
 			this.partner=partner;
 		}
+		/**
+		 * Rotates the clickable the specified number of quadrants, i.e. 90 degree intervals.
+		 * <p>This is fairly buggy, and should not be called more than once under any circumstances for
+		 * a given card or type of card. Deprecated until further notice, since only the bullet card is
+		 * currently rotated. For rotation to work nicely, Clickable will have to store an image of the
+		 * card or whatever so that it is rotated independently of other instances of the same card.
+		 * @param quadrant the number of 90 degree intervals to rotate
+		 */
 		public void rotate(int quadrant){//rotates in terms of 90 degree increments. call with 0 to reset.
 			int realrotation=quadrant-oldrotation;
 			if(realrotation>0 && realrotation<4){
@@ -639,9 +669,14 @@ public class Field implements MouseListener, MouseMotionListener{
 		}
 
 	}
+	/**
+	 * Sets the given players's HP and updates the bullet display accordingly
+	 * @param playerid the id of the player whose HP changed
+	 * @param lifePoints the amount of HP the player lost
+	 */
 	public void setHP(int playerid, int lifePoints) {
-                if(lifePoints == 0) //bug when saloon is played when you have full hp
-                    return;
+		if(lifePoints == 0) //bug when saloon is played when you have full hp
+			return;
 		CardSpace hpc = handPlacer.get(playerid).hp;
 		hpc.translate(-10*lifePoints, 0);
 	}

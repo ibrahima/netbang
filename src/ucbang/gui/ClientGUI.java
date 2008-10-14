@@ -38,7 +38,7 @@ public class ClientGUI extends JFrame implements KeyListener, ComponentListener{
 	int textIndex = -1; // the bottom line of the text
 	public Client client;
 	public ClientGUI(int p, Client client) {
-                this.client = client;
+		this.client = client;
 		this.p = p;
 		chat = new StringBuilder();
 		// set window sizes
@@ -62,7 +62,7 @@ public class ClientGUI extends JFrame implements KeyListener, ComponentListener{
 		});
 		this.addComponentListener(this);
 	}
-        
+
 
 	public void paint(Graphics g) {
 		Graphics2D graphics;
@@ -76,24 +76,24 @@ public class ClientGUI extends JFrame implements KeyListener, ComponentListener{
 		//graphics.fillRect(0, 0, width, 400);
 		//graphics.setColor(new Color(100, 0, 0));
 		//graphics.fillRect(0, 400, width, height);
-		 graphics.setColor(new Color(175, 150, 50));
-		 graphics.fillRect(0, 0, width, height);
-                
-                //the ugly proxy skip turn button: this is coded for in Field.java
-                graphics.setColor(new Color(255, 255, 255));
-                graphics.fillRect(760, 560, 40, 40);
-                graphics.setColor(new Color(0, 0, 0));
-                graphics.drawString("Skip", 770, 580);
-                
+		graphics.setColor(new Color(175, 150, 50));
+		graphics.fillRect(0, 0, width, height);
+
+		//the ugly proxy skip turn button: this is coded for in Field.java
+		graphics.setColor(new Color(255, 255, 255));
+		graphics.fillRect(760, 560, 40, 40);
+		graphics.setColor(new Color(0, 0, 0));
+		graphics.drawString("Skip", 770, 580);
+
 		if (chatting) {
 			graphics.setColor(Color.WHITE);
 			graphics.drawString("Chatting: " + chat.toString(), 20, 420);
 		}
 		if (textIndex >= 0) { // there is text to display, must draw it
 			for (int n = textIndex; n >= (textIndex < 9 ? 0 : textIndex - 9); n--) {
-                                graphics.setColor(textColor.get(n));
+				graphics.setColor(textColor.get(n));
 				graphics.drawString(text.get(n), 20, 580 - 15 * (textIndex - n));
-                                graphics.setColor(Color.WHITE);
+				graphics.setColor(Color.WHITE);
 			}
 		}
 		if(client.field!=null)
@@ -103,12 +103,12 @@ public class ClientGUI extends JFrame implements KeyListener, ComponentListener{
 		Iterator<Player> iter = client.players.iterator();
 		int n = 0;
 		while (iter.hasNext()) {
-                    Player temp = iter.next();
-                    if(temp!=null)
-                        graphics.drawString(temp.name, 30, 60 + 15 * n++);
+			Player temp = iter.next();
+			if(temp!=null)
+				graphics.drawString(temp.name, 30, 60 + 15 * n++);
 		}
-                if(client.player!=null)
-                    graphics.drawString(client.player.lifePoints+"HP", 300, 40);
+		if(client.player!=null)
+			graphics.drawString(client.player.lifePoints+"HP", 300, 40);
 		graphics.dispose();
 		// paint backbuffer to window
 		strategy.show();
@@ -134,7 +134,7 @@ public class ClientGUI extends JFrame implements KeyListener, ComponentListener{
 		// TODO: actually do something with color
 		textIndex++;
 		text.add(str);
-                textColor.add(c);
+		textColor.add(c);
 		paint(getGraphics());
 	}
 
@@ -142,30 +142,38 @@ public class ClientGUI extends JFrame implements KeyListener, ComponentListener{
 		paint(this.getGraphics());
 	}
 
+	/**
+	 * Prompts the player to choose a name
+	 * @return the name the player chose
+	 */
 	public String promptChooseName() {
 		String s = "";
 		while (s == null || s.length() == 0) {
 			s = (String) JOptionPane
-					.showInputDialog(this, "What is your name?");
+			.showInputDialog(this, "What is your name?");
 		}
 		return s;
 	}
 
-	// I think it's visually more intuitive to have Yes on the left, but keep in
-	// mind that this means 01 is yes and 1 is no!
-	public int promptYesNo(String str1, String str2) {
+
+	/**
+	 * Creates a yes or no prompt with the desired question and title
+	 * @param message The message to ask
+	 * @param title The title of the message prompt
+	 * @return
+	 */
+	public int promptYesNo(String message, String title) {
+		// I think it's visually more intuitive to have Yes on the left, but keep in
+		// mind that this means 0 is yes and 1 is no!
 		int r = -1;
 		while (r == -1) {
-			r = JOptionPane.showOptionDialog(this, str1, str2,
+			r = JOptionPane.showOptionDialog(this, message, title,
 					JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE,
 					null, new String[] { "Yes", "No" }, "Yes");
 		}
 		return r;
 	}
 
-	public int promptChooseTargetPlayer() {
-		return 1 - p; // temporary fix for not being able to target
-	}
 
 	/**
 	 * Asks the player to choose a card. This is used for many instances. TODO:
@@ -175,20 +183,19 @@ public class ClientGUI extends JFrame implements KeyListener, ComponentListener{
 	 * @return
 	 */
 	public void promptChooseCard(ArrayList<Card> al, String str1, String str2, boolean force) {
-                client.field.pick = al;
-                client.prompting = true;
-                client.forceDecision = force;
+		client.field.pick = al;
+		client.prompting = true;
+		client.forceDecision = force;
 	}
-        /**
-         * Adds one bool, then does promptChooseCard
-         * @param al
-         * @param str1
-         * @param str2
-         * @param force
-         */
-        public void promptTargetCard(String str1, String str2, boolean force) {
-                promptChooseCard(null, str1, str2, force);
-        }
+	/**
+	 * Adds one bool, then does promptChooseCard
+	 * @param str1
+	 * @param str2
+	 * @param force
+	 */
+	public void promptTargetCard(String str1, String str2, boolean force) {
+		promptChooseCard(null, str1, str2, force);
+	}
 
 	public void keyPressed(KeyEvent e) {
 		// TODO Auto-generated method stub
@@ -201,21 +208,21 @@ public class ClientGUI extends JFrame implements KeyListener, ComponentListener{
 	}
 
 	public void keyTyped(KeyEvent e) {
-                if((int)e.getKeyChar()==27){
-                    if(chatting){
-                        chatting = false;
-                        if (chat.length() > 0) {
-                                chat.delete(0, chat.length());
-                        }
-                    }
-                    else{
-                        if(client.prompting&&!client.forceDecision){
-                            client.outMsgs.add("Prompt:-1");
-                            client.prompting = false;
-                        }
-                        return;
-                    }
-                }
+		if((int)e.getKeyChar()==27){
+			if(chatting){
+				chatting = false;
+				if (chat.length() > 0) {
+					chat.delete(0, chat.length());
+				}
+			}
+			else{
+				if(client.prompting&&!client.forceDecision){
+					client.outMsgs.add("Prompt:-1");
+					client.prompting = false;
+				}
+				return;
+			}
+		}
 		else if (e.getKeyChar() == '\n') {
 			chatting = !chatting;
 			if (!chatting && chat.length() > 0) {
@@ -228,55 +235,55 @@ public class ClientGUI extends JFrame implements KeyListener, ComponentListener{
 			else
 				chat.append(e.getKeyChar());
 		} else{
-                    if(Character.isDigit(e.getKeyChar())){
-                        int f = ((Character)e.getKeyChar())%48;
-                        appendText(client.players.get(1-client.id).hand.get(f).name);
-                    }
-                    if((char)e.getKeyChar()=='a'){
-                        appendText(String.valueOf(client.numPlayers));
-                    }
-                    if((char)e.getKeyChar()=='s'){
-                        appendText(String.valueOf(client.players.size()));
-                    }
-                    if((char)e.getKeyChar()=='d'){
-                        appendText(String.valueOf(client.id));
-                    }
-                    if((char)e.getKeyChar()=='f'){
-                        appendText(String.valueOf(client.player.id));
-                    }
-                    if((char)e.getKeyChar()=='g'){
-                        appendText(client.players.get(client.id)+" "+client.player+" "+client.id);
-                    }
-                    if((char)e.getKeyChar()=='h'){
-                        appendText(client.players.get(client.id).hand.size()+""+client.player.hand.size());
-                    }
-                    if((char)e.getKeyChar()=='j'){
-                        String s = "";
-                        for(Card c:client.player.hand){
-                            s+=c.name+" ";
-                        }
-                        appendText(s);
-                    }
-                }
+			if(Character.isDigit(e.getKeyChar())){
+				int f = ((Character)e.getKeyChar())%48;
+				appendText(client.players.get(1-client.id).hand.get(f).name);
+			}
+			if((char)e.getKeyChar()=='a'){
+				appendText(String.valueOf(client.numPlayers));
+			}
+			if((char)e.getKeyChar()=='s'){
+				appendText(String.valueOf(client.players.size()));
+			}
+			if((char)e.getKeyChar()=='d'){
+				appendText(String.valueOf(client.id));
+			}
+			if((char)e.getKeyChar()=='f'){
+				appendText(String.valueOf(client.player.id));
+			}
+			if((char)e.getKeyChar()=='g'){
+				appendText(client.players.get(client.id)+" "+client.player+" "+client.id);
+			}
+			if((char)e.getKeyChar()=='h'){
+				appendText(client.players.get(client.id).hand.size()+""+client.player.hand.size());
+			}
+			if((char)e.getKeyChar()=='j'){
+				String s = "";
+				for(Card c:client.player.hand){
+					s+=c.name+" ";
+				}
+				appendText(s);
+			}
+		}
 		paint(getGraphics());
 	}
 
 
 	public void componentHidden(ComponentEvent e) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 
 	public void componentMoved(ComponentEvent e) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	public void componentResized(ComponentEvent e){
 		int oldw = width;
 		int oldh = height;
-		
+
 		height = e.getComponent().getHeight();
 		width = e.getComponent().getWidth();
 		if(height<600)
@@ -290,6 +297,6 @@ public class ClientGUI extends JFrame implements KeyListener, ComponentListener{
 
 	public void componentShown(ComponentEvent e) {
 		// TODO Auto-generated method stub
-		
+
 	}
 }

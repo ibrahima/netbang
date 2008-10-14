@@ -41,6 +41,13 @@ public class Client extends Thread {
     public boolean targetingPlayer;
     public int nextPrompt = -2; //this value will be returned the next time the client is prompted to do something
 
+    /**
+     * Constructs a client to the Bang server on the specified host.
+     * <p>Note: guiEnabled is intended for bots and the like. As such there is no
+     * use of it yet, but there will be eventually.</p>
+     * @param host the host to connect to
+     * @param guiEnabled whether the GUI is enabled
+     */
     public Client(String host, boolean guiEnabled) {
         running = true;
         this.host = host;
@@ -65,7 +72,14 @@ public class Client extends Thread {
         player = new Player(id, name);
         this.start();
     }
-
+    /**
+     * Constructs a client to the Bang server on the specified host, with the specified name.
+     * <p>Note: guiEnabled is intended for bots and the like. As such there is no
+     * use of it yet, but there will be eventually.</p>
+     * @param host the host to connect to
+     * @param guiEnabled whether the GUI is enabled
+     * @param name the name of the client
+     */
     public Client(String host, boolean guiEnabled, String name) {
         running = true;
         this.host = host;
@@ -103,6 +117,10 @@ public class Client extends Thread {
                 new Client(Args[0], true, Args[1]);
     }
 
+    /**
+     * Gives the name of the local client
+     * @return the name of the client
+     */
     public String getPlayerName() {
         return name;
     }
@@ -148,6 +166,10 @@ public class Client extends Thread {
         }
     }
 
+    /**
+     * Sends the specified chat message to the server
+     * @param chat the chat message
+     */
     public void addChat(String chat) {
         addMsg("Chat:" + chat);
     }
@@ -168,10 +190,8 @@ class ClientThread extends Thread {
         server = theServer;
         this.c = c;
         try {
-            out = 
-new BufferedWriter(new OutputStreamWriter(server.getOutputStream()));
-            in = 
- new BufferedReader(new InputStreamReader(server.getInputStream()));
+            out = new BufferedWriter(new OutputStreamWriter(server.getOutputStream()));
+            in =  new BufferedReader(new InputStreamReader(server.getInputStream()));
         } catch (Exception e1) {
             try {
                 if (server != null) // is it closing too soon some times?
