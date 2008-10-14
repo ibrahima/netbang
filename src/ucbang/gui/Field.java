@@ -338,7 +338,6 @@ public class Field implements MouseListener, MouseMotionListener{
 					}
 					else if(client.nextPrompt==-1){
 						Player p = client.players.get(cs.playerid);
-						System.out.println("asdjflasldfjaslfjaslfska12893041893249128340128401284091284jfslfjasfas "+p.id);
 						if(cs.card.location==0){
 							client.nextPrompt = p.hand.indexOf(cs.card);
 							client.gui.appendText("Index of card is "+client.nextPrompt);
@@ -452,7 +451,6 @@ public class Field implements MouseListener, MouseMotionListener{
 		}
 		public V remove(Object o){
                         if(o instanceof Card){
-                            System.out.println("WOWWTFWTFWTFWWOW");
                             CardSpace cs =(CardSpace)get(o);
                             if(cs.hs != null){
                                 if(!cs.field)

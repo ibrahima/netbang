@@ -241,7 +241,6 @@ new BufferedWriter(new OutputStreamWriter(server.getOutputStream()));
                         c.players.remove(messagevalue);
                     } else if (messagetype.equals("Prompt")) {
                         if(c.nextPrompt!=-2){
-                            System.out.println("AUTOAUTOAUTOAUTOAUTOAUTOAUTOAUTOAUTO");
                             c.outMsgs.add("Prompt:" + c.nextPrompt);
                             c.nextPrompt = -2;
                         }

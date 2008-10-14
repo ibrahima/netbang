@@ -52,7 +52,6 @@ public class Bang {
                             {
                                 if (getCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]).effect == Card.play.STEAL.ordinal() ||
                                  getCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]).effect == Card.play.DISCARD.ordinal()){
-                                    System.out.println("ASDFASFASDFASFASDFSFAFASDFASDFASDFASDFASFSFFASFAFKWR!#$!$!$!!$$ 1");
                                     server.prompt(turn % numPlayers, "PickCardTarget", true);
                                 }
                                 else
@@ -125,7 +124,6 @@ public class Bang {
                                                    server.choice.get(1)[0][1]);
                                 if (getCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]).effect == Card.play.STEAL.ordinal() ||
                                     getCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]).effect == Card.play.DISCARD.ordinal()){
-                                    System.out.println("ASDFASFASDFASFASDFSFAFASDFASDFASDFASDFASFSFFASFAFKWR!#$!$!$!!$$ 2");
                                         server.prompt(turn % numPlayers, 
                                                       "PickCardTarget", 
                                                       true);
