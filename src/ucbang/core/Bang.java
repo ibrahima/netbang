@@ -66,8 +66,7 @@ public class Bang {
                             } else if (isCardLegal(getCard(server.choice.get(0)[0][0],server.choice.get(0)[0][1]), 
                                                    players[server.choice.get(0)[0][0]], 
                                                    players[server.choice.get(1)[0][1]])) {
-                                if (getCard(server.choice.get(0)[0][0],server.choice.get(0)[0][1]).discardToPlay == 
-                                    true) {
+                                if (getCard(server.choice.get(0)[0][0],server.choice.get(0)[0][1]).discardToPlay == true) {
                                     if (players[server.choice.get(0)[0][0]].hand.size() > 1) {
                                         if (server.choice.get(1).length == 1) { //has not been asked to discard yet
                                             System.out.println("THIS CARD REQUIRES A DISCARD TO PLAY AS WELL");
@@ -83,8 +82,7 @@ public class Bang {
                                                                server.choice.get(1).length);
                                             return;
                                         }
-                                        if (server.choice.get(1).length == 
-                                            2) { //has  been asked to discard
+                                        if (server.choice.get(1).length ==  2) { //has  been asked to discard
                                             if (server.choice.get(1)[1][1] == 
                                                 server.choice.get(0)[0][1]) {
                                                 System.out.println("Cannot discard the card you are playing");
@@ -227,6 +225,14 @@ public class Bang {
                             }
                             else if (getCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]).effect == Card.play.STEAL.ordinal() ||
                                 getCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]).effect == Card.play.DISCARD.ordinal()){
+                                    if(server.choice.get(1)[0][1] == server.choice.get(1)[0][0]){
+                                        server.sendInfo("Chat:Player "+server.choice.get(0)[0][0]+" is an idiot.");
+                                        server.choice.remove(server.choice.size() - 1);
+                                        server.choice.remove(server.choice.size() - 1);
+                                        server.prompt(turn % numPlayers, "PickCardTarget", true);
+                                        System.out.println("Cannot panic yourself");
+                                        return;
+                                    }
                                     int temp = server.choice.get(2)[0][1];
                                     if(getCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]).effect == Card.play.DISCARD.ordinal()){
                                         if(temp>-1){
