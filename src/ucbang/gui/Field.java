@@ -277,13 +277,13 @@ public class Field implements MouseListener, MouseMotionListener{
 				chara = new Card(Deck.Characters.values()[client.player.character]);
 			}
 			if(chara!=null){
-				int x=(int) hs.rect.x-90;
+				int x=(int) hs.rect.x-60;
 				int y=(int) hs.rect.y;
-				CardSpace csp = new CardSpace(chara,new Rectangle(x,y,60,90), player, false);
+				CardSpace csp = new CardSpace(chara,new Rectangle(x,y-60,60,90), player, false);
 				//generate HP card
 				Card hp = new Card(Deck.CardName.BULLETBACK);
 				CardSpace hps = new CardSpace(hp, new Rectangle(x+
-						10 * client.players.get(player).maxLifePoints,y+30,90,60),player, false);
+						10 * client.players.get(player).maxLifePoints,y-60,90,60),player, false);
 				hps.setPartner(csp);
 				csp.setPartner(hps);
 				//hps.rotate(1);
@@ -336,7 +336,7 @@ public class Field implements MouseListener, MouseMotionListener{
 				} else if(client.forceDecision==false){
 					//it's your turn
 					if(client.targetingPlayer){
-						if(cs.card.type==1){
+						if(cs.card.type==1||cs.card.name=="BULLETBACK"){
 							client.targetingPlayer = false;   
 							client.prompting = false;
 							client.outMsgs.add("Prompt:" + cs.playerid);

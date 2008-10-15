@@ -115,7 +115,6 @@ public class Bang {
                                         return;
                                     }
                                 }
-                                server.sendInfo("SetInfo:CardPlayed:" + server.choice.get(0)[0][0] + ":" + getCard(server.choice.get(0)[0][0],server.choice.get(0)[0][1]).name + ":" + server.choice.get(1)[0][1]);
                                 System.out.println("Player " + 
                                                    server.choice.get(1)[0][0] + 
                                                    " is targetting " + 
@@ -127,7 +126,8 @@ public class Bang {
                                                       true);
                                         return;
                                 }
-                                else if (getCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]).effect == Card.play.DAMAGE.ordinal() ||
+                                server.sendInfo("SetInfo:CardPlayed:" + server.choice.get(0)[0][0] + ":" + getCard(server.choice.get(0)[0][0],server.choice.get(0)[0][1]).name + ":" + server.choice.get(1)[0][1]);
+                                if (getCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]).effect == Card.play.DAMAGE.ordinal() ||
                                     getCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]).effect == Card.play.DUEL.ordinal() ) {
                                     server.prompt(server.choice.get(1)[0][1], 
                                                   "PlayCardUnforced", 
@@ -226,18 +226,18 @@ public class Bang {
                             else if (getCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]).effect == Card.play.STEAL.ordinal() ||
                                 getCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]).effect == Card.play.DISCARD.ordinal()){
                                     if(server.choice.get(1)[0][1] == server.choice.get(1)[0][0]){
-                                        server.sendInfo("Chat:Player "+server.choice.get(0)[0][0]+" is an idiot.");
                                         server.choice.remove(server.choice.size() - 1);
                                         server.choice.remove(server.choice.size() - 1);
                                         server.prompt(turn % numPlayers, "PickCardTarget", true);
                                         System.out.println("Cannot panic yourself");
                                         return;
                                     }
+                                server.sendInfo("SetInfo:CardPlayed:" + server.choice.get(0)[0][0] + ":" + getCard(server.choice.get(0)[0][0],server.choice.get(0)[0][1]).name + ":" + server.choice.get(1)[0][1]);
                                     int temp = server.choice.get(2)[0][1];
                                     if(getCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]).effect == Card.play.DISCARD.ordinal()){
                                         if(temp>-1){
                                             playerDiscardCard(server.choice.get(1)[0][1], temp, true);
-                                        }
+                                             }
                                         else{
                                             temp = (-temp)-3;
                                             System.out.println("LOOKING FOR A CARD IN FIELD");
