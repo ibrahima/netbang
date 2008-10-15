@@ -104,8 +104,7 @@ public class ClientGUI extends JFrame implements KeyListener, ComponentListener{
 		int n = 0;
 		while (iter.hasNext()) {
 			Player temp = iter.next();
-			if(temp!=null)
-				graphics.drawString(temp.name, 30, 60 + 15 * n++);
+                        graphics.drawString(temp.name, 30, 60 + 15 * n++);
 		}
 		if(client.player!=null)
 			graphics.drawString(client.player.lifePoints+"HP", 300, 40);
@@ -237,7 +236,7 @@ public class ClientGUI extends JFrame implements KeyListener, ComponentListener{
 		} else{
 			if(Character.isDigit(e.getKeyChar())){
 				int f = ((Character)e.getKeyChar())%48;
-				appendText(client.players.get(1-client.id).hand.get(f).name);
+				appendText(client.players.get(f).name);
 			}
 			if((char)e.getKeyChar()=='a'){
 				appendText(String.valueOf(client.numPlayers));

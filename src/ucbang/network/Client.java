@@ -251,6 +251,7 @@ class ClientThread extends Thread {
                     } else if (messagetype.equals("Players")) {
                         String[] ppl = messagevalue.split(",");
                         for (int i = 0; i < ppl.length; i++) {
+                        //for (int i = ppl.length-1; i >= 0; i--) {
                             if (ppl[i] != null && !ppl[i].isEmpty()) {
                                 c.players.add(new Player(i, ppl[i]));
                             }
@@ -331,19 +332,22 @@ class ClientThread extends Thread {
                         // set information about hand and stuff
                         String[] temp1 = messagevalue.split(":");
                     	int tid = Integer.valueOf(temp1[1]);
-                    	Player ptemp = null;
-                    	if(c.id == tid){
-                    		ptemp = c.player;
-                    	}else if(tid<c.players.size()){
-                    		ptemp = c.players.get(tid);
-                    	}
                         String infotype = temp1[0];
-						if (infotype.equals("newPlayer")) {
+                        Player ptemp = null;
+                        if (infotype.equals("newPlayer")) {
+                            c.id = tid;
                             c.player = new Player(tid, c.name); 
                             c.numPlayers = Integer.valueOf(temp1[2]);
-                            c.id = tid;
-                            c.players.set(c.id, c.player);
-                        } else if (infotype.equals("role")) {
+                            //System.out.println("ASDFASDFASDFASFASFASFASFASFASFASFASFASFASFASFASFSAFASFSDFASFASFASFASFASFASFASFASFASFASFs"+ c.id);
+                            //c.players.set(c.id, c.player);
+                        } else{
+                            if(c.id == tid){
+                                    ptemp = c.player;
+                            }else if(tid<c.players.size()){
+                                    ptemp = c.players.get(tid);
+                            }
+                        }
+                        if (infotype.equals("role")) {
                             if (tid == c.id) {
                                 c.field.clear();
                                 c.player.role = 
