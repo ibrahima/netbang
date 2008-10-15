@@ -8,9 +8,18 @@ public class Card {
 	public String name;
 	public int ordinal;
 
-	public int type; // 1 = char, 2 = play, 3 = greenfield, 4 = miss, 5 = bluefield
-	public int target; // 1 = self, 2 = choose 1 player, 3 = all, 4 = all others
-	public int effect; // 1 = deal damage, 2 = heal, 3 = miss, 4 = draw
+	/**
+	 * 1 = char, 2 = play, 3 = greenfield, 4 = miss, 5 = bluefield
+	 */
+	public int type;
+	/**
+	 * 1 = self, 2 = choose 1 player, 3 = all, 4 = all others
+	 */
+	public int target;
+	/**
+	 * 1 = deal damage, 2 = heal, 3 = miss, 4 = draw
+	 */
+	public int effect;
 	public int effect2; // secondary effects only affect player
 	public int special; // HP for char cards, ???? for other cards, 1 for beer
 						// and bangs, 1 for miss, 2 for dodge

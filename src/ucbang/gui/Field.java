@@ -204,6 +204,10 @@ public class Field implements MouseListener, MouseMotionListener{
 						description = cs.card.name.replace('_', ' ');
 					else
 						description = cs.card.name+" - "+cs.card.description;
+					if(cs.card.type==1){
+						description = description + "\n" + client.players.get(cs.playerid).lifePoints +"HP";
+						//TODO: add distance to tooltip?
+					}
 					describeWhere = hoverpoint;
 					tooltipWidth = textWidth(description, graphics);
 					tooltipHeight = textHeight(description, graphics);
