@@ -11,6 +11,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.awt.image.BufferStrategy;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -60,7 +61,7 @@ public class ClientGUI extends JFrame implements KeyListener, ComponentListener{
 				((ClientGUI)(e.getWindow())).client.running=false;
 			}
 		});
-		this.addComponentListener(this);
+		this.addComponentListener(this); //<-- lol wtf
 	}
 
 

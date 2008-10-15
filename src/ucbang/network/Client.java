@@ -251,7 +251,6 @@ class ClientThread extends Thread {
                     } else if (messagetype.equals("Players")) {
                         String[] ppl = messagevalue.split(",");
                         for (int i = 0; i < ppl.length; i++) {
-                        //for (int i = ppl.length-1; i >= 0; i--) {
                             if (ppl[i] != null && !ppl[i].isEmpty()) {
                                 c.players.add(new Player(i, ppl[i]));
                             }
@@ -338,8 +337,7 @@ class ClientThread extends Thread {
                             c.id = tid;
                             c.player = new Player(tid, c.name); 
                             c.numPlayers = Integer.valueOf(temp1[2]);
-                            //System.out.println("ASDFASDFASDFASFASFASFASFASFASFASFASFASFASFASFASFSAFASFSDFASFASFASFASFASFASFASFASFASFASFs"+ c.id);
-                            //c.players.set(c.id, c.player);
+                            c.players.set(c.id, c.player);
                         } else{
                             if(c.id == tid){
                                     ptemp = c.player;

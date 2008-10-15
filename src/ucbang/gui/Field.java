@@ -37,6 +37,7 @@ public class Field implements MouseListener, MouseMotionListener{
 	int tooltipWidth = 0;
 	int tooltipHeight = 0;
 	Point hoverpoint;
+        
 	public Field(CardDisplayer cd, Client c) {
 		this.cd=cd;
 		client = c;
@@ -667,11 +668,9 @@ public class Field implements MouseListener, MouseMotionListener{
 	public void resize(int width, int height, int width2, int height2) {
 		ArrayList<Clickable> stuff = clickies.values();
 		Iterator<Clickable> iter = stuff.iterator();
-		while(iter.hasNext()){
-			Clickable temp = iter.next();
-			temp.move(temp.rect.x*width2/width, temp.rect.y*height2/height);
-		}
-
+                for(HandSpace hs: handPlacer){
+                    hs.move(hs.rect.x*width2/width, hs.rect.y*height2/height);
+                }
 	}
 	/**
 	 * Sets the given players's HP and updates the bullet display accordingly
