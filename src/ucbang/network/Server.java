@@ -12,6 +12,7 @@ import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 
 import javax.swing.JOptionPane;
@@ -23,7 +24,7 @@ public class Server extends Thread {
 	public static void main(String Args[]) {
 		new Server(12345, false);
 	}
-	protected HashMap<String, LinkedList<String>> messages = new HashMap<String, LinkedList<String>>();
+	protected LinkedHashMap<String, LinkedList<String>> messages = new LinkedHashMap<String, LinkedList<String>>();
 	static int numPlayers;
 	ServerSocket me;
 	public int gameInProgress; // 1 = attempting to start game, 2 = game started
