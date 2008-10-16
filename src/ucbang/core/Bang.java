@@ -237,7 +237,7 @@ public class Bang {
                                         System.out.println("Cannot panic yourself");
                                         return;
                                     }
-                                server.sendInfo("SetInfo:CardPlayed:" + server.choice.get(0)[0][0] + ":" + getCard(server.choice.get(0)[0][0],server.choice.get(0)[0][1]).name + ":" + server.choice.get(1)[0][1]);
+                                    server.sendInfo("SetInfo:CardPlayed:" + server.choice.get(0)[0][0] + ":" + getCard(server.choice.get(0)[0][0],server.choice.get(0)[0][1]).name + ":" + server.choice.get(1)[0][1]);
                                     int temp = server.choice.get(2)[0][1];
                                     if(getCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]).effect == Card.play.DISCARD.ordinal()){
                                         if(temp>-1){
@@ -251,11 +251,13 @@ public class Bang {
                                     }
                                     else{
                                         if(temp>-1){///askdfjlasjflajfa;lsjkafsf REPLACE THIS WITH GETCARD
-                                            server.sendInfo(turn%numPlayers,"Draw:" + turn%numPlayers + ":Game:"+players[(server.choice.get(1)[0][1])].hand.get( temp).name);
+                                            players[turn%numPlayers].hand.add(players[(server.choice.get(1)[0][1])].hand.get(temp));
+                                            server.sendInfo(turn%numPlayers,"Draw:" + turn%numPlayers + ":Game:"+players[(server.choice.get(1)[0][1])].hand.get(temp).name);
                                             playerDiscardCard(server.choice.get(1)[0][1], temp, false);
                                         }
                                         else{
                                             temp = (-temp)-3;
+                                            players[turn%numPlayers].hand.add(players[(server.choice.get(1)[0][1])].field.get(temp));
                                             server.sendInfo(turn%numPlayers,"Draw:" + turn%numPlayers + ":Game:"+players[(server.choice.get(1)[0][1])].field.get(temp).name);
                                             playerFieldDiscardCard(server.choice.get(1)[0][1], temp, false);
                                         }
@@ -908,7 +910,6 @@ public class Bang {
     
     Card getCard(int p, int n){
         if(n>-1){
-            System.out.println(n+"       "+players[p].hand.size());
             return players[p].hand.get(n);
         }
         if(n<-2){

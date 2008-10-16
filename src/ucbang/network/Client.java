@@ -401,8 +401,10 @@ class ClientThread extends Thread {
                                         c.field.clickies.remove(c.players.get(tid).hand.get((int)Integer.valueOf(temp1[3])));
                                         c.players.get(tid).hand.remove((int)Integer.valueOf(temp1[3]));
                                     }
+                                    else{
                                         card = new Card(Deck.CardName.values()[Integer.valueOf(temp1[2])]);
                                         card.location = 1;
+                                    }
                                 }
                                 c.players.get(tid).field.add(card);
                                 c.field.add(card, tid, true);

@@ -470,7 +470,7 @@ public class Field implements MouseListener, MouseMotionListener{
 					else
 						cs.hs.fieldCards.remove(cs);
 				}
-                                System.out.println(cs.card.name+" "+cs.playerid+" "+(cs.hs==null)+" "+handPlacer.get(cs.playerid).fieldCards.contains(cs));
+                                //System.out.println(cs.card.name+" "+cs.playerid+" "+(cs.hs==null)+" "+handPlacer.get(cs.playerid).fieldCards.contains(cs));
 				if(cs.hs.autoSort){
 					sortHandSpace(cs.hs);
 				}
