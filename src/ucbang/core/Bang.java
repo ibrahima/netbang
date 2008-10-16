@@ -624,7 +624,7 @@ public class Bang {
                         server.sendInfo("SetInfo:PutInField:"+a%numPlayers+":"+
                                     players[turn%numPlayers].field.get(n).ordinal);
                         players[a%numPlayers].field.add(players[turn%numPlayers].field.get(n));
-                        //playerFieldDiscardCard(turn%numPlayers, n, true);
+                        playerFieldDiscardCard(turn%numPlayers, n, true);
                     }
                 }
             }

@@ -389,7 +389,6 @@ class ClientThread extends Thread {
                                         card.location = 1;
                                         c.field.clickies.remove(card);
                                         c.player.hand.remove(card);
-                                        c.players.get(tid).field.add(card);
                                     } else{
                                         card = new Card(Deck.CardName.values()[Integer.valueOf(temp1[2])]);
                                     }
@@ -425,6 +424,7 @@ class ClientThread extends Thread {
                             }
                         } else if (infotype.equals("fieldDiscard")) {
                             if(tid==c.id){
+                                c.gui.appendText("REMOVING:" + Integer.valueOf(temp1[2]).intValue()+ " "+c.player.field.get(Integer.valueOf(temp1[2]).intValue())+" "+c.player.field.size());
                                 c.field.clickies.remove(c.player.field.get(Integer.valueOf(temp1[2]).intValue()));
                                 c.gui.appendText("You discarded:" + c.player.field.remove(Integer.valueOf(temp1[2]).intValue()).name);
                             }

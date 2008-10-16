@@ -464,6 +464,9 @@ public class Field implements MouseListener, MouseMotionListener{
 		public V remove(Object o){
 			if(o instanceof Card){
 				CardSpace cs =(CardSpace)get(o);
+                                if(cs==null){
+                                    client.gui.appendText("WTFWTFWTF");
+                                }
 				if(cs.hs != null){
 					if(!cs.field)
 						cs.hs.cards.remove(cs);
