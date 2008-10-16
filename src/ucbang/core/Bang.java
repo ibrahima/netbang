@@ -350,6 +350,10 @@ public class Bang {
                         server.sendInfo("SetInfo:PutInField:"+server.choice.get(0)[0][0]+":"+
                                     getCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]).name+":"+
                                     server.choice.get(0)[0][1]);
+                        if(getCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]).name=="DYNAMITE"){
+                            //System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+                             getCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]).effect2 = turn%numPlayers;
+                        }
                         getCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]).location = 2;
                         players[server.choice.get(0)[0][0]].field.add(getCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]));
                         players[server.choice.get(0)[0][0]].hand.remove(server.choice.get(0)[0][1]);
@@ -610,7 +614,7 @@ public class Bang {
                     nextTurn();
                     return;
                 } else{ //dynamite
-                    if(Math.random()<.5){ //BOOM
+                    if(Math.random()<0){ //BOOM
                         playerFieldDiscardCard(turn%numPlayers, n, true); 
                         System.out.println("ASPLODEDEDEDEDEDEDEDEDEDEDED!11111!!$!@#$!@#$");
                         //something to end the guy's turn if he's dead
@@ -621,9 +625,11 @@ public class Bang {
                                a - turn < numPlayers) {
                             a++;
                         }
-                        server.sendInfo("SetInfo:PutInField:"+a%numPlayers+":"+
-                                    players[turn%numPlayers].field.get(n).ordinal);
-                        players[a%numPlayers].field.add(players[turn%numPlayers].field.get(n));
+                        if(players[turn%numPlayers].field.get(n).effect2 != a%numPlayers){
+                            server.sendInfo("SetInfo:PutInField:"+a%numPlayers+":"+
+                                        players[turn%numPlayers].field.get(n).ordinal);
+                            players[a%numPlayers].field.add(players[turn%numPlayers].field.get(n));
+                        }
                         playerFieldDiscardCard(turn%numPlayers, n, true);
                     }
                 }
