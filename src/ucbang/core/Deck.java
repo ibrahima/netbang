@@ -29,7 +29,7 @@ public class Deck {
     public void fillGameCards(){
         //Create a drawPile
         Enum[] cards = new Enum[120];
-        Arrays.fill(cards, 0, 1, CardName.APPALOOSA);
+        /*Arrays.fill(cards, 0, 1, CardName.APPALOOSA);
         Arrays.fill(cards, 1, 30, CardName.BANG);
         Arrays.fill(cards, 30, 33, CardName.BARREL);
         Arrays.fill(cards, 33, 41, CardName.BEER);
@@ -70,9 +70,9 @@ public class Deck {
         Arrays.fill(cards, 115, 117, CardName.VOLCANIC);
         Arrays.fill(cards, 117, 118, CardName.WELLS_FARGO);
         Arrays.fill(cards, 118, 119, CardName.WHISKY);
-        Arrays.fill(cards, 119, 120, CardName.WINCHESTER);
+        Arrays.fill(cards, 119, 120, CardName.WINCHESTER);*/
         
-        //Arrays.fill(cards, 0, 120, CardName.DYNAMITE);
+        Arrays.fill(cards, 0, 120, CardName.DYNAMITE);
         
         ArrayList<Enum> allCards = new ArrayList<Enum>();
         for(Enum e: cards)

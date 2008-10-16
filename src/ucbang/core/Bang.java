@@ -290,7 +290,6 @@ public class Bang {
                             server.sendInfo("SetInfo:PutInField:"+server.choice.get(0)[0][0]+":"+
                                     getCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]).name+":"+
                                     server.choice.get(0)[0][1]);
-                            System.out.println("WTFTFWTFWtFwtfwtfwtwfwtwfasfawfawefAWEFAWASDFASFAFAW Don't think there's any other card that does this....");
                         }
 
                     } else if (getCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]).target == 
@@ -606,9 +605,28 @@ public class Bang {
         for(int n = 0; n<players[turn % numPlayers].field.size(); n++){
             Card c = players[turn % numPlayers].field.get(n);
             if(c.effect == Card.play.JAIL.ordinal()){
-                playerFieldDiscardCard(turn%numPlayers, n, true);
-                nextTurn();
-                return;
+                if(c.type==2){
+                    playerFieldDiscardCard(turn%numPlayers, n, true);
+                    nextTurn();
+                    return;
+                } else{ //dynamite
+                    if(Math.random()<.5){ //BOOM
+                        playerFieldDiscardCard(turn%numPlayers, n, true); 
+                        System.out.println("ASPLODEDEDEDEDEDEDEDEDEDEDED!11111!!$!@#$!@#$");
+                        //something to end the guy's turn if he's dead
+                    }
+                    else{
+                        int a = turn+1;
+                        while (players[a  % numPlayers].lifePoints == 0 && 
+                               a - turn < numPlayers) {
+                            a++;
+                        }
+                        server.sendInfo("SetInfo:PutInField:"+a%numPlayers+":"+
+                                    players[turn%numPlayers].field.get(n).ordinal);
+                        players[a%numPlayers].field.add(players[turn%numPlayers].field.get(n));
+                        //playerFieldDiscardCard(turn%numPlayers, n, true);
+                    }
+                }
             }
         }
         
