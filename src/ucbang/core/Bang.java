@@ -133,10 +133,18 @@ public class Bang {
                                     return;
                                 } else if (getCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]).effect == Card.play.DAMAGE.ordinal() ||
                                     getCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]).effect == Card.play.DUEL.ordinal() ) {
-                                    server.prompt(server.choice.get(1)[0][1], 
-                                                  "PlayCardUnforced", 
-                                                  true); //unforce b/c do not have to miss
-                                    return;
+                                    if(playerHasFieldEffect(server.choice.get(1)[0][1], Card.field.BARREL)>-1&&Math.random()<.2){
+                                        server.sendInfo("Chat:Player "+server.choice.get(1)[0][1]+" did a barrel roll!");
+                                        server.choice.remove(server.choice.size() - 1);
+                                        playerDiscardCard(server.choice.get(0)[0][0], 
+                                                          server.choice.get(0)[0][1], true);
+                                    }
+                                    else{
+                                        server.prompt(server.choice.get(1)[0][1], 
+                                                      "PlayCardUnforced", 
+                                                      true); //unforce b/c do not have to miss
+                                        return;
+                                    }
                                 } else {
                                     System.out.println("NOT A BANG, SO TARGET DOES NOT CHOOSE (Unimplemented targetting card)");
                                     playerDiscardCard(server.choice.get(0)[0][0], 
@@ -461,7 +469,7 @@ public class Bang {
     public int getRangeBetweenPlayers(Player p1, Player p2) {
         int naturalRange = Math.min((numPlayers-p1.id+p2.id)%numPlayers, (numPlayers-p2.id+p1.id)%numPlayers);//seating order
         int distance = naturalRange;
-        distance+=p1.hasFieldEffect(Card.field.HORSE_CHASE)+p2.hasFieldEffect(Card.field.HORSE_RUN);
+        distance += playerHasFieldEffect(p1.id, Card.field.HORSE_CHASE)>-1?-1:0+playerHasFieldEffect(p2.id, Card.field.HORSE_RUN)>-1?1:0;
         return distance;
     }
 
@@ -941,5 +949,15 @@ public class Bang {
         }
         System.out.println("ERRORERRORERROR12345");
         return null;
+    }
+    
+    public int playerHasFieldEffect(int p, Card.field e){ //TODO: this
+        for(int n = 0; n<players[p].field.size(); n++){
+            Card c = players[p].field.get(n);
+            if(e.ordinal()==c.effect){
+                return n;
+            }
+        }
+        return -1;
     }
 }
