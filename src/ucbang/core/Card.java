@@ -223,6 +223,7 @@ public class Card {
 			case JAIL:
 				type = 2; //TODO: make special case for jail
 				range = -1;
+                                target = 2;
 				effect = play.JAIL.ordinal();
 				break; // special case: even though jail remains on the field of
 						// a player, it is "played"

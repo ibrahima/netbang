@@ -26,7 +26,7 @@ public class Player {
 		return name;
 	}*/
         
-        public int hasFieldEffect(Card.field e){
+        public int hasFieldEffect(Card.field e){ //TODO: this
             return 0;
         }
 }

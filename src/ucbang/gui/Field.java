@@ -156,7 +156,7 @@ public class Field implements MouseListener, MouseMotionListener{
 						if(crd.card.type==5)
 							inner=new Color(100,100,200);
 						else{
-							inner = (crd.card.name!="DYNAMITE"?inner=new Color(100,200,100):new Color(100,100,200));
+							inner = ((crd.card.name!="JAIL"||crd.card.name!="DYNAMITE")?inner=new Color(100,200,100):new Color(100,100,200));
 						}
 						break;
 					default:
@@ -470,6 +470,7 @@ public class Field implements MouseListener, MouseMotionListener{
 					else
 						cs.hs.fieldCards.remove(cs);
 				}
+                                System.out.println(cs.card.name+" "+cs.playerid+" "+(cs.hs==null)+" "+handPlacer.get(cs.playerid).fieldCards.contains(cs));
 				if(cs.hs.autoSort){
 					sortHandSpace(cs.hs);
 				}
@@ -501,7 +502,7 @@ public class Field implements MouseListener, MouseMotionListener{
 			rect = r;
 			playerid = player;
 			field = f;
-			if(!f && !handPlacer.isEmpty())
+			if(!handPlacer.isEmpty())
 				hs = handPlacer.get(playerid);
 		}
 	}

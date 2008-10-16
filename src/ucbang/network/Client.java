@@ -384,20 +384,27 @@ class ClientThread extends Thread {
                                 c.gui.appendText("Player "+temp1[1]+" added "+temp1[2]+" to the field.");
                                 Card card;
                                 if(tid==c.id){
-                                    card = c.player.hand.get(Integer.valueOf(temp1[3]));
-                                    card.location = 1;
-                                    c.field.clickies.remove(card);
-                                    c.player.hand.remove(card);
-                                    c.players.get(tid).field.add(card);
-                                        //c.players.get(tid).hand.remove(Integer.valueOf(temp1[3]).intValue());
+                                    if(temp1.length==4){
+                                        card = c.player.hand.get(Integer.valueOf(temp1[3]));
+                                        card.location = 1;
+                                        c.field.clickies.remove(card);
+                                        c.player.hand.remove(card);
+                                        c.players.get(tid).field.add(card);
+                                    } else{
+                                        card = new Card(Deck.CardName.values()[Integer.valueOf(temp1[2])]);
+                                    }
                                 }
                                 else{
-                                    card = new Card(CardName.valueOf(temp1[2]));
-                                    card.location = 1;
-                                    c.field.clickies.remove(c.players.get(tid).hand.get((int)Integer.valueOf(temp1[3])));
-                                    c.players.get(tid).hand.remove((int)Integer.valueOf(temp1[3]));
-                                    c.players.get(tid).field.add(card);
+                                    if(temp1.length==4){
+                                        card = new Card(CardName.valueOf(temp1[2]));
+                                        card.location = 1;
+                                        c.field.clickies.remove(c.players.get(tid).hand.get((int)Integer.valueOf(temp1[3])));
+                                        c.players.get(tid).hand.remove((int)Integer.valueOf(temp1[3]));
+                                    }
+                                        card = new Card(Deck.CardName.values()[Integer.valueOf(temp1[2])]);
+                                        card.location = 1;
                                 }
+                                c.players.get(tid).field.add(card);
                                 c.field.add(card, tid, true);
                         } else if (infotype.equals("turn")) {
                             c.turn = tid;
@@ -416,10 +423,11 @@ class ClientThread extends Thread {
                             }
                         } else if (infotype.equals("fieldDiscard")) {
                             if(tid==c.id){
-                                c.field.clickies.remove(c.player.field.get(Integer.valueOf(temp1[2])));
+                                c.field.clickies.remove(c.player.field.get(Integer.valueOf(temp1[2]).intValue()));
                                 c.gui.appendText("You discarded:" + c.player.field.remove(Integer.valueOf(temp1[2]).intValue()).name);
                             }
                             else{
+                                System.out.println("ASDFASDFASDFASDFASDF"+temp[1]);
                                 c.field.clickies.remove(c.players.get(tid).field.get(Integer.valueOf(temp1[2])));
                                 c.players.get(tid).field.remove(Integer.valueOf(temp1[2]).intValue());
                                 c.gui.appendText("Player "+tid+" discarded:" + temp1[3]);
