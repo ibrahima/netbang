@@ -53,8 +53,9 @@ public class Bang {
                                  getCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]).effect == Card.play.DISCARD.ordinal()){
                                     server.prompt(turn % numPlayers, "PickCardTarget", true);
                                 }
-                                else
+                                else{   
                                     server.prompt(turn % numPlayers, "PickTarget", true);
+                                }
                                 System.out.println("pick target....");
                                 return;
                             }
@@ -447,15 +448,27 @@ public class Bang {
                         System.out.println("ILLEGAL CARD: target is already at maxhp");
                         return false;
                     }
-                } else if (c.effect == Card.play.DAMAGE.ordinal() && 
-                           p1 == p2) {
-                    System.out.println("ILLEGAL CARD: why would you shoot yourself?");
-                    return false;
+                } else if(c.effect == Card.play.DAMAGE.ordinal()){ 
+                    if(p1 == p2) {
+                        System.out.println("ILLEGAL CARD: why would you shoot yourself?");
+                        return false;
+                    }
                 }
             } else if (c.type == 4 && 
                        c.effect == Card.play.MISS.ordinal()) { //can't play miss
                 System.out.println("ILLEGAL CARD: can't play miss on turn");
                 return false;
+            }
+            if(c.target==2 && c.range!=-1){
+                if(c.effect == Card.play.DAMAGE.ordinal()){ 
+                    if(c.range == 0){
+                        int gun = (playerHasFieldEffect(p1.id, Card.field.GUN)!=-1?p1.field.get(playerHasFieldEffect(p1.id, Card.field.GUN)).range:1);
+                        if(getRangeBetweenPlayers(p1, p2)>gun)
+                            return false;
+                    }
+                    else if(c.range == 1 && getRangeBetweenPlayers(p1, p2)>1)
+                        return false;
+                }
             }
         }
         return true;
@@ -951,6 +964,13 @@ public class Bang {
         return null;
     }
     
+    /**
+     * Returns the index in field of the card in player p's field granting the effect e.
+     * If p does not have the effect, returns -1.
+     * @param p
+     * @param e
+     * @return
+     */
     public int playerHasFieldEffect(int p, Card.field e){ //TODO: this
         for(int n = 0; n<players[p].field.size(); n++){
             Card c = players[p].field.get(n);

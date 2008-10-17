@@ -61,7 +61,7 @@ public class Card {
 			case BANG:
 				type = 2;
 				special = 1;
-				range = 1;
+				range = 0;
 				target = 2;
 				effect = play.DAMAGE.ordinal();
 				description = "BANG! cards are the main method to reduce other players' life points. \n" +
@@ -127,7 +127,7 @@ public class Card {
 			case PEPPERBOX:
 				type = 3;
 				target = 2;
-				range = 1;
+				range = 0;
 				effect = play.DAMAGE.ordinal();
 				description="The current player play a PepperBox card in front of him. Starting with the next\n" +
 						" player's turn, he can discard it for BANG! effect to 1 player at visible distance.\n" +
