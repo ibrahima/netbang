@@ -251,6 +251,7 @@ class ClientThread extends Thread {
                     } else if (messagetype.equals("InfoMsg")) {
                         String[] temp1 = messagevalue.split(":");
                         c.gui.appendText(temp1[0], (Integer.valueOf(temp1[1])==0)?Color.BLUE:Color.RED);
+                        c.outMsgs.add("Ready");
                     } else if (messagetype.equals("Players")) {
                         String[] ppl = messagevalue.split(",");
                         for (int i = 0; i < ppl.length; i++) {
