@@ -248,6 +248,9 @@ class ClientThread extends Thread {
                         }
                     } else if (messagetype.equals("Chat")) {
                         c.gui.appendText(messagevalue);
+                    } else if (messagetype.equals("InfoMsg")) {
+                        String[] temp1 = messagevalue.split(":");
+                        c.gui.appendText(temp1[0], (Integer.valueOf(temp1[1])==0)?Color.BLUE:Color.RED);
                     } else if (messagetype.equals("Players")) {
                         String[] ppl = messagevalue.split(",");
                         for (int i = 0; i < ppl.length; i++) {
@@ -441,8 +444,7 @@ class ClientThread extends Thread {
                             c.gui.appendText(s);
                             //if(tid!=c.id && (temp1.length==4?!temp1[3].equals("no miss"):true)) //client would have already removed it
                                 //c.field.removeLast(tid);
-                        } else if (infotype.equals("id")) {
-                            System.out.println("ASDFASDFASDFASFASFASDFASDFAS"); //just realized this one is never called....
+                        } else if (infotype.equals("id")) { //TODO: remove safely?
                             c.id = tid;
                         } else if (infotype.equals("character")) {
                             if (tid == c.id){

@@ -135,7 +135,7 @@ public class Bang {
                                 } else if (getCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]).effect == Card.play.DAMAGE.ordinal() ||
                                     getCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]).effect == Card.play.DUEL.ordinal() ) {
                                     if(playerHasFieldEffect(server.choice.get(1)[0][1], Card.field.BARREL)>-1&&Math.random()<.2){
-                                        server.sendInfo("Chat:Player "+server.choice.get(1)[0][1]+" did a barrel roll!");
+                                        server.sendInfo("InfoMsg:Player "+server.choice.get(1)[0][1]+" did a barrel roll!:0");
                                         server.choice.remove(server.choice.size() - 1);
                                         playerDiscardCard(server.choice.get(0)[0][0], 
                                                           server.choice.get(0)[0][1], true);
@@ -463,8 +463,11 @@ public class Bang {
                 if(c.effect == Card.play.DAMAGE.ordinal()){ 
                     if(c.range == 0){
                         int gun = (playerHasFieldEffect(p1.id, Card.field.GUN)!=-1?p1.field.get(playerHasFieldEffect(p1.id, Card.field.GUN)).range:1);
-                        if(getRangeBetweenPlayers(p1, p2)>gun)
+                        if(getRangeBetweenPlayers(p1, p2)>gun){
+                            //System.out.println("YOU RANGE: "+gun+". Target distance: "+ getRangeBetweenPlayers(p1, p2));
+                            server.sendInfo(p1.id, "InfoMsg:Player "+server.choice.get(1)[0][1]+" out of range. "+gun+"/"+ getRangeBetweenPlayers(p1, p2)+":1");
                             return false;
+                        }
                     }
                     else if(c.range == 1 && getRangeBetweenPlayers(p1, p2)>1)
                         return false;
