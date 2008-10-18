@@ -182,6 +182,18 @@ public class ServerBrowser extends JFrame implements ActionListener{
 			new Server(12345, false);
 			new Client("localhost", true, "Host");
 			this.dispose();
+		}else if(e.getSource().equals(createlan)){
+			new Server(12345, true);
+			new Client("localhost", true, "Host");
+			this.dispose();
+		}else if(e.getSource().equals(joinlan)){
+			String host = JOptionPane
+			.showInputDialog("Input server IP");
+			new Client(host, true, "Host");
+			this.dispose();
+		}else if(e.getSource().equals(foobar)){
+			this.dispose();
+			System.exit(-1);
 		}
 		
 	}
