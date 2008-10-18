@@ -31,7 +31,8 @@ public class ServerBrowser extends JFrame implements ActionListener{
 	ArrayList<ServerInfo> servers = new ArrayList<ServerInfo>();
 	JTable servertable;
 	JScrollPane scrollPane;
-	JButton create, join, refresh;
+	JButton join, create, refresh;
+	JButton joinlan, createlan, foobar;
 	ServerTableModel tm;
 	/**
 	 * Constructs a ServerBrowser
@@ -62,27 +63,45 @@ public class ServerBrowser extends JFrame implements ActionListener{
 		gbc.gridx=1;
 		gbc.gridheight=1;
 		gbc.gridwidth=1;
+		
 		join = new JButton("Join");
 		join.setMnemonic(java.awt.event.KeyEvent.VK_J);
 		this.add(join,gbc);
 		join.addActionListener(this);
+		
 		create = new JButton("Create Server");
 		create.setMnemonic(java.awt.event.KeyEvent.VK_C);
 		gbc.gridx=2;
 		create.addActionListener(this);
 		this.add(create,gbc);
 		gbc.gridx=3;
+		
 		refresh = new JButton("Refresh");
 		refresh.setMnemonic(java.awt.event.KeyEvent.VK_R);
 		refresh.addActionListener(this);
 		this.add(refresh,gbc);
+		
+		gbc.gridy = 6;
+		gbc.gridx = 1;
+		joinlan = new JButton("Join LAN");
+		joinlan.setMnemonic(java.awt.event.KeyEvent.VK_O);
+		this.add(joinlan, gbc);
+		
+		gbc.gridx = 2;
+		createlan = new JButton("Create LAN");
+		createlan.setMnemonic(java.awt.event.KeyEvent.VK_L);
+		this.add(createlan, gbc);
+		
+		gbc.gridx = 3;
+		foobar = new JButton("FOOBAR");
+		foobar.setMnemonic(java.awt.event.KeyEvent.VK_F);
+		this.add(foobar, gbc);	
 		this.pack();
 		this.setVisible(true);
 		downloadList();
 		tm.setData(servers);
 		tm.fireTableDataChanged();
 	}
-
 	public static void main(String args[]) {
 		new ServerBrowser();
 	}
