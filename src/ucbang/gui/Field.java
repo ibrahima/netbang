@@ -85,7 +85,7 @@ public class Field implements MouseListener, MouseMotionListener{
 			double handoffset = 30*(!field?client.players.get(player).hand.size():client.players.get(player).field.size());
 			int xoffset = (int)(handoffset * Math.sin(hs.theta))+(int)(fieldoffset*Math.sin(hs.theta));
 			int yoffset = (int)(handoffset * Math.cos(hs.theta))+(int)(fieldoffset*Math.cos(hs.theta));
-			int x=(int) hs.rect.x+hs.rect.width+xoffset;
+			int x=(int) hs.rect.x+hs.rect.width-xoffset;
 			int y=(int) hs.rect.y+yoffset;
 			CardSpace cs = new CardSpace(card, new Rectangle(x,y, 60,90), player, field);
 			clickies.put(card, cs);
