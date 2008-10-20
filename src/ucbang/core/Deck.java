@@ -74,7 +74,7 @@ public class Deck {
         
         Arrays.fill(cards, 0, 60, CardName.BANG);
         Arrays.fill(cards, 60, 90, CardName.MUSTANG);
-        Arrays.fill(cards, 90, 120, CardName.SCHOFIELD);
+        Arrays.fill(cards, 90, 120, CardName.VOLCANIC);
         
         ArrayList<Enum> allCards = new ArrayList<Enum>();
         for(Enum e: cards)

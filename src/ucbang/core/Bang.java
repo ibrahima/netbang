@@ -25,6 +25,7 @@ public class Bang {
      * where it makes more sense
      */
     public void process() {
+        int who = turn % numPlayers;
         if (turn == -2) {
             start();
             turn++;
@@ -112,7 +113,7 @@ public class Bang {
                                 }
                                 System.out.println("Player " + 
                                                    server.choice.get(1)[0][0] + 
-                                                   " is targetting " + 
+                                                   " is targeting " + 
                                                    server.choice.get(1)[0][1]);
                                 if (getCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]).effect == Card.play.STEAL.ordinal() ||
                                     getCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]).effect == Card.play.DISCARD.ordinal()){
@@ -133,14 +134,20 @@ public class Bang {
                                     server.prompt(turn % numPlayers, "PlayCardUnforced", true);
                                     return;
                                 } else if (getCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]).effect == Card.play.DAMAGE.ordinal() ||
-                                    getCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]).effect == Card.play.DUEL.ordinal() ) {
-                                    if(playerHasFieldEffect(server.choice.get(1)[0][1], Card.field.BARREL)>-1&&Math.random()<.2){
+                                 getCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]).effect == Card.play.DUEL.ordinal() ) {
+                                    if(players[turn%numPlayers].bangs>0 && getCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]).special == 1 &&
+                                     (playerHasFieldEffect(turn % numPlayers, Card.field.GUN)==-1||players[turn % numPlayers].field.get(playerHasFieldEffect(turn % numPlayers, Card.field.GUN)).special!=1)){
+                                        server.choice.remove(server.choice.size() - 1);
+                                        server.sendInfo(turn%numPlayers, "InfoMsg:Stop banging!:1");    
+                                    }                                    
+                                    else if(playerHasFieldEffect(server.choice.get(1)[0][1], Card.field.BARREL)>-1&&Math.random()<.2){
                                         server.sendInfo("InfoMsg:Player "+server.choice.get(1)[0][1]+" did a barrel roll!:0");
                                         server.choice.remove(server.choice.size() - 1);
                                         playerDiscardCard(server.choice.get(0)[0][0], 
                                                           server.choice.get(0)[0][1], true);
                                     }
                                     else{
+                                        System.out.println(players[turn%numPlayers].bangs+"~!@#!@#!@#!@#@!#!#!@#!@#!#@!@#!@#!#!#!#!@#!#!@#12");
                                         server.prompt(server.choice.get(1)[0][1], 
                                                       "PlayCardUnforced", 
                                                       true); //unforce b/c do not have to miss
@@ -160,8 +167,7 @@ public class Bang {
                                 Card.play.DAMAGE.ordinal() && 
                                 getCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]).special != 
                                 2) {
-                                if (server.choice.get(2)[0][1] == 
-                                    -1) { //no miss played
+                                if (server.choice.get(2)[0][1] == -1) { //no miss played
                                     server.sendInfo("SetInfo:CardPlayed:" + 
                                                     server.choice.get(1)[0][1] + 
                                                     ":no miss");
@@ -172,6 +178,8 @@ public class Bang {
                                         playerDrawCard(server.choice.get(1)[0][0], 
                                                        1);
                                     }
+                                    if(getCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]).special == 1)
+                                        players[turn%numPlayers].bangs++;
                                     server.choice.remove(server.choice.size() - 
                                                          1);
                                     server.choice.remove(server.choice.size() - 
@@ -190,6 +198,8 @@ public class Bang {
                                         Card.play.DRAW.ordinal()) {
                                         playerDrawCard(server.choice.get(1)[0][0], 1);
                                     }
+                                    if(getCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]).special == 1)
+                                        players[turn%numPlayers].bangs++;
                                     playerDiscardCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1], true);
                                     playerDiscardCard(server.choice.get(1)[0][1], server.choice.get(2)[0][1], true);
                                     server.choice.remove(server.choice.size() - 1);
@@ -663,6 +673,8 @@ public class Bang {
         for(Card c : players[turn % numPlayers].field){ //set all green cards played the turn before to 1
             c.location = 1;
         }
+        
+        players[turn%numPlayers].bangs = 0;
         
         //draw two cards
         if (players[turn % numPlayers].specialDraw == 
