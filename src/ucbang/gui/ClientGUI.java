@@ -24,9 +24,7 @@ import ucbang.core.Player;
 import ucbang.network.Client;
 
 public class ClientGUI extends JFrame implements KeyListener, ComponentListener{
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 4377855794895936467L;
 	BufferStrategy strategy;
 	int p;
@@ -72,11 +70,7 @@ public class ClientGUI extends JFrame implements KeyListener, ComponentListener{
 		} catch (Exception e) {
 			return;
 		}
-		// fill background w/ dark green
-		//graphics.setColor(Color.GREEN);
-		//graphics.fillRect(0, 0, width, 400);
-		//graphics.setColor(new Color(100, 0, 0));
-		//graphics.fillRect(0, 400, width, height);
+		// fill background w/ tan
 		graphics.setColor(new Color(175, 150, 50));
 		graphics.fillRect(0, 0, width, height);
 
@@ -87,6 +81,8 @@ public class ClientGUI extends JFrame implements KeyListener, ComponentListener{
 		graphics.drawString("Skip", 770, 580);
 
 		if (chatting) {
+			graphics.setColor(new Color(185, 160, 60));
+			graphics.draw3DRect(17, 407, 760, 18, true);
 			graphics.setColor(Color.WHITE);
 			graphics.drawString("Chatting: " + chat.toString(), 20, 420);
 		}
@@ -107,8 +103,6 @@ public class ClientGUI extends JFrame implements KeyListener, ComponentListener{
 			Player temp = iter.next();
                         graphics.drawString(temp.name, 30, 60 + 15 * n++);
 		}
-		if(client.player!=null)
-			graphics.drawString(client.player.lifePoints+"HP", 300, 40);
 		graphics.dispose();
 		// paint backbuffer to window
 		strategy.show();
