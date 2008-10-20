@@ -85,21 +85,12 @@ public class Field implements MouseListener, MouseMotionListener{
 			double handoffset = 30*(!field?client.players.get(player).hand.size():client.players.get(player).field.size());
 			int xoffset = (int)(handoffset * Math.sin(hs.theta))+(int)(fieldoffset*Math.sin(hs.theta));
 			int yoffset = (int)(handoffset * Math.cos(hs.theta))+(int)(fieldoffset*Math.cos(hs.theta));
-			if(hs.autoSort){
-				int x=(int) hs.rect.x+hs.rect.width+xoffset;
-				int y=(int) hs.rect.y+yoffset;
-				CardSpace cs = new CardSpace(card, new Rectangle(x,y, 60,90), player, field);
-				clickies.put(card, cs);
-				hs.addCard(cs);
-				sortHandSpace(hs);
-			}
-			else{
-				int x=(int) hs.rect.x+hs.rect.width+xoffset;
-				int y=(int) hs.rect.y+(field?(player==client.id?-100:100):0); //more trinarytrinary fun!
-				CardSpace cs = new CardSpace(card, new Rectangle(x, y,60,90), player, field);
-				clickies.put(card, cs);
-				hs.addCard(cs);
-			}
+			int x=(int) hs.rect.x+hs.rect.width+xoffset;
+			int y=(int) hs.rect.y+yoffset;
+			CardSpace cs = new CardSpace(card, new Rectangle(x,y, 60,90), player, field);
+			clickies.put(card, cs);
+			hs.addCard(cs);
+			//if(hs.autoSort) sortHandSpace(hs);
 		}
 	}
         
