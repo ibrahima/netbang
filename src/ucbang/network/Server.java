@@ -107,7 +107,7 @@ public class Server extends Thread {
 	 * Sends a prompt to the specified player
 	 * @param player The player to send the prompt to
 	 * @param s The prompt message
-	 * @param one Wait, what? Please explain
+	 * @param one Whether only one player is being prompted. Too lazy to make a helper method for that.
 	 */
 	public void prompt(int player, String s, boolean one) {
 		if (one) {

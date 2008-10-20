@@ -40,6 +40,8 @@ public class Client extends Thread {
     public boolean forceDecision;
     public boolean targetingPlayer;
     public int nextPrompt = -2; //this value will be returned the next time the client is prompted to do something
+    
+    public ArrayList<Card> specialHand = new ArrayList<Card>(); //for general store or when players die and their hands are revealed
 
     /**
      * Constructs a client to the Bang server on the specified host.
@@ -288,6 +290,8 @@ class ClientThread extends Thread {
                             c.gui.promptTargetCard("", "", //null should be ALL cards.
                                                    false);
                             c.nextPrompt = -1;
+                        } else if (messagevalue.equals("GeneralStore")) {
+                            c.gui.promptChooseCard(c.specialHand, "", "", true);
                         } else if (messagevalue.equals("ChooseCharacter")) {
                             c.gui.promptChooseCard(c.player.hand, "", "", 
                                                    true);
@@ -345,7 +349,7 @@ class ClientThread extends Thread {
                         } else{
                             if(c.id == tid){
                                     ptemp = c.player;
-                            }else if(tid<c.players.size()){
+                            }else if(tid<c.players.size()&&tid>0){
                                     ptemp = c.players.get(tid);
                             }
                         }
@@ -411,6 +415,18 @@ class ClientThread extends Thread {
                                 }
                                 c.players.get(tid).field.add(card);
                                 c.field.add(card, tid, true);
+                        } else if(infotype.equals("GeneralStore")){
+                            System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+                                for(Card card: c.specialHand){
+                                    c.field.clickies.remove(card);
+                                }
+                                c.specialHand.clear();
+                                
+                                for(int n = 2; n<temp1.length; n++){
+                                    Card card = new Card(Deck.CardName.valueOf(temp1[n]));
+                                    c.specialHand.add(card);
+                                    c.field.add(card, c.gui.width/2-120+n*30, c.gui.height/2, -1, false);
+                                }
                         } else if (infotype.equals("turn")) {
                             c.turn = tid;
                             if (c.turn % c.numPlayers == c.id) {

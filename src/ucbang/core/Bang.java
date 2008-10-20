@@ -11,6 +11,8 @@ public class Bang {
     public int numPlayers;
     public int turn;
     public Deck deck;
+    ArrayList<Card> store;
+        int storeIndex;
 
     public int sheriff;
 
@@ -301,10 +303,49 @@ public class Bang {
                             playerDiscardCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1], true);
                         } else if (getCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]).effect == 
                                    Card.play.DRAW.ordinal()) {
-                            for (int n = 0; n < numPlayers; n++) {
-                                playerDrawCard(n, 1);
-                            }
-                            playerDiscardCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1], true); //TODO: fix general store
+                                                if(store==null){
+                                                    store = new ArrayList<Card>();
+                                                    for(int n = 0; n < numPlayers; n++){ //only check living players
+                                                        if(players[n].lifePoints>0)
+                                                            store.add(drawCard());
+                                                    }
+                                                    storeIndex = turn % numPlayers;
+                                                    
+                                                    String s = "";
+                                                    for(Card c:store)
+                                                        s += ":"+c.name;
+                                                    server.sendInfo("SetInfo:GeneralStore:-1"+s);
+                                                    server.prompt(storeIndex, "GeneralStore", true);
+                                                    return;
+                                                }
+                                                else{
+                                                        Card card = store.remove(server.choice.get(1)[0][1]);
+                                                        server.sendInfo(storeIndex, "Draw:"+storeIndex+":Game:" + card.name);
+                                                        for(int m = 0; m != storeIndex; m++)
+                                                            server.sendInfo(m, "Draw:" + storeIndex + ":" + 1);
+                                                        players[storeIndex].hand.add(card);
+                                                        
+                                                        server.choice.remove(server.choice.size()-1);
+                                                        
+                                                        storeIndex++;
+                                                        if(storeIndex == numPlayers)
+                                                            storeIndex = 0;
+                                                        
+                                                    if(store.size()>0){
+                                                        String s = "";
+                                                        for(Card c:store)
+                                                            s += ":"+c.name;
+                                                        server.sendInfo("SetInfo:GeneralStore:-1"+s);
+                                                        server.prompt(storeIndex, "GeneralStore", true);
+                                                        return;
+                                                    }
+                                                    else{
+                                                        for(int n = 0; n<numPlayers; n++){
+                                                            server.sendInfo(n, "SetInfo:GeneralStore:-1");
+                                                        }
+                                                        store = null;
+                                                    }
+                                                }
                         } else {                        
                             server.sendInfo("SetInfo:PutInField:"+server.choice.get(0)[0][0]+":"+
                                     getCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]).name+":"+

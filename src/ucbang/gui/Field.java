@@ -99,6 +99,7 @@ public class Field implements MouseListener, MouseMotionListener{
 			}
 		}
 	}
+        
 	int textHeight(String message, Graphics2D graphics){
 		int lineheight=(int)graphics.getFont().getStringBounds("|", graphics.getFontRenderContext()).getHeight();
 		return message.split("\n").length*lineheight;
@@ -319,7 +320,10 @@ public class Field implements MouseListener, MouseMotionListener{
 		if (cl instanceof CardSpace) {
 			CardSpace cs = (CardSpace) cl;
 			if (cs != null && cs.card != null){
+			    if(cs.playerid != -1)
 				client.gui.appendText(String.valueOf(client.players.get(cs.playerid).hand.indexOf(cs.card))+" "+(cs.hs!=null?String.valueOf(cs.hs.cards.indexOf(cs)):""));
+                            else if(pick != null)
+                                client.gui.appendText(String.valueOf(pick.contains(cs.card)));
 			}
 			else
 				return;
@@ -472,11 +476,11 @@ public class Field implements MouseListener, MouseMotionListener{
 						cs.hs.cards.remove(cs);
 					else
 						cs.hs.fieldCards.remove(cs);
+                                        if(cs.hs.autoSort){
+                                                sortHandSpace(cs.hs);
+                                        }
 				}
                                 //System.out.println(cs.card.name+" "+cs.playerid+" "+(cs.hs==null)+" "+handPlacer.get(cs.playerid).fieldCards.contains(cs));
-				if(cs.hs.autoSort){
-					sortHandSpace(cs.hs);
-				}
 			}                        
 			occupied.remove(get(o));
 			V oo = super.remove(o);
@@ -505,7 +509,7 @@ public class Field implements MouseListener, MouseMotionListener{
 			rect = r;
 			playerid = player;
 			field = f;
-			if(!handPlacer.isEmpty())
+			if(!handPlacer.isEmpty()&& player != -1)
 				hs = handPlacer.get(playerid);
 		}
 	}
