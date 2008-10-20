@@ -407,6 +407,7 @@ public class Bang {
                         }
                     } 
                     else if((getCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]).type == 3 || getCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]).type == 5) && getCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]).location == 0){
+                        isCardLegal(getCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]), players[server.choice.get(0)[0][0]], null);
                         server.sendInfo("SetInfo:PutInField:"+server.choice.get(0)[0][0]+":"+
                                     getCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]).name+":"+
                                     server.choice.get(0)[0][1]);
@@ -475,10 +476,12 @@ public class Bang {
         
         //the rules
         if (true) { //no idea why i had a condition here
-            if (c.type == 3 && players[server.choice.get(0)[0][0]].field.contains(c)) { //replace false with some indicator of whether the card is on field
-                    System.out.println("CLICKED ON A GREEN CARD ON FIELD, not implemented yet");
+            if ((c.type == 3 || c.type == 5) && players[server.choice.get(0)[0][0]].hand.contains(c)) {
+                if(c.type == 5)
+                    if(playerHasFieldEffect(server.choice.get(0)[0][0], Card.field.GUN)>-1)
+                        playerFieldDiscardCard(server.choice.get(0)[0][0], playerHasFieldEffect(server.choice.get(0)[0][0], Card.field.GUN), true);
             }
-            if (c.type == 2) {
+            if (c.type == 2 ||(c.type == 3 && players[server.choice.get(0)[0][0]].field.contains(c))) {
                 if (c.effect == Card.play.JAIL.ordinal()) {
                     if(p2.role.ordinal()==0){
                         return false; //cannot jail sheriff
