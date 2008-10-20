@@ -73,7 +73,6 @@ public class Field implements MouseListener, MouseMotionListener{
 	 * @param field
 	 */
 	public void add(Card card, int player, boolean field){
-		int xoffset = 30*(!field?client.players.get(player).hand.size():client.players.get(player).field.size());
 		if(client.id==player)
 			System.out.println("Client has "+client.player.hand.size()+"cards in his hand.");
 		if(card.type==1){//this a character card
@@ -82,9 +81,13 @@ public class Field implements MouseListener, MouseMotionListener{
 			clickies.put(card, new CardSpace(card, new Rectangle(x, y,60,90), player, false));
 		}else{
 			HandSpace hs = handPlacer.get(player);
+			int fieldoffset = (field?100:0);
+			double handoffset = 30*(!field?client.players.get(player).hand.size():client.players.get(player).field.size());
+			int xoffset = (int)(handoffset * Math.sin(hs.theta))+(int)(fieldoffset*Math.sin(hs.theta));
+			int yoffset = (int)(handoffset * Math.cos(hs.theta))+(int)(fieldoffset*Math.cos(hs.theta));
 			if(hs.autoSort){
 				int x=(int) hs.rect.x+hs.rect.width+xoffset;
-				int y=(int) hs.rect.y+(field?(player==client.id?-100:100):0);
+				int y=(int) hs.rect.y+yoffset;
 				CardSpace cs = new CardSpace(card, new Rectangle(x,y, 60,90), player, field);
 				clickies.put(card, cs);
 				hs.addCard(cs);
@@ -272,8 +275,9 @@ public class Field implements MouseListener, MouseMotionListener{
 		clear();
 		for(int player = 0; player<client.numPlayers; player++){
 			theta = -(player-client.id)*(2*Math.PI/client.numPlayers)-Math.PI/2;
-			hs=new HandSpace(new Rectangle((client.gui.width-100)/2+(int)((client.gui.width-300)*Math.cos(theta)),
-					280-(int)(220*Math.sin(theta)),10,10), player);
+			int hsx = client.gui.width/2+(int)((client.gui.width-150)/2*Math.cos(theta));
+			int hsy = 280-(int)(220*Math.sin(theta));
+			hs=new HandSpace(new Rectangle(hsx, hsy,10,10), player, theta);
 			handPlacer.add(hs);
 			Card chara=null;
 			if(client.players.get(player).character>=0){
@@ -519,24 +523,43 @@ public class Field implements MouseListener, MouseMotionListener{
 		public ArrayList<CardSpace> fieldCards = new ArrayList<CardSpace>();
 		CardSpace character, hp;
 		boolean autoSort = true;
-
-		public HandSpace(Rectangle r, int player){
+		double theta;
+		/**
+		 * @param r
+		 * @param player
+		 * @param theta
+		 */
+		public HandSpace(Rectangle r, int player, double theta){
 			super(r);
 			playerid = player;
+			this.theta = theta;
 		}
+		/**
+		 * @param character
+		 * @param hp
+		 */
 		public void setCharHP(CardSpace character, CardSpace hp){
 			this.character = character;
 			this.hp = hp;
 		}
+		/**
+		 * @param card
+		 */
 		public void addCard(CardSpace card){
 			if(!card.field)
 				cards.add(card);
 			else
 				fieldCards.add(card);
 		}
+		/**
+		 * @return
+		 */
 		public CardSpace removeLast(){
 			return cards.remove(cards.size()-1);
 		}
+		/* (non-Javadoc)
+		 * @see ucbang.gui.Field.Clickable#move(int, int)
+		 */
 		public void move(int x, int y){
 			int dx = x-rect.x;
 			int dy = y-rect.y;
@@ -554,6 +577,9 @@ public class Field implements MouseListener, MouseMotionListener{
 			if(character!=null)character.translate(dx, dy);
 			if(hp!=null)hp.translate(dx, dy);
 		}
+		/* (non-Javadoc)
+		 * @see ucbang.gui.Field.Clickable#translate(int, int)
+		 */
 		public void translate(int dx, int dy){
 			super.translate(dx, dy);
 			Iterator<CardSpace> iter = cards.iterator();
@@ -580,6 +606,9 @@ public class Field implements MouseListener, MouseMotionListener{
 		public AffineTransform at;
 		private int oldrotation=0;
 		private Clickable partner;
+		/**
+		 * @param r
+		 */
 		public Clickable(Rectangle r){
 			rect=r;
 		}
@@ -662,6 +691,10 @@ public class Field implements MouseListener, MouseMotionListener{
 				//at=null;
 			}
 		}
+		/**
+		 * @param dx
+		 * @param dy
+		 */
 		public void translate(int dx, int dy){
 			rect.translate(dx, dy);
 		}
@@ -674,6 +707,13 @@ public class Field implements MouseListener, MouseMotionListener{
 		hoverpoint=e.getPoint();
 		description=null;
 	}
+	/**
+	 * Scales all objects to the newly resized coordinates.
+	 * @param width
+	 * @param height
+	 * @param width2
+	 * @param height2
+	 */
 	public void resize(int width, int height, int width2, int height2) {
 		ArrayList<Clickable> stuff = clickies.values();
 		Iterator<Clickable> iter = stuff.iterator();
