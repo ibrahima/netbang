@@ -263,11 +263,13 @@ class ClientThread extends Thread {
                         }
                     } else if (messagetype.equals("PlayerJoin")) {
                         c.players.add(new Player(c.players.size(), messagevalue));
+                        System.out.println("added "+messagevalue);
                     } else if (messagetype.equals("PlayerLeave")) {
                         for(Player p : c.players)
                             if(p.name.equals(messagevalue)){
                                 c.players.remove(p);
-                                return;
+                                System.out.println("removed "+p.name);
+                                break;
                             }
                     } else if (messagetype.equals("Prompt")) {
                         if(c.nextPrompt!=-2){

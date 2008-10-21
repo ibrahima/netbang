@@ -426,9 +426,9 @@ class ServerThread extends Thread {
 										server.messages.put(temp1, newMsgs);
 										server.playerLeave(name);
 										server.playerJoin(temp1);
+                                                                                System.out.println("hi");
 										name = temp1;
-										out
-										.write("Connection:Successfully renamed.");
+										out.write("Connection:Successfully renamed.");
 										out.newLine();
 										out.flush();
 									}
