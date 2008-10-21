@@ -689,9 +689,12 @@ public class Bang {
             if(c.effect == Card.play.JAIL.ordinal()){
                 if(c.type==2){
                     playerFieldDiscardCard(turn%numPlayers, n, true);
-                    nextTurn();
-                    return;
-                } else{ //dynamite
+                     if(Math.random()<.75){
+                        nextTurn();
+                        return;
+                    }
+                } 
+                else{ //dynamite
                     if(Math.random()<0){ //BOOM
                         playerFieldDiscardCard(turn%numPlayers, n, true); 
                         System.out.println("ASPLODEDEDEDEDEDEDEDEDEDEDED!11111!!$!@#$!@#$");

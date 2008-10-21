@@ -158,66 +158,80 @@ public class Card {
 				type = 3;
 				target = 1;
 				effect = field.DYNAMITE.ordinal();
-				break;
-
+                                description="The player puts this card on his field. On his next turn, it has a 20% chance of blowing up.\n" +
+                                                "If it doesn't blow up, it is given to the player to his left, and then it has a chance of\n" +
+                                                "blowing up on that player. If it blows up, it does three damage to that player.\n" + 
+                                                "If it continues through all players without blowing up, it is discarded.";
+                                break;
 			case MISS:
 				type = 4;
 				special = 1;
 				effect = play.MISS.ordinal();
+                                description="Playing a miss in response to a damage card, such as a BANG!, prevents you from losing life.";
 				break;
 			case DODGE:
 				type = 4;
 				effect = play.MISS.ordinal();
                                 effect2 = play.DRAW.ordinal();
+                                description="A miss with the added effect of drawing a card.";
 				break;
 			case BIBLE:
 				type = 3;
 				effect = play.MISS.ordinal();
                                 effect2 = play.DRAW.ordinal();
+                                description="A miss that must be first placed on the field to be used.";
 				break;
 			case IRON_PLATE:
 				type = 3;
 				effect = play.MISS.ordinal();
+                                description="A miss that must be first placed on the field to be used.";
 				break;
 			case SOMBRERO:
 				type = 3;
 				effect = play.MISS.ordinal();
+                                description="A miss that must be first placed on the field to be used.";
 				break;
 			case TEN_GALLON_HAT:
 				type = 3;
 				effect = play.MISS.ordinal();
+                                description="A miss that must be first placed on the field to be used.";
 				break;
-
 			case BARREL:
 				type = 5;
 				effect = field.BARREL.ordinal();
-				break;
-
+                                description="Each time you are targetted by a BANG! effect, there is a 25% chance that you will MISS!\n" +
+                                                "Does not work on Gatling or Howitzer.";
+                                break;
 			case WELLS_FARGO:
 				type = 2;
 				range = 3;
 				effect = play.DRAW.ordinal();
+                                description="Draw THREE cards!";
 				break;
 			case STAGECOACH:
 				type = 2;
 				range = 2;
 				effect = play.DRAW.ordinal();
+                                description="Draw two cards.";
 				break;
 			case CONESTOGA:
 				type = 3;
 				range = 2;
 				effect = play.DRAW.ordinal();
+                                description="After staying on the field for one turn, can be discarded to draw two cards.";
 				break;
 			case PONY_EXPRESS:
 				type = 3;
 				range = 3;
 				effect = play.DRAW.ordinal();
+                                description="After staying on the field for one turn, can be discarded to draw three cards.";
 				break;
 			case GENERAL_STORE:
 				type = 2;
 				target = 3;
 				range = 1;
 				effect = play.DRAW.ordinal();
+                                description="After staying on the field for one turn, can be discarded to draw two cards.";
 				break; //TODO: fix general store
 
 			case JAIL:
@@ -225,24 +239,29 @@ public class Card {
 				range = -1;
                                 target = 2;
 				effect = play.JAIL.ordinal();
+                                description="25% chance that target player skips his next turn. Cannot be used on the Sheriff.";
 				break; // special case: even though jail remains on the field of
 						// a player, it is "played"
 
 			case APPALOOSA:
 				type = 5;
 				effect = field.HORSE_CHASE.ordinal();
+                                description="Other players' distances are decreased by one when you target them.";
 				break;
 			case SILVER:
 				type = 5;
 				effect = field.HORSE_CHASE.ordinal();
+                                description="Other players' distances are decreased by one when you target them.";
 				break;
 			case MUSTANG:
 				type = 5;
 				effect = field.HORSE_RUN.ordinal();
+                                description="Your distance from other players is increased by one when they target you.";
 				break;
 			case HIDEOUT:
 				type = 5;
 				effect = field.HORSE_RUN.ordinal();
+                                description="Your distance from other players is increased by one when they target you.";
 				break; // you heard me: a hideout is a horse.
 
 			case BEER:
@@ -251,6 +270,7 @@ public class Card {
                                 range = 1;
 				special = 1;
 				effect = play.HEAL.ordinal();
+                                description="Regain one life.";
 				break;
 			case TEQUILA:
 				type = 2;
@@ -258,6 +278,7 @@ public class Card {
                                 range = 1;
 				discardToPlay = true;
 				effect = play.HEAL.ordinal();
+                                description="Discard a card to play, target player regains one life.";
 				break;
 			case WHISKY:
 				type = 2;
@@ -265,6 +286,7 @@ public class Card {
 				range = 2;
 				discardToPlay = true;
 				effect = play.HEAL.ordinal();
+                                description="Discard a card to play, regain 2 life.";
 				break; // special case: heals 2 hp, so i guess i'll use "range"
 			case CANTEEN:
 				type = 3;
@@ -277,6 +299,7 @@ public class Card {
 				target = 3;
                                 range = 1;
 				effect = play.HEAL.ordinal();
+                                description="All players regain one life.";
 				break;
 
 			case BRAWL:
@@ -284,12 +307,15 @@ public class Card {
 				target = 4;
 				discardToPlay = true;
 				play.DISCARD.ordinal();
-				break;
+                                description="Discard a card to play. Choose one card for each player; that player discards it.";
+                                break;
 			case CAN_CAN:
 				type = 3;
 				target = 2;
 				range = -1;
 				effect = play.STEAL.ordinal();
+                                description="After staying on the field for one turn, may be discarded to draw a card in any\n" +
+                                                "opponent's hand or field.";
 				break;
 			case RAG_TIME:
 				type = 2;
@@ -297,18 +323,21 @@ public class Card {
 				range = -1;
 				discardToPlay = true;
 				effect = play.STEAL.ordinal();
+                                description="Draw a card in any opponent's hand or field at any distance. Requires a discard to play.";
 				break;
 			case PANIC:
 				type = 2;
 				target = 2;
 				range = 1;
 				effect = play.STEAL.ordinal();
+                                description="Draw a card in any opponent's hand or field at a range of 1.";
 				break;
 			case CAT_BALLOU:
 				type = 2;
 				target = 2;
 				range = -1;
 				effect = play.DISCARD.ordinal();
+                                description="Pick a card in any opponent's hand or field. That card is discarded.";
 				break;
 
 			case VOLCANIC:
@@ -316,26 +345,31 @@ public class Card {
 				special = 1;
 				range = 1;
 				effect = field.GUN.ordinal();
+                                description="A gun with a range of 1. Can play unlimited BANGS! with this gun.";
 				break;
 			case SCHOFIELD:
 				type = 5;
 				range = 2;
 				effect = field.GUN.ordinal();
+                                description="A gun with a range of 2.";
 				break;
 			case REMINGTON:
 				type = 5;
 				range = 3;
 				effect = field.GUN.ordinal();
+                                description="A gun with a range of 3.";
 				break;
 			case REV_CARBINE:
 				type = 5;
 				range = 4;
 				effect = field.GUN.ordinal();
+                                description="A gun with a range of 4.";
 				break;
 			case WINCHESTER:
 				type = 5;
 				range = 5;
 				effect = field.GUN.ordinal();
+                                description="A gun with a range of 5.";
 				break;
 
 			default:

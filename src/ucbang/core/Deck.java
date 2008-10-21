@@ -66,7 +66,7 @@ public class Deck {
         Arrays.fill(cards, 110, 111, CardName.SPRINGFIELD);
         Arrays.fill(cards, 111, 113, CardName.STAGECOACH);
         Arrays.fill(cards, 113, 114, CardName.TEN_GALLON_HAT);
-        Arrays.fill(cards, 114, 115, CardName.TEQUILA);
+        Arrays.fill(cards, 114, 115, CardName.TEQUILA); 
         Arrays.fill(cards, 115, 117, CardName.VOLCANIC);
         Arrays.fill(cards, 117, 118, CardName.WELLS_FARGO);
         Arrays.fill(cards, 118, 119, CardName.WHISKY);
