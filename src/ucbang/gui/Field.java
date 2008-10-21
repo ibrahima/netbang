@@ -192,19 +192,22 @@ public class Field implements MouseListener, MouseMotionListener{
 
 		if(description==null&&System.currentTimeMillis()-lastMouseMoved>1000){
 			//create description
+			StringBuilder temp = new StringBuilder();
 			Clickable cl = binarySearchCardAtPoint(hoverpoint);
 			if (cl instanceof CardSpace) {
 				CardSpace cs = (CardSpace) cl;
 				if (cs != null && cs.card != null){
-					if(cs.card.description.equals(""))
-						description = cs.card.name.replace('_', ' ');
-					else
-						description = cs.card.name+" - "+cs.card.description;
-					if(cs.card.type==1){
+					if(cs.card.type==1||cs.card.name.equals("BULLETBACK")){
+						temp.append(client.players.get(cs.playerid).name + "\n");
 						if(client.players.get(cs.playerid).maxLifePoints>0)
-							description = description + "\n" + client.players.get(cs.playerid).lifePoints +"HP";;
+							temp.append(client.players.get(cs.playerid).lifePoints +"HP\n");;
 						//TODO: add distance to tooltip?
 					}
+					if(!cs.card.name.equals("BULLETBACK"))
+						temp.append(cs.card.name.replace('_', ' '));
+					if(!cs.card.description.equals(""))
+						temp.append(" - "+cs.card.description);
+					description = temp.toString();
 					describeWhere = hoverpoint;
 					tooltipWidth = textWidth(description, graphics);
 					tooltipHeight = textHeight(description, graphics);
