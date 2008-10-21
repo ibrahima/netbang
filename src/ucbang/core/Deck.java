@@ -71,10 +71,7 @@ public class Deck {
         Arrays.fill(cards, 117, 118, CardName.WELLS_FARGO);
         Arrays.fill(cards, 118, 119, CardName.WHISKY);
         Arrays.fill(cards, 119, 120, CardName.WINCHESTER);
-        
-        Arrays.fill(cards, 0, 60, CardName.VOLCANIC);
-        Arrays.fill(cards, 60, 120, CardName.WINCHESTER);
-        
+
         ArrayList<Enum> allCards = new ArrayList<Enum>();
         for(Enum e: cards)
             allCards.add(e);
