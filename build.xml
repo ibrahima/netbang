@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- WARNING: Eclipse auto-generated file.
+              Any modifications will be overwritten.
+              To include a user specific buildfile here, simply create one in the same
+              directory with the processing instruction <?eclipse.ant.import?>
+              as the first entry and export the buildfile again. -->
+<project basedir="." default="create_run_jar" name="UCBang">
+    <property environment="env"/>
+    <property name="ECLIPSE_HOME" value="../../../../Program Files/eclipse"/>
+    <property name="debuglevel" value="source,lines,vars"/>
+    <property name="target" value="1.6"/>
+    <property name="source" value="1.6"/>
+    <path id="UCBang.classpath">
+        <pathelement location="classes"/>
+    </path>
+    <target name="init">
+        <mkdir dir="classes"/>
+        <copy includeemptydirs="false" todir="classes">
+            <fileset dir="src" excludes="**/*.launch, **/*.java"/>
+        </copy>
+    </target>
+    <target name="clean">
+        <delete dir="classes"/>
+    </target>
+    <target depends="clean" name="cleanall"/>
+    <target depends="build-subprojects,build-project" name="build"/>
+    <target name="build-subprojects"/>
+    <target depends="init" name="build-project">
+        <echo message="${ant.project.name}: ${ant.file}"/>
+        <javac debug="true" debuglevel="${debuglevel}" destdir="classes" source="${source}" target="${target}">
+            <src path="src"/>
+            <classpath refid="UCBang.classpath"/>
+        </javac>
+    </target>
+    <target description="Build all projects which reference this project. Useful to propagate changes." name="build-refprojects"/>
+    <target description="copy Eclipse compiler jars to ant lib directory" name="init-eclipse-compiler">
+        <copy todir="${ant.library.dir}">
+            <fileset dir="${ECLIPSE_HOME}/plugins" includes="org.eclipse.jdt.core_*.jar"/>
+        </copy>
+        <unzip dest="${ant.library.dir}">
+            <patternset includes="jdtCompilerAdapter.jar"/>
+            <fileset dir="${ECLIPSE_HOME}/plugins" includes="org.eclipse.jdt.core_*.jar"/>
+        </unzip>
+    </target>
+    <target description="compile project with Eclipse compiler" name="build-eclipse-compiler">
+        <property name="build.compiler" value="org.eclipse.jdt.core.JDTCompilerAdapter"/>
+        <antcall target="build"/>
+    </target>
+    <target name="Bang">
+        <java classname="ucbang.core.Bang" failonerror="true" fork="yes">
+            <classpath refid="UCBang.classpath"/>
+        </java>
+    </target>
+    <target name="Client">
+        <java classname="ucbang.network.Client" failonerror="true" fork="yes">
+            <classpath refid="UCBang.classpath"/>
+        </java>
+    </target>
+    <target name="Host">
+        <java classname="ucbang.launchers.Host" failonerror="true" fork="yes">
+            <classpath refid="UCBang.classpath"/>
+        </java>
+    </target>
+    <target name="Server">
+        <java classname="ucbang.network.Server" failonerror="true" fork="yes">
+            <classpath refid="UCBang.classpath"/>
+        </java>
+    </target>
+    <target name="ServerBrowser">
+        <java classname="ucbang.network.ServerBrowser" failonerror="true" fork="yes">
+            <classpath refid="UCBang.classpath"/>
+        </java>
+    </target>
+    <target name="Test2">
+        <java classname="ucbang.launchers.Test2" failonerror="true" fork="yes">
+            <classpath refid="UCBang.classpath"/>
+        </java>
+    </target>
+    <target name="Test4">
+        <java classname="ucbang.launchers.Test4" failonerror="true" fork="yes">
+            <classpath refid="UCBang.classpath"/>
+        </java>
+    </target>
+    <target name="create_run_jar" depends="build">
+        <jar destfile="bang.jar" filesetmanifest="mergewithoutmain">
+            <manifest>
+                <attribute name="Built-By" value="${user.name}"/>
+                <attribute name="Main-Class" value="ucbang.network.ServerBrowser"/>
+                <attribute name="Class-Path" value="."/>
+            </manifest>
+            <fileset dir="classes"/>
+        </jar>
+    </target>
+</project>
