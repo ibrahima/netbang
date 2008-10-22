@@ -265,6 +265,10 @@ class ClientThread extends Thread {
                         c.players.add(new Player(c.players.size(), messagevalue));
                         System.out.println("added "+messagevalue);
                     } else if (messagetype.equals("PlayerLeave")) {
+                        if(c.player.maxLifePoints>0){ //game is started
+                            c.gui.appendText("A player has left the game. Game cannot continue. Server shutting down.");
+                            break;
+                        }
                         for(Player p : c.players)
                             if(p.name.equals(messagevalue)){
                                 c.players.remove(p);
@@ -513,10 +517,8 @@ class ClientThread extends Thread {
 
     protected void finalize() throws Throwable {
         try {
-            if (c.id == 0) {
-                out.write("/shutdown");
-                out.flush();
-            }
+            out.write("/quit");
+            out.flush();
             in.close();
             out.close();
             server.close();

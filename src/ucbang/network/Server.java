@@ -393,11 +393,14 @@ class ServerThread extends Thread {
 								out.flush();
 							}
 						}
-					} else if(temp[0].equals("/shutdown")){
-						//if(id==0){
+					} else if(temp[0].equals("/quit")){
+                                            if(client.getInetAddress().toString().equals("/127.0.0.1")){
 						server.running=false;
 						System.out.println("Server shutting down");
-						//}
+                                            }
+                                            else{
+                                                server.sendInfo(("PlayerLeave:"+name));
+                                            }
 					} else if (temp[0].equals("Chat")) {
 						if (temp[1].charAt(0) == '/') {
 							// TODO: Send commands
