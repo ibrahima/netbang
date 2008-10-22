@@ -180,7 +180,8 @@ public class Bang {
                                         playerDrawCard(server.choice.get(1)[0][0], 
                                                        1);
                                     }
-                                    if(getCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]).special == 1)
+                                    if(getCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]).special == 1 && 
+                                     players[turn % numPlayers].character!=Deck.Characters.WILLY_THE_KID.ordinal())//Willy the Kid
                                         players[turn%numPlayers].bangs++;
                                     server.choice.remove(server.choice.size() - 
                                                          1);
@@ -200,7 +201,8 @@ public class Bang {
                                         Card.play.DRAW.ordinal()) {
                                         playerDrawCard(server.choice.get(1)[0][0], 1);
                                     }
-                                    if(getCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]).special == 1)
+                                    if(getCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]).special == 1 &&
+                                     players[turn % numPlayers].character!=Deck.Characters.WILLY_THE_KID.ordinal())
                                         players[turn%numPlayers].bangs++;
                                     playerDiscardCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1], true);
                                     playerDiscardCard(server.choice.get(1)[0][1], server.choice.get(2)[0][1], true);

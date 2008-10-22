@@ -103,7 +103,7 @@ public class Card {
                                     description="*Takes eliminated player's hands.";
                                     break;
                             case  WILLY_THE_KID:
-                                    description="*May play any amount of BANG! cards on his turn.";
+                                    description="May play any amount of BANG! cards on his turn.";
                                     break;
                             case  APACHE_KID:
                                     description="*25% chance of being immune to any card except discard and steal cards and during duels.";
