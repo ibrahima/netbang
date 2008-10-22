@@ -5,6 +5,11 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -101,6 +106,15 @@ public class ServerBrowser extends JFrame implements ActionListener{
 		downloadList();
 		tm.setData(servers);
 		tm.fireTableDataChanged();
+		int current = currentRevision();
+		int latest = latestRevision();
+		System.out.println(current);
+		System.out.println(latest);
+		if(current<latest){
+			System.out.println("Update your game please.");
+		}else{
+			System.out.println("You are up to date!");
+		}
 	}
 	public static void main(String args[]) {
 		new ServerBrowser();
@@ -154,7 +168,37 @@ public class ServerBrowser extends JFrame implements ActionListener{
 				.getTextContent(), ns.item(5).getTextContent(),
 				Integer.parseInt(ns.item(7).getTextContent()), Boolean.parseBoolean(ns.item(9).getTextContent()));
 	}
-
+	public int currentRevision(){
+		BufferedReader is;
+		try {
+			is = new BufferedReader(
+					new FileReader(ClassLoader.getSystemResource("revision.txt").toString()));
+			int rev = Integer.valueOf(is.readLine());
+			return rev;
+		} catch(NullPointerException e){
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+		return 1<<31-1;
+	}
+	public int latestRevision(){
+		URL url;
+		try {
+			url = new URL("http://inst.eecs.berkeley.edu/~ibrahima/bang/revision.txt");
+			HttpURLConnection hConnection = (HttpURLConnection) url
+					.openConnection();
+			HttpURLConnection.setFollowRedirects(true);
+			if (HttpURLConnection.HTTP_OK == hConnection.getResponseCode()) {
+				BufferedReader is = new BufferedReader(new
+						InputStreamReader(hConnection.getInputStream()));
+				int rev = Integer.valueOf(is.readLine());
+				return rev;
+			}
+		}catch(IOException e){
+			e.printStackTrace();
+		}
+		return -1;
+	}
 	void recPrint(Node n) {
 		if (!n.getNodeName().equals("#text"))
 			System.out.println(n.getNodeName() + ":" + n.getTextContent());
