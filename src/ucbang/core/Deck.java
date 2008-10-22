@@ -19,8 +19,8 @@ public class Deck {
             charList.add(e);
         }
         for(int n = 0; n<numPlayers; n++){
-            drawPile.add(new Card(Characters.PAUL_REGRET));
-            drawPile.add(new Card(Characters.SUZY_LAFAYETTE));
+            drawPile.add(new Card(Characters.TEQUILA_JOE));
+            drawPile.add(new Card(Characters.TEQUILA_JOE));
             /*drawPile.add(new Card(charList.remove((int)(Math.random()*charList.size()))));
             drawPile.add(new Card(charList.remove((int)(Math.random()*charList.size()))));
             drawPile.add(new Card(charList.remove((int)(Math.random()*charList.size()))));

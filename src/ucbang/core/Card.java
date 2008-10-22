@@ -140,7 +140,7 @@ public class Card {
                                     description="*Does not have to discard cards at the end of his turn.";
                                     break;
                             case  TEQUILA_JOE:
-                                    description="*Regains two life from Beers.";
+                                    description="Regains two life from Beers.";
                                     break;
                             case  VERA_CUSTER:
                                     description="*At the beginning of a turn, gets any player's ability for the whole round.";

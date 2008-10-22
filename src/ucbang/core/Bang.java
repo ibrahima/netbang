@@ -435,7 +435,8 @@ public class Bang {
                             if (getCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]).effect == 
                                 Card.play.HEAL.ordinal()) {
                                 changeLifePoints(server.choice.get(0)[0][0], 
-                                                 getCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]).range);
+                                                 getCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]).range +
+                                                 (getCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]).special==1 && isCharacter(server.choice.get(0)[0][0],Deck.Characters.TEQUILA_JOE)?1:0));
                             }
                             playerDiscardCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1], true);
                         }
