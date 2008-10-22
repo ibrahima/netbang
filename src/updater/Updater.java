@@ -36,6 +36,7 @@ public class Updater extends JFrame{
 		progress.setValue(0);
 		progress.setStringPainted(true);
 		this.add(progress);
+		this.setLocationRelativeTo(null);
 		this.setVisible(true);
 		this.requestFocus(true);
 	}
