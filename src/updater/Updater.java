@@ -66,7 +66,7 @@ public class Updater {
 			if (HttpURLConnection.HTTP_OK == hConnection.getResponseCode()) {
 				InputStream in = hConnection.getInputStream();
 				BufferedOutputStream out = new BufferedOutputStream(
-						new FileOutputStream("dest"));
+						new FileOutputStream(dest));
 				int filesize = hConnection.getContentLength();
 				byte[] buffer = new byte[4096];
 				int numRead;
