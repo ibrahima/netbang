@@ -112,6 +112,13 @@ public class ServerBrowser extends JFrame implements ActionListener{
 		System.out.println(latest);
 		if(current<latest){
 			System.out.println("Update your game please.");
+			try {
+				Process foo = Runtime.getRuntime().exec("java -jar updater.jar");
+				System.exit(0);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}else{
 			System.out.println("You are up to date!");
 		}

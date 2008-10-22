@@ -13,6 +13,14 @@ public class Updater {
 	public static void main(String[] args){
 		Updater up = new Updater("http://inst.eecs.berkeley.edu/~ibrahima/bang/bang.jar");
 		up.downloadLatestVersion();
+		try {
+			Process foo = Runtime.getRuntime().exec("java -jar bang.jar");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		System.exit(0);
+
 	}
 	public Updater(String url){
 		updateurl = url;
