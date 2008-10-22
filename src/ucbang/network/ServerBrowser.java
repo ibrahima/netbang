@@ -6,6 +6,7 @@ import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
@@ -31,6 +32,8 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
+
+import updater.Updater;
 
 public class ServerBrowser extends JFrame implements ActionListener{
 	ArrayList<ServerInfo> servers = new ArrayList<ServerInfo>();
@@ -112,6 +115,9 @@ public class ServerBrowser extends JFrame implements ActionListener{
 		System.out.println(latest);
 		if(current<latest){
 			System.out.println("Update your game please.");
+			if(!new File("updater.jar").exists()){
+				Updater.downloadFile("http://inst.eecs.berkeley.edu/~ibrahima/bang/updater.jar", "updater.jar");
+			}
 			try {
 				Process foo = Runtime.getRuntime().exec("java -jar updater.jar");
 				System.exit(0);
