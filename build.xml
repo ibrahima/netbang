@@ -103,7 +103,7 @@
 		  />
 		<scp file="bang.jar" trust="yes" todir="${scpuser}:${scppw}@pulsar.cs.berkeley.edu:~/public_html">
 		</scp>
-		<scp file="bang.jar" trust="yes" remoteToFile="${scpuser}:${scppw}@pulsar.cs.berkeley.edu:~/public_html/bangr${revision.number}.jar">
+		<scp file="bang.jar" trust="yes" remoteToFile="${scpuser}:${scppw}@pulsar.cs.berkeley.edu:~/public_html/bangr${svn.revision}.jar">
 		</scp>
 		<sshexec host="pulsar.cs.berkeley.edu"
 		  username="${scpuser}"
