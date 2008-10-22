@@ -101,24 +101,31 @@
 		    message="Please enter password:"
 		    addproperty="scppw"
 		  />
-		<scp file="bang.jar" trust="yes" todir="${scpuser}:${scppw}@pulsar.cs.berkeley.edu:~/public_html">
-		</scp>
-		<scp file="bang.jar" trust="yes" remoteToFile="${scpuser}:${scppw}@pulsar.cs.berkeley.edu:~/public_html/bangr${svn.revision}.jar">
+		<scp file="bang.jar" trust="yes" remoteToFile="${scpuser}:${scppw}@pulsar.cs.berkeley.edu:~/public_html/bang/bangr${svn.revision}.jar">
 		</scp>
 		<sshexec host="pulsar.cs.berkeley.edu"
 		  username="${scpuser}"
 		  password="${scppw}"
 		  trust="yes"
-		  command="chmod 644 ~/public_html/bangr${svn.revision}.jar"
+		  command="chmod 644 ~/public_html/bang/bangr${svn.revision}.jar"
 		/>
+		<sshexec host="pulsar.cs.berkeley.edu"
+		  username="${scpuser}"
+		  password="${scppw}"
+		  trust="yes"
+		  command="ln -s -f ~/public_html/bang/bangr${svn.revision}.jar ~/public_html/bang/bang.jar"
+		/>
+		<scp file="revision.txt" trust="yes" todir="${scpuser}:${scppw}@pulsar.cs.berkeley.edu:~/public_html/bang">
+		</scp>
 	</target>
 
-	<target name="find_revision" description="Sets property 'revision.number' to the head svn revision">
+	<target name="find_revision" description="Sets property 'svn.revision' to the head svn revision">
 		<taskdef  resource="org/tigris/subversion/svnant/svnantlib.xml" />
 		<svn>
 			<status path="src" revisionProperty="svn.revision" />
 		</svn>
 		<echo>Revision: ${svn.revision}</echo>
+		<echo file="revision.txt" append="false">${svn.revision}</echo>
 	</target>
 
 </project>
