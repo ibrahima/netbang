@@ -91,4 +91,37 @@
             <fileset dir="classes"/>
         </jar>
     </target>
+	<target name="copy_to_server" depends="create_run_jar,find_revision">
+		<input
+		    message="Please enter username:"
+		    addproperty="scpuser"
+		    defaultvalue="ibrahima"
+		  />
+		<input
+		    message="Please enter password:"
+		    addproperty="scppw"
+		  />
+		<scp file="bang.jar" trust="yes" todir="${scpuser}:${scppw}@pulsar.cs.berkeley.edu:~/public_html"></scp>
+		<scp file="bang.jar" trust="yes" remoteToFile="${scpuser}:${scppw}@pulsar.cs.berkeley.edu:~/public_html/bangr${revision.number}.jar"></scp>
+	</target>
+
+	<target name="find_revision" description="Sets property 'revision.number' to the head svn revision">
+	        <property name="revision" value="HEAD"/>
+
+	        <!-- find out revision number of HEAD, need svn.exe installed on local machine -->
+	        <exec executable="svn" outputproperty="svnlog.out">
+	            <arg line="log ${homedir}/.. -r ${revision} -q"/>
+	        </exec>
+
+	        <echo>${svnlog.out}</echo>
+
+	        <!-- need ant-contrib.jar for this in lib dir of ant install -->
+	        <taskdef resource="net/sf/antcontrib/antcontrib.properties"/>
+	        <propertyregex property="revision.number" input="${svnlog.out}" select="\1">
+	            <regexp pattern="r([0-9]*)"/>
+	        </propertyregex>
+
+	        <echo>Revision found: ${revision.number}</echo>
+	    </target>
+
 </project>
