@@ -59,7 +59,7 @@ public class Bang {
                                 else{   
                                     server.prompt(turn % numPlayers, "PickTarget", true);
                                 }
-                                System.out.println("pick target....");
+                                server.sendInfo(turn%numPlayers, "InfoMsg:Pick Target:0");    
                                 return;
                             }
                         } else if (server.choice.size() == 2) {
@@ -539,8 +539,15 @@ public class Bang {
     public int getRangeBetweenPlayers(Player p1, Player p2) {
         int naturalRange = Math.min((numPlayers-p1.id+p2.id)%numPlayers, (numPlayers-p2.id+p1.id)%numPlayers);//seating order
         int distance = naturalRange;
-        distance += playerHasFieldEffect(p1.id, Card.field.HORSE_CHASE)>-1?-1:0+playerHasFieldEffect(p2.id, Card.field.HORSE_RUN)>-1?1:0;
+        distance += playerHasFieldEffect(p1.id, Card.field.HORSE_CHASE)>-1?-1:0+playerHasFieldEffect(p2.id, Card.field.HORSE_RUN)>-1?1:0
+            + (isCharacter(p1.id, Deck.Characters.SUZY_LAFAYETTE)?-1:0) + (isCharacter(p2.id, Deck.Characters.PAUL_REGRET)?1:0);
         return distance;
+    }
+    
+    boolean isCharacter(int player, Deck.Characters e){
+        if(players[player].character==e.ordinal())
+            return true;
+        return false;
     }
 
     /**
@@ -625,7 +632,7 @@ public class Bang {
         deck.fillCharacterCards(numPlayers);
 
         for (int n = 0; n < numPlayers; n++) {
-            playerDrawCard(n, 5);
+            playerDrawCard(n, 2);
         }
 
         server.promptAll("ChooseCharacter");

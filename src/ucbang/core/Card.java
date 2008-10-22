@@ -53,76 +53,97 @@ public class Card {
 				special = 4;
                         switch ((Deck.Characters) e) {
                             case  BART_CASSIDY:
-                                    description="Draws a card each time loses a life point.";
+                                    description="*Draws a card each time loses a life point.";
                                     break;
                             case  BLACK_JACK:
-                                    description="Reveals the second card drawn. 50% chance of drawing another card.";
+                                    description="*Reveals the second card drawn. 50% chance of drawing another card.";
                                     break;
                             case  CALAMITY_JANET:
-                                    description="May play a Miss as a BANG!, and vice versa.";
+                                    description="*May play a Miss as a BANG!, and vice versa.";
                                     break;
                             case  EL_GRINGO:
-                                    description="When damaged by a player, draws a card from that player.";
+                                    description="*When damaged by a player, draws a card from that player.";
                                     break;
                             case  JESSE_JONES:
-                                    description="May draw his first card from the hand of a player.";
+                                    description="*May draw his first card from the hand of a player.";
                                     break;
                             case  JOURDONNAIS:
-                                    description="25% chance to dodge a BANG!";
+                                    description="*25% chance to dodge a BANG!";
                                     break;
                             case  KIT_CARLSON:
-                                    description="May look at the top three cards of the deck and choose which two to draw.";
+                                    description="*May look at the top three cards of the deck and choose which two to draw.";
                                     break;
                             case  LUCKY_DUKE:
-                                    description="When effected by a chance card, he gets to roll twice.";
+                                    description="*When effected by a chance card, he gets to roll twice.";
                                     break;
                             case  PAUL_REGRET:
-                                    description="When effected by a chance card, he gets to roll twice.";
-                                    break;
-                            case  PEDRO_RAMIREZ:
                                     description="Other players see him as 1 farther.";
                                     break;
+                            case  PEDRO_RAMIREZ:
+                                    description="*May draw his first card from the top of the deck.";
+                                    break;
                             case  ROSE_DOOLAN:
+                                    description="Sees other players as 1 closer.";
                                     break;
                             case  SID_KETCHUM:
+                                    description="*May discard two cards to regain one life.";
                                     break;
                             case  SLAB_THE_KILLER:
+                                    description="*Players must use two misses against his BANG!s.";
                                     break;
                             case  SUZY_LAFAYETTE:
+                                    description="*Draws a card when she has no cards in her hand.";
                                     break;
                             case  VULTURE_SAM:
+                                    description="*Takes eliminated player's hands.";
                                     break;
                             case  WILLY_THE_KID:
+                                    description="*May play any amount of BANG! cards on his turn.";
                                     break;
                             case  APACHE_KID:
+                                    description="*25% chance of being immune to any card except discard and steal cards and during duels.";
                                     break;
                             case  BELLE_STAR:
+                                    description="*No cards in front of any other player has any effect during her turn.";
                                     break;
                             case  BILL_NOFACE:
+                                    description="*Draws cards equal to the amount of life he's missing plus one.";
                                     break;
                             case  CHUCK_WENGAM:
+                                    description="*May sacrifice one life point to draw 2 cards on his turn.";
                                     break;
                             case  DOC_HOLYDAY:
+                                    description="*May discard two cards to play a BANG!. Does not count towards the BANG! limit.";
                                     break;
                             case  ELENA_FUENTE:
+                                    description="*Can discard any card to play a Miss effect.";
                                     break;
                             case  GREG_DIGGER:
+                                    description="*Regains two life when a player is eliminated.";
                                     break;
                             case  HERB_HUNTER:
+                                    description="*Draws two cards when a player is eliminated.";
                                     break;
                             case  JOSE_DELGADO:
+                                    description="*May discard a blue card from his hand to draw two cards.";
                                     break;
                             case  MOLLY_STARK:
+                                    description="*Draws one card for each Miss, Beer, or BANG! she plays off her turn.";
                                     break;
                             case  PAT_BRENNAN:
+                                    description="*May draw one card only in play in front of any player.";
                                     break;
                             case  PIXIE_PETE:
+                                    description="*Draws four cards during his turn instead of two.";
                                     break;
                             case  SEAN_MALLORY:
+                                    description="*Does not have to discard cards at the end of his turn.";
                                     break;
                             case  TEQUILA_JOE:
+                                    description="*Regains two life from Beers.";
                                     break;
                             case  VERA_CUSTER:
+                                    description="*At the beginning of a turn, gets any player's ability for the whole round.";
                                     break;
                             default:
                                     break;
