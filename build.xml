@@ -103,6 +103,12 @@
 		  />
 		<scp file="bang.jar" trust="yes" todir="${scpuser}:${scppw}@pulsar.cs.berkeley.edu:~/public_html"></scp>
 		<scp file="bang.jar" trust="yes" remoteToFile="${scpuser}:${scppw}@pulsar.cs.berkeley.edu:~/public_html/bangr${revision.number}.jar"></scp>
+		<sshexec host="pulsar.cs.berkeley.edu"
+		  username="${scpuser}"
+		  password="${scppw}"
+		  trust="yes"
+		  command="chmod 644 ~/public_html/bangr${revision.number}.jar"
+		/>
 	</target>
 
 	<target name="find_revision" description="Sets property 'revision.number' to the head svn revision">
