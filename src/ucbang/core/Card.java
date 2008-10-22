@@ -51,6 +51,72 @@ public class Card {
 				special = 3;
 			} else
 				special = 4;
+                        switch ((Deck.Characters) e) {
+                            case BART_CASSIDY:
+                                    break;
+                            case  BLACK_JACK:
+                                    break;
+                            case  CALAMITY_JANET:
+                                    break;
+                            case  EL_GRINGO:
+                                    break;
+                            case  JESSE_JONES:
+                                    break;
+                            case  JOURDONNAIS:
+                                    break;
+                            case  KIT_CARLSON:
+                                    break;
+                            case  LUCKY_DUKE:
+                                    break;
+                            case  PAUL_REGRET:
+                                    break;
+                            case  PEDRO_RAMIREZ:
+                                    break;
+                            case  ROSE_DOOLAN:
+                                    break;
+                            case  SID_KETCHUM:
+                                    break;
+                            case  SLAB_THE_KILLER:
+                                    break;
+                            case  SUZY_LAFAYETTE:
+                                    break;
+                            case  VULTURE_SAM:
+                                    break;
+                            case  WILLY_THE_KID:
+                                    break;
+                            case  APACHE_KID:
+                                    break;
+                            case  BELLE_STAR:
+                                    break;
+                            case  BILL_NOFACE:
+                                    break;
+                            case  CHUCK_WENGAM:
+                                    break;
+                            case  DOC_HOLYDAY:
+                                    break;
+                            case  ELENA_FUENTE:
+                                    break;
+                            case  GREG_DIGGER:
+                                    break;
+                            case  HERB_HUNTER:
+                                    break;
+                            case  JOSE_DELGADO:
+                                    break;
+                            case  MOLLY_STARK:
+                                    break;
+                            case  PAT_BRENNAN:
+                                    break;
+                            case  PIXIE_PETE:
+                                    break;
+                            case  SEAN_MALLORY:
+                                    break;
+                            case  TEQUILA_JOE:
+                                    break;
+                            case  VERA_CUSTER:
+                                    break;
+                            default:
+                                    break;
+                        }
 		} else {
 			// TODO: find out what kind of card it is
 
@@ -398,4 +464,10 @@ public class Card {
 	public String toString(){
 		return name;
 	}
+        
+    public class CharacterCard extends Card{
+        public CharacterCard(Deck.Characters e){
+            
+        }
+    }
 }
