@@ -90,7 +90,7 @@ public class Field implements MouseListener, MouseMotionListener{
 			CardSpace cs = new CardSpace(card, new Rectangle(x,y, 60,90), player, field);
 			clickies.put(card, cs);
 			hs.addCard(cs);
-			//if(hs.autoSort) sortHandSpace(hs);
+			if(hs.autoSort) sortHandSpace(hs);
 		}
 	}
         
@@ -425,17 +425,25 @@ public class Field implements MouseListener, MouseMotionListener{
 			System.out.println("WTWFWTWFWWTFWTWTWWAFSFASFASFS");
 			return;
 		}
+	
 		client.gui.appendText("Sorting...");
 		int player = hs.playerid;
 		for(int n = 0; n<hs.cards.size(); n++){
-			int x = (int) hs.rect.x+hs.rect.width+30*n;
-			int y = (int) hs.rect.y+(0); //more trinarytrinary fun!
+			double handoffset = 30*n;
+			int xoffset = (int)(handoffset * Math.sin(hs.theta));
+			int yoffset = (int)(handoffset * Math.cos(hs.theta));
+			int x=(int) hs.rect.x+hs.rect.width-xoffset;
+			int y=(int) hs.rect.y+yoffset;
 			hs.cards.get(n).rect.x = x;
 			hs.cards.get(n).rect.y = y;
 		}
 		for(int n = 0; n<hs.fieldCards.size(); n++){
-			int x = (int) hs.rect.x+hs.rect.width+30*n;
-			int y = (int) hs.rect.y+(0) +(player==client.id?-100:100); //more trinarytrinary fun!
+			int fieldoffset = 100;
+			double handoffset = 30*n;
+			int xoffset = (int)(handoffset * Math.sin(hs.theta))+(int)(fieldoffset*Math.sin(hs.theta));
+			int yoffset = (int)(handoffset * Math.cos(hs.theta))+(int)(fieldoffset*Math.cos(hs.theta));
+			int x=(int) hs.rect.x+hs.rect.width-xoffset;
+			int y=(int) hs.rect.y+yoffset;
 			hs.fieldCards.get(n).rect.x = x;
 			hs.fieldCards.get(n).rect.y = y;
 		}
