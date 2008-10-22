@@ -52,25 +52,35 @@ public class Card {
 			} else
 				special = 4;
                         switch ((Deck.Characters) e) {
-                            case BART_CASSIDY:
+                            case  BART_CASSIDY:
+                                    description="Draws a card each time loses a life point.";
                                     break;
                             case  BLACK_JACK:
+                                    description="Reveals the second card drawn. 50% chance of drawing another card.";
                                     break;
                             case  CALAMITY_JANET:
+                                    description="May play a Miss as a BANG!, and vice versa.";
                                     break;
                             case  EL_GRINGO:
+                                    description="When damaged by a player, draws a card from that player.";
                                     break;
                             case  JESSE_JONES:
+                                    description="May draw his first card from the hand of a player.";
                                     break;
                             case  JOURDONNAIS:
+                                    description="25% chance to dodge a BANG!";
                                     break;
                             case  KIT_CARLSON:
+                                    description="May look at the top three cards of the deck and choose which two to draw.";
                                     break;
                             case  LUCKY_DUKE:
+                                    description="When effected by a chance card, he gets to roll twice.";
                                     break;
                             case  PAUL_REGRET:
+                                    description="When effected by a chance card, he gets to roll twice.";
                                     break;
                             case  PEDRO_RAMIREZ:
+                                    description="Other players see him as 1 farther.";
                                     break;
                             case  ROSE_DOOLAN:
                                     break;
@@ -467,7 +477,7 @@ public class Card {
         
     public class CharacterCard extends Card{
         public CharacterCard(Deck.Characters e){
-            
+            super(e);
         }
     }
 }
