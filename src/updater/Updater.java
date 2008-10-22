@@ -1,32 +1,46 @@
 package updater;
 
-import java.io.BufferedReader;
+import java.io.BufferedOutputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
 
 public class Updater {
+	String updateurl;
 	public static void main(String[] args){
-		System.out.println("FOOBAR");
+		Updater up = new Updater("http://inst.eecs.berkeley.edu/~ibrahima/bang/bang.jar");
+		up.downloadLatestVersion();
 	}
-	int latestRevision(){
+	public Updater(String url){
+		updateurl = url;
+	}
+	void downloadLatestVersion(){
 		URL url;
 		try {
-			url = new URL("http://inst.eecs.berkeley.edu/~ibrahima/bang/revision.txt");
+			url = new URL(updateurl);
 			HttpURLConnection hConnection = (HttpURLConnection) url
 					.openConnection();
 			HttpURLConnection.setFollowRedirects(true);
 			if (HttpURLConnection.HTTP_OK == hConnection.getResponseCode()) {
-				BufferedReader is = new BufferedReader(new
-						InputStreamReader(hConnection.getInputStream()));
-				int rev = Integer.valueOf(is.readLine());
-				return rev;
+				InputStream in = hConnection.getInputStream();
+				BufferedOutputStream out = new BufferedOutputStream(
+						new FileOutputStream("bang.jar"));
+				byte[] buffer = new byte[1024];
+				int numRead;
+				long numWritten = 0;
+				while ((numRead = in.read(buffer)) != -1) {
+					out.write(buffer, 0, numRead);
+					numWritten += numRead;
+				}
+				System.out.println(numWritten);
+				out.close();
+				in.close();
 			}
 		}catch(IOException e){
 			e.printStackTrace();
 		}
-		return -1;
 	}
 }
