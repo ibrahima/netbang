@@ -260,7 +260,7 @@ public class ClientGUI extends JFrame implements KeyListener, ComponentListener{
 				appendText(s);
 			}
 		}
-		paint(getGraphics());
+		//paint(getGraphics());
 	}
 
 
