@@ -28,14 +28,19 @@ public class Updater {
 				InputStream in = hConnection.getInputStream();
 				BufferedOutputStream out = new BufferedOutputStream(
 						new FileOutputStream("bang.jar"));
-				byte[] buffer = new byte[1024];
+				int filesize = hConnection.getContentLength();
+				byte[] buffer = new byte[4096];
 				int numRead;
 				long numWritten = 0;
 				while ((numRead = in.read(buffer)) != -1) {
 					out.write(buffer, 0, numRead);
 					numWritten += numRead;
+					System.out.println((double)numWritten/(double)filesize);
 				}
-				System.out.println(numWritten);
+				if(filesize!=numWritten)
+					System.out.println("Wrote "+numWritten+" bytes, should have been "+filesize);
+				else
+					System.out.println("Downloaded successfully.");
 				out.close();
 				in.close();
 			}
