@@ -114,7 +114,7 @@ public class ServerBrowser extends JFrame implements ActionListener{
 		System.out.println(current);
 		System.out.println(latest);
 		if(current<latest){
-			System.out.println("Update your game please.");
+			JOptionPane.showMessageDialog(this, "Your game is out of date. Automatically updating...");
 			if(!new File("updater.jar").exists()){
 				Updater.downloadFile("http://inst.eecs.berkeley.edu/~ibrahima/bang/updater.jar", "updater.jar");
 			}
