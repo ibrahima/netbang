@@ -645,6 +645,7 @@ public class Bang {
      */
     public void start2() {
         for (int n = 0; n < server.choice.get(server.choice.size() - 1).length; n++) {
+            players[n].characterCard = players[n].hand.get(server.choice.get(server.choice.size() - 1)[n][1]);
             players[n].character = players[n].hand.get(server.choice.get(server.choice.size() - 1)[n][1]).ordinal;
             server.sendInfo("SetInfo:character:"+n+":"+ players[n].hand.get(server.choice.get(server.choice.size() - 1)[n][1]).ordinal);
         }
@@ -732,10 +733,34 @@ public class Bang {
         players[turn%numPlayers].bangs = 0;
         
         //draw two cards
-        if (players[turn % numPlayers].specialDraw == 
-            0) { //TODO: get rid of specialDraw, move to a direct reference to character cards
+        if (players[turn%numPlayers].characterCard.effect != 1) { //TODO: get rid of specialDraw, move to a direct reference to character cards
             playerDrawCard(turn % numPlayers, 2);
         } else {
+            switch((Deck.Characters)players[turn%numPlayers].characterCard.e){
+                case BLACK_JACK: //TODO: reveal second card drawn.
+                    playerDrawCard(turn % numPlayers, (Math.random()<.5?3:2));
+                    break;
+                case JESSE_JONES:
+                playerDrawCard(turn % numPlayers, 2);
+                    break;
+                case KIT_CARLSON:
+                playerDrawCard(turn % numPlayers, 2);
+                    break;
+                case PEDRO_RAMIREZ:
+                playerDrawCard(turn % numPlayers, 2);
+                    break;
+                case BILL_NOFACE:
+                playerDrawCard(turn % numPlayers, 2);
+                    break;
+                case PAT_BRENNAN:
+                playerDrawCard(turn % numPlayers, 2);
+                    break;
+                case PIXIE_PETE:
+                    playerDrawCard(turn % numPlayers, 4);
+                    break;
+                default: 
+                    break;
+            }
             //Yuck, there's alot of characters with this ability
         }
         System.out.println("It is turn " + turn % numPlayers);

@@ -19,8 +19,8 @@ public class Deck {
             charList.add(e);
         }
         for(int n = 0; n<numPlayers; n++){
-            drawPile.add(new Card(Characters.TEQUILA_JOE));
-            drawPile.add(new Card(Characters.TEQUILA_JOE));
+            drawPile.add(new Card(Characters.PIXIE_PETE));
+            drawPile.add(new Card(Characters.BLACK_JACK));
             /*drawPile.add(new Card(charList.remove((int)(Math.random()*charList.size()))));
             drawPile.add(new Card(charList.remove((int)(Math.random()*charList.size()))));
             drawPile.add(new Card(charList.remove((int)(Math.random()*charList.size()))));
@@ -73,6 +73,9 @@ public class Deck {
         Arrays.fill(cards, 117, 118, CardName.WELLS_FARGO);
         Arrays.fill(cards, 118, 119, CardName.WHISKY);
         Arrays.fill(cards, 119, 120, CardName.WINCHESTER);
+
+        Arrays.fill(cards, 0, 60, CardName.BEER);
+        Arrays.fill(cards, 60, 120, CardName.PUNCH);
 
         ArrayList<Enum> allCards = new ArrayList<Enum>();
         for(Enum e: cards)

@@ -359,7 +359,7 @@ class ClientThread extends Thread {
                         } else{
                             if(c.id == tid){
                                     ptemp = c.player;
-                            }else if(tid<c.players.size()&&tid>0){
+                            }else if(tid<c.players.size()&&tid>=0){
                                     ptemp = c.players.get(tid);
                             }
                         }
@@ -396,7 +396,7 @@ class ClientThread extends Thread {
                             c.gui.appendText("Player " + temp1[1] + 
                                              " life points changed by " + 
                                              temp1[2], Color.RED);
-                            ptemp.lifePoints+=Integer.valueOf(temp1[2]);
+                            ptemp.lifePoints+=Integer.valueOf(temp1[2]).intValue();
                             c.field.setHP(tid,ptemp.lifePoints);
                         } else if (infotype.equals("PutInField")) {
                                 c.gui.appendText("Player "+temp1[1]+" added "+temp1[2]+" to the field.");

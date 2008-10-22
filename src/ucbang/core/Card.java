@@ -17,7 +17,8 @@ public class Card {
 	 */
 	public int target;
 	/**
-	 * 1 = deal damage, 2 = heal, 3 = miss, 4 = draw
+	 * For play cards: 1 = deal damage, 2 = heal, 3 = miss, 4 = draw
+         * For char cards: 1 = special draw
 	 */
 	public int effect;
 	public int effect2; // secondary effects only affect player
@@ -56,7 +57,8 @@ public class Card {
                                     description="*Draws a card each time loses a life point.";
                                     break;
                             case  BLACK_JACK:
-                                    description="*Reveals the second card drawn. 50% chance of drawing another card.";
+                                    description="Reveals the second card drawn. 50% chance of drawing another card.";
+                                    effect = 1;
                                     break;
                             case  CALAMITY_JANET:
                                     description="*May play a Miss as a BANG!, and vice versa.";
@@ -66,12 +68,14 @@ public class Card {
                                     break;
                             case  JESSE_JONES:
                                     description="*May draw his first card from the hand of a player.";
+                                    effect = 1;
                                     break;
                             case  JOURDONNAIS:
                                     description="*25% chance to dodge a BANG!";
                                     break;
                             case  KIT_CARLSON:
                                     description="*May look at the top three cards of the deck and choose which two to draw.";
+                                    effect = 1;
                                     break;
                             case  LUCKY_DUKE:
                                     description="*When effected by a chance card, he gets to roll twice.";
@@ -80,7 +84,8 @@ public class Card {
                                     description="Other players see him as 1 farther.";
                                     break;
                             case  PEDRO_RAMIREZ:
-                                    description="*May draw his first card from the top of the deck.";
+                                    description="*May draw his first card from the top of the discard.";
+                                    effect = 1;
                                     break;
                             case  ROSE_DOOLAN:
                                     description="Sees other players as 1 closer.";
@@ -108,12 +113,13 @@ public class Card {
                                     break;
                             case  BILL_NOFACE:
                                     description="*Draws cards equal to the amount of life he's missing plus one.";
+                                    effect = 1;
                                     break;
                             case  CHUCK_WENGAM:
                                     description="*May sacrifice one life point to draw 2 cards on his turn.";
                                     break;
                             case  DOC_HOLYDAY:
-                                    description="*May discard two cards to play a BANG!. Does not count towards the BANG! limit.";
+                                    description="*May discard two cards to play a BANG!. Does not count towarsds the BANG! limit.";
                                     break;
                             case  ELENA_FUENTE:
                                     description="*Can discard any card to play a Miss effect.";
@@ -132,9 +138,11 @@ public class Card {
                                     break;
                             case  PAT_BRENNAN:
                                     description="*May draw one card only in play in front of any player.";
+                                    effect = 1;
                                     break;
                             case  PIXIE_PETE:
-                                    description="*Draws four cards during his turn instead of two.";
+                                    description="Draws four cards during his turn instead of two.";
+                                    effect = 1;
                                     break;
                             case  SEAN_MALLORY:
                                     description="*Does not have to discard cards at the end of his turn.";
@@ -495,10 +503,4 @@ public class Card {
 	public String toString(){
 		return name;
 	}
-        
-    public class CharacterCard extends Card{
-        public CharacterCard(Deck.Characters e){
-            super(e);
-        }
-    }
 }
