@@ -1,5 +1,6 @@
 package updater;
 
+import java.awt.Dimension;
 import java.io.BufferedOutputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -7,9 +8,13 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import javax.swing.JFrame;
+import javax.swing.JProgressBar;
 
-public class Updater {
+
+public class Updater extends JFrame{
 	String updateurl;
+	JProgressBar progress;
 	public static void main(String[] args){
 		Updater up = new Updater("http://inst.eecs.berkeley.edu/~ibrahima/bang/bang.jar");
 		up.downloadLatestVersion();
@@ -24,6 +29,15 @@ public class Updater {
 	}
 	public Updater(String url){
 		updateurl = url;
+		this.setPreferredSize(new Dimension(300, 80));
+		this.setSize(new Dimension(300, 80));
+		this.setTitle("UCBang Updater");
+		progress = new JProgressBar(0,100);
+		progress.setValue(0);
+		progress.setStringPainted(true);
+		this.add(progress);
+		this.setVisible(true);
+		this.requestFocus(true);
 	}
 	void downloadLatestVersion(){
 		URL url;
@@ -37,6 +51,7 @@ public class Updater {
 				BufferedOutputStream out = new BufferedOutputStream(
 						new FileOutputStream("bang.jar"));
 				int filesize = hConnection.getContentLength();
+				progress.setMaximum(filesize);
 				byte[] buffer = new byte[4096];
 				int numRead;
 				long numWritten = 0;
@@ -44,6 +59,7 @@ public class Updater {
 					out.write(buffer, 0, numRead);
 					numWritten += numRead;
 					System.out.println((double)numWritten/(double)filesize);
+					progress.setValue((int) numWritten);
 				}
 				if(filesize!=numWritten)
 					System.out.println("Wrote "+numWritten+" bytes, should have been "+filesize);
