@@ -172,7 +172,7 @@ public class ServerBrowser extends JFrame implements ActionListener{
 		BufferedReader is;
 		try {
 			is = new BufferedReader(
-					new FileReader(ClassLoader.getSystemResource("revision.txt").toString()));
+					new InputStreamReader(ClassLoader.getSystemResource("revision.txt").openStream()));
 			int rev = Integer.valueOf(is.readLine());
 			return rev;
 		} catch(NullPointerException e){
