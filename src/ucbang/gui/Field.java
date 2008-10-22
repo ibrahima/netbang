@@ -306,7 +306,7 @@ public class Field implements MouseListener, MouseMotionListener{
 
 	public void mouseClicked(MouseEvent e) {
 		Point ep=e.getPoint();
-		////the ugly proxy skip turn button
+                
 		if(new Rectangle(760, 560, 40, 40).contains(ep)){
 			if(client.prompting&&!client.forceDecision){
 				client.outMsgs.add("Prompt:-1");
@@ -318,10 +318,10 @@ public class Field implements MouseListener, MouseMotionListener{
 		if (cl instanceof CardSpace) {
 			CardSpace cs = (CardSpace) cl;
 			if (cs != null && cs.card != null){
-			    if(cs.playerid != -1)
-				client.gui.appendText(String.valueOf(client.players.get(cs.playerid).hand.indexOf(cs.card))+" "+(cs.hs!=null?String.valueOf(cs.hs.cards.indexOf(cs)):""));
-                            else if(pick != null)
-                                client.gui.appendText(String.valueOf(pick.contains(cs.card)));
+			    if(cs.playerid != -1){}
+				//client.gui.appendText(String.valueOf(client.players.get(cs.playerid).hand.indexOf(cs.card))+" "+(cs.hs!=null?String.valueOf(cs.hs.cards.indexOf(cs)):""));
+                            else if(pick != null){}
+                                //client.gui.appendText(String.valueOf(pick.contains(cs.card)));
 			}
 			else
 				return;
@@ -329,8 +329,6 @@ public class Field implements MouseListener, MouseMotionListener{
 				//Put right click stuff here, or not
 			}else if (client.prompting){
 				if(pick!= null && pick.contains(cs.card)) {
-					System.out.println("000000000000000000000000000000 "+pick.size()+" "+client.player.hand.size());
-					System.out.println("sending prompt...");
 					if (cs.card.type == 1) {
 						client.outMsgs.add("Prompt:"
 								+ pick.indexOf(cs.card));
@@ -354,11 +352,11 @@ public class Field implements MouseListener, MouseMotionListener{
 						Player p = client.players.get(cs.playerid);
 						if(cs.card.location==0){
 							client.nextPrompt = p.hand.indexOf(cs.card);
-							client.gui.appendText("Index of card is "+client.nextPrompt);
+							//client.gui.appendText("Index of card is "+client.nextPrompt);
 						}
 						else{
 							client.nextPrompt = ((0-client.players.get(cs.playerid).field.indexOf(cs.card))-3);
-							client.gui.appendText("lol "+client.nextPrompt);
+							//client.gui.appendText("lol "+client.nextPrompt);
 						}
 						client.outMsgs.add("Prompt:"+p.id);
 					}
@@ -475,7 +473,7 @@ public class Field implements MouseListener, MouseMotionListener{
 			if(o instanceof Card){
 				CardSpace cs =(CardSpace)get(o);
                                 if(cs==null){
-                                    client.gui.appendText("WTFWTFWTF");
+                                    //client.gui.appendText("WTFWTFWTF");
                                 }
 				if(cs.hs != null){
 					if(!cs.field)
