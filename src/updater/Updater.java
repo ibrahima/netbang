@@ -2,6 +2,7 @@ package updater;
 
 import java.awt.Dimension;
 import java.io.BufferedOutputStream;
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -72,6 +73,32 @@ public class Updater extends JFrame{
 		}catch(IOException e){
 			e.printStackTrace();
 		}
+	}
+	public static long getRemoteFileSize(String sourceurl){
+		URL url;
+		try {
+			url = new URL(sourceurl);
+			HttpURLConnection hConnection = (HttpURLConnection) url
+					.openConnection();
+			HttpURLConnection.setFollowRedirects(true);
+			if (HttpURLConnection.HTTP_OK == hConnection.getResponseCode()) {
+				int filesize = hConnection.getContentLength();
+				hConnection.disconnect();
+				return filesize;
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		return -1;
+	}
+	public static long getLocalFileSize(String filename) {
+		File file = new File(filename);
+
+		if (!file.exists() || !file.isFile()) {
+			System.out.println("File doesn\'t exist");
+			return -1;
+		}
+		return file.length();
 	}
 	public static void downloadFile(String sourceurl, String dest){
 		URL url;

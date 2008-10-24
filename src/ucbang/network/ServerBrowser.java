@@ -115,14 +115,16 @@ public class ServerBrowser extends JFrame implements ActionListener{
 		System.out.println(latest);
 		if(current<latest){
 			JOptionPane.showMessageDialog(this, "Your game is out of date. Automatically updating...");
-			if(!new File("updater.jar").exists()){
+			long localUpdaterSize = Updater.getLocalFileSize("updater.jar");
+			long remoteUpdaterSize = Updater.getRemoteFileSize("http://inst.eecs.berkeley.edu/~ibrahima/bang/updater.jar");
+			//simple/lazy check to see if updater has been updated
+			if(localUpdaterSize<0||(remoteUpdaterSize>0&&localUpdaterSize!=remoteUpdaterSize)){
 				Updater.downloadFile("http://inst.eecs.berkeley.edu/~ibrahima/bang/updater.jar", "updater.jar");
 			}
 			try {
 				Process foo = Runtime.getRuntime().exec("java -jar updater.jar");
 				System.exit(0);
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}else{
