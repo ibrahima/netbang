@@ -142,7 +142,8 @@ public class Bang {
                                         server.choice.remove(server.choice.size() - 1);
                                         server.sendInfo(turn%numPlayers, "InfoMsg:Stop banging!:1");    
                                     }                                    
-                                    else if(playerHasFieldEffect(server.choice.get(1)[0][1], Card.field.BARREL)>-1&&Math.random()<.2){
+                                    else if(playerHasFieldEffect(server.choice.get(1)[0][1], Card.field.BARREL)>-1&&Math.random()<.25 ||
+                                     (players[server.choice.get(1)[0][1]].character==Deck.Characters.JOURDONNAIS.ordinal()?Math.random()<.25:false)){
                                         server.sendInfo("InfoMsg:Player "+server.choice.get(1)[0][1]+" did a barrel roll!:0");
                                         server.choice.remove(server.choice.size() - 1);
                                         playerDiscardCard(server.choice.get(0)[0][0], 

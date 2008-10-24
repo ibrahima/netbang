@@ -20,7 +20,7 @@ public class Deck {
         }
         for(int n = 0; n<numPlayers; n++){
             drawPile.add(new Card(Characters.PIXIE_PETE));
-            drawPile.add(new Card(Characters.BLACK_JACK));
+            drawPile.add(new Card(Characters.JOURDONNAIS));
             /*drawPile.add(new Card(charList.remove((int)(Math.random()*charList.size()))));
             drawPile.add(new Card(charList.remove((int)(Math.random()*charList.size()))));
             drawPile.add(new Card(charList.remove((int)(Math.random()*charList.size()))));

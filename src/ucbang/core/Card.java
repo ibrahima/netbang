@@ -71,7 +71,7 @@ public class Card {
                                     effect = 1;
                                     break;
                             case  JOURDONNAIS:
-                                    description="*25% chance to dodge a BANG!";
+                                    description="25% chance to dodge a BANG!";
                                     break;
                             case  KIT_CARLSON:
                                     description="*May look at the top three cards of the deck and choose which two to draw.";
