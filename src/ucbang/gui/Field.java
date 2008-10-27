@@ -211,6 +211,9 @@ public class Field implements MouseListener, MouseMotionListener{
 					describeWhere = hoverpoint;
 					tooltipWidth = textWidth(description, graphics);
 					tooltipHeight = textHeight(description, graphics);
+					if(describeWhere.x+tooltipWidth>client.gui.width){
+						describeWhere.x = client.gui.width - tooltipWidth - 5;
+					}
 				}
 			}
 		}
