@@ -11,4 +11,12 @@ public abstract class Bot extends Client{
 	 * @return
 	 */
 	public abstract int choose();
+	/**
+	 * All bots will always agree to start
+	 * @return returns 0 to signify that the bot agrees to start
+	 */
+	protected int promptStart() {
+		print("HI");
+		return 0;
+	}
 }

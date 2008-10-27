@@ -154,7 +154,7 @@ public class ClientGUI extends JFrame implements KeyListener, ComponentListener{
 	 * Creates a yes or no prompt with the desired question and title
 	 * @param message The message to ask
 	 * @param title The title of the message prompt
-	 * @return
+	 * @return whether the client agrees to start; 0 is yes and 1 is no
 	 */
 	public int promptYesNo(String message, String title) {
 		// I think it's visually more intuitive to have Yes on the left, but keep in

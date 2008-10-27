@@ -159,7 +159,7 @@ public class Client extends Thread {
         System.out.println("Exiting");
     }
 
-    void print(Object stuff) {
+    protected void print(Object stuff) {
         if (gui != null)
             gui.appendText("Client "+name+": " + stuff);
         else
@@ -179,6 +179,16 @@ public class Client extends Thread {
     public void addChat(String chat) {
         addMsg("Chat:" + chat);
     }
+	/**
+	 * Prompts the player to start
+	 * @return
+	 */
+	protected int promptStart() {
+        gui.appendText("Host has requested the game be started", 
+                Color.BLUE);
+		return gui.promptYesNo("Host has sent a request to start game", 
+		                    "Start game?");
+	}
 
 }
 
@@ -288,16 +298,10 @@ class ClientThread extends Thread {
                             c.outMsgs.add("Prompt:" + c.nextPrompt);
                             c.nextPrompt = -2;
                         }
-                        // received a prompt from host
-                        else if (messagevalue.equals("Start")) { // will waiting for
-                            // response here cause
-                            // client to desync with
-                            // server?
+                        // received a prompt from host to start
+                        else if (messagevalue.equals("Start")) {
                             c.outMsgs.add("Prompt:" + 
-                                          c.gui.promptYesNo("Host has sent a request to start game", 
-                                                            "Start game?"));
-                            c.gui.appendText("Host has requested the game be started", 
-                                             Color.BLUE);
+                                          c.promptStart());
                         } else if (messagevalue.equals("PlayCard")) {
                             c.gui.promptChooseCard(c.player.hand, "", "", 
                                                    true);
@@ -522,6 +526,8 @@ class ClientThread extends Thread {
         }
         System.out.println("Server connection closed");
     }
+
+
 
     protected void finalize() throws Throwable {
         try {
