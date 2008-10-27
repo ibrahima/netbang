@@ -40,7 +40,7 @@ public class Client extends Thread {
     public boolean forceDecision;
     public boolean targetingPlayer;
     public int nextPrompt = -2; //this value will be returned the next time the client is prompted to do something
-    
+    boolean guiEnabled;
     public ArrayList<Card> specialHand = new ArrayList<Card>(); //for general store or when players die and their hands are revealed
 
     /**
@@ -53,24 +53,26 @@ public class Client extends Thread {
     public Client(String host, boolean guiEnabled) {
         running = true;
         this.host = host;
-        if (guiEnabled)
+        this.guiEnabled = guiEnabled;
+        if (guiEnabled){
             gui = new ClientGUI(numPlayers, this);
-        field = new Field(new CardDisplayer(), this);
-        gui.addMouseListener(field); // TODO: does this need to be here?
-        gui.addMouseMotionListener(field);
-        // Begin testing card field stuffs
-        CardName[] cards = CardName.values();
-        int x = 70;
-        int y = 30;
-        for (int i = 0; i < cards.length; i++) {
-            field.add(new Card(cards[i]), x, y, 0, false);
-            x += 60;
-            if (x > 750) {
-                y += 90;
-                x = 70;
+            field = new Field(new CardDisplayer(), this);
+            gui.addMouseListener(field); // TODO: does this need to be here?
+            gui.addMouseMotionListener(field);
+            // Begin testing card field stuffs
+            CardName[] cards = CardName.values();
+            int x = 70;
+            int y = 30;
+            for (int i = 0; i < cards.length; i++) {
+                field.add(new Card(cards[i]), x, y, 0, false);
+                x += 60;
+                if (x > 750) {
+                    y += 90;
+                    x = 70;
+                }
             }
+            promptName();
         }
-        promptName();
         player = new Player(id, name);
         this.start();
     }
@@ -86,21 +88,23 @@ public class Client extends Thread {
         running = true;
         this.host = host;
         this.name = name;
-        if (guiEnabled)
+        this.guiEnabled = guiEnabled;
+        if (guiEnabled){
             gui = new ClientGUI(numPlayers++, this);
-        field = new Field(new CardDisplayer(), this);
-        gui.addMouseListener(field);
-        gui.addMouseMotionListener(field);
-        // Begin testing card field stuffs
-        CardName[] cards = CardName.values();
-        int x = 70;
-        int y = 30;
-        for (int i = 0; i < cards.length; i++) {
-            field.add(new Card(cards[i]), x, y, 0, false);
-            x += 60;
-            if (x > 750) {
-                y += 90;
-                x = 70;
+            field = new Field(new CardDisplayer(), this);
+            gui.addMouseListener(field);
+            gui.addMouseMotionListener(field);
+            // Begin testing card field stuffs
+            CardName[] cards = CardName.values();
+            int x = 70;
+            int y = 30;
+            for (int i = 0; i < cards.length; i++) {
+                field.add(new Card(cards[i]), x, y, 0, false);
+                x += 60;
+                if (x > 750) {
+                    y += 90;
+                    x = 70;
+                }
             }
         }
         player = new Player(id, name);
@@ -144,7 +148,7 @@ public class Client extends Thread {
         }
         t = new ClientThread(socket, this);
         while (running) {
-            gui.update();
+            if(guiEnabled)gui.update();
             try {
                 sleep(45);
             } catch (InterruptedException e) {
@@ -157,9 +161,9 @@ public class Client extends Thread {
 
     void print(Object stuff) {
         if (gui != null)
-            gui.appendText("Client:" + stuff);
+            gui.appendText("Client "+name+": " + stuff);
         else
-            System.out.println("Client:" + stuff);
+            System.out.println("Client "+name+": " + stuff);
     }
 
     void addMsg(String msg) {
@@ -238,7 +242,8 @@ class ClientThread extends Thread {
                         if (!c.connected && 
                             messagevalue.equals("Successfully connected.")) {
                             c.connected = true;
-                            c.gui.setTitle("UCBang - " + c.name + 
+                            if(c.guiEnabled)
+                            	c.gui.setTitle("UCBang - " + c.name + 
                                            " - Connected to server on " + 
                                            server.getInetAddress());
                         } else if (!c.connected && 
@@ -249,7 +254,10 @@ class ClientThread extends Thread {
                             c.promptName();
                         }
                     } else if (messagetype.equals("Chat")) {
-                        c.gui.appendText(messagevalue);
+                    	if(c.guiEnabled)
+                    		c.gui.appendText(messagevalue);
+                    	else
+                    		print(messagevalue);
                     } else if (messagetype.equals("InfoMsg")) {
                         String[] temp1 = messagevalue.split(":");
                         c.gui.appendText(temp1[0], (Integer.valueOf(temp1[1])==0)?Color.BLUE:Color.RED);
