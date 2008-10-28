@@ -189,6 +189,13 @@ public class Client extends Thread {
 		return gui.promptYesNo("Host has sent a request to start game", 
 		                    "Start game?");
 	}
+	/**
+	 * Prompts the player to play a card
+	 */
+	protected void promptPlayCard() {
+		gui.promptChooseCard(player.hand, "", "", 
+		                       true);
+	}
 
 }
 
@@ -303,8 +310,7 @@ class ClientThread extends Thread {
                             c.outMsgs.add("Prompt:" + 
                                           c.promptStart());
                         } else if (messagevalue.equals("PlayCard")) {
-                            c.gui.promptChooseCard(c.player.hand, "", "", 
-                                                   true);
+                            c.promptPlayCard();
                         } else if (messagevalue.equals("PlayCardUnforced")) {
                             c.gui.promptChooseCard(c.player.hand, "", "", 
                                                    false);
@@ -315,8 +321,7 @@ class ClientThread extends Thread {
                         } else if (messagevalue.equals("GeneralStore")) {
                             c.gui.promptChooseCard(c.specialHand, "", "", true);
                         } else if (messagevalue.equals("ChooseCharacter")) {
-                            c.gui.promptChooseCard(c.player.hand, "", "", 
-                                                   true);
+                            c.promptPlayCard();
                         } else if (messagevalue.equals("PickTarget")) {
                             //System.out.println("I am player " + c.id + ", prompting = " + c.prompting);
                             //c.outMsgs.add("Prompt:" + (1 - c.id));
@@ -334,12 +339,14 @@ class ClientThread extends Thread {
                                 if (temp1[1].equals("Character")) {
                                     Card card = 
                                         new Card(Deck.Characters.valueOf(temp1[m]));
-                                    c.field.add(card, 150+80*m, 200, c.id, false);
+                                    if(c.guiEnabled)
+                                    	c.field.add(card, 150+80*m, 200, c.id, false);
                                     c.player.hand.add(card);
                                 } else {
                                     Card card = 
                                         new Card(Deck.CardName.valueOf(temp1[m]));
-                                    c.field.add(card, c.id, false);
+                                    if(c.guiEnabled)
+                                    	c.field.add(card, c.id, false);
                                     c.player.hand.add(card);
                                 }
                             }
@@ -376,40 +383,51 @@ class ClientThread extends Thread {
                             }
                         }
                         if (infotype.equals("role")) {
-                            if (tid == c.id) {
-                                c.field.clear();
-                                c.player.role = 
-                                        Deck.Role.values()[Integer.valueOf(temp1[2])];
-                                c.gui.appendText("You are a " + 
-                                                 Deck.Role.values()[Integer.valueOf(temp1[2])].name(), 
-                                                 Color.YELLOW);
-                            } else {
-                                if (Integer.valueOf(temp1[2]) == 0)
-                                    c.gui.appendText("Player " + temp1[1] + 
-                                                     " is the " + 
+                        	if(c.guiEnabled)
+                        		if (tid == c.id) {
+                                    c.field.clear();
+                                    c.player.role = 
+                                            Deck.Role.values()[Integer.valueOf(temp1[2])];
+                                    c.gui.appendText("You are a " + 
                                                      Deck.Role.values()[Integer.valueOf(temp1[2])].name(), 
                                                      Color.YELLOW);
-                                else //only shown when player is killed
-                                    c.gui.appendText("Player " + temp1[1] + 
-                                                     " was a " + 
-                                                     Deck.Role.values()[Integer.valueOf(temp1[2])].name(), 
-                                                     Color.YELLOW);
-                            }
+                                } else {
+                                    if (Integer.valueOf(temp1[2]) == 0)
+                                        c.gui.appendText("Player " + temp1[1] + 
+                                                         " is the " + 
+                                                         Deck.Role.values()[Integer.valueOf(temp1[2])].name(), 
+                                                         Color.YELLOW);
+                                    else //only shown when player is killed
+                                        c.gui.appendText("Player " + temp1[1] + 
+                                                         " was a " + 
+                                                         Deck.Role.values()[Integer.valueOf(temp1[2])].name(), 
+                                                         Color.YELLOW);
+                                }
+                        	else{
+                        		print("HIHALSADPKASDKLKJASLDLASK");
+                        	}
+                            
                         } else if (infotype.equals("maxHP")) {
-                            c.gui.appendText("Player " + temp1[1] + 
+                        	if(c.guiEnabled)
+                        		c.gui.appendText("Player " + temp1[1] + 
                                              " has a maxHP of " + temp1[2], 
                                              Color.RED);
                             ptemp.maxLifePoints=Integer.valueOf(temp1[2]);
                             ptemp.lifePoints=Integer.valueOf(temp1[2]);
                                 //this should match the above block
-                            if(tid+1==c.numPlayers)
+                            if(tid+1==c.numPlayers&&c.guiEnabled)
                             	c.field.start2();
                         } else if (infotype.equals("HP")) {
-                            c.gui.appendText("Player " + temp1[1] + 
-                                             " life points changed by " + 
-                                             temp1[2], Color.RED);
                             ptemp.lifePoints+=Integer.valueOf(temp1[2]).intValue();
-                            c.field.setHP(tid,ptemp.lifePoints);
+                        	if(c.guiEnabled){
+                        		c.gui.appendText("Player " + temp1[1] + 
+                                        " life points changed by " + 
+                                        temp1[2], Color.RED);
+                        		c.field.setHP(tid,ptemp.lifePoints);
+                        	}else
+                        		c.print("Player " + temp1[1] + 
+                                        " life points changed by " + 
+                                        temp1[2]);
                         } else if (infotype.equals("PutInField")) {
                                 c.gui.appendText("Player "+temp1[1]+" added "+temp1[2]+" to the field.");
                                 Card card;
@@ -526,6 +544,8 @@ class ClientThread extends Thread {
         }
         System.out.println("Server connection closed");
     }
+
+
 
 
 

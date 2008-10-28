@@ -9,5 +9,11 @@ public class RandomBot extends Bot {
 	public int choose() {
 		return 0;
 	}
+	/**
+	 * Prompts the player to play a card
+	 */
+	protected void promptPlayCard() {
+		outMsgs.add("Prompt:0");
+	}
 
 }
