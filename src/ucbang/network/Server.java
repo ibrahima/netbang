@@ -105,6 +105,15 @@ public class Server extends Thread {
 
 	/**
 	 * Sends a prompt to the specified player
+	 * <p>The valid prompts are</p>
+	 * <ul><li>PlayCard</li>
+	 * <li>PlayCardUnforced</li>
+	 * <li>Start</li>
+	 * <li>PickCardTarget</li>
+	 * <li>GeneralStore</li>
+	 * <li>ChooseCharacter</li>
+	 * <li>PickTarget</li>
+	 * </ul>
 	 * @param player The player to send the prompt to
 	 * @param s The prompt message
 	 * @param one Whether only one player is being prompted. Too lazy to make a helper method for that.
@@ -383,24 +392,24 @@ class ServerThread extends Thread {
 								out.flush();
 								Object[] players = server.messages.keySet().toArray();
 								out.write("Players:");
-                                                                String wr=(String)players[0];
+								String wr=(String)players[0];
 								for(int n = 1; n<players.length; n++) {// give player list
 									wr+=","+(String)players[n];
 								}
-                                                                out.write(wr);
-                                                                System.out.println("PLAYERS LIST IS NOW "+ wr);
+								out.write(wr);
+								System.out.println("PLAYERS LIST IS NOW "+ wr);
 								out.newLine();
 								out.flush();
 							}
 						}
 					} else if(temp[0].equals("/quit")){
-                                            if(client.getInetAddress().toString().equals("/127.0.0.1")){
-						server.running=false;
-						System.out.println("Server shutting down");
-                                            }
-                                            else{
-                                                server.sendInfo(("PlayerLeave:"+name));
-                                            }
+						if(client.getInetAddress().toString().equals("/127.0.0.1")){
+							server.running=false;
+							System.out.println("Server shutting down");
+						}
+						else{
+							server.sendInfo(("PlayerLeave:"+name));
+						}
 					} else if (temp[0].equals("Chat")) {
 						if (temp[1].charAt(0) == '/') {
 							// TODO: Send commands
@@ -429,7 +438,7 @@ class ServerThread extends Thread {
 										server.messages.put(temp1, newMsgs);
 										server.playerLeave(name);
 										server.playerJoin(temp1);
-                                                                                System.out.println("hi");
+										System.out.println("hi");
 										name = temp1;
 										out.write("Connection:Successfully renamed.");
 										out.newLine();
