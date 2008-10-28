@@ -4,7 +4,7 @@
               To include a user specific buildfile here, simply create one in the same
               directory with the processing instruction <?eclipse.ant.import?>
               as the first entry and export the buildfile again. -->
-<project basedir="." default="create_run_jar" name="UCBang">
+<project basedir="." default="copy_to_server" name="UCBang">
 	<property environment="env" />
 	<property name="ECLIPSE_HOME" value="../../../../Program Files/eclipse" />
 	<property name="debuglevel" value="source,lines,vars" />
