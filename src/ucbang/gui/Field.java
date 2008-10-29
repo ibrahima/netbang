@@ -3,6 +3,7 @@ package ucbang.gui;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.Polygon;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -54,7 +55,7 @@ public class Field implements MouseListener, MouseMotionListener{
 	 * @param field Whether the card is in the field or not
 	 */
 	public void add(Card card, int x, int y, int player, boolean field){
-		clickies.put(card, new CardSpace(card, new Rectangle(x,y,60,90), player, field, cd.getImage(card.name)));
+		clickies.put(card, new CardSpace(card, rectToPoly(x,y,60,90), player, field, cd.getImage(card.name)));
 	}
 	/**
 	 * Removes the last card in the hand of a player, used when
@@ -79,7 +80,7 @@ public class Field implements MouseListener, MouseMotionListener{
 		if(card.type==1){//this a character card
 			int x=350;
 			int y=200;
-			clickies.put(card, new CardSpace(card, new Rectangle(x, y,60,90), player, false, cd.getImage(card.name)));
+			clickies.put(card, new CardSpace(card, rectToPoly(x, y,60,90), player, false, cd.getImage(card.name)));
 		}else{
 			HandSpace hs = handPlacer.get(player);
 			int fieldoffset = (field?100:0);
@@ -88,7 +89,7 @@ public class Field implements MouseListener, MouseMotionListener{
 			int yoffset = (int)(handoffset * Math.cos(hs.theta))+(int)(fieldoffset*Math.cos(hs.theta));
 			int x=(int) hs.rect.x+hs.rect.width-xoffset;
 			int y=(int) hs.rect.y+yoffset;
-			CardSpace cs = new CardSpace(card, new Rectangle(x,y, 60,90), player, field, cd.getImage(card.name));
+			CardSpace cs = new CardSpace(card, rectToPoly(x,y, 60,90), player, field, cd.getImage(card.name));
 			clickies.put(card, cs);
 			hs.addCard(cs);
 			if(hs.autoSort) sortHandSpace(hs);
@@ -276,7 +277,7 @@ public class Field implements MouseListener, MouseMotionListener{
 			theta = -(player-client.id)*(2*Math.PI/client.numPlayers)-Math.PI/2;
 			int hsx = client.gui.width/2+(int)((client.gui.width-150)/2*Math.cos(theta));
 			int hsy = 280-(int)(220*Math.sin(theta));
-			hs=new HandSpace(new Rectangle(hsx, hsy,10,10), player, theta);
+			hs=new HandSpace(rectToPoly(hsx, hsy,10,10), player, theta);
 			handPlacer.add(hs);
 			Card chara=null;
 			if(client.players.get(player).character>=0){
@@ -289,10 +290,10 @@ public class Field implements MouseListener, MouseMotionListener{
 			if(chara!=null){
 				int x=(int) hs.rect.x-60;
 				int y=(int) hs.rect.y;
-				CardSpace csp = new CardSpace(chara,new Rectangle(x,y-60,60,90), player, false, cd.getImage(chara.name));
+				CardSpace csp = new CardSpace(chara,rectToPoly(x,y-60,60,90), player, false, cd.getImage(chara.name));
 				//generate HP card
 				Card hp = new Card(Deck.CardName.BULLETBACK);
-				CardSpace hps = new CardSpace(hp, new Rectangle(x+
+				CardSpace hps = new CardSpace(hp, rectToPoly(x+
 						10 * client.players.get(player).maxLifePoints,y-60,90,60),player, false, cd.getImage(hp.name));
 				hps.setPartner(csp);
 				csp.setPartner(hps);
@@ -513,10 +514,9 @@ public class Field implements MouseListener, MouseMotionListener{
 		 * @param f Whether the card is on the field
 		 * @param partner The parent container of the card
 		 */
-		public CardSpace(Card c, Rectangle r, int player, boolean f, BufferedImage img){
-			super(r, img);
+		public CardSpace(Card c, Polygon p, int player, boolean f, BufferedImage img){
+			super(p, img);
 			card = c;
-			rect = r;
 			playerid = player;
 			switch(c.location){
 			case 0:
@@ -571,8 +571,8 @@ public class Field implements MouseListener, MouseMotionListener{
 		 * @param player
 		 * @param theta
 		 */
-		public HandSpace(Rectangle r, int player, double theta){
-			super(r, new BufferedImage(10,10, BufferedImage.TYPE_BYTE_BINARY));//TODO: Find some suitable image for a handplacer
+		public HandSpace(Polygon p, int player, double theta){
+			super(p, new BufferedImage(10,10, BufferedImage.TYPE_BYTE_BINARY));//TODO: Find some suitable image for a handplacer
 			playerid = player;
 			this.theta = theta;
 		}
@@ -643,6 +643,7 @@ public class Field implements MouseListener, MouseMotionListener{
 	 */
 	private abstract class Clickable implements Comparable<Clickable>{
 		public Rectangle rect;
+		public Polygon bounds;
 		//public int location; //position of card on field or in hand
 		public int playerid;
 		public AffineTransform at;
@@ -652,8 +653,9 @@ public class Field implements MouseListener, MouseMotionListener{
 		/**
 		 * @param r
 		 */
-		public Clickable(Rectangle r, BufferedImage srcimg){
-			rect=r;
+		public Clickable(Polygon p, BufferedImage srcimg){
+			bounds = p;
+			rect=p.getBounds();
 			img = new BufferedImage(srcimg.getWidth(), srcimg.getHeight(), srcimg.getType());
 			img.getRaster().setRect(srcimg.getData());
 		}
@@ -702,9 +704,6 @@ public class Field implements MouseListener, MouseMotionListener{
 		public void rotate(int quadrant){//rotates in terms of 90 degree increments. call with 0 to reset.
 			int realrotation=quadrant-oldrotation;
 			if(realrotation>0 && realrotation<4){
-				if(this instanceof CardSpace){
-					cd.rotateImage(((CardSpace)this).card.name, quadrant);
-				}
 				at = AffineTransform.getQuadrantRotateInstance(realrotation, rect.x+rect.width/2, rect.y+rect.height/2);
 				oldrotation=quadrant;
 				PathIterator iter = rect.getPathIterator(at);
@@ -780,5 +779,17 @@ public class Field implements MouseListener, MouseMotionListener{
 			return;
 		CardSpace hpc = handPlacer.get(playerid).hp;
 		hpc.translate(-10*lifePoints, 0);
+	}
+	public Polygon rectToPoly(Rectangle r){
+		int[] xs = {r.x, r.x, r.x+r.width, r.x+r.width};
+		int[] ys = {r.y, r.y+r.height, r.y+r.height, r.y};
+		Polygon temp = new Polygon(xs, ys, 4);
+		return temp;
+	}
+	public Polygon rectToPoly(int x, int y, int width, int height){
+		int[] xs = {x, x, x+width, x+width};
+		int[] ys = {y, y+height, y+height, y};
+		Polygon temp = new Polygon(xs, ys, 4);
+		return temp;
 	}
 }
