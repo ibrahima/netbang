@@ -173,8 +173,9 @@ public class Field implements MouseListener, MouseMotionListener{
 					case 9: outer = Color.PINK; break;
 					default: outer = Color.BLACK; break;
 					}
-					cd.paint(crd.card.name, graphics, crd.rect.x, crd.rect.y, crd.rect.width, temp.rect.height, 
-							inner,outer);
+					/*/cd.paint(crd.card.name, graphics, crd.rect.x, crd.rect.y, crd.rect.width, temp.rect.height, 
+							inner,outer);/*/
+					crd.paint(graphics);//TODO:DEFAULT PAINTER
 				}
 			}else if(temp instanceof HandSpace){
 				HandSpace hs = (HandSpace)temp;
@@ -503,7 +504,8 @@ public class Field implements MouseListener, MouseMotionListener{
 		public Card card;
 		public boolean field;
 		HandSpace hs;
-
+		Color inner;
+		Color outer;
 		/**
 		 * @param c The card this CardSpace describes
 		 * @param r The bounds of the card
@@ -516,9 +518,45 @@ public class Field implements MouseListener, MouseMotionListener{
 			card = c;
 			rect = r;
 			playerid = player;
+			switch(c.location){
+			case 0:
+				inner=Color.BLACK;
+				break;
+			case 1:
+				if(c.type==5)
+					inner=new Color(100,100,200);
+				else{
+					inner = ((c.name!="JAIL"||c.name!="DYNAMITE")?inner=new Color(100,200,100):new Color(100,100,200));
+				}
+				break;
+			default:
+				inner=new Color(200,100,100);
+			}
+			switch(playerid){
+			case 0: outer = Color.RED; break;
+			case 1: outer = Color.BLUE; break;
+			case 2: outer = Color.CYAN; break;
+			case 3: outer = Color.MAGENTA; break;
+			case 4: outer = Color.YELLOW; break;
+			case 5: outer = Color.ORANGE; break;
+			case 6: outer = Color.GREEN; break;
+			case 7: outer = Color.LIGHT_GRAY; break;
+			case 8: outer = Color.WHITE; break;
+			case 9: outer = Color.PINK; break;
+			default: outer = Color.BLACK; break;
+			}
 			field = f;
 			if(!handPlacer.isEmpty()&& player != -1)
 				hs = handPlacer.get(playerid);
+		}
+		public void paint(Graphics2D g){
+			Color temp = g.getColor();
+			g.setColor(outer);
+			g.fillRoundRect(rect.x, rect.y, rect.width, rect.height, 7, 7);
+			g.setColor(inner);
+			g.fillRoundRect(rect.x + 1, rect.y + 1, rect.width-2, rect.height-2, 6, 6);
+			g.drawImage(img, rect.x + 2, rect.y + 3, null);
+			g.setColor(temp);
 		}
 	}
 
@@ -610,7 +648,7 @@ public class Field implements MouseListener, MouseMotionListener{
 		public AffineTransform at;
 		private int oldrotation=0;
 		private Clickable partner;
-		private BufferedImage img;
+		protected BufferedImage img;
 		/**
 		 * @param r
 		 */
