@@ -5,6 +5,7 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Polygon;
 import java.awt.Rectangle;
+import java.awt.Shape;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -329,7 +330,7 @@ public class Field implements MouseListener, MouseMotionListener{
 		if (cl instanceof CardSpace) {
 			CardSpace cs = (CardSpace) cl;
 			if (cs != null && cs.card != null){
-				if (e.getButton() == MouseEvent.BUTTON3) cs.rotate(cs.oldrotation+Math.PI/2);
+				if (e.getButton() == MouseEvent.BUTTON3) cs.rotate(cs.oldrotation+Math.PI/4);
 				if(cs.playerid != -1){}
 				//client.gui.appendText(String.valueOf(client.players.get(cs.playerid).hand.indexOf(cs.card))+" "+(cs.hs!=null?String.valueOf(cs.hs.cards.indexOf(cs)):""));
 				else if(pick != null){}
@@ -562,8 +563,12 @@ public class Field implements MouseListener, MouseMotionListener{
 			g.setColor(inner);
 			g.fillRoundRect(rect.x + 1, rect.y + 1, rect.width-2, rect.height-2, 6, 6);
 			g.drawImage(img, rect.x + 2, rect.y + 3, null);
+			g.setColor(Color.GREEN);
+			g.drawPolygon(bounds);
 			g.setColor(temp);
+			//this.rotate(oldrotation+.1); Uncomment this line for trippiness
 		}
+		
 	}
 
 	public class HandSpace extends Clickable{
@@ -704,39 +709,52 @@ public class Field implements MouseListener, MouseMotionListener{
 			this.partner=partner;
 		}
 
-		 /**
-		  * find proper translations to keep rotated image correctly displayed
-		  */
-		 private AffineTransform findTranslation(AffineTransform at, BufferedImage bi) {
-			 Point2D p2din, p2dout;
+		/**
+		 * find proper translations to keep rotated image correctly displayed
+		 */
+		private AffineTransform findTranslation(AffineTransform at, BufferedImage bi) {
+			Point2D p2din, p2dout;
 
-			 p2din = new Point2D.Double(bi.getWidth()/2.0, bi.getHeight()/2.0);
-			 p2dout = at.transform(p2din, null);
-			 double ytrans = p2dout.getY();
+			p2din = new Point2D.Double(bi.getWidth()/2.0, bi.getHeight()/2.0);
+			p2dout = at.transform(p2din, null);
+			double ytrans = p2dout.getY();
 
-			 p2din = new Point2D.Double(bi.getWidth()/2.0, bi.getHeight()/2.0);
-			 p2dout = at.transform(p2din, null);
-			 double xtrans = p2dout.getX();
+			p2din = new Point2D.Double(bi.getWidth()/2.0, bi.getHeight()/2.0);
+			p2dout = at.transform(p2din, null);
+			double xtrans = p2dout.getX();
 
-			 AffineTransform tat = new AffineTransform();
-			 tat.translate(-xtrans+bi.getWidth()/2, -ytrans+bi.getHeight()/2);
-			 return tat;
-		 }
-			private AffineTransform findTranslation(AffineTransform at, Rectangle r) {
-				Point2D p2din, p2dout;
+			AffineTransform tat = new AffineTransform();
+			tat.translate(-xtrans+bi.getWidth()/2, -ytrans+bi.getHeight()/2);
+			return tat;
+		}
+		private AffineTransform findTranslation(AffineTransform at, Rectangle r) {
+			Point2D p2din, p2dout;
 
-				p2din = new Point2D.Double(r.x, r.y);
-				p2dout = at.transform(p2din, null);
-				double ytrans = p2dout.getY()-p2din.getY();
+			p2din = new Point2D.Double(r.x, r.y);
+			p2dout = at.transform(p2din, null);
+			double ytrans = p2dout.getY()-p2din.getY();
 
-				p2din = new Point2D.Double(r.x, r.y+r.height);
-				p2dout = at.transform(p2din, null);
-				double xtrans = p2dout.getX() - p2din.getX();
+			p2din = new Point2D.Double(r.x, r.y+r.height);
+			p2dout = at.transform(p2din, null);
+			double xtrans = p2dout.getX() - p2din.getX();
 
-				AffineTransform tat = new AffineTransform();
-				tat.translate(-xtrans, -ytrans);
-				return tat;
-			}
+			AffineTransform tat = new AffineTransform();
+			tat.translate(-xtrans, -ytrans);
+			return tat;
+		}
+		private Point2D.Double getPolygonCenter(Polygon poly){
+			// R + r = height
+			Rectangle2D r2 = poly.getBounds2D();
+			double cx = r2.getX() + r2.getWidth()/2;
+			double cy = r2.getY() + r2.getHeight()/2;
+			int sides = poly.xpoints.length;
+			double side = Point2D.distance(poly.xpoints[0], poly.ypoints[0],
+					poly.xpoints[1], poly.ypoints[1]);
+			double R = side / (2 * Math.sin(Math.PI/sides));
+			double r = R * Math.cos(Math.PI/sides);
+			double dy = (R - r)/2;
+			return new Point2D.Double(cx, cy + dy);
+		}
 		/**
 		 * Rotates the clickable the specified number of quadrants, i.e. 90 degree intervals.
 		 * <p>This is fairly buggy, and should not be called more than once under any circumstances for
@@ -748,7 +766,7 @@ public class Field implements MouseListener, MouseMotionListener{
 		public void rotate(double angle){//rotates in terms of 90 degree increments. call with 0 to reset.
 
 			double realrotation=(angle-oldrotation)%(Math.PI*2);
-			angle = angle % (Math.PI*2);
+			//angle = angle % (Math.PI*2);
 			if(realrotation>=0 && realrotation<Math.PI*2){
 				int w = sourceImg.getWidth();  
 				int h = sourceImg.getHeight();
@@ -761,46 +779,38 @@ public class Field implements MouseListener, MouseMotionListener{
 				bio = new AffineTransformOp(at, AffineTransformOp.TYPE_BICUBIC);
 				dimg = bio.filter(sourceImg, null);
 				img = dimg;
-//				Graphics2D graphics = dimg.createGraphics();
-//				graphics.drawImage(sourceImg, new AffineTransformOp(at, 
-//				AffineTransformOp.TYPE_BILINEAR), 0, 0);/**/
-				//img = rotate(quadrant*90, sourceImg);
-				System.out.println(0==0.0);
-				at = AffineTransform.getRotateInstance(angle,
-						origrect.x+origrect.width/2, origrect.y+origrect.height/2);
-				translationTransform = findTranslation(at, origrect);
-				at.preConcatenate(translationTransform);
+				Polygon p = rectToPoly(origrect);
+				Point2D.Double c = getPolygonCenter(p);
+
+				AffineTransform at = AffineTransform.getRotateInstance(angle/2, c.x, c.y);
 				oldrotation=angle;
-				PathIterator iter = origrect.getPathIterator(at);
+		        Shape l = at.createTransformedShape(p);
+				PathIterator iter=l.getPathIterator(at);
 				int i=0;
 				float[] pts= new float[6];
-				int newx=-1, newy=-1, newwidth=-1, newheight=-1;
+				p.reset();
 				while(!iter.isDone()){
-					int type = iter.currentSegment(pts);
-					switch(type){
-					case PathIterator.SEG_MOVETO :
-						break;
-					case PathIterator.SEG_LINETO :
-						if(i==1){
-							newx=(int) pts[0];//misnomers for this part lol.
-							newy=(int) pts[1];
-						}else if(i==3){
-							newwidth=(int)Math.abs(newx-(int)pts[0]);
-							newheight=(int)Math.abs(newy-(int)pts[1]);
-							newx=(int) pts[0];
-							newy=(int) pts[1];
-						}
-						break;
-					}
-					i++;
-					iter.next();
-				}
-				//rect = new Rectangle(newx, newy, newwidth, newheight);
-				System.out.println(rect);
+			      	int type = iter.currentSegment(pts);
+			      	switch(type){
+			        case PathIterator.SEG_MOVETO :
+			          //System.out.println("SEG_MOVETO");
+			          p.addPoint((int)pts[0],(int)pts[1]);
+			          break;
+			        case PathIterator.SEG_LINETO :
+			          //System.out.println("SEG_LINETO");
+			          p.addPoint((int)pts[0],(int)pts[1]);
+			          break;
+			      	}
+			      	i++;
+			      	iter.next();
+		    	}
+				rect = p.getBounds();
+				bounds = p;
+				System.out.println(p.toString());
 				at=null;
 			}
 		}
-		
+
 		/**
 		 * @param dx
 		 * @param dy
