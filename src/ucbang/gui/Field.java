@@ -10,7 +10,9 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.PathIterator;
+import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
+import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -324,6 +326,7 @@ public class Field implements MouseListener, MouseMotionListener{
 		if (cl instanceof CardSpace) {
 			CardSpace cs = (CardSpace) cl;
 			if (cs != null && cs.card != null){
+				if (e.getButton() == MouseEvent.BUTTON3) cs.rotate(cs.oldrotation+1);
 			    if(cs.playerid != -1){}
 				//client.gui.appendText(String.valueOf(client.players.get(cs.playerid).hand.indexOf(cs.card))+" "+(cs.hs!=null?String.valueOf(cs.hs.cards.indexOf(cs)):""));
                             else if(pick != null){}
@@ -646,10 +649,11 @@ public class Field implements MouseListener, MouseMotionListener{
 		public Polygon bounds;
 		//public int location; //position of card on field or in hand
 		public int playerid;
-		public AffineTransform at;
-		private int oldrotation=0;
-		private Clickable partner;
+		protected AffineTransform at;
+		protected int oldrotation=0;
+		protected Clickable partner;
 		protected BufferedImage img;
+		protected BufferedImage origimg;
 		/**
 		 * @param r
 		 */
@@ -658,6 +662,7 @@ public class Field implements MouseListener, MouseMotionListener{
 			rect=p.getBounds();
 			img = new BufferedImage(srcimg.getWidth(), srcimg.getHeight(), srcimg.getType());
 			img.getRaster().setRect(srcimg.getData());
+			origimg = img;
 		}
 		public int compareTo(Clickable o) {
 			if(o.rect.getLocation().y!=rect.getLocation().y)
@@ -693,6 +698,21 @@ public class Field implements MouseListener, MouseMotionListener{
 		public void setPartner(Clickable partner){
 			this.partner=partner;
 		}
+		private AffineTransform findTranslation(AffineTransform at, BufferedImage bi) {
+			Point2D p2din, p2dout;
+
+			p2din = new Point2D.Double(0.0, 0.0);
+			p2dout = at.transform(p2din, null);
+			double ytrans = p2dout.getY();
+
+			p2din = new Point2D.Double(0, bi.getHeight());
+			p2dout = at.transform(p2din, null);
+			double xtrans = p2dout.getX();
+
+			AffineTransform tat = new AffineTransform();
+			tat.translate(-xtrans, -ytrans);
+			return tat;
+		}
 		/**
 		 * Rotates the clickable the specified number of quadrants, i.e. 90 degree intervals.
 		 * <p>This is fairly buggy, and should not be called more than once under any circumstances for
@@ -703,7 +723,20 @@ public class Field implements MouseListener, MouseMotionListener{
 		 */
 		public void rotate(int quadrant){//rotates in terms of 90 degree increments. call with 0 to reset.
 			int realrotation=quadrant-oldrotation;
+
 			if(realrotation>0 && realrotation<4){
+				int w = origimg.getWidth();  
+				int h = origimg.getHeight();
+				BufferedImage dimg = new BufferedImage(h, w, ((BufferedImage) origimg).getType());  
+				Graphics2D graphics = dimg.createGraphics();
+				at = AffineTransform.getQuadrantRotateInstance(quadrant, w/2.0, h/2.0);
+				AffineTransform translationTransform = findTranslation(at, origimg);
+			    at.preConcatenate(translationTransform);
+				graphics.drawImage(origimg, new AffineTransformOp(at, 
+						AffineTransformOp.TYPE_BICUBIC), 0, 0);
+				img = dimg;
+				graphics.dispose();
+				
 				at = AffineTransform.getQuadrantRotateInstance(realrotation, rect.x+rect.width/2, rect.y+rect.height/2);
 				oldrotation=quadrant;
 				PathIterator iter = rect.getPathIterator(at);
