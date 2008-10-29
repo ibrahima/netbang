@@ -14,6 +14,7 @@ import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
+import java.awt.image.BufferedImageOp;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -41,7 +42,7 @@ public class Field implements MouseListener, MouseMotionListener{
 	int tooltipWidth = 0;
 	int tooltipHeight = 0;
 	Point hoverpoint;
-        
+
 	public Field(CardDisplayer cd, Client c) {
 		this.cd=cd;
 		client = c;
@@ -97,7 +98,7 @@ public class Field implements MouseListener, MouseMotionListener{
 			if(hs.autoSort) sortHandSpace(hs);
 		}
 	}
-        
+
 	int textHeight(String message, Graphics2D graphics){
 		int lineheight=(int)graphics.getFont().getStringBounds("|", graphics.getFontRenderContext()).getHeight();
 		return message.split("\n").length*lineheight;
@@ -114,6 +115,8 @@ public class Field implements MouseListener, MouseMotionListener{
 	}
 	void improvedDrawString(String message, int x, int y, Graphics2D graphics){
 		int lineheight=(int)graphics.getFont().getStringBounds("|", graphics.getFontRenderContext()).getHeight();
+		if(message==null)
+			return;
 		String[] lines = message.split("\n");
 		for(int i=0;i<lines.length;i++){
 			graphics.drawString(lines[i], x, y+i*lineheight);
@@ -206,7 +209,7 @@ public class Field implements MouseListener, MouseMotionListener{
 						temp.append(client.players.get(cs.playerid).name + "\n");
 						if(client.players.get(cs.playerid).maxLifePoints>0)
 							temp.append(client.players.get(cs.playerid).lifePoints +"HP\n");;
-						//TODO: add distance to tooltip?
+							//TODO: add distance to tooltip?
 					}
 					if(!cs.card.name.equals("BULLETBACK"))
 						temp.append(cs.card.name.replace('_', ' '));
@@ -314,7 +317,7 @@ public class Field implements MouseListener, MouseMotionListener{
 
 	public void mouseClicked(MouseEvent e) {
 		Point ep=e.getPoint();
-                
+
 		if(new Rectangle(760, 560, 40, 40).contains(ep)){
 			if(client.prompting&&!client.forceDecision){
 				client.outMsgs.add("Prompt:-1");
@@ -326,11 +329,11 @@ public class Field implements MouseListener, MouseMotionListener{
 		if (cl instanceof CardSpace) {
 			CardSpace cs = (CardSpace) cl;
 			if (cs != null && cs.card != null){
-				if (e.getButton() == MouseEvent.BUTTON3) cs.rotate(cs.oldrotation+1);
-			    if(cs.playerid != -1){}
+				if (e.getButton() == MouseEvent.BUTTON3) cs.rotate(cs.oldrotation+Math.PI/2);
+				if(cs.playerid != -1){}
 				//client.gui.appendText(String.valueOf(client.players.get(cs.playerid).hand.indexOf(cs.card))+" "+(cs.hs!=null?String.valueOf(cs.hs.cards.indexOf(cs)):""));
-                            else if(pick != null){}
-                                //client.gui.appendText(String.valueOf(pick.contains(cs.card)));
+				else if(pick != null){}
+				//client.gui.appendText(String.valueOf(pick.contains(cs.card)));
 			}
 			else
 				return;
@@ -432,7 +435,7 @@ public class Field implements MouseListener, MouseMotionListener{
 			System.out.println("WTWFWTWFWWTFWTWTWWAFSFASFASFS");
 			return;
 		}
-	
+
 		client.gui.appendText("Sorting...");
 		int player = hs.playerid;
 		for(int n = 0; n<hs.cards.size(); n++){
@@ -481,19 +484,19 @@ public class Field implements MouseListener, MouseMotionListener{
 		public V remove(Object o){
 			if(o instanceof Card){
 				CardSpace cs =(CardSpace)get(o);
-                                if(cs==null){
-                                    //client.gui.appendText("WTFWTFWTF");
-                                }
+				if(cs==null){
+					//client.gui.appendText("WTFWTFWTF");
+				}
 				if(cs.hs != null){
 					if(!cs.field)
 						cs.hs.cards.remove(cs);
 					else
 						cs.hs.fieldCards.remove(cs);
-                                        if(cs.hs.autoSort){
-                                                sortHandSpace(cs.hs);
-                                        }
+					if(cs.hs.autoSort){
+						sortHandSpace(cs.hs);
+					}
 				}
-                                //System.out.println(cs.card.name+" "+cs.playerid+" "+(cs.hs==null)+" "+handPlacer.get(cs.playerid).fieldCards.contains(cs));
+				//System.out.println(cs.card.name+" "+cs.playerid+" "+(cs.hs==null)+" "+handPlacer.get(cs.playerid).fieldCards.contains(cs));
 			}                        
 			occupied.remove(get(o));
 			V oo = super.remove(o);
@@ -646,23 +649,25 @@ public class Field implements MouseListener, MouseMotionListener{
 	 */
 	private abstract class Clickable implements Comparable<Clickable>{
 		public Rectangle rect;
+		public Rectangle origrect;
 		public Polygon bounds;
 		//public int location; //position of card on field or in hand
 		public int playerid;
 		protected AffineTransform at;
-		protected int oldrotation=0;
+		protected double oldrotation=0;
 		protected Clickable partner;
 		protected BufferedImage img;
-		protected BufferedImage origimg;
+		protected final BufferedImage sourceImg;
 		/**
 		 * @param r
 		 */
 		public Clickable(Polygon p, BufferedImage srcimg){
 			bounds = p;
-			rect=p.getBounds();
+			rect = p.getBounds();
+			origrect = rect;
 			img = new BufferedImage(srcimg.getWidth(), srcimg.getHeight(), srcimg.getType());
 			img.getRaster().setRect(srcimg.getData());
-			origimg = img;
+			sourceImg = img;
 		}
 		public int compareTo(Clickable o) {
 			if(o.rect.getLocation().y!=rect.getLocation().y)
@@ -688,7 +693,7 @@ public class Field implements MouseListener, MouseMotionListener{
 				partner.translate(dx, dy);
 			}
 		}
-		
+
 		/**
 		 * Sets the Clickable's partner.
 		 * <p>If a Clickable has a partner defined, moving it will also
@@ -698,48 +703,75 @@ public class Field implements MouseListener, MouseMotionListener{
 		public void setPartner(Clickable partner){
 			this.partner=partner;
 		}
-		private AffineTransform findTranslation(AffineTransform at, BufferedImage bi) {
-			Point2D p2din, p2dout;
 
-			p2din = new Point2D.Double(0.0, 0.0);
-			p2dout = at.transform(p2din, null);
-			double ytrans = p2dout.getY();
+		 /**
+		  * find proper translations to keep rotated image correctly displayed
+		  */
+		 private AffineTransform findTranslation(AffineTransform at, BufferedImage bi) {
+			 Point2D p2din, p2dout;
 
-			p2din = new Point2D.Double(0, bi.getHeight());
-			p2dout = at.transform(p2din, null);
-			double xtrans = p2dout.getX();
+			 p2din = new Point2D.Double(bi.getWidth()/2.0, bi.getHeight()/2.0);
+			 p2dout = at.transform(p2din, null);
+			 double ytrans = p2dout.getY();
 
-			AffineTransform tat = new AffineTransform();
-			tat.translate(-xtrans, -ytrans);
-			return tat;
-		}
+			 p2din = new Point2D.Double(bi.getWidth()/2.0, bi.getHeight()/2.0);
+			 p2dout = at.transform(p2din, null);
+			 double xtrans = p2dout.getX();
+
+			 AffineTransform tat = new AffineTransform();
+			 tat.translate(-xtrans+bi.getWidth()/2, -ytrans+bi.getHeight()/2);
+			 return tat;
+		 }
+			private AffineTransform findTranslation(AffineTransform at, Rectangle r) {
+				Point2D p2din, p2dout;
+
+				p2din = new Point2D.Double(r.x, r.y);
+				p2dout = at.transform(p2din, null);
+				double ytrans = p2dout.getY()-p2din.getY();
+
+				p2din = new Point2D.Double(r.x, r.y+r.height);
+				p2dout = at.transform(p2din, null);
+				double xtrans = p2dout.getX() - p2din.getX();
+
+				AffineTransform tat = new AffineTransform();
+				tat.translate(-xtrans, -ytrans);
+				return tat;
+			}
 		/**
 		 * Rotates the clickable the specified number of quadrants, i.e. 90 degree intervals.
 		 * <p>This is fairly buggy, and should not be called more than once under any circumstances for
 		 * a given card or type of card. Deprecated until further notice, since only the bullet card is
 		 * currently rotated. For rotation to work nicely, Clickable will have to store an image of the
 		 * card or whatever so that it is rotated independently of other instances of the same card.
-		 * @param quadrant the number of 90 degree intervals to rotate
+		 * @param angle the number of radians to rotate
 		 */
-		public void rotate(int quadrant){//rotates in terms of 90 degree increments. call with 0 to reset.
-			int realrotation=quadrant-oldrotation;
+		public void rotate(double angle){//rotates in terms of 90 degree increments. call with 0 to reset.
 
-			if(realrotation>0 && realrotation<4){
-				int w = origimg.getWidth();  
-				int h = origimg.getHeight();
-				BufferedImage dimg = new BufferedImage(h, w, ((BufferedImage) origimg).getType());  
-				Graphics2D graphics = dimg.createGraphics();
-				at = AffineTransform.getQuadrantRotateInstance(quadrant, w/2.0, h/2.0);
-				AffineTransform translationTransform = findTranslation(at, origimg);
-			    at.preConcatenate(translationTransform);
-				graphics.drawImage(origimg, new AffineTransformOp(at, 
-						AffineTransformOp.TYPE_BICUBIC), 0, 0);
+			double realrotation=(angle-oldrotation)%(Math.PI*2);
+			angle = angle % (Math.PI*2);
+			if(realrotation>=0 && realrotation<Math.PI*2){
+				int w = sourceImg.getWidth();  
+				int h = sourceImg.getHeight();
+				int maxdim = Math.max(w,h);
+				BufferedImage dimg = new BufferedImage(maxdim, maxdim, BufferedImage.TYPE_INT_ARGB);
+				at = AffineTransform.getRotateInstance(angle, w/2.0, h/2.0);
+				AffineTransform translationTransform = findTranslation(at, sourceImg);
+				at.preConcatenate(translationTransform);
+				BufferedImageOp bio;
+				bio = new AffineTransformOp(at, AffineTransformOp.TYPE_BICUBIC);
+				dimg = bio.filter(sourceImg, null);
 				img = dimg;
-				graphics.dispose();
-				
-				at = AffineTransform.getQuadrantRotateInstance(realrotation, rect.x+rect.width/2, rect.y+rect.height/2);
-				oldrotation=quadrant;
-				PathIterator iter = rect.getPathIterator(at);
+//				Graphics2D graphics = dimg.createGraphics();
+//				graphics.drawImage(sourceImg, new AffineTransformOp(at, 
+//				AffineTransformOp.TYPE_BILINEAR), 0, 0);/**/
+				//img = rotate(quadrant*90, sourceImg);
+				System.out.println(0==0.0);
+				at = AffineTransform.getRotateInstance(angle,
+						origrect.x+origrect.width/2, origrect.y+origrect.height/2);
+				translationTransform = findTranslation(at, origrect);
+				at.preConcatenate(translationTransform);
+				oldrotation=angle;
+				PathIterator iter = origrect.getPathIterator(at);
 				int i=0;
 				float[] pts= new float[6];
 				int newx=-1, newy=-1, newwidth=-1, newheight=-1;
@@ -747,8 +779,6 @@ public class Field implements MouseListener, MouseMotionListener{
 					int type = iter.currentSegment(pts);
 					switch(type){
 					case PathIterator.SEG_MOVETO :
-						//temp.add((int)pts[0],(int)pts[1]);
-						//System.out.println(pts[0]+","+pts[1]);
 						break;
 					case PathIterator.SEG_LINETO :
 						if(i==1){
@@ -765,13 +795,12 @@ public class Field implements MouseListener, MouseMotionListener{
 					i++;
 					iter.next();
 				}
-				rect = new Rectangle(newx, newy, newwidth, newheight);
+				//rect = new Rectangle(newx, newy, newwidth, newheight);
 				System.out.println(rect);
 				at=null;
-			}else{
-				//at=null;
 			}
 		}
+		
 		/**
 		 * @param dx
 		 * @param dy
@@ -779,6 +808,7 @@ public class Field implements MouseListener, MouseMotionListener{
 		public void translate(int dx, int dy){
 			rect.translate(dx, dy);
 		}
+
 	}
 
 	public void mouseEntered(MouseEvent e) {}
@@ -798,9 +828,9 @@ public class Field implements MouseListener, MouseMotionListener{
 	public void resize(int width, int height, int width2, int height2) {
 		ArrayList<Clickable> stuff = clickies.values();
 		Iterator<Clickable> iter = stuff.iterator();
-                for(HandSpace hs: handPlacer){
-                    hs.move(hs.rect.x*width2/width, hs.rect.y*height2/height);
-                }
+		for(HandSpace hs: handPlacer){
+			hs.move(hs.rect.x*width2/width, hs.rect.y*height2/height);
+		}
 	}
 	/**
 	 * Sets the given players's HP and updates the bullet display accordingly
