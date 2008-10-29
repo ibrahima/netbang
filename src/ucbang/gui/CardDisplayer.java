@@ -149,4 +149,7 @@ public class CardDisplayer {
 		}
 		graphics.setColor(temp);
 	}
+	public BufferedImage getImage(String card){
+		return cards.get(card);
+	}
 }
