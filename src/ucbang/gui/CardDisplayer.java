@@ -108,21 +108,6 @@ public class CardDisplayer {
 	}
 
 
-	public void paint(String card, Graphics2D graphics, int x, int y, int width, int height, Color c, double theta){
-		Color temp = graphics.getColor();
-		AffineTransform old = graphics.getTransform();
-		rotate = AffineTransform.getRotateInstance(theta, x+30,y+45);
-		graphics.setTransform(rotate);
-		graphics.setColor(c);
-		if(cards.containsKey(card)){
-			graphics.fillRoundRect(x, y, width, height, 8, 8);
-			graphics.drawImage(cards.get(card), x+2, y+3, null);
-		}else{
-			System.out.println("Card "+card+" not found");
-		}
-		graphics.setColor(temp);
-		graphics.setTransform(old);
-	}
 
 	public void rotateImage(String card, int quadrant){
 		BufferedImage img = cards.get(card);
@@ -134,20 +119,6 @@ public class CardDisplayer {
 				AffineTransformOp.TYPE_BICUBIC), 16,-15);
 		cards.put(card, dimg);
 		graphics.dispose();
-	}
-	public void paint(String card, Graphics2D graphics, int x, int y, int width, int height,
-			Color inner, Color player) { // TODO: replace player with an int
-		Color temp = graphics.getColor();
-		if (cards.containsKey(card)) {
-			graphics.setColor(player);
-			graphics.fillRoundRect(x, y, width, height, 7, 7);
-			graphics.setColor(inner);
-			graphics.fillRoundRect(x + 1, y + 1, width-2, height-2, 6, 6);
-			graphics.drawImage(cards.get(card), x + 2, y + 3, null);
-		}else {
-			System.out.println("Card " + card + " not found");
-		}
-		graphics.setColor(temp);
 	}
 	public BufferedImage getImage(String card){
 		return cards.get(card);

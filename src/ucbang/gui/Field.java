@@ -186,10 +186,10 @@ public class Field implements MouseListener, MouseMotionListener{
 		}
 
 		for(CardSpace crd:Bullet){
-			cd.paint(crd.card.name, graphics, crd.rect.x, crd.rect.y, crd.rect.width, crd.rect.height, Color.BLACK, Color.BLACK);
+			crd.paint(graphics);
 		}
 		for(CardSpace crd:Char){
-			cd.paint(crd.card.name, graphics, crd.rect.x, crd.rect.y, crd.rect.width, crd.rect.height, Color.BLACK, Color.BLACK);
+			crd.paint(graphics);
 		}
 
 		if(description==null&&System.currentTimeMillis()-lastMouseMoved>1000){
@@ -572,7 +572,7 @@ public class Field implements MouseListener, MouseMotionListener{
 		 * @param theta
 		 */
 		public HandSpace(Rectangle r, int player, double theta){
-			super(r, null);//TODO: Find some suitable image for a handplacer
+			super(r, new BufferedImage(10,10, BufferedImage.TYPE_BYTE_BINARY));//TODO: Find some suitable image for a handplacer
 			playerid = player;
 			this.theta = theta;
 		}
