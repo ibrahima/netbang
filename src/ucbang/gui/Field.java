@@ -693,12 +693,13 @@ public class Field implements MouseListener, MouseMotionListener{
 		public void move(int x, int y){
 			int dx = x-rect.x;
 			int dy = y-rect.y;
+                        bounds.translate(dx,dy);
 			if(at!=null)at.translate(origrect.x-x, origrect.y-y);
 			origrect.setLocation(x, y);
 			if(partner!=null){
 				partner.translate(dx, dy);
 			}
-                        bounds.translate(dx,dy);
+                        client.gui.update();
 		}
 
 		/**
