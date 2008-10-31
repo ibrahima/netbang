@@ -10,6 +10,7 @@ public class Bang {
     public Player[] players;
     public int numPlayers;
     public int turn;
+        public int offturn = -1;
     public Deck deck;
     ArrayList<Card> store;
         int storeIndex;
@@ -34,7 +35,15 @@ public class Bang {
         } else if (turn == -1) {
             start2();
         } else {
-            System.out.println("PROCESS");
+            if(offturn>-1){
+                if (server.choice.size() == 0) {
+                    server.prompt(offturn, "PlayCard", true);
+                }
+                else if (server.choice.size() >= 1) {
+                    offturn = -1;
+                }
+            }
+            
             if (server.choice.size() >= 1) {
                 if (server.choice.size() == 1) {
                     System.out.println("You played " + 
@@ -477,7 +486,6 @@ public class Bang {
             System.out.println("TARGETING CARD DOES NOT HAVE TARGET");
             return false;
         }
-        
         //the rules
         if (true) { //no idea why i had a condition here
             if ((c.type == 3 || c.type == 5) && players[server.choice.get(0)[0][0]].hand.contains(c)) {
@@ -763,8 +771,8 @@ public class Bang {
                     break;
                 default: 
                     break;
+                //
             }
-            //Yuck, there's alot of characters with this ability
         }
         System.out.println("It is turn " + turn % numPlayers);
         server.prompt(turn % numPlayers, "PlayCardUnforced", true);
