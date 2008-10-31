@@ -527,7 +527,7 @@ public class Field implements MouseListener, MouseMotionListener{
 			playerid = player;
 			switch(c.location){
 			case 0:
-				inner=Color.BLACK;
+				inner=Color.GRAY;
 				break;
 			case 1:
 				if(c.type==5)
@@ -560,14 +560,14 @@ public class Field implements MouseListener, MouseMotionListener{
 			Color temp = g.getColor();
 			g.setColor(outer);
 			g.fillRoundRect(rect.x, rect.y, rect.width, rect.height, 7, 7);
-			g.setColor(inner);
+                        g.setColor(Color.BLACK);
 			g.fillRoundRect(rect.x + 1, rect.y + 1, rect.width-2, rect.height-2, 6, 6);
+                        g.setColor(inner);
+                        g.drawPolygon(bounds);
 			g.drawImage(img, origrect.x + 2, origrect.y + 3, null);
-			g.setColor(Color.GREEN);
-			g.drawPolygon(bounds);
 			g.setColor(temp);
 			if(this.card.name.equals("TEN_GALLON_HAT"))
-			this.rotate(oldrotation+.05); //Uncomment this line for trippiness
+                            this.rotate(oldrotation+.01); //Uncomment this line for trippiness
 		}
 		
 	}
@@ -698,6 +698,7 @@ public class Field implements MouseListener, MouseMotionListener{
 			if(partner!=null){
 				partner.translate(dx, dy);
 			}
+                        bounds.translate(dx,dy);
 		}
 
 		/**
@@ -732,7 +733,6 @@ public class Field implements MouseListener, MouseMotionListener{
 		 * @param angle the number of radians to rotate
 		 */
 		public void rotate(double angle){//rotates in terms of 90 degree increments. call with 0 to reset.
-
 			double realrotation=(angle-oldrotation)%(Math.PI*2);
 			//angle = angle % (Math.PI*2);
 			if(realrotation>=0 && realrotation<Math.PI*2){
@@ -743,7 +743,7 @@ public class Field implements MouseListener, MouseMotionListener{
 				AffineTransform at = AffineTransform.getRotateInstance(angle/2,
 						origrect.getCenterX(), origrect.getCenterY());
 				oldrotation=angle;
-		        Shape l = at.createTransformedShape(p);
+                                Shape l = at.createTransformedShape(p);
 				PathIterator iter=l.getPathIterator(at);
 				int i=0;
 				float[] pts= new float[6];
