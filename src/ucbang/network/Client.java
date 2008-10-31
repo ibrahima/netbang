@@ -149,10 +149,10 @@ public class Client extends Thread {
         t = new ClientThread(socket, this);
         while (running) {
             if(guiEnabled)gui.update();
-            try {
-                sleep(45);
+            /*try {
+                sleep(10);
             } catch (InterruptedException e) {
-            }
+            }*/
         }
         gui.dispose();
         gui = null;

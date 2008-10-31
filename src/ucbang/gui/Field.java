@@ -699,7 +699,6 @@ public class Field implements MouseListener, MouseMotionListener{
 			if(partner!=null){
 				partner.translate(dx, dy);
 			}
-                        client.gui.update();
 		}
 
 		/**

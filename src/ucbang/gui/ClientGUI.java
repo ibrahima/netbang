@@ -37,8 +37,6 @@ public class ClientGUI extends JFrame implements KeyListener, ComponentListener{
 	int textIndex = -1; // the bottom line of the text
 	public Client client;
         
-        boolean isPainting;
-        
 	public ClientGUI(int p, Client client) {
 		this.client = client;
 		this.p = p;
@@ -67,9 +65,6 @@ public class ClientGUI extends JFrame implements KeyListener, ComponentListener{
 
 
 	public void paint(Graphics g) {
-                if(isPainting)
-                    return;
-                isPainting = true;
 		Graphics2D graphics;
 		try {
 			graphics = (Graphics2D) strategy.getDrawGraphics();
@@ -112,7 +107,6 @@ public class ClientGUI extends JFrame implements KeyListener, ComponentListener{
 		graphics.dispose();
 		// paint backbuffer to window
 		strategy.show();
-                isPainting = false;
 	}
 
 	/**
@@ -268,7 +262,6 @@ public class ClientGUI extends JFrame implements KeyListener, ComponentListener{
 			}
                         */
 		}
-		//paint(getGraphics());
 	}
 
 
