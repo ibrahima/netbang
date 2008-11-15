@@ -566,8 +566,6 @@ public class Field implements MouseListener, MouseMotionListener{
                         g.drawPolygon(bounds);
 			g.drawImage(img, origrect.x + 2, origrect.y + 3, null);
 			g.setColor(temp);
-			if(this.card.name.equals("TEN_GALLON_HAT"))
-                            this.rotate(oldrotation+.01); //Uncomment this line for trippiness
 		}
 		
 	}
