@@ -7,7 +7,6 @@ public class Card {
 	public Enum e;
 	public String name;
 	public int ordinal;
-
 	/**
 	 * 1 = char, 2 = play, 3 = greenfield, 4 = miss, 5 = bluefield
 	 */
@@ -35,6 +34,7 @@ public class Card {
 	public static enum field {
 		DAMAGE, HEAL, MISS, DRAW, STEAL, DISCARD, BARREL, DYNAMITE, GUN, HORSE_RUN, HORSE_CHASE
 	}; // field cards
+	public enum suit{CLUB, DIAMOND, HEART, SPADE};
 
 	public Card(Enum e) {
 		this.e = e;
