@@ -5,6 +5,8 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -35,7 +37,7 @@ import org.xml.sax.SAXParseException;
 
 import updater.Updater;
 
-public class ServerBrowser extends JFrame implements ActionListener{
+public class ServerBrowser extends JFrame implements ActionListener, MouseListener{
 	ArrayList<ServerInfo> servers = new ArrayList<ServerInfo>();
 	JTable servertable;
 	JScrollPane scrollPane;
@@ -109,6 +111,7 @@ public class ServerBrowser extends JFrame implements ActionListener{
 		downloadList();
 		tm.setData(servers);
 		tm.fireTableDataChanged();
+		servertable.addMouseListener(this);
 		int current = currentRevision();
 		int latest = latestRevision();
 		System.out.println(current);
@@ -353,6 +356,39 @@ public class ServerBrowser extends JFrame implements ActionListener{
 	        return data[row][col];
 	    }
     }
+	@Override
+	public void mouseClicked(MouseEvent e) {
+		if(e.getClickCount()==2&&e.getSource().equals(servertable)){
+			int i=servertable.getSelectedRow();
+			if(i>=0){
+				System.out.println("Joining "+servers.get(i).ip);
+				new Client(servers.get(i).ip, true);
+				this.dispose();
+			}
+		}
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void mouseEntered(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void mouseExited(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void mousePressed(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
 
 
 }
