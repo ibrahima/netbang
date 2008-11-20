@@ -359,7 +359,7 @@ public class ClientGUI extends JFrame implements KeyListener, ComponentListener,
 	}
 
 
-	@Override
+	//@Override
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource().equals(quit)){
 			client.running = false;

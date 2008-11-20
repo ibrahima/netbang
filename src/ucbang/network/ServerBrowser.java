@@ -356,7 +356,7 @@ public class ServerBrowser extends JFrame implements ActionListener, MouseListen
 	        return data[row][col];
 	    }
     }
-	@Override
+	//@Override
 	public void mouseClicked(MouseEvent e) {
 		if(e.getClickCount()==2&&e.getSource().equals(servertable)){
 			int i=servertable.getSelectedRow();
@@ -369,22 +369,22 @@ public class ServerBrowser extends JFrame implements ActionListener, MouseListen
 		// TODO Auto-generated method stub
 		
 	}
-	@Override
+	//@Override
 	public void mouseEntered(MouseEvent e) {
 		// TODO Auto-generated method stub
 		
 	}
-	@Override
+	//@Override
 	public void mouseExited(MouseEvent e) {
 		// TODO Auto-generated method stub
 		
 	}
-	@Override
+	//@Override
 	public void mousePressed(MouseEvent e) {
 		// TODO Auto-generated method stub
 		
 	}
-	@Override
+	//@Override
 	public void mouseReleased(MouseEvent e) {
 		// TODO Auto-generated method stub
 		
