@@ -57,8 +57,8 @@ public class Client extends Thread {
         if (guiEnabled){
             gui = new ClientGUI(numPlayers, this);
             field = new Field(new CardDisplayer(), this);
-            gui.addMouseListener(field); // TODO: does this need to be here?
-            gui.addMouseMotionListener(field);
+            gui.getContentPane().addMouseListener(field); // TODO: does this need to be here?
+            gui.getContentPane().addMouseMotionListener(field);
             // Begin testing card field stuffs
             CardName[] cards = CardName.values();
             int x = 70;
@@ -92,8 +92,8 @@ public class Client extends Thread {
         if (guiEnabled){
             gui = new ClientGUI(numPlayers++, this);
             field = new Field(new CardDisplayer(), this);
-            gui.addMouseListener(field);
-            gui.addMouseMotionListener(field);
+            gui.getContentPane().addMouseListener(field);
+            gui.getContentPane().addMouseMotionListener(field);
             // Begin testing card field stuffs
             CardName[] cards = CardName.values();
             int x = 70;
