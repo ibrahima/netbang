@@ -694,8 +694,9 @@ public class Field implements MouseListener, MouseMotionListener{
 			int dx = x-rect.x;
 			int dy = y-rect.y;
 			if(at!=null)at.translate(origrect.x-x, origrect.y-y);
-			origrect.setLocation(x, y);
-                        bounds = rectToPoly(rect);
+			origrect.translate(dx, dy);
+			rect.setLocation(x, y);
+			bounds = rectToPoly(rect);
 			if(partner!=null){
 				partner.translate(dx, dy);
 			}
@@ -774,7 +775,9 @@ public class Field implements MouseListener, MouseMotionListener{
 		 * @param dy
 		 */
 		public void translate(int dx, int dy){
+			origrect.translate(dx, dy);
 			rect.translate(dx, dy);
+			bounds.translate(dx, dy);
 		}
 		private BufferedImage rotate(double angle, BufferedImage sourceBI) {
 			AffineTransform at = new AffineTransform();
