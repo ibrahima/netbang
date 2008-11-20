@@ -5,6 +5,7 @@ import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.UnknownHostException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -15,18 +16,6 @@ public class ServerListAdder {
 	private String name;
 	int players=1;
 	boolean started=false;
-	public ServerListAdder() {
-		name = "NameMePlz";
-		try {
-			MessageDigest md = MessageDigest.getInstance("SHA-1");
-			md.update(name.getBytes());
-			md.update(type.getBytes());
-			byte[] bar = md.digest();
-			hash = getHexString(bar);
-		} catch (NoSuchAlgorithmException e) {
-			e.printStackTrace();
-		}
-	}
 
 	public ServerListAdder(String name) {
 		this.name = name;
@@ -93,8 +82,11 @@ public class ServerListAdder {
 				is.close();
 				hConnection.disconnect();
 			} else {
-				System.out.println("Ugh, something bad happened");
+				System.out.println("Ugh, something bad happened when trying to connect to " +
+						url);
 			}
+		} catch(UnknownHostException uh){
+			System.out.println("Couldn't find "+address);
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
@@ -124,8 +116,11 @@ public class ServerListAdder {
 				is.close();
 				hConnection.disconnect();
 			} else {
-				System.out.println("Ugh, something bad happened");
+				System.out.println("Ugh, something bad happened when trying to connect to " +
+				url);
 			}
+		} catch(UnknownHostException uh){
+			System.out.println("Couldn't find "+address);
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}

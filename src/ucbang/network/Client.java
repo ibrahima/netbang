@@ -51,30 +51,7 @@ public class Client extends Thread {
      * @param guiEnabled whether the GUI is enabled
      */
     public Client(String host, boolean guiEnabled) {
-        running = true;
-        this.host = host;
-        this.guiEnabled = guiEnabled;
-        if (guiEnabled){
-            gui = new ClientGUI(numPlayers, this);
-            field = new Field(new CardDisplayer(), this);
-            gui.getContentPane().addMouseListener(field); // TODO: does this need to be here?
-            gui.getContentPane().addMouseMotionListener(field);
-            // Begin testing card field stuffs
-            CardName[] cards = CardName.values();
-            int x = 70;
-            int y = 30;
-            for (int i = 0; i < cards.length; i++) {
-                field.add(new Card(cards[i]), x, y, 0, false);
-                x += 60;
-                if (x > 750) {
-                    y += 90;
-                    x = 70;
-                }
-            }
-            promptName();
-        }
-        player = new Player(id, name);
-        this.start();
+    	new Client(host, guiEnabled, ClientGUI.promptChooseName());
     }
     /**
      * Constructs a client to the Bang server on the specified host, with the specified name.
@@ -96,14 +73,14 @@ public class Client extends Thread {
             gui.getContentPane().addMouseMotionListener(field);
             // Begin testing card field stuffs
             CardName[] cards = CardName.values();
-            int x = 70;
-            int y = 30;
+            int x = 65;
+            int y = 0;
             for (int i = 0; i < cards.length; i++) {
                 field.add(new Card(cards[i]), x, y, 0, false);
                 x += 60;
                 if (x > 750) {
                     y += 90;
-                    x = 70;
+                    x = 65;
                 }
             }
         }
@@ -133,7 +110,7 @@ public class Client extends Thread {
 
     void promptName() {
         System.out.println("Choosing a new name");
-        name = gui.promptChooseName();
+        name = ClientGUI.promptChooseName();
         synchronized (name) {
             name.notifyAll();
         }
@@ -149,10 +126,6 @@ public class Client extends Thread {
         t = new ClientThread(socket, this);
         while (running) {
             if(guiEnabled)gui.update();
-            /*try {
-                sleep(10);
-            } catch (InterruptedException e) {
-            }*/
         }
         gui.dispose();
         gui = null;

@@ -270,7 +270,7 @@ public class Field implements MouseListener, MouseMotionListener{
 		end = a - 1;
 		for (int n = end; n>= start; n--) {
 			Clickable s = al.get(n);
-			if (s.rect.contains(ep.x, ep.y)) {
+			if (s.bounds.contains(ep.x, ep.y)) {
 				return al.get(n);
 			}
 		}
@@ -560,16 +560,17 @@ public class Field implements MouseListener, MouseMotionListener{
 		}
 		public void paint(Graphics2D g){
 			Color temp = g.getColor();
+			//g.fillRoundRect(rect.x, rect.y, rect.width, rect.height, 7, 7);
+			//g.setColor(Color.BLACK);
+			//g.fillRoundRect(rect.x + 1, rect.y + 1, rect.width-2, rect.height-2, 6, 6);
+			g.setColor(inner);
+			g.fillPolygon(bounds);
 			g.setColor(outer);
-			g.fillRoundRect(rect.x, rect.y, rect.width, rect.height, 7, 7);
-                        g.setColor(Color.BLACK);
-			g.fillRoundRect(rect.x + 1, rect.y + 1, rect.width-2, rect.height-2, 6, 6);
-                        g.setColor(inner);
-                        g.drawPolygon(bounds);
+			g.drawPolygon(bounds);
 			g.drawImage(img, origrect.x + 2, origrect.y + 3, null);
 			g.setColor(temp);
 		}
-		
+
 	}
 
 	public class HandSpace extends Clickable{
@@ -696,12 +697,21 @@ public class Field implements MouseListener, MouseMotionListener{
 			if(at!=null)at.translate(origrect.x-x, origrect.y-y);
 			origrect.translate(dx, dy);
 			rect.setLocation(x, y);
-			bounds = rectToPoly(rect);
+			bounds.translate(dx, dy);
 			if(partner!=null){
 				partner.translate(dx, dy);
 			}
 		}
-
+		
+		/**
+		 * @param dx
+		 * @param dy
+		 */
+		public void translate(int dx, int dy){
+			origrect.translate(dx, dy);
+			rect.translate(dx, dy);
+			bounds.translate(dx, dy);
+		}
 		/**
 		 * Sets the Clickable's partner.
 		 * <p>If a Clickable has a partner defined, moving it will also
@@ -744,41 +754,32 @@ public class Field implements MouseListener, MouseMotionListener{
 				AffineTransform at = AffineTransform.getRotateInstance(angle/2,
 						origrect.getCenterX(), origrect.getCenterY());
 				oldrotation=angle;
-                                Shape l = at.createTransformedShape(p);
+				Shape l = at.createTransformedShape(p);
 				PathIterator iter=l.getPathIterator(at);
 				int i=0;
 				float[] pts= new float[6];
 				p.reset();
 				while(!iter.isDone()){
-			      	int type = iter.currentSegment(pts);
-			      	switch(type){
-			        case PathIterator.SEG_MOVETO :
-			          //System.out.println("SEG_MOVETO");
-			          p.addPoint((int)pts[0],(int)pts[1]);
-			          break;
-			        case PathIterator.SEG_LINETO :
-			          //System.out.println("SEG_LINETO");
-			          p.addPoint((int)pts[0],(int)pts[1]);
-			          break;
-			      	}
-			      	i++;
-			      	iter.next();
-		    	}
+					int type = iter.currentSegment(pts);
+					switch(type){
+					case PathIterator.SEG_MOVETO :
+						//System.out.println("SEG_MOVETO");
+						p.addPoint((int)pts[0],(int)pts[1]);
+						break;
+					case PathIterator.SEG_LINETO :
+						//System.out.println("SEG_LINETO");
+						p.addPoint((int)pts[0],(int)pts[1]);
+						break;
+					}
+					i++;
+					iter.next();
+				}
 				rect = p.getBounds();
 				bounds = p;
 				at=null;
 			}
 		}
 
-		/**
-		 * @param dx
-		 * @param dy
-		 */
-		public void translate(int dx, int dy){
-			origrect.translate(dx, dy);
-			rect.translate(dx, dy);
-			bounds.translate(dx, dy);
-		}
 		private BufferedImage rotate(double angle, BufferedImage sourceBI) {
 			AffineTransform at = new AffineTransform();
 
@@ -793,7 +794,6 @@ public class Field implements MouseListener, MouseMotionListener{
 			destinationBI = bio.filter(sourceBI, null);
 			return destinationBI;
 		}
-
 	}
 
 	public void mouseEntered(MouseEvent e) {}

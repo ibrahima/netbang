@@ -6,15 +6,12 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
-import java.awt.image.BufferStrategy;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -36,7 +33,6 @@ public class ClientGUI extends JFrame implements KeyListener, ComponentListener,
 	ActionListener{
 
 	private static final long serialVersionUID = 4377855794895936467L;
-	BufferStrategy strategy;
 	int p;
 	StringBuilder chat;
 	boolean chatting = false;
@@ -68,15 +64,14 @@ public class ClientGUI extends JFrame implements KeyListener, ComponentListener,
 		// set window sizes
 		setPreferredSize(new Dimension(width, height));
 		setSize(new Dimension(width, height));
-		//setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		addKeyListener(this);
-		//this.setIgnoreRepaint(true);
+		this.setIgnoreRepaint(true);
+		GamePanel panel = new GamePanel();
+		this.setContentPane(panel);
 		createMenu();
 		this.setJMenuBar(menubar);
 		this.setVisible(true);
 		this.requestFocus(true);
-		//this.createBufferStrategy(2);		
-		//strategy = this.getBufferStrategy();
 		this.setTitle("UCBang");
 		addWindowListener(new WindowAdapter() {
 			public void windowActivated(WindowEvent e) {
@@ -87,43 +82,7 @@ public class ClientGUI extends JFrame implements KeyListener, ComponentListener,
 			}
 		});
 		this.addComponentListener(this);
-		JPanel panel = new JPanel(){
-			public void paint(Graphics g) {
-				Graphics2D graphics = (Graphics2D)g;
-				graphics.setColor(new Color(175, 150, 50));
-				graphics.fillRect(0, 0, width, height);
-				//the ugly proxy skip turn button: this is coded for in Field.java
-				graphics.setColor(new Color(255, 255, 255));
-				graphics.fillRect(760, 560, 40, 40);
-				graphics.setColor(new Color(0, 0, 0));
-				graphics.drawString("Skip", 770, 580);
 
-				if (chatting) {
-					graphics.setColor(new Color(185, 160, 60));
-					graphics.draw3DRect(17, 407, 760, 18, true);
-					graphics.setColor(Color.WHITE);
-					graphics.drawString("Chatting: " + chat.toString(), 20, 420);
-				}
-				if (textIndex >= 0) { // there is text to display, must draw it
-					for (int n = textIndex; n >= (textIndex < 9 ? 0 : textIndex - 9); n--) {
-						graphics.setColor(textColor.get(n));
-						graphics.drawString(text.get(n), 20, 580 - 15 * (textIndex - n));
-						graphics.setColor(Color.WHITE);
-					}
-				}
-				if(client.field!=null)
-		                    client.field.paint(graphics);
-				graphics.setColor(Color.DARK_GRAY);
-				graphics.drawString("Players", 25, 40);
-				Iterator<Player> iter = client.players.iterator();
-				int n = 0;
-				while (iter.hasNext()) {
-					Player temp = iter.next();
-		                        graphics.drawString(temp.name, 30, 60 + 15 * n++);
-				}
-			}
-		};
-		this.setContentPane(panel);
 		logviewer = new JDialog(this, "Chat Log", false);
 		logviewer.setSize(400, 200);
 		logviewer.setLocation(800, 0);
@@ -204,11 +163,11 @@ public class ClientGUI extends JFrame implements KeyListener, ComponentListener,
 	 * Prompts the player to choose a name
 	 * @return the name the player chose
 	 */
-	public String promptChooseName() {
+	public static String promptChooseName() {
 		String s = "";
 		while (s == null || s.length() == 0) {
 			s = (String) JOptionPane
-			.showInputDialog(this, "What is your name?");
+			.showInputDialog(null, "What is your name?");
 		}
 		return s;
 	}
@@ -368,6 +327,42 @@ public class ClientGUI extends JFrame implements KeyListener, ComponentListener,
 			logviewer.setVisible(true);
 		}else if(e.getSource().equals(about)){
 			
+		}
+	}
+	private class GamePanel extends JPanel{
+		public void paint(Graphics g) {
+			Graphics2D graphics = (Graphics2D)g;
+			graphics.setColor(new Color(175, 150, 50));
+			graphics.fillRect(0, 0, width, height);
+			//the ugly proxy skip turn button: this is coded for in Field.java
+			graphics.setColor(new Color(255, 255, 255));
+			graphics.fillRect(760, 560, 40, 40);
+			graphics.setColor(new Color(0, 0, 0));
+			graphics.drawString("Skip", 770, 580);
+
+			if (chatting) {
+				graphics.setColor(new Color(185, 160, 60));
+				graphics.draw3DRect(17, 407, 760, 18, true);
+				graphics.setColor(Color.WHITE);
+				graphics.drawString("Chatting: " + chat.toString(), 20, 420);
+			}
+			if (textIndex >= 0) { // there is text to display, must draw it
+				for (int n = textIndex; n >= (textIndex < 9 ? 0 : textIndex - 9); n--) {
+					graphics.setColor(textColor.get(n));
+					graphics.drawString(text.get(n), 20, 580 - 15 * (textIndex - n));
+					graphics.setColor(Color.WHITE);
+				}
+			}
+			if(client.field!=null)
+	                    client.field.paint(graphics);
+			graphics.setColor(Color.DARK_GRAY);
+			graphics.drawString("Players", 10, 12);
+			Iterator<Player> iter = client.players.iterator();
+			int n = 0;
+			while (iter.hasNext()) {
+				Player temp = iter.next();
+	                        graphics.drawString(temp.name, 25, 25 + 15 * n++);
+			}
 		}
 	}
 }

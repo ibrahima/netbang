@@ -50,7 +50,7 @@ public class Server extends Thread {
 		running = true;
 		if(!lan)
 			adder = new ServerListAdder(JOptionPane
-					.showInputDialog("Input server name"));
+					.showInputDialog(null, "Input server name"));
 		try {
 			me = new ServerSocket(port);
 			me.setSoTimeout(1000);
