@@ -101,10 +101,12 @@ public class Field implements MouseListener, MouseMotionListener{
 	}
 
 	int textHeight(String message, Graphics2D graphics){
+		if(message==null)return -1;
 		int lineheight=(int)graphics.getFont().getStringBounds("|", graphics.getFontRenderContext()).getHeight();
 		return message.split("\n").length*lineheight;
 	}
 	int textWidth(String message, Graphics2D graphics){
+		if(message==null)return -1;
 		String[] lines = message.split("\n");
 		int width=0;
 		for(int i=0;i<lines.length;i++){
