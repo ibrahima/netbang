@@ -4,6 +4,8 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
@@ -27,7 +29,8 @@ import ucbang.core.Card;
 import ucbang.core.Player;
 import ucbang.network.Client;
 
-public class ClientGUI extends JFrame implements KeyListener, ComponentListener{
+public class ClientGUI extends JFrame implements KeyListener, ComponentListener,
+	ActionListener{
 
 	private static final long serialVersionUID = 4377855794895936467L;
 	BufferStrategy strategy;
@@ -128,6 +131,7 @@ public class ClientGUI extends JFrame implements KeyListener, ComponentListener{
 		menubar.add(menu);
 		quit = new JMenuItem("Quit");
 		quit.setMnemonic(KeyEvent.VK_Q);
+		quit.addActionListener(this);
 		menu.add(quit);
 		
 		chatmenu = new JMenu("Chat");
@@ -135,6 +139,7 @@ public class ClientGUI extends JFrame implements KeyListener, ComponentListener{
 		menubar.add(chatmenu);
 		chatlog = new JMenuItem("View Chat Log");
 		chatlog.setMnemonic(KeyEvent.VK_L);
+		chatlog.addActionListener(this);
 		chatmenu.add(chatlog);
 		
 		helpmenu = new JMenu("Help");
@@ -142,6 +147,7 @@ public class ClientGUI extends JFrame implements KeyListener, ComponentListener{
 		menubar.add(helpmenu);
 		about = new JMenuItem("About");
 		about.setMnemonic(KeyEvent.VK_A);
+		about.addActionListener(this);
 		helpmenu.add(about);
 	}
 
@@ -333,5 +339,17 @@ public class ClientGUI extends JFrame implements KeyListener, ComponentListener{
 	public void componentShown(ComponentEvent e) {
 		// TODO Auto-generated method stub
 
+	}
+
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		if(e.getSource().equals(quit)){
+			client.running = false;
+		}else if(e.getSource().equals(chatlog)){
+			
+		}else if(e.getSource().equals(about)){
+			
+		}
 	}
 }
