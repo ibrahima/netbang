@@ -62,12 +62,15 @@ public class ClientGUI extends JFrame implements KeyListener, ComponentListener,
 	 */
 	private void createAndShowGui() {
 		// set window sizes
-		setPreferredSize(new Dimension(width, height));
-		setSize(new Dimension(width, height));
+		//setPreferredSize(new Dimension(width, height));
+		//setSize(new Dimension(width, height));
 		addKeyListener(this);
 		this.setIgnoreRepaint(true);
 		GamePanel panel = new GamePanel();
-		this.setContentPane(panel);
+		panel.setSize(width, height);
+		panel.setPreferredSize(new Dimension(width, height));
+		this.add(panel);
+		this.pack();
 		createMenu();
 		this.setJMenuBar(menubar);
 		this.setVisible(true);
@@ -81,8 +84,16 @@ public class ClientGUI extends JFrame implements KeyListener, ComponentListener,
 				((ClientGUI)(e.getWindow())).client.running=false;
 			}
 		});
-		this.addComponentListener(this);
+		panel.addComponentListener(this);
 
+		createLogViewer();
+	}
+
+
+	/**
+	 * 
+	 */
+	private void createLogViewer() {
 		logviewer = new JDialog(this, "Chat Log", false);
 		logviewer.setSize(400, 200);
 		logviewer.setLocation(800, 0);
@@ -124,9 +135,6 @@ public class ClientGUI extends JFrame implements KeyListener, ComponentListener,
 		about.addActionListener(this);
 		helpmenu.add(about);
 	}
-
-
-	
 
 	/**
 	 * appendText with default color of white
@@ -171,7 +179,6 @@ public class ClientGUI extends JFrame implements KeyListener, ComponentListener,
 		}
 		return s;
 	}
-
 
 	/**
 	 * Creates a yes or no prompt with the desired question and title
@@ -309,6 +316,7 @@ public class ClientGUI extends JFrame implements KeyListener, ComponentListener,
 		if(width<800)
 			width=800;
 		e.getComponent().setSize(width, height);
+		
 		if(client.field!=null)client.field.resize(oldw, oldh, width, height);
 	}
 
