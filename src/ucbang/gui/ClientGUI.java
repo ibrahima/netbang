@@ -43,7 +43,7 @@ public class ClientGUI extends JFrame implements KeyListener, ComponentListener{
 	JMenuBar menubar;
 	JMenu menu, chatmenu, helpmenu;
 	JMenuItem quit, chatlog, about;
-
+	JPanel panel;
 	public ClientGUI(int p, Client client) {
 		this.client = client;
 		this.p = p;
@@ -61,13 +61,13 @@ public class ClientGUI extends JFrame implements KeyListener, ComponentListener{
 		setSize(new Dimension(width, height));
 		//setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		addKeyListener(this);
-		this.setIgnoreRepaint(true);
+		//this.setIgnoreRepaint(true);
 		createMenu();
 		this.setJMenuBar(menubar);
 		this.setVisible(true);
 		this.requestFocus(true);
-		this.createBufferStrategy(2);		
-		strategy = this.getBufferStrategy();
+		//this.createBufferStrategy(2);		
+		//strategy = this.getBufferStrategy();
 		this.setTitle("UCBang");
 		addWindowListener(new WindowAdapter() {
 			public void windowActivated(WindowEvent e) {
@@ -78,8 +78,43 @@ public class ClientGUI extends JFrame implements KeyListener, ComponentListener{
 			}
 		});
 		this.addComponentListener(this);
-		//create menu;
+		JPanel panel = new JPanel(){
+			public void paint(Graphics g) {
+				Graphics2D graphics = (Graphics2D)g;
+				graphics.setColor(new Color(175, 150, 50));
+				graphics.fillRect(0, 0, width, height);
+				//the ugly proxy skip turn button: this is coded for in Field.java
+				graphics.setColor(new Color(255, 255, 255));
+				graphics.fillRect(760, 560, 40, 40);
+				graphics.setColor(new Color(0, 0, 0));
+				graphics.drawString("Skip", 770, 580);
 
+				if (chatting) {
+					graphics.setColor(new Color(185, 160, 60));
+					graphics.draw3DRect(17, 407, 760, 18, true);
+					graphics.setColor(Color.WHITE);
+					graphics.drawString("Chatting: " + chat.toString(), 20, 420);
+				}
+				if (textIndex >= 0) { // there is text to display, must draw it
+					for (int n = textIndex; n >= (textIndex < 9 ? 0 : textIndex - 9); n--) {
+						graphics.setColor(textColor.get(n));
+						graphics.drawString(text.get(n), 20, 580 - 15 * (textIndex - n));
+						graphics.setColor(Color.WHITE);
+					}
+				}
+				if(client.field!=null)
+		                    client.field.paint(graphics);
+				graphics.setColor(Color.DARK_GRAY);
+				graphics.drawString("Players", 25, 40);
+				Iterator<Player> iter = client.players.iterator();
+				int n = 0;
+				while (iter.hasNext()) {
+					Player temp = iter.next();
+		                        graphics.drawString(temp.name, 30, 60 + 15 * n++);
+				}
+			}
+		};
+		this.setContentPane(panel);
 	}
 
 
@@ -111,50 +146,7 @@ public class ClientGUI extends JFrame implements KeyListener, ComponentListener{
 	}
 
 
-	public void paint(Graphics g) {
-		Graphics2D graphics;
-		try {
-			graphics = (Graphics2D) strategy.getDrawGraphics();
-		} catch (Exception e) {
-			return;
-		}
-		// fill background w/ tan
-		graphics.setColor(new Color(175, 150, 50));
-		graphics.fillRect(0, 100, width, height);
-
-		//the ugly proxy skip turn button: this is coded for in Field.java
-		graphics.setColor(new Color(255, 255, 255));
-		graphics.fillRect(760, 560, 40, 40);
-		graphics.setColor(new Color(0, 0, 0));
-		graphics.drawString("Skip", 770, 580);
-
-		if (chatting) {
-			graphics.setColor(new Color(185, 160, 60));
-			graphics.draw3DRect(17, 407, 760, 18, true);
-			graphics.setColor(Color.WHITE);
-			graphics.drawString("Chatting: " + chat.toString(), 20, 420);
-		}
-		if (textIndex >= 0) { // there is text to display, must draw it
-			for (int n = textIndex; n >= (textIndex < 9 ? 0 : textIndex - 9); n--) {
-				graphics.setColor(textColor.get(n));
-				graphics.drawString(text.get(n), 20, 580 - 15 * (textIndex - n));
-				graphics.setColor(Color.WHITE);
-			}
-		}
-		if(client.field!=null)
-                    client.field.paint(graphics);
-		graphics.setColor(Color.DARK_GRAY);
-		graphics.drawString("Players", 25, 40);
-		Iterator<Player> iter = client.players.iterator();
-		int n = 0;
-		while (iter.hasNext()) {
-			Player temp = iter.next();
-                        graphics.drawString(temp.name, 30, 60 + 15 * n++);
-		}
-		graphics.dispose();
-		// paint backbuffer to window
-		strategy.show();
-	}
+	
 
 	/**
 	 * appendText with default color of black
