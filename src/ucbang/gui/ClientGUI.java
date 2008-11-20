@@ -18,12 +18,15 @@ import java.awt.image.BufferStrategy;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 
 import ucbang.core.Card;
 import ucbang.core.Player;
@@ -47,6 +50,9 @@ public class ClientGUI extends JFrame implements KeyListener, ComponentListener,
 	JMenu menu, chatmenu, helpmenu;
 	JMenuItem quit, chatlog, about;
 	JPanel panel;
+	JDialog logviewer;
+	JScrollPane logscroll;
+	JTextArea logs;
 	public ClientGUI(int p, Client client) {
 		this.client = client;
 		this.p = p;
@@ -118,6 +124,15 @@ public class ClientGUI extends JFrame implements KeyListener, ComponentListener,
 			}
 		};
 		this.setContentPane(panel);
+		logviewer = new JDialog(this, "Chat Log", false);
+		logviewer.setSize(400, 200);
+		logviewer.setLocation(800, 0);
+		logs = new JTextArea(9,34);
+		logs.setEditable(false);
+		logscroll = new JScrollPane(logs, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		logviewer.add(logscroll);
+		logviewer.pack();
 	}
 
 
@@ -155,7 +170,7 @@ public class ClientGUI extends JFrame implements KeyListener, ComponentListener,
 	
 
 	/**
-	 * appendText with default color of black
+	 * appendText with default color of white
 	 * 
 	 * @param str
 	 * @param c
@@ -176,6 +191,8 @@ public class ClientGUI extends JFrame implements KeyListener, ComponentListener,
 		text.add(str);
 		textColor.add(c);
 		paint(getGraphics());
+		logs.append(str+"\n");
+		logviewer.repaint();
 	}
 
 	public void update() {
@@ -347,7 +364,7 @@ public class ClientGUI extends JFrame implements KeyListener, ComponentListener,
 		if(e.getSource().equals(quit)){
 			client.running = false;
 		}else if(e.getSource().equals(chatlog)){
-			
+			logviewer.setVisible(true);
 		}else if(e.getSource().equals(about)){
 			
 		}
