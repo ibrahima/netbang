@@ -17,7 +17,11 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 
 import ucbang.core.Card;
 import ucbang.core.Player;
@@ -36,20 +40,33 @@ public class ClientGUI extends JFrame implements KeyListener, ComponentListener{
 	ArrayList<Color> textColor = new ArrayList<Color>();
 	int textIndex = -1; // the bottom line of the text
 	public Client client;
-        
+	JMenuBar menubar;
+	JMenu menu, chatmenu, helpmenu;
+	JMenuItem quit, chatlog, about;
+
 	public ClientGUI(int p, Client client) {
 		this.client = client;
 		this.p = p;
 		chat = new StringBuilder();
+		createAndShowGui();
+	}
+
+
+	/**
+	 * 
+	 */
+	private void createAndShowGui() {
 		// set window sizes
 		setPreferredSize(new Dimension(width, height));
 		setSize(new Dimension(width, height));
 		//setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		addKeyListener(this);
 		this.setIgnoreRepaint(true);
+		createMenu();
+		this.setJMenuBar(menubar);
 		this.setVisible(true);
 		this.requestFocus(true);
-		this.createBufferStrategy(2);
+		this.createBufferStrategy(2);		
 		strategy = this.getBufferStrategy();
 		this.setTitle("UCBang");
 		addWindowListener(new WindowAdapter() {
@@ -60,7 +77,37 @@ public class ClientGUI extends JFrame implements KeyListener, ComponentListener{
 				((ClientGUI)(e.getWindow())).client.running=false;
 			}
 		});
-		this.addComponentListener(this); //<-- lol wtf
+		this.addComponentListener(this);
+		//create menu;
+
+	}
+
+
+	/**
+	 * 
+	 */
+	private void createMenu() {
+		menubar = new JMenuBar();
+		menu = new JMenu("Game");
+		menu.setMnemonic(KeyEvent.VK_G);
+		menubar.add(menu);
+		quit = new JMenuItem("Quit");
+		quit.setMnemonic(KeyEvent.VK_Q);
+		menu.add(quit);
+		
+		chatmenu = new JMenu("Chat");
+		chatmenu.setMnemonic(KeyEvent.VK_C);
+		menubar.add(chatmenu);
+		chatlog = new JMenuItem("View Chat Log");
+		chatlog.setMnemonic(KeyEvent.VK_L);
+		chatmenu.add(chatlog);
+		
+		helpmenu = new JMenu("Help");
+		helpmenu.setMnemonic(KeyEvent.VK_H);
+		menubar.add(helpmenu);
+		about = new JMenuItem("About");
+		about.setMnemonic(KeyEvent.VK_A);
+		helpmenu.add(about);
 	}
 
 
@@ -73,7 +120,7 @@ public class ClientGUI extends JFrame implements KeyListener, ComponentListener{
 		}
 		// fill background w/ tan
 		graphics.setColor(new Color(175, 150, 50));
-		graphics.fillRect(0, 0, width, height);
+		graphics.fillRect(0, 100, width, height);
 
 		//the ugly proxy skip turn button: this is coded for in Field.java
 		graphics.setColor(new Color(255, 255, 255));
