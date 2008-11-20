@@ -157,7 +157,7 @@ public class ClientGUI extends JFrame implements KeyListener, ComponentListener,
 		textIndex++;
 		text.add(str);
 		textColor.add(c);
-		paint(getGraphics());
+		//paint(getGraphics()); HJKLM
 		logs.append(str+"\n");
 		logscroll.getVerticalScrollBar().setValue(logscroll.getVerticalScrollBar().getMaximum());
 		logviewer.repaint();
