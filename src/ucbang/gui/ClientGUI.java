@@ -192,6 +192,7 @@ public class ClientGUI extends JFrame implements KeyListener, ComponentListener,
 		textColor.add(c);
 		paint(getGraphics());
 		logs.append(str+"\n");
+		logscroll.getVerticalScrollBar().setValue(logscroll.getVerticalScrollBar().getMaximum());
 		logviewer.repaint();
 	}
 
