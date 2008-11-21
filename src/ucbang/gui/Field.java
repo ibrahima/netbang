@@ -285,7 +285,7 @@ public class Field implements MouseListener, MouseMotionListener{
 			theta = -(player-client.id)*(2*Math.PI/client.numPlayers)-Math.PI/2;
 			int hsx = client.gui.width/2+(int)((client.gui.width-150)/2*Math.cos(theta));
 			int hsy = 280-(int)(220*Math.sin(theta));
-			hs=new HandSpace(rectToPoly(hsx, hsy,10,10), player, theta);
+			hs = new HandSpace(rectToPoly(hsx, hsy,10,10), player, theta);
 			handPlacer.add(hs);
 			Card chara=null;
 			if(client.players.get(player).character>=0){
@@ -302,7 +302,9 @@ public class Field implements MouseListener, MouseMotionListener{
 				//generate HP card
 				Card hp = new Card(Deck.CardName.BULLETBACK);
 				CardSpace hps = new CardSpace(hp, rectToPoly(x+
-						10 * client.players.get(player).maxLifePoints,y-60,90,60),player, false, cd.getImage(hp.name));
+						10 * client.players.get(player).maxLifePoints,y-60,60,90),player, false, cd.getImage(hp.name));
+				hps.rotate(Math.PI/2);
+				hps.move(x + 10 * client.players.get(player).maxLifePoints, y - 60);
 				hps.setPartner(csp);
 				csp.setPartner(hps);
 				//hps.rotate(1);
@@ -654,7 +656,12 @@ public class Field implements MouseListener, MouseMotionListener{
 	 *
 	 */
 	private abstract class Clickable implements Comparable<Clickable>{
-		public Rectangle rect;
+		/**
+		 * @deprecated Rect in this form needs to go, and should be replaced by
+		 * the functionality that origrect provides, and then origrect should be
+		 * renamed to rect. Rigamarole.
+		 */
+		@Deprecated public Rectangle rect;
 		public Rectangle origrect;
 		public Polygon bounds;
 		//public int location; //position of card on field or in hand
@@ -708,7 +715,7 @@ public class Field implements MouseListener, MouseMotionListener{
 		 */
 		public void translate(int dx, int dy){
 			origrect.translate(dx, dy);
-			rect.translate(dx, dy);
+			//rect.translate(dx, dy);
 			bounds.translate(dx, dy);
 		}
 		/**
