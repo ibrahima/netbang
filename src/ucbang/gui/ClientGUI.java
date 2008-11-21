@@ -66,13 +66,16 @@ public class ClientGUI extends JFrame implements KeyListener, ComponentListener,
 		//setSize(new Dimension(width, height));
 		addKeyListener(this);
 		this.setIgnoreRepaint(true);
-		GamePanel panel = new GamePanel();
-		panel.setSize(width, height);
+		panel = new GamePanel();
+		//panel.setSize(width, height);
 		panel.setPreferredSize(new Dimension(width, height));
-		this.add(panel);
+		panel.setMinimumSize(new Dimension(width,height));
+		this.setContentPane(panel);
 		this.pack();
 		createMenu();
 		this.setJMenuBar(menubar);
+		this.addComponentListener(this);
+		System.out.println(this+":\n"+this.getComponentListeners());
 		this.setVisible(true);
 		this.requestFocus(true);
 		this.setTitle("UCBang");
@@ -84,8 +87,6 @@ public class ClientGUI extends JFrame implements KeyListener, ComponentListener,
 				((ClientGUI)(e.getWindow())).client.running=false;
 			}
 		});
-		panel.addComponentListener(this);
-
 		createLogViewer();
 	}
 
@@ -306,17 +307,19 @@ public class ClientGUI extends JFrame implements KeyListener, ComponentListener,
 	}
 
 	public void componentResized(ComponentEvent e){
+		System.out.println("FEH");
 		int oldw = width;
 		int oldh = height;
-
-		height = e.getComponent().getHeight();
-		width = e.getComponent().getWidth();
+		if(panel==null)return;
+		System.out.println(panel.getHeight()+","+panel.getWidth());
+		height = panel.getHeight();
+		width = panel.getWidth();
 		if(height<600)
 			height=600;
 		if(width<800)
 			width=800;
-		e.getComponent().setSize(width, height);
-		
+		panel.setPreferredSize(new Dimension(width, height));
+		this.pack();
 		if(client.field!=null)client.field.resize(oldw, oldh, width, height);
 	}
 
