@@ -30,7 +30,7 @@ import ucbang.core.Player;
 import ucbang.network.Client;
 
 public class ClientGUI extends JFrame implements KeyListener, ComponentListener,
-	ActionListener{
+ActionListener{
 
 	private static final long serialVersionUID = 4377855794895936467L;
 	int p;
@@ -43,7 +43,7 @@ public class ClientGUI extends JFrame implements KeyListener, ComponentListener,
 	int textIndex = -1; // the bottom line of the text
 	public Client client;
 	JMenuBar menubar;
-	JMenu menu, chatmenu, helpmenu;
+	JMenu menu, chatmenu, helpmenu, fpsmenu;
 	JMenuItem quit, chatlog, about;
 	JPanel panel;
 	JDialog logviewer;
@@ -117,7 +117,7 @@ public class ClientGUI extends JFrame implements KeyListener, ComponentListener,
 		quit.setMnemonic(KeyEvent.VK_Q);
 		quit.addActionListener(this);
 		menu.add(quit);
-		
+
 		chatmenu = new JMenu("Chat");
 		chatmenu.setMnemonic(KeyEvent.VK_C);
 		menubar.add(chatmenu);
@@ -125,7 +125,7 @@ public class ClientGUI extends JFrame implements KeyListener, ComponentListener,
 		chatlog.setMnemonic(KeyEvent.VK_L);
 		chatlog.addActionListener(this);
 		chatmenu.add(chatlog);
-		
+
 		helpmenu = new JMenu("Help");
 		helpmenu.setMnemonic(KeyEvent.VK_H);
 		menubar.add(helpmenu);
@@ -133,6 +133,9 @@ public class ClientGUI extends JFrame implements KeyListener, ComponentListener,
 		about.setMnemonic(KeyEvent.VK_A);
 		about.addActionListener(this);
 		helpmenu.add(about);
+		
+		fpsmenu = new JMenu("FPS");
+		menubar.add(fpsmenu);
 	}
 
 	/**
@@ -238,7 +241,7 @@ public class ClientGUI extends JFrame implements KeyListener, ComponentListener,
 			else{
 				if(client.prompting&&!client.forceDecision){
 					client.outMsgs.add("Prompt:-1");
-                                        client.nextPrompt = -2;
+					client.nextPrompt = -2;
 					client.prompting = false;
 				}
 				return;
@@ -285,7 +288,7 @@ public class ClientGUI extends JFrame implements KeyListener, ComponentListener,
 				}
 				appendText(s);
 			}
-                        */
+			 */
 		}
 	}
 
@@ -330,10 +333,15 @@ public class ClientGUI extends JFrame implements KeyListener, ComponentListener,
 		}else if(e.getSource().equals(chatlog)){
 			logviewer.setVisible(true);
 		}else if(e.getSource().equals(about)){
-			
+
 		}
 	}
 	private class GamePanel extends JPanel{
+		private int tfps;
+		private long now;
+		private long lastTime;
+		private int fps;
+
 		public void paintComponent(Graphics g) {
 			Graphics2D graphics = (Graphics2D)g;
 			graphics.setColor(new Color(175, 150, 50));
@@ -365,7 +373,15 @@ public class ClientGUI extends JFrame implements KeyListener, ComponentListener,
 			int n = 0;
 			while (iter.hasNext()) {
 				Player temp = iter.next();
-	                        graphics.drawString(temp.name, 25, 25 + 15 * n++);
+				graphics.drawString(temp.name, 25, 25 + 15 * n++);
+			}
+			tfps++;
+			now=System.currentTimeMillis();
+			if((now-lastTime)>1000){
+				lastTime=now;
+				fps=tfps;
+				tfps=0;
+				fpsmenu.setText(fps+"FPS");
 			}
 		}
 	}
