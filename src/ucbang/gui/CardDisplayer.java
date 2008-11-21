@@ -100,26 +100,12 @@ public class CardDisplayer {
 			cards.put("SEAN_MALLORY", ImageIO.read(ClassLoader.getSystemResource("images/char/dodge/seanmallory.jpg")));
 			cards.put("TEQUILA_JOE", ImageIO.read(ClassLoader.getSystemResource("images/char/dodge/tequilajoe.jpg")));
 			cards.put("VERA_CUSTER", ImageIO.read(ClassLoader.getSystemResource("images/char/dodge/veracuster.jpg")));
-			this.rotateImage("BULLETBACK",1);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 
-
-
-	public void rotateImage(String card, int quadrant){
-		BufferedImage img = cards.get(card);
-		int w = img.getWidth();  
-		int h = img.getHeight();
-		BufferedImage dimg = new BufferedImage(h, w, ((BufferedImage) img).getType());  
-		Graphics2D graphics = (Graphics2D)dimg.getGraphics();
-		graphics.drawImage(img, new AffineTransformOp(AffineTransform.getQuadrantRotateInstance(quadrant, w/2, h/2), 
-				AffineTransformOp.TYPE_BICUBIC), 16,-15);
-		cards.put(card, dimg);
-		graphics.dispose();
-	}
 	public BufferedImage getImage(String card){
 		return cards.get(card);
 	}

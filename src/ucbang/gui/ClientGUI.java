@@ -162,9 +162,6 @@ public class ClientGUI extends JFrame implements KeyListener, ComponentListener,
 		logviewer.repaint();
 	}
 
-	public void update() {
-		paint(this.getGraphics());
-	}
 
 	/**
 	 * Prompts the player to choose a name
@@ -337,7 +334,7 @@ public class ClientGUI extends JFrame implements KeyListener, ComponentListener,
 		}
 	}
 	private class GamePanel extends JPanel{
-		public void paint(Graphics g) {
+		public void paintComponent(Graphics g) {
 			Graphics2D graphics = (Graphics2D)g;
 			graphics.setColor(new Color(175, 150, 50));
 			graphics.fillRect(0, 0, width, height);
@@ -361,7 +358,7 @@ public class ClientGUI extends JFrame implements KeyListener, ComponentListener,
 				}
 			}
 			if(client.field!=null)
-	                    client.field.paint(graphics);
+				client.field.paint(graphics);
 			graphics.setColor(Color.DARK_GRAY);
 			graphics.drawString("Players", 10, 12);
 			Iterator<Player> iter = client.players.iterator();

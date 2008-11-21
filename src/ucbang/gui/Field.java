@@ -570,7 +570,6 @@ public class Field implements MouseListener, MouseMotionListener{
 			g.drawImage(img, origrect.x + 2, origrect.y + 3, null);
 			g.setColor(temp);
 		}
-
 	}
 
 	public class HandSpace extends Clickable{

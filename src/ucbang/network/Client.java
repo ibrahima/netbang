@@ -125,7 +125,7 @@ public class Client extends Thread {
         }
         t = new ClientThread(socket, this);
         while (running) {
-            if(guiEnabled)gui.update();
+            if(guiEnabled)gui.repaint();
         }
         gui.dispose();
         gui = null;
