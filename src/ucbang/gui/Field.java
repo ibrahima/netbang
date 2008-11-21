@@ -334,7 +334,7 @@ public class Field implements MouseListener, MouseMotionListener{
 		if (cl instanceof CardSpace) {
 			CardSpace cs = (CardSpace) cl;
 			if (cs != null && cs.card != null){
-				if (e.getButton() == MouseEvent.BUTTON3) cs.rotate(cs.oldrotation+Math.PI/4);
+				if (e.getButton() == MouseEvent.BUTTON3) cs.rotate(cs.theta+Math.PI/4);
 				if(cs.playerid != -1){}
 				//client.gui.appendText(String.valueOf(client.players.get(cs.playerid).hand.indexOf(cs.card))+" "+(cs.hs!=null?String.valueOf(cs.hs.cards.indexOf(cs)):""));
 				else if(pick != null){}
@@ -569,8 +569,20 @@ public class Field implements MouseListener, MouseMotionListener{
 			g.fillPolygon(bounds);
 			g.setColor(outer);
 			g.drawPolygon(bounds);
-			g.drawImage(img, origrect.x + 2, origrect.y + 3, null);
+			if(theta!=0.0){
+				AffineTransform tempy = g.getTransform();
+				g.translate(origrect.getCenterX(), origrect.getCenterY());;
+				at = new AffineTransform();
+				at.setToRotation(theta);
+				at.translate(-30, -45);
+				g.transform(at);
+				g.drawImage(img, 2, 3, null);
+				g.setTransform(tempy);
+			}else{
+				g.drawImage(img, origrect.x+2, origrect.y+3, null);
+			}
 			g.setColor(temp);
+
 		}
 	}
 
@@ -667,7 +679,7 @@ public class Field implements MouseListener, MouseMotionListener{
 		//public int location; //position of card on field or in hand
 		public int playerid;
 		protected AffineTransform at;
-		protected double oldrotation=0;
+		protected double theta=0;
 		protected Clickable partner;
 		protected BufferedImage img;
 		protected final BufferedImage sourceImg;
@@ -742,24 +754,16 @@ public class Field implements MouseListener, MouseMotionListener{
 			return new Point2D.Double(cx, cy + dy);
 		}
 		/**
-		 * Rotates the clickable the specified number of quadrants, i.e. 90 degree intervals.
-		 * <p>This is fairly buggy, and should not be called more than once under any circumstances for
-		 * a given card or type of card. Deprecated until further notice, since only the bullet card is
-		 * currently rotated. For rotation to work nicely, Clickable will have to store an image of the
-		 * card or whatever so that it is rotated independently of other instances of the same card.
-		 * @param angle the number of radians to rotate
+		 * Rotates the Clickable the specified angle, in radians.
 		 */
-		public void rotate(double angle){//rotates in terms of 90 degree increments. call with 0 to reset.
-			double realrotation=(angle-oldrotation)%(Math.PI*2);
-			//angle = angle % (Math.PI*2);
+		public void rotate(double angle){
+			double realrotation=(angle-theta)%(Math.PI*2);
 			if(realrotation>=0 && realrotation<Math.PI*2){
-				img = rotate(angle, sourceImg);
 				Polygon p = rectToPoly(origrect);
-				Point2D.Double c = getPolygonCenter(p);
 
-				AffineTransform at = AffineTransform.getRotateInstance(angle/2,
+				at = AffineTransform.getRotateInstance(angle/2,
 						origrect.getCenterX(), origrect.getCenterY());
-				oldrotation=angle;
+				theta=angle%(Math.PI*2);
 				Shape l = at.createTransformedShape(p);
 				PathIterator iter=l.getPathIterator(at);
 				int i=0;
@@ -780,25 +784,9 @@ public class Field implements MouseListener, MouseMotionListener{
 					i++;
 					iter.next();
 				}
-				rect = p.getBounds();
+				//rect = p.getBounds();
 				bounds = p;
-				at=null;
 			}
-		}
-
-		private BufferedImage rotate(double angle, BufferedImage sourceBI) {
-			AffineTransform at = new AffineTransform();
-
-			// rotate some degrees around image center
-			at.rotate(angle, sourceBI.getWidth() / 2.0, sourceBI
-					.getHeight() / 2.0);
-
-			// instantiate and apply affine transformation filter
-			BufferedImageOp bio;
-			bio = new AffineTransformOp(at, AffineTransformOp.TYPE_BILINEAR);
-			BufferedImage destinationBI;
-			destinationBI = bio.filter(sourceBI, null);
-			return destinationBI;
 		}
 	}
 
