@@ -67,7 +67,6 @@ public class ClientGUI extends JFrame implements KeyListener, ComponentListener,
 		addKeyListener(this);
 		this.setIgnoreRepaint(true);
 		panel = new GamePanel();
-		//panel.setSize(width, height);
 		panel.setPreferredSize(new Dimension(width, height));
 		panel.setMinimumSize(new Dimension(width,height));
 		this.setContentPane(panel);
@@ -75,7 +74,6 @@ public class ClientGUI extends JFrame implements KeyListener, ComponentListener,
 		createMenu();
 		this.setJMenuBar(menubar);
 		this.addComponentListener(this);
-		System.out.println(this+":\n"+this.getComponentListeners());
 		this.setVisible(true);
 		this.requestFocus(true);
 		this.setTitle("UCBang");
@@ -307,11 +305,9 @@ public class ClientGUI extends JFrame implements KeyListener, ComponentListener,
 	}
 
 	public void componentResized(ComponentEvent e){
-		System.out.println("FEH");
 		int oldw = width;
 		int oldh = height;
 		if(panel==null)return;
-		System.out.println(panel.getHeight()+","+panel.getWidth());
 		height = panel.getHeight();
 		width = panel.getWidth();
 		if(height<600)
