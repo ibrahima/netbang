@@ -544,7 +544,7 @@ public class Bang {
     }
 
     /**
-     * Gets the distance between p1 and p2. Includes horses and hideouts, but not guns
+     * Gets the distance between p1 and p2. Includes horses and hideouts.
      * @param Player 1, Player 2
      * @return int of how far they are apart
      */

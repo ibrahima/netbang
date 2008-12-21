@@ -27,11 +27,16 @@ public class Server extends Thread {
 	protected LinkedHashMap<String, LinkedList<String>> messages = new LinkedHashMap<String, LinkedList<String>>();
 	static int numPlayers;
 	ServerSocket me;
-	public int gameInProgress; // 1 = attempting to start game, 2 = game started
-	// for realz lawl
-	public int prompting; // flag for whether people are still being prompting
-	// for something 0 = no, 1 = prompting with no
-	// unchecked updates, 2 = unchecked prompt
+	/**
+	 * 1 = attempting to start game, 2 = game started for realz lawl
+	 */
+	public int gameInProgress;
+	/**
+	 * flag for whether people are still being prompted
+	 * for something. 0 = no, 1 = prompting with no
+	 * unchecked updates, 2 = unchecked prompt
+	 */
+	public int prompting;
 	public ArrayList<int[][]> choice; 	// int[m][n], where m is player and n is
 	// option
 

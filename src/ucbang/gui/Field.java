@@ -439,7 +439,7 @@ public class Field implements MouseListener, MouseMotionListener{
 
 	public void sortHandSpace(HandSpace hs){
 		if(hs==null){
-			System.out.println("WTWFWTWFWWTFWTWTWWAFSFASFASFS");
+			System.out.println("Handspace is null and should not be. Running away very, very scared.");
 			return;
 		}
 
