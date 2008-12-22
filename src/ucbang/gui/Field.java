@@ -5,21 +5,11 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Polygon;
 import java.awt.Rectangle;
-import java.awt.Shape;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
-import java.awt.geom.AffineTransform;
-import java.awt.geom.PathIterator;
-import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
-import java.awt.image.AffineTransformOp;
-import java.awt.image.BufferedImage;
-import java.awt.image.BufferedImageOp;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
 import java.util.Iterator;
 
 import ucbang.core.Card;
@@ -152,38 +142,6 @@ public class Field implements MouseListener, MouseMotionListener{
 					Char.add(crd);
 				}
 				else{
-					Color inner;
-					switch(crd.card.location){
-					case 0:
-						inner=Color.BLACK;
-						break;
-					case 1:
-						if(crd.card.type==5)
-							inner=new Color(100,100,200);
-						else{
-							inner = ((crd.card.name!="JAIL"||crd.card.name!="DYNAMITE")?inner=new Color(100,200,100):new Color(100,100,200));
-						}
-						break;
-					default:
-						inner=new Color(200,100,100);
-					}
-					//Color outer=client.id==1?Color.RED:Color.BLUE;
-					Color outer;
-					switch(crd.playerid){
-					case 0: outer = Color.RED; break;
-					case 1: outer = Color.BLUE; break;
-					case 2: outer = Color.CYAN; break;
-					case 3: outer = Color.MAGENTA; break;
-					case 4: outer = Color.YELLOW; break;
-					case 5: outer = Color.ORANGE; break;
-					case 6: outer = Color.GREEN; break;
-					case 7: outer = Color.LIGHT_GRAY; break;
-					case 8: outer = Color.WHITE; break;
-					case 9: outer = Color.PINK; break;
-					default: outer = Color.BLACK; break;
-					}
-					/*/cd.paint(crd.card.name, graphics, crd.rect.x, crd.rect.y, crd.rect.width, temp.rect.height, 
-							inner,outer);/*/
 					crd.paint(graphics);//TODO:DEFAULT PAINTER
 				}
 			}else if(temp instanceof HandSpace){
@@ -452,8 +410,6 @@ public class Field implements MouseListener, MouseMotionListener{
 	 * @param height2
 	 */
 	public void resize(int width, int height, int width2, int height2) {
-		ArrayList<Clickable> stuff = clickies.values();
-		Iterator<Clickable> iter = stuff.iterator();
 		for(HandSpace hs: handPlacer){
 			hs.move(hs.rect.x*width2/width, hs.rect.y*height2/height);
 		}

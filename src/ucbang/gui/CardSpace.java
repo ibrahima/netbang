@@ -70,7 +70,7 @@ public class CardSpace extends Clickable{
 		g.drawPolygon(bounds);
 		if(theta!=0.0){
 			AffineTransform tempy = g.getTransform();
-			g.translate(origrect.getCenterX(), origrect.getCenterY());;
+			g.translate(rect.getCenterX(), rect.getCenterY());;
 			at = new AffineTransform();
 			at.setToRotation(theta);
 			at.translate(-30, -45);
@@ -78,7 +78,7 @@ public class CardSpace extends Clickable{
 			g.drawImage(img, 2, 3, null);
 			g.setTransform(tempy);
 		}else{
-			g.drawImage(img, origrect.x+2, origrect.y+3, null);
+			g.drawImage(img, rect.x+2, rect.y+3, null);
 		}
 		g.setColor(temp);
 

@@ -10,7 +10,6 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -25,7 +24,7 @@ public class Server extends Thread {
 		new Server(12345, false);
 	}
 	protected LinkedHashMap<String, LinkedList<String>> messages = new LinkedHashMap<String, LinkedList<String>>();
-	static int numPlayers;
+	int numPlayers;
 	ServerSocket me;
 	/**
 	 * 1 = attempting to start game, 2 = game started for realz lawl

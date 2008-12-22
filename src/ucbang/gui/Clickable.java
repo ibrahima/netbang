@@ -15,13 +15,8 @@ import java.awt.image.BufferedImage;
  *
  */
 public abstract class Clickable implements Comparable<Clickable>{
-	/**
-	 * @deprecated Rect in this form needs to go, and should be replaced by
-	 * the functionality that origrect provides, and then origrect should be
-	 * renamed to rect. Rigamarole.
-	 */
-	@Deprecated public Rectangle rect;
-	public Rectangle origrect;
+
+	public Rectangle rect;
 	public Polygon bounds;
 	//public int location; //position of card on field or in hand
 	public int playerid;
@@ -36,7 +31,6 @@ public abstract class Clickable implements Comparable<Clickable>{
 	public Clickable(Polygon p, BufferedImage srcimg){
 		bounds = p;
 		rect = p.getBounds();
-		origrect = rect;
 		img = new BufferedImage(srcimg.getWidth(), srcimg.getHeight(), srcimg.getType());
 		img.getRaster().setRect(srcimg.getData());
 		sourceImg = img;
@@ -59,9 +53,8 @@ public abstract class Clickable implements Comparable<Clickable>{
 	public void move(int x, int y){
 		int dx = x-rect.x;
 		int dy = y-rect.y;
-		if(at!=null)at.translate(origrect.x-x, origrect.y-y);
-		origrect.translate(dx, dy);
-		rect.setLocation(x, y);
+		if(at!=null)at.translate(rect.x-x, rect.y-y);
+		rect.translate(dx, dy);
 		bounds.translate(dx, dy);
 		if(partner!=null){
 			partner.translate(dx, dy);
@@ -73,7 +66,7 @@ public abstract class Clickable implements Comparable<Clickable>{
 	 * @param dy
 	 */
 	public void translate(int dx, int dy){
-		origrect.translate(dx, dy);
+		rect.translate(dx, dy);
 		//rect.translate(dx, dy);
 		bounds.translate(dx, dy);
 	}
@@ -106,10 +99,10 @@ public abstract class Clickable implements Comparable<Clickable>{
 	public void rotate(double angle){
 		double realrotation=(angle-theta)%(Math.PI*2);
 		if(realrotation>=0 && realrotation<Math.PI*2){
-			Polygon p = rectToPoly(origrect);
+			Polygon p = rectToPoly(rect);
 
 			at = AffineTransform.getRotateInstance(angle/2,
-					origrect.getCenterX(), origrect.getCenterY());
+					rect.getCenterX(), rect.getCenterY());
 			theta=angle%(Math.PI*2);
 			Shape l = at.createTransformedShape(p);
 			PathIterator iter=l.getPathIterator(at);
