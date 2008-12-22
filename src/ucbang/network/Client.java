@@ -446,6 +446,7 @@ class ClientThread extends Thread {
                                 c.gui.appendText("It's your move!!!!!! Time to d-d-d-d-d-duel!", Color.CYAN);
                             }
                         } else if (infotype.equals("discard")) {
+                            //TODO: Keep track of discard pile on client side
                             if(tid==c.id){
                                 c.field.clickies.remove(c.player.hand.get(Integer.valueOf(temp1[2])));
                                 c.gui.appendText("You discarded:" + c.player.hand.remove(Integer.valueOf(temp1[2]).intValue()).name);
@@ -456,6 +457,7 @@ class ClientThread extends Thread {
                                 c.gui.appendText("Player "+tid+" discarded:" + (temp1.length==4?temp1[3]:"card #"+temp1[2]));
                             }
                         } else if (infotype.equals("fieldDiscard")) {
+                            //TODO: Keep track of discard pile on client side
                             if(tid==c.id){
                                 c.gui.appendText("REMOVING:" + Integer.valueOf(temp1[2]).intValue()+ " "+c.player.field.get(Integer.valueOf(temp1[2]).intValue())+" "+c.player.field.size());
                                 c.field.clickies.remove(c.player.field.get(Integer.valueOf(temp1[2]).intValue()));
@@ -469,6 +471,7 @@ class ClientThread extends Thread {
                             }
                         }
                         else if (infotype.equals("CardPlayed")) {
+                            //TODO: Keep track of discard pile on client side
                             String s = "";
                             s = "Player " + temp1[1] + " played " + temp1[2] + (temp1.length == 4 ? " at player " + temp1[3] : "");
                             c.gui.appendText(s);
