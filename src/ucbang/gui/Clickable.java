@@ -24,16 +24,19 @@ public abstract class Clickable implements Comparable<Clickable>{
 	protected double theta=0;
 	protected Clickable partner;
 	protected BufferedImage img;
-	protected final BufferedImage sourceImg;
+	//protected final BufferedImage sourceImg;
+	protected boolean draggable = true;
 	/**
 	 * @param r
 	 */
 	public Clickable(Polygon p, BufferedImage srcimg){
 		bounds = p;
 		rect = p.getBounds();
-		img = new BufferedImage(srcimg.getWidth(), srcimg.getHeight(), srcimg.getType());
-		img.getRaster().setRect(srcimg.getData());
-		sourceImg = img;
+		if(srcimg!=null){
+			img = new BufferedImage(srcimg.getWidth(), srcimg.getHeight(), srcimg.getType());
+			img.getRaster().setRect(srcimg.getData());
+			//sourceImg = img;
+		}
 	}
 	public int compareTo(Clickable o) {
 		if(o.rect.getLocation().y!=rect.getLocation().y)

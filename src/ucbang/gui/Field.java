@@ -20,7 +20,7 @@ import ucbang.network.Client;
 
 public class Field implements MouseListener, MouseMotionListener{
 	Client client;
-	public BSHashMap<Card, Clickable> clickies = new BSHashMap<Card, Clickable>();
+	public BSHashMap<Rectangle, Clickable> clickies = new BSHashMap<Rectangle, Clickable>();
 	CardDisplayer cd;
 	Point pointOnCard;
 	Clickable movingCard;
@@ -33,7 +33,7 @@ public class Field implements MouseListener, MouseMotionListener{
 	int tooltipWidth = 0;
 	int tooltipHeight = 0;
 	Point hoverpoint;
-
+	Button skip;
 	public Field(CardDisplayer cd, Client c) {
 		this.cd=cd;
 		client = c;
@@ -49,7 +49,7 @@ public class Field implements MouseListener, MouseMotionListener{
 	 * @param field Whether the card is in the field or not
 	 */
 	public void add(Card card, int x, int y, int player, boolean field){
-		clickies.put(card, new CardSpace(card, rectToPoly(x,y,60,90), player, field, cd.getImage(card.name), null));
+		clickies.put(new Rectangle(x,y,60,90), new CardSpace(card, rectToPoly(x,y,60,90), player, field, cd.getImage(card.name), null));
 	}
 	/**
 	 * Removes the last card in the hand of a player, used when
@@ -74,7 +74,7 @@ public class Field implements MouseListener, MouseMotionListener{
 		if(card.type==1){//this a character card
 			int x=350;
 			int y=200;
-			clickies.put(card, new CardSpace(card, rectToPoly(x, y,60,90), player, false, cd.getImage(card.name), null));
+			clickies.put(new Rectangle(x, y, 60, 90), new CardSpace(card, rectToPoly(x, y,60,90), player, false, cd.getImage(card.name), null));
 		}else{
 			HandSpace hs = handPlacer.get(player);
 			int fieldoffset = (field?100:0);
@@ -84,7 +84,7 @@ public class Field implements MouseListener, MouseMotionListener{
 			int x=(int) hs.rect.x+hs.rect.width-xoffset;
 			int y=(int) hs.rect.y+yoffset;
 			CardSpace cs = new CardSpace(card, rectToPoly(x,y, 60,90), player, field, cd.getImage(card.name), hs);
-			clickies.put(card, cs);
+			clickies.put(cs.rect, cs);
 			hs.addCard(cs);
 			if(hs.autoSort) hs.sortHandSpace();
 		}
@@ -144,11 +144,12 @@ public class Field implements MouseListener, MouseMotionListener{
 				else{
 					crd.paint(graphics);//TODO:DEFAULT PAINTER
 				}
+			}else if(temp instanceof Button){
+				temp.paint(graphics);
 			}else if(temp instanceof HandSpace){
-				HandSpace hs = (HandSpace)temp;
-				graphics.draw3DRect(hs.rect.x, hs.rect.y, hs.rect.width, hs.rect.height, true);
+				
 			}else{
-				System.out.println("WTF");
+				System.out.println("Something strange in my clickies");
 			}
 		}
 
@@ -266,11 +267,13 @@ public class Field implements MouseListener, MouseMotionListener{
 				hps.setPartner(csp);
 				csp.setPartner(hps);
 				//hps.rotate(1);
-				clickies.put(hp, hps);
-				clickies.put(chara, csp);
+				clickies.put(hps.rect, hps);
+				clickies.put(hps.rect, csp);
 				hs.setCharHP(csp, hps);
 			}
 		}
+		skip = new Button(rectToPoly(752,564,48,36), null, "SKIP");
+		clickies.put(skip.rect, skip);
 	}
 	public void clear(){
 		pointOnCard = null;
@@ -280,14 +283,14 @@ public class Field implements MouseListener, MouseMotionListener{
 
 	public void mouseClicked(MouseEvent e) {
 		Point ep=e.getPoint();
-
-		if(new Rectangle(760, 560, 40, 40).contains(ep)){
-			if(client.prompting&&!client.forceDecision){
-				client.outMsgs.add("Prompt:-1");
-				client.prompting = false;
-			}
-			return;
-		}
+		//TODO: Remove ugly proxy skip button
+//		if(new Rectangle(760, 560, 40, 40).contains(ep)){
+//			if(client.prompting&&!client.forceDecision){
+//				client.outMsgs.add("Prompt:-1");
+//				client.prompting = false;
+//			}
+//			return;
+//		}
 		Clickable cl = binarySearchCardAtPoint(ep);
 		if (cl instanceof CardSpace) {
 			CardSpace cs = (CardSpace) cl;
@@ -345,6 +348,16 @@ public class Field implements MouseListener, MouseMotionListener{
 					System.out.println("i was prompting, but a bad card was given");
 				}
 			}
+		}else if(cl instanceof Button){
+			if(cl == skip){
+				if(client.prompting&&!client.forceDecision){
+				client.outMsgs.add("Prompt:-1");
+				client.prompting = false;
+				}
+			}else
+				System.out.println("Unknown button pressed");
+		}else if(cl instanceof HandSpace){
+			
 		}
 		else if(cl == null){
 			for(HandSpace cs : handPlacer)
@@ -370,7 +383,10 @@ public class Field implements MouseListener, MouseMotionListener{
 				}
 		}
 		if(movingCard!=null){
-			pointOnCard = new Point(e.getPoint().x-movingCard.rect.x, e.getPoint().y-movingCard.rect.y);
+			if(!movingCard.draggable)
+				movingCard = null;
+			else
+				pointOnCard = new Point(e.getPoint().x-movingCard.rect.x, e.getPoint().y-movingCard.rect.y);
 			//System.out.println("picked up card");
 		}
 	}

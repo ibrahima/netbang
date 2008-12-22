@@ -335,10 +335,10 @@ ActionListener{
 			graphics.setColor(new Color(175, 150, 50));
 			graphics.fillRect(0, 0, width, height);
 			//the ugly proxy skip turn button: this is coded for in Field.java
-			graphics.setColor(new Color(255, 255, 255));
-			graphics.fillRect(760, 560, 40, 40);
-			graphics.setColor(new Color(0, 0, 0));
-			graphics.drawString("Skip", 770, 580);
+//			graphics.setColor(new Color(255, 255, 255));
+//			graphics.fillRect(760, 560, 40, 40);
+//			graphics.setColor(new Color(0, 0, 0));
+//			graphics.drawString("Skip", 770, 580);
 
 			if (chatting) {
 				graphics.setColor(new Color(185, 160, 60));
