@@ -502,7 +502,7 @@ public class Bang {
                     }
                     for(Card card :p2.field){
                         if(card.effect == Card.play.JAIL.ordinal()) //TODO: this sort of check should be for all field cards
-                            return false; //TODO: techinically, this should be allowed, and the old jail should be discarded
+                            return false; //TODO: technically, this should be allowed, and the old jail should be discarded
                     }
                 } else if (c.effect == Card.play.HEAL.ordinal()) {
                     if (c.target == 1 && 

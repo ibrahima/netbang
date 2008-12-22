@@ -22,7 +22,6 @@ public class Updater extends JFrame{
 		try {
 			Process foo = Runtime.getRuntime().exec("java -jar bang.jar");
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		System.exit(0);

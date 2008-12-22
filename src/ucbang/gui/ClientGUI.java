@@ -155,11 +155,9 @@ ActionListener{
 	 * @param c
 	 */
 	public void appendText(String str, Color c) {
-		// TODO: actually do something with color
 		textIndex++;
 		text.add(str);
 		textColor.add(c);
-		//paint(getGraphics()); HJKLM
 		logs.append(str+"\n");
 		logscroll.getVerticalScrollBar().setValue(logscroll.getVerticalScrollBar().getMaximum());
 		logviewer.repaint();
@@ -199,8 +197,8 @@ ActionListener{
 
 
 	/**
-	 * Asks the player to choose a card. This is used for many instances. TODO:
-	 * replace al with ID of the player.
+	 * Asks the player to choose a card. This is used for many instances.
+	 * TODO: replace al with ID of the player.
 	 * 
 	 * @param al
 	 * @return
@@ -221,12 +219,10 @@ ActionListener{
 	}
 
 	public void keyPressed(KeyEvent e) {
-		// TODO Auto-generated method stub
 
 	}
 
 	public void keyReleased(KeyEvent e) {
-		// TODO Auto-generated method stub
 
 	}
 
@@ -294,14 +290,10 @@ ActionListener{
 
 
 	public void componentHidden(ComponentEvent e) {
-		// TODO Auto-generated method stub
-
 	}
 
 
 	public void componentMoved(ComponentEvent e) {
-		// TODO Auto-generated method stub
-
 	}
 
 	public void componentResized(ComponentEvent e){
@@ -321,12 +313,8 @@ ActionListener{
 
 
 	public void componentShown(ComponentEvent e) {
-		// TODO Auto-generated method stub
-
 	}
 
-
-	//@Override
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource().equals(quit)){
 			client.running = false;

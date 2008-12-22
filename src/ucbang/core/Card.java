@@ -337,7 +337,7 @@ public class Card {
 				range = 1;
 				effect = play.DRAW.ordinal();
                                 description="After staying on the field for one turn, can be discarded to draw two cards.";
-				break; //TODO: fix general store
+				break;
 
 			case JAIL:
 				type = 2; //TODO: make special case for jail
@@ -478,16 +478,8 @@ public class Card {
 				break;
 
 			default:
-				break; // special = 1; type = 2; effect = play.DAMAGE.ordinal();
-						// break; //all cards left untreated are treated as
-						// bangs
+				break;
 			}
-                        /*if(type==3||type==5){ //TODO: remove this debug feature
-                            setLocation((int)(2*Math.random()));
-                        }
-                        else{
-                            setLocation((int)(2*Math.random())==0?0:2);
-                        }*/
 		}
 	}
 

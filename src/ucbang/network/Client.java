@@ -42,7 +42,7 @@ public class Client extends Thread {
     public int nextPrompt = -2; //this value will be returned the next time the client is prompted to do something
     boolean guiEnabled;
     public ArrayList<Card> specialHand = new ArrayList<Card>(); //for general store or when players die and their hands are revealed
-
+    public ArrayList<Card> discardpile = new ArrayList<Card>(); //only used for drawing the discard pile, for aesthetic effect
     /**
      * Constructs a client to the Bang server on the specified host.
      * <p>Note: guiEnabled is intended for bots and the like. As such there is no
@@ -449,25 +449,33 @@ class ClientThread extends Thread {
                             //TODO: Keep track of discard pile on client side
                             if(tid==c.id){
                                 c.field.clickies.remove(c.player.hand.get(Integer.valueOf(temp1[2])));
-                                c.gui.appendText("You discarded:" + c.player.hand.remove(Integer.valueOf(temp1[2]).intValue()).name);
+                                String cname = c.player.hand.remove(Integer.valueOf(temp1[2]).intValue()).name;
+                                c.gui.appendText("You discarded:" + cname);
+                                c.discardpile.add(new Card(Deck.CardName.valueOf(cname)));
                             }
                             else{
                                 c.field.clickies.remove(c.players.get(tid).hand.get(Integer.valueOf(temp1[2])));
                                 c.players.get(tid).hand.remove(Integer.valueOf(temp1[2]).intValue());
                                 c.gui.appendText("Player "+tid+" discarded:" + (temp1.length==4?temp1[3]:"card #"+temp1[2]));
+                                if(temp1.length==4){
+                                    c.discardpile.add(new Card(Deck.CardName.valueOf(temp1[3])));
+                                }
                             }
                         } else if (infotype.equals("fieldDiscard")) {
                             //TODO: Keep track of discard pile on client side
                             if(tid==c.id){
                                 c.gui.appendText("REMOVING:" + Integer.valueOf(temp1[2]).intValue()+ " "+c.player.field.get(Integer.valueOf(temp1[2]).intValue())+" "+c.player.field.size());
                                 c.field.clickies.remove(c.player.field.get(Integer.valueOf(temp1[2]).intValue()));
-                                c.gui.appendText("You discarded:" + c.player.field.remove(Integer.valueOf(temp1[2]).intValue()).name);
+                                String cname =c.player.field.remove(Integer.valueOf(temp1[2]).intValue()).name;
+                                c.gui.appendText("You discarded:" + cname);
+                                c.discardpile.add(new Card(Deck.CardName.valueOf(cname)));
                             }
                             else{
                                 System.out.println("ASDFASDFASDFASDFASDF"+temp[1]);
                                 c.field.clickies.remove(c.players.get(tid).field.get(Integer.valueOf(temp1[2])));
                                 c.players.get(tid).field.remove(Integer.valueOf(temp1[2]).intValue());
                                 c.gui.appendText("Player "+tid+" discarded:" + temp1[3]);
+                                c.discardpile.add(new Card(Deck.CardName.valueOf(temp1[3])));
                             }
                         }
                         else if (infotype.equals("CardPlayed")) {
@@ -475,6 +483,7 @@ class ClientThread extends Thread {
                             String s = "";
                             s = "Player " + temp1[1] + " played " + temp1[2] + (temp1.length == 4 ? " at player " + temp1[3] : "");
                             c.gui.appendText(s);
+                            c.discardpile.add(new Card(Deck.CardName.valueOf(temp1[2])));
                             //if(tid!=c.id && (temp1.length==4?!temp1[3].equals("no miss"):true)) //client would have already removed it
                                 //c.field.removeLast(tid);
                         } else if (infotype.equals("id")) { //TODO: remove safely?
@@ -515,7 +524,6 @@ class ClientThread extends Thread {
         try {
             this.finalize();
         } catch (Throwable e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
         System.out.println("Server connection closed");

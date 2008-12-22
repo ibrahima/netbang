@@ -96,7 +96,6 @@ public class CardDisplayer {
 			cards.put("TEQUILA_JOE", ImageIO.read(ClassLoader.getSystemResource("images/char/dodge/tequilajoe.jpg")));
 			cards.put("VERA_CUSTER", ImageIO.read(ClassLoader.getSystemResource("images/char/dodge/veracuster.jpg")));
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
