@@ -59,7 +59,7 @@ public class Field implements MouseListener, MouseMotionListener{
 	 * @param field Whether the card is in the field or not
 	 */
 	public void add(Card card, int x, int y, int player, boolean field){
-		clickies.put(card, new CardSpace(card, rectToPoly(x,y,60,90), player, field, cd.getImage(card.name)));
+		clickies.put(card, new CardSpace(card, rectToPoly(x,y,60,90), player, field, cd.getImage(card.name), null));
 	}
 	/**
 	 * Removes the last card in the hand of a player, used when
@@ -84,7 +84,7 @@ public class Field implements MouseListener, MouseMotionListener{
 		if(card.type==1){//this a character card
 			int x=350;
 			int y=200;
-			clickies.put(card, new CardSpace(card, rectToPoly(x, y,60,90), player, false, cd.getImage(card.name)));
+			clickies.put(card, new CardSpace(card, rectToPoly(x, y,60,90), player, false, cd.getImage(card.name), null));
 		}else{
 			HandSpace hs = handPlacer.get(player);
 			int fieldoffset = (field?100:0);
@@ -93,10 +93,10 @@ public class Field implements MouseListener, MouseMotionListener{
 			int yoffset = (int)(handoffset * Math.cos(hs.theta))+(int)(fieldoffset*Math.cos(hs.theta));
 			int x=(int) hs.rect.x+hs.rect.width-xoffset;
 			int y=(int) hs.rect.y+yoffset;
-			CardSpace cs = new CardSpace(card, rectToPoly(x,y, 60,90), player, field, cd.getImage(card.name));
+			CardSpace cs = new CardSpace(card, rectToPoly(x,y, 60,90), player, field, cd.getImage(card.name), hs);
 			clickies.put(card, cs);
 			hs.addCard(cs);
-			if(hs.autoSort) sortHandSpace(hs);
+			if(hs.autoSort) hs.sortHandSpace();
 		}
 	}
 
@@ -298,11 +298,11 @@ public class Field implements MouseListener, MouseMotionListener{
 			if(chara!=null){
 				int x=(int) hs.rect.x-60;
 				int y=(int) hs.rect.y;
-				CardSpace csp = new CardSpace(chara,rectToPoly(x,y-60,60,90), player, false, cd.getImage(chara.name));
+				CardSpace csp = new CardSpace(chara,rectToPoly(x,y-60,60,90), player, false, cd.getImage(chara.name), hs);
 				//generate HP card
 				Card hp = new Card(Deck.CardName.BULLETBACK);
 				CardSpace hps = new CardSpace(hp, rectToPoly(x+
-						10 * client.players.get(player).maxLifePoints,y-60,60,90),player, false, cd.getImage(hp.name));
+						10 * client.players.get(player).maxLifePoints,y-60,60,90),player, false, cd.getImage(hp.name), hs);
 				hps.rotate(Math.PI/2);
 				hps.move(x + 10 * client.players.get(player).maxLifePoints, y - 60);
 				hps.setPartner(csp);
@@ -395,7 +395,7 @@ public class Field implements MouseListener, MouseMotionListener{
 				}
 			if(cl!=null){
 				if(e.getButton()==MouseEvent.BUTTON1)
-					sortHandSpace((HandSpace)cl);
+					((HandSpace)cl).sortHandSpace();
 				if(e.getButton()==MouseEvent.BUTTON3)
 					((HandSpace)cl).autoSort = !((HandSpace)cl).autoSort;
 			}
@@ -437,362 +437,6 @@ public class Field implements MouseListener, MouseMotionListener{
 		}
 	}
 
-	public void sortHandSpace(HandSpace hs){
-		if(hs==null){
-			System.out.println("Handspace is null and should not be. Running away very, very scared.");
-			return;
-		}
-
-		client.gui.appendText("Sorting...");
-		int player = hs.playerid;
-		for(int n = 0; n<hs.cards.size(); n++){
-			double handoffset = 30*n;
-			int xoffset = (int)(handoffset * Math.sin(hs.theta));
-			int yoffset = (int)(handoffset * Math.cos(hs.theta));
-			int x=(int) hs.rect.x+hs.rect.width-xoffset;
-			int y=(int) hs.rect.y+yoffset;
-			hs.cards.get(n).rect.x = x;
-			hs.cards.get(n).rect.y = y;
-		}
-		for(int n = 0; n<hs.fieldCards.size(); n++){
-			int fieldoffset = 100;
-			double handoffset = 30*n;
-			int xoffset = (int)(handoffset * Math.sin(hs.theta))+(int)(fieldoffset*Math.sin(hs.theta));
-			int yoffset = (int)(handoffset * Math.cos(hs.theta))+(int)(fieldoffset*Math.cos(hs.theta));
-			int x=(int) hs.rect.x+hs.rect.width-xoffset;
-			int y=(int) hs.rect.y+yoffset;
-			hs.fieldCards.get(n).rect.x = x;
-			hs.fieldCards.get(n).rect.y = y;
-		}
-	}
-
-	public class BSHashMap<K,V> extends HashMap<K,V>{
-		ArrayList<V> occupied = new ArrayList<V>();
-
-		public V put(K key, V value){
-			occupied.add(value);
-			return super.put(key, value);
-		}
-
-		public ArrayList<V> values(){
-			ArrayList<V> al = new ArrayList<V>();
-			Collections.sort(occupied, new Comparator(){
-				public int compare(Object o1, Object o2) {
-					return ((Comparable<Object>)o1).compareTo(o2);
-				}
-			});
-			al.addAll(occupied);
-			return al;
-		}
-		public void clear(){
-			occupied.clear();
-			super.clear();
-		}
-		public V remove(Object o){
-			if(o instanceof Card){
-				CardSpace cs =(CardSpace)get(o);
-				if(cs==null){
-					//client.gui.appendText("WTFWTFWTF");
-				}
-				if(cs.hs != null){
-					if(!cs.field)
-						cs.hs.cards.remove(cs);
-					else
-						cs.hs.fieldCards.remove(cs);
-					if(cs.hs.autoSort){
-						sortHandSpace(cs.hs);
-					}
-				}
-				//System.out.println(cs.card.name+" "+cs.playerid+" "+(cs.hs==null)+" "+handPlacer.get(cs.playerid).fieldCards.contains(cs));
-			}                        
-			occupied.remove(get(o));
-			V oo = super.remove(o);
-			return oo;
-		}
-	}
-
-	/*
-	 * Contains a card and a rectangle
-	 */
-	private class CardSpace extends Clickable{
-		public Card card;
-		public boolean field;
-		public boolean animating = false;
-		HandSpace hs;
-		Color inner;
-		Color outer;
-		/**
-		 * @param c The card this CardSpace describes
-		 * @param r The bounds of the card
-		 * @param player The player who owns the card
-		 * @param f Whether the card is on the field
-		 * @param partner The parent container of the card
-		 */
-		public CardSpace(Card c, Polygon p, int player, boolean f, BufferedImage img){
-			super(p, img);
-			card = c;
-			playerid = player;
-			switch(c.location){
-			case 0:
-				inner=Color.GRAY;
-				break;
-			case 1:
-				if(c.type==5)
-					inner=new Color(100,100,200);
-				else{
-					inner = ((c.name!="JAIL"||c.name!="DYNAMITE")?inner=new Color(100,200,100):new Color(100,100,200));
-				}
-				break;
-			default:
-				inner=new Color(200,100,100);
-			}
-			switch(playerid){
-			case 0: outer = Color.RED; break;
-			case 1: outer = Color.BLUE; break;
-			case 2: outer = Color.CYAN; break;
-			case 3: outer = Color.MAGENTA; break;
-			case 4: outer = Color.YELLOW; break;
-			case 5: outer = Color.ORANGE; break;
-			case 6: outer = Color.GREEN; break;
-			case 7: outer = Color.LIGHT_GRAY; break;
-			case 8: outer = Color.WHITE; break;
-			case 9: outer = Color.PINK; break;
-			default: outer = Color.BLACK; break;
-			}
-			field = f;
-			if(!handPlacer.isEmpty()&& player != -1)
-				hs = handPlacer.get(playerid);
-		}
-		public void paint(Graphics2D g){
-			Color temp = g.getColor();
-			//g.fillRoundRect(rect.x, rect.y, rect.width, rect.height, 7, 7);
-			//g.setColor(Color.BLACK);
-			//g.fillRoundRect(rect.x + 1, rect.y + 1, rect.width-2, rect.height-2, 6, 6);
-			g.setColor(inner);
-			g.fillPolygon(bounds);
-			g.setColor(outer);
-			g.drawPolygon(bounds);
-			if(theta!=0.0){
-				AffineTransform tempy = g.getTransform();
-				g.translate(origrect.getCenterX(), origrect.getCenterY());;
-				at = new AffineTransform();
-				at.setToRotation(theta);
-				at.translate(-30, -45);
-				g.transform(at);
-				g.drawImage(img, 2, 3, null);
-				g.setTransform(tempy);
-			}else{
-				g.drawImage(img, origrect.x+2, origrect.y+3, null);
-			}
-			g.setColor(temp);
-
-		}
-	}
-
-	public class HandSpace extends Clickable{
-		public ArrayList<CardSpace> cards = new ArrayList<CardSpace>();
-		public ArrayList<CardSpace> fieldCards = new ArrayList<CardSpace>();
-		CardSpace character, hp;
-		boolean autoSort = true;
-		double theta;
-		/**
-		 * @param r
-		 * @param player
-		 * @param theta
-		 */
-		public HandSpace(Polygon p, int player, double theta){
-			super(p, new BufferedImage(10,10, BufferedImage.TYPE_BYTE_BINARY));//TODO: Find some suitable image for a handplacer
-			playerid = player;
-			this.theta = theta;
-		}
-		/**
-		 * @param character
-		 * @param hp
-		 */
-		public void setCharHP(CardSpace character, CardSpace hp){
-			this.character = character;
-			this.hp = hp;
-		}
-		/**
-		 * @param card
-		 */
-		public void addCard(CardSpace card){
-			if(!card.field)
-				cards.add(card);
-			else
-				fieldCards.add(card);
-		}
-		/**
-		 * @return
-		 */
-		public CardSpace removeLast(){
-			return cards.remove(cards.size()-1);
-		}
-		/* (non-Javadoc)
-		 * @see ucbang.gui.Field.Clickable#move(int, int)
-		 */
-		public void move(int x, int y){
-			int dx = x-rect.x;
-			int dy = y-rect.y;
-			super.move(x, y);
-			Iterator<CardSpace> iter = cards.iterator();
-			while(iter.hasNext()){
-				iter.next().translate(dx, dy);
-			}
-			//add a special boolean here                        
-			iter = fieldCards.iterator();
-			while(iter.hasNext()){
-				iter.next().translate(dx, dy);
-			}
-
-			if(character!=null)character.translate(dx, dy);
-			if(hp!=null)hp.translate(dx, dy);
-		}
-		/* (non-Javadoc)
-		 * @see ucbang.gui.Field.Clickable#translate(int, int)
-		 */
-		public void translate(int dx, int dy){
-			super.translate(dx, dy);
-			Iterator<CardSpace> iter = cards.iterator();
-			while(iter.hasNext()){
-				iter.next().translate(dx, dy);
-			}
-			//add a special boolean here                        
-			iter = fieldCards.iterator();
-			while(iter.hasNext()){
-				iter.next().translate(dx, dy);
-			}
-			if(character!=null)character.translate(dx, dy);
-			if(hp!=null)hp.translate(dx, dy);
-		}
-	}
-	/**
-	 * @author Ibrahim
-	 *
-	 */
-	private abstract class Clickable implements Comparable<Clickable>{
-		/**
-		 * @deprecated Rect in this form needs to go, and should be replaced by
-		 * the functionality that origrect provides, and then origrect should be
-		 * renamed to rect. Rigamarole.
-		 */
-		@Deprecated public Rectangle rect;
-		public Rectangle origrect;
-		public Polygon bounds;
-		//public int location; //position of card on field or in hand
-		public int playerid;
-		protected AffineTransform at;
-		protected double theta=0;
-		protected Clickable partner;
-		protected BufferedImage img;
-		protected final BufferedImage sourceImg;
-		/**
-		 * @param r
-		 */
-		public Clickable(Polygon p, BufferedImage srcimg){
-			bounds = p;
-			rect = p.getBounds();
-			origrect = rect;
-			img = new BufferedImage(srcimg.getWidth(), srcimg.getHeight(), srcimg.getType());
-			img.getRaster().setRect(srcimg.getData());
-			sourceImg = img;
-		}
-		public int compareTo(Clickable o) {
-			if(o.rect.getLocation().y!=rect.getLocation().y)
-				return ((Integer)rect.getLocation().y).compareTo(o.rect.getLocation().y);
-			else
-				return ((Integer)rect.getLocation().x).compareTo(o.rect.getLocation().x);
-		}
-		public void paint(Graphics2D g){
-			if(img!=null)
-				g.drawImage(img, rect.x, rect.y, null);
-		}
-		/**
-		 * Moves the Clickable to the specified location
-		 * @param x
-		 * @param y
-		 */
-		public void move(int x, int y){
-			int dx = x-rect.x;
-			int dy = y-rect.y;
-			if(at!=null)at.translate(origrect.x-x, origrect.y-y);
-			origrect.translate(dx, dy);
-			rect.setLocation(x, y);
-			bounds.translate(dx, dy);
-			if(partner!=null){
-				partner.translate(dx, dy);
-			}
-		}
-		
-		/**
-		 * @param dx
-		 * @param dy
-		 */
-		public void translate(int dx, int dy){
-			origrect.translate(dx, dy);
-			//rect.translate(dx, dy);
-			bounds.translate(dx, dy);
-		}
-		/**
-		 * Sets the Clickable's partner.
-		 * <p>If a Clickable has a partner defined, moving it will also
-		 * translate the partner so that they move together.</p>
-		 * @param partner the other Clickable to be set as the partner
-		 */
-		public void setPartner(Clickable partner){
-			this.partner=partner;
-		}
-
-		private Point2D.Double getPolygonCenter(Polygon poly){
-			// R + r = height
-			Rectangle2D r2 = poly.getBounds2D();
-			double cx = r2.getX() + r2.getWidth()/2;
-			double cy = r2.getY() + r2.getHeight()/2;
-			int sides = poly.xpoints.length;
-			double side = Point2D.distance(poly.xpoints[0], poly.ypoints[0],
-					poly.xpoints[1], poly.ypoints[1]);
-			double R = side / (2 * Math.sin(Math.PI/sides));
-			double r = R * Math.cos(Math.PI/sides);
-			double dy = (R - r)/2;
-			return new Point2D.Double(cx, cy + dy);
-		}
-		/**
-		 * Rotates the Clickable the specified angle, in radians.
-		 */
-		public void rotate(double angle){
-			double realrotation=(angle-theta)%(Math.PI*2);
-			if(realrotation>=0 && realrotation<Math.PI*2){
-				Polygon p = rectToPoly(origrect);
-
-				at = AffineTransform.getRotateInstance(angle/2,
-						origrect.getCenterX(), origrect.getCenterY());
-				theta=angle%(Math.PI*2);
-				Shape l = at.createTransformedShape(p);
-				PathIterator iter=l.getPathIterator(at);
-				int i=0;
-				float[] pts= new float[6];
-				p.reset();
-				while(!iter.isDone()){
-					int type = iter.currentSegment(pts);
-					switch(type){
-					case PathIterator.SEG_MOVETO :
-						//System.out.println("SEG_MOVETO");
-						p.addPoint((int)pts[0],(int)pts[1]);
-						break;
-					case PathIterator.SEG_LINETO :
-						//System.out.println("SEG_LINETO");
-						p.addPoint((int)pts[0],(int)pts[1]);
-						break;
-					}
-					i++;
-					iter.next();
-				}
-				//rect = p.getBounds();
-				bounds = p;
-			}
-		}
-	}
-
 	public void mouseEntered(MouseEvent e) {}
 	public void mouseExited(MouseEvent e) {}
 	public void mouseMoved(MouseEvent e) {
@@ -825,12 +469,7 @@ public class Field implements MouseListener, MouseMotionListener{
 		CardSpace hpc = handPlacer.get(playerid).hp;
 		hpc.translate(-10*lifePoints, 0);
 	}
-	public Polygon rectToPoly(Rectangle r){
-		int[] xs = {r.x, r.x, r.x+r.width, r.x+r.width};
-		int[] ys = {r.y, r.y+r.height, r.y+r.height, r.y};
-		Polygon temp = new Polygon(xs, ys, 4);
-		return temp;
-	}
+
 	public Polygon rectToPoly(int x, int y, int width, int height){
 		int[] xs = {x, x, x+width, x+width};
 		int[] ys = {y, y+height, y+height, y};
