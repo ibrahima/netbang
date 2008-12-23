@@ -34,6 +34,7 @@ public class Field implements MouseListener, MouseMotionListener{
 	int tooltipHeight = 0;
 	Point hoverpoint;
 	Button skip;
+	CardSpace deckcard;
 	public Field(CardDisplayer cd, Client c) {
 		this.cd=cd;
 		client = c;
@@ -116,18 +117,7 @@ public class Field implements MouseListener, MouseMotionListener{
 		}
 	}
 	public void paint(Graphics2D graphics){
-		for(HandSpace hs : handPlacer){
-			if(hs.autoSort)
-				graphics.fill(hs.rect);
-			else
-				graphics.draw(hs.rect);
-		}
-		//draw HP cards first
-		/*Iterator<CardSpace> it = hpcards.iterator();
-		while(it.hasNext()){
-			CardSpace hp = it.next();
-			cd.paint("BULLETBACK", graphics, hp.rect.x, hp.rect.y, hp.rect.width, hp.rect.height, Color.BLUE, Color.GRAY);
-		}*/
+
 		Iterator<Clickable> iter = clickies.values().iterator();
 		ArrayList<CardSpace> Char = new ArrayList<CardSpace>();
 		ArrayList<CardSpace> Bullet = new ArrayList<CardSpace>();
@@ -147,7 +137,7 @@ public class Field implements MouseListener, MouseMotionListener{
 			}else if(temp instanceof Button){
 				temp.paint(graphics);
 			}else if(temp instanceof HandSpace){
-				
+				temp.paint(graphics);
 			}else{
 				System.out.println("Something strange in my clickies");
 			}
@@ -159,7 +149,6 @@ public class Field implements MouseListener, MouseMotionListener{
 		for(CardSpace crd:Char){
 			crd.paint(graphics);
 		}
-
 		if(description==null&&System.currentTimeMillis()-lastMouseMoved>1000){
 			//create description
 			StringBuilder temp = new StringBuilder();
@@ -246,6 +235,7 @@ public class Field implements MouseListener, MouseMotionListener{
 			int hsy = 280-(int)(220*Math.sin(theta));
 			hs = new HandSpace(rectToPoly(hsx, hsy,10,10), player, theta);
 			handPlacer.add(hs);
+			clickies.put(hs.rect, hs);
 			Card chara=null;
 			if(client.players.get(player).character>=0){
 				System.out.println(player+":"+Deck.Characters.values()[client.players.get(player).character]);
@@ -274,6 +264,9 @@ public class Field implements MouseListener, MouseMotionListener{
 		}
 		skip = new Button(rectToPoly(752,564,48,36), null, "SKIP");
 		clickies.put(skip.rect, skip);
+		deckcard = new CardSpace( new Card(Deck.CardName.BACK), rectToPoly(370, 255, 60, 90), -1, false, cd.getImage("BACK"), null);
+		deckcard.draggable = false;
+		clickies.put(deckcard.rect, deckcard);
 	}
 	public void clear(){
 		pointOnCard = null;
@@ -357,7 +350,7 @@ public class Field implements MouseListener, MouseMotionListener{
 			}else
 				System.out.println("Unknown button pressed");
 		}else if(cl instanceof HandSpace){
-			
+			System.out.println("Handspace clicked!");
 		}
 		else if(cl == null){
 			for(HandSpace cs : handPlacer)

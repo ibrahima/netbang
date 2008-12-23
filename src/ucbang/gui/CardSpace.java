@@ -20,10 +20,11 @@ public class CardSpace extends Clickable{
 	Color outer;
 	/**
 	 * @param c The card this CardSpace describes
-	 * @param r The bounds of the card
+	 * @param p The bounds of the card
 	 * @param player The player who owns the card
 	 * @param f Whether the card is on the field
-	 * @param partner The parent container of the card
+	 * @param img The image for the card
+	 * @param hand The parent container of the card
 	 */
 	public CardSpace(Card c, Polygon p, int player, boolean f, BufferedImage img, HandSpace hand){
 		super(p, img);

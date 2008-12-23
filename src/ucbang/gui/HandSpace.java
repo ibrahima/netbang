@@ -1,5 +1,6 @@
 package ucbang.gui;
 
+import java.awt.Graphics2D;
 import java.awt.Polygon;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
@@ -83,8 +84,6 @@ public class HandSpace extends Clickable{
 	}
 	
 	public void sortHandSpace(){
-
-		int player = playerid;
 		for(int n = 0; n<cards.size(); n++){
 			double handoffset = 30*n;
 			int xoffset = (int)(handoffset * Math.sin(theta));
@@ -104,5 +103,11 @@ public class HandSpace extends Clickable{
 			fieldCards.get(n).rect.x = x;
 			fieldCards.get(n).rect.y = y;
 		}
+	}
+	public void paint(Graphics2D g){
+		if(autoSort)
+			g.fill3DRect(rect.x, rect.y, rect.width, rect.height, true);
+		else
+			g.draw3DRect(rect.x, rect.y, rect.width, rect.height, true);
 	}
 }
