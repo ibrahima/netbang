@@ -14,7 +14,6 @@ import ucbang.core.Card;
 public class CardSpace extends Clickable{
 	public Card card;
 	public boolean field;
-	public boolean animating = false;
 	HandSpace hs;
 	Color inner;
 	Color outer;
@@ -61,6 +60,7 @@ public class CardSpace extends Clickable{
 		hs = hand;
 	}
 	public void paint(Graphics2D g){
+		if(animating) animate();
 		Color temp = g.getColor();
 		//g.fillRoundRect(rect.x, rect.y, rect.width, rect.height, 7, 7);
 		//g.setColor(Color.BLACK);

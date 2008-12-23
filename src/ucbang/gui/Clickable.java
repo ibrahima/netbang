@@ -21,11 +21,16 @@ public abstract class Clickable implements Comparable<Clickable>{
 	//public int location; //position of card on field or in hand
 	public int playerid;
 	protected AffineTransform at;
-	protected double theta=0;
+	protected double theta=0.0;
 	protected Clickable partner;
 	protected BufferedImage img;
 	//protected final BufferedImage sourceImg;
 	protected boolean draggable = true;
+	public boolean animating = false;
+	public enum Animations {ROTATETO, MOVETO, GROW, SHRINK};
+	protected Animations animation;
+	protected double rotateto=0.0;
+	protected Point2D moveto;
 	/**
 	 * @param r
 	 */
@@ -136,5 +141,31 @@ public abstract class Clickable implements Comparable<Clickable>{
 		int[] ys = {r.y, r.y+r.height, r.y+r.height, r.y};
 		Polygon temp = new Polygon(xs, ys, 4);
 		return temp;
+	}
+	public void animate(){
+		switch(animation){
+		case ROTATETO:
+			if(Math.abs(theta-rotateto)<Math.PI/64){
+				rotate(rotateto);
+				animating=false;
+				break;
+			}
+			if(theta>rotateto)
+				rotate(theta-Math.PI/64);
+			if(theta<rotateto)
+				rotate(theta+Math.PI/64);
+			break;
+		case MOVETO:
+			break;
+		case GROW:
+			break;
+		case SHRINK:
+			break;
+		}
+	}
+	public void rotateTo(double theta){
+		animation = Animations.ROTATETO;
+		animating = true;
+		rotateto = theta;
 	}
 }

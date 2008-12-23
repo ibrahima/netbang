@@ -171,7 +171,10 @@ public class Field implements MouseListener, MouseMotionListener{
 					tooltipWidth = textWidth(description, graphics);
 					tooltipHeight = textHeight(description, graphics);
 					if(describeWhere.x+tooltipWidth>client.gui.width){
-						describeWhere.x = client.gui.width - tooltipWidth - 5;
+						describeWhere.x = client.gui.width - tooltipWidth;
+					}
+					if(describeWhere.y+tooltipHeight>client.gui.height){
+						describeWhere.y = client.gui.height - tooltipHeight;
 					}
 				}
 			}
@@ -288,7 +291,7 @@ public class Field implements MouseListener, MouseMotionListener{
 		if (cl instanceof CardSpace) {
 			CardSpace cs = (CardSpace) cl;
 			if (cs != null && cs.card != null){
-				if (e.getButton() == MouseEvent.BUTTON3) cs.rotate(cs.theta+Math.PI/4);
+				if (e.getButton() == MouseEvent.BUTTON3) cs.rotateTo(cs.theta+Math.PI/4);
 				if(cs.playerid != -1){}
 				//client.gui.appendText(String.valueOf(client.players.get(cs.playerid).hand.indexOf(cs.card))+" "+(cs.hs!=null?String.valueOf(cs.hs.cards.indexOf(cs)):""));
 				else if(pick != null){}
