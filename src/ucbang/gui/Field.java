@@ -234,6 +234,12 @@ public class Field implements MouseListener, MouseMotionListener{
 		clear();
 		for(int player = 0; player<client.numPlayers; player++){
 			theta = -(player-client.id)*(2*Math.PI/client.numPlayers)-Math.PI/2;
+			while(theta<0){
+				theta+=Math.PI*2;
+			}
+			while(theta>Math.PI*2){
+				theta-=Math.PI*2;
+			}
 			int hsx = client.gui.width/2+(int)((client.gui.width-150)/2*Math.cos(theta));
 			int hsy = 280-(int)(220*Math.sin(theta));
 			hs = new HandSpace(rectToPoly(hsx, hsy,10,10), player, theta);
@@ -279,19 +285,11 @@ public class Field implements MouseListener, MouseMotionListener{
 
 	public void mouseClicked(MouseEvent e) {
 		Point ep=e.getPoint();
-		//TODO: Remove ugly proxy skip button
-//		if(new Rectangle(760, 560, 40, 40).contains(ep)){
-//			if(client.prompting&&!client.forceDecision){
-//				client.outMsgs.add("Prompt:-1");
-//				client.prompting = false;
-//			}
-//			return;
-//		}
+
 		Clickable cl = binarySearchCardAtPoint(ep);
 		if (cl instanceof CardSpace) {
 			CardSpace cs = (CardSpace) cl;
 			if (cs != null && cs.card != null){
-				if (e.getButton() == MouseEvent.BUTTON3) cs.rotateTo(cs.theta+Math.PI/4);
 				if(cs.playerid != -1){}
 				//client.gui.appendText(String.valueOf(client.players.get(cs.playerid).hand.indexOf(cs.card))+" "+(cs.hs!=null?String.valueOf(cs.hs.cards.indexOf(cs)):""));
 				else if(pick != null){}
@@ -300,7 +298,7 @@ public class Field implements MouseListener, MouseMotionListener{
 			else
 				return;
 			if (e.getButton() == MouseEvent.BUTTON3) {
-				//Put right click stuff here, or not
+				cs.rotateTo(cs.theta+Math.PI/4);
 			}else if (client.prompting){
 				if(pick!= null && pick.contains(cs.card)) {
 					if (cs.card.type == 1) {
@@ -443,5 +441,9 @@ public class Field implements MouseListener, MouseMotionListener{
 		int[] ys = {y, y+height, y+height, y};
 		Polygon temp = new Polygon(xs, ys, 4);
 		return temp;
+	}
+	public void rotateDeck(int player){
+		System.out.println(client.getPlayerName()+"Rotating deck to point towards "+handPlacer.get(player).theta);
+		deckcard.rotateTo(handPlacer.get(player).theta-Math.PI/2);
 	}
 }

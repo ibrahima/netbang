@@ -429,7 +429,7 @@ class ClientThread extends Thread {
                                 c.players.get(tid).field.add(card);
                                 c.field.add(card, tid, true);
                         } else if(infotype.equals("GeneralStore")){
-                            System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+                            System.out.println("General Store!!!!!");
                                 for(Card card: c.specialHand){
                                     c.field.clickies.remove(card);
                                 }
@@ -445,6 +445,7 @@ class ClientThread extends Thread {
                             if (c.turn % c.numPlayers == c.id) {
                                 c.gui.appendText("It's your move!!!!!! Time to d-d-d-d-d-duel!", Color.CYAN);
                             }
+                            c.field.rotateDeck(c.turn%c.numPlayers);
                         } else if (infotype.equals("discard")) {
                             //TODO: Keep track of discard pile on client side
                             if(tid==c.id){

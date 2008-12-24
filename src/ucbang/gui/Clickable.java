@@ -106,7 +106,9 @@ public abstract class Clickable implements Comparable<Clickable>{
 	 */
 	public void rotate(double angle){
 		double realrotation=(angle-theta)%(Math.PI*2);
-		if(realrotation>=0 && realrotation<Math.PI*2){
+		if(realrotation<0)realrotation+=Math.PI*2;
+		if(realrotation>Math.PI*2)realrotation-=Math.PI*2;
+		if(realrotation>0 && realrotation<(Math.PI*2)){
 			Polygon p = rectToPoly(rect);
 
 			at = AffineTransform.getRotateInstance(angle/2,
@@ -145,15 +147,15 @@ public abstract class Clickable implements Comparable<Clickable>{
 	public void animate(){
 		switch(animation){
 		case ROTATETO:
-			if(Math.abs(theta-rotateto)<Math.PI/64){
+			if(Math.abs(theta-rotateto)<=Math.PI/32){
 				rotate(rotateto);
 				animating=false;
 				break;
 			}
 			if(theta>rotateto)
-				rotate(theta-Math.PI/64);
+				rotate(theta-Math.PI/32);
 			if(theta<rotateto)
-				rotate(theta+Math.PI/64);
+				rotate(theta+Math.PI/32);
 			break;
 		case MOVETO:
 			break;
