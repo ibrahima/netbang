@@ -90,8 +90,10 @@ public class HandSpace extends Clickable{
 			int yoffset = (int)(handoffset * Math.cos(theta));
 			int x=(int) rect.x+rect.width-xoffset;
 			int y=(int) rect.y+yoffset;
-			cards.get(n).rect.x = x;
-			cards.get(n).rect.y = y;
+			CardSpace cs = cards.get(n);
+			if(cs.animating&&cs.animation==Animations.MOVETO)continue;
+			cs.rect.x = x;
+			cs.rect.y = y;
 		}
 		for(int n = 0; n<fieldCards.size(); n++){
 			int fieldoffset = 100;
@@ -100,8 +102,10 @@ public class HandSpace extends Clickable{
 			int yoffset = (int)(handoffset * Math.cos(theta))+(int)(fieldoffset*Math.cos(theta));
 			int x=(int) rect.x+rect.width-xoffset;
 			int y=(int) rect.y+yoffset;
-			fieldCards.get(n).rect.x = x;
-			fieldCards.get(n).rect.y = y;
+			CardSpace cs = fieldCards.get(n);
+			if(cs.animating&&cs.animation==Animations.MOVETO)continue;
+			cs.rect.x = x;
+			cs.rect.y = y;
 		}
 	}
 	public void paint(Graphics2D g){

@@ -88,7 +88,7 @@ public class Field implements MouseListener, MouseMotionListener{
 			clickies.put(cs.rect, cs);
 			cs.moveTo(x, y);
 			hs.addCard(cs);
-			//if(hs.autoSort) hs.sortHandSpace();
+			if(hs.autoSort) hs.sortHandSpace();
 		}
 	}
 
