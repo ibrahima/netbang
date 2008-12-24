@@ -1,6 +1,7 @@
 package ucbang.gui;
 
 import java.awt.Graphics2D;
+import java.awt.Point;
 import java.awt.Polygon;
 import java.awt.Rectangle;
 import java.awt.Shape;
@@ -30,7 +31,8 @@ public abstract class Clickable implements Comparable<Clickable>{
 	public enum Animations {ROTATETO, MOVETO, GROW, SHRINK};
 	protected Animations animation;
 	protected double rotateto=0.0;
-	protected Point2D moveto;
+	protected Point moveto;
+	protected int xspeed, yspeed;
 	/**
 	 * @param r
 	 */
@@ -149,7 +151,7 @@ public abstract class Clickable implements Comparable<Clickable>{
 		case ROTATETO:
 			if(Math.abs(theta-rotateto)<=Math.PI/32){
 				rotate(rotateto);
-				animating=false;
+				animating = false;
 				break;
 			}
 			if(theta>rotateto)
@@ -158,6 +160,12 @@ public abstract class Clickable implements Comparable<Clickable>{
 				rotate(theta+Math.PI/32);
 			break;
 		case MOVETO:
+			if(rect.y-moveto.y<yspeed){
+				this.move(moveto.x, moveto.y);
+				animating = false;
+				break;
+			}
+			this.translate(xspeed, yspeed);
 			break;
 		case GROW:
 			break;
@@ -169,5 +177,12 @@ public abstract class Clickable implements Comparable<Clickable>{
 		animation = Animations.ROTATETO;
 		animating = true;
 		rotateto = theta;
+	}
+	public void moveTo(int x, int y){
+		animation = Animations.MOVETO;
+		animating = true;
+		moveto =  new Point(x,y);
+		yspeed = (y-rect.y)/10;
+		xspeed = (x-rect.x)/10;
 	}
 }

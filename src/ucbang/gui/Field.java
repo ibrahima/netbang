@@ -84,10 +84,11 @@ public class Field implements MouseListener, MouseMotionListener{
 			int yoffset = (int)(handoffset * Math.cos(hs.theta))+(int)(fieldoffset*Math.cos(hs.theta));
 			int x=(int) hs.rect.x+hs.rect.width-xoffset;
 			int y=(int) hs.rect.y+yoffset;
-			CardSpace cs = new CardSpace(card, rectToPoly(x,y, 60,90), player, field, cd.getImage(card.name), hs);
+			CardSpace cs = new CardSpace(card, rectToPoly(deckcard.rect.x,deckcard.rect.y, 60,90), player, field, cd.getImage(card.name), hs);
 			clickies.put(cs.rect, cs);
+			cs.moveTo(x, y);
 			hs.addCard(cs);
-			if(hs.autoSort) hs.sortHandSpace();
+			//if(hs.autoSort) hs.sortHandSpace();
 		}
 	}
 
@@ -445,5 +446,8 @@ public class Field implements MouseListener, MouseMotionListener{
 	public void rotateDeck(int player){
 		System.out.println(client.getPlayerName()+"Rotating deck to point towards "+handPlacer.get(player).theta);
 		deckcard.rotateTo(handPlacer.get(player).theta-Math.PI/2);
+	}
+	public void drawCard(int player, Card card){
+		//TODO: Do a moveTo
 	}
 }

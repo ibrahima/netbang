@@ -113,13 +113,13 @@
 	<target name="copy_to_server" depends="find_revision,create_run_jar,create_updater_jar">
 		<input message="Please enter username:" addproperty="scpuser" defaultvalue="ibrahima" />
 		<input message="Please enter password:" addproperty="scppw" />
-		<scp file="bang.jar" trust="yes" remoteToFile="${scpuser}:${scppw}@pulsar.cs.berkeley.edu:~/public_html/bang/bangr${svn.revision}.jar">
+		<scp file="bang.jar" trust="yes" remoteToFile="${scpuser}:${scppw}@cory.eecs.berkeley.edu:~/public_html/bang/bangr${svn.revision}.jar">
 		</scp>
-		<scp file="updater.jar" trust="yes" remoteToFile="${scpuser}:${scppw}@pulsar.cs.berkeley.edu:~/public_html/bang/updater.jar">
+		<scp file="updater.jar" trust="yes" remoteToFile="${scpuser}:${scppw}@cory.eecs.berkeley.edu:~/public_html/bang/updater.jar">
 		</scp>
-		<sshexec host="pulsar.cs.berkeley.edu" username="${scpuser}" password="${scppw}" trust="yes" command="chmod 644 ~/public_html/bang/bangr${svn.revision}.jar" />
-		<sshexec host="pulsar.cs.berkeley.edu" username="${scpuser}" password="${scppw}" trust="yes" command="ln -s -f ~/public_html/bang/bangr${svn.revision}.jar ~/public_html/bang/bang.jar" />
-		<scp file="revision.txt" trust="yes" todir="${scpuser}:${scppw}@pulsar.cs.berkeley.edu:~/public_html/bang">
+		<sshexec host="cory.eecs.berkeley.edu" username="${scpuser}" password="${scppw}" trust="yes" command="chmod 644 ~/public_html/bang/bangr${svn.revision}.jar" />
+		<sshexec host="cory.eecs.berkeley.edu" username="${scpuser}" password="${scppw}" trust="yes" command="ln -s -f ~/public_html/bang/bangr${svn.revision}.jar ~/public_html/bang/bang.jar" />
+		<scp file="revision.txt" trust="yes" todir="${scpuser}:${scppw}@cory.eecs.berkeley.edu:~/public_html/bang">
 		</scp>
 	</target>
 
