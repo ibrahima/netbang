@@ -447,7 +447,4 @@ public class Field implements MouseListener, MouseMotionListener{
 		System.out.println(client.getPlayerName()+"Rotating deck to point towards "+handPlacer.get(player).theta);
 		deckcard.rotateTo(handPlacer.get(player).theta-Math.PI/2);
 	}
-	public void drawCard(int player, Card card){
-		//TODO: Do a moveTo
-	}
 }

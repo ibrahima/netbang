@@ -58,12 +58,10 @@ ActionListener{
 
 
 	/**
-	 * 
+	 * Creates the GUI.
 	 */
 	private void createAndShowGui() {
 		// set window sizes
-		//setPreferredSize(new Dimension(width, height));
-		//setSize(new Dimension(width, height));
 		addKeyListener(this);
 		this.setIgnoreRepaint(true);
 		panel = new GamePanel();
@@ -90,7 +88,7 @@ ActionListener{
 
 
 	/**
-	 * 
+	 * Creates the chat log viewer window.
 	 */
 	private void createLogViewer() {
 		logviewer = new JDialog(this, "Chat Log", false);
@@ -106,7 +104,7 @@ ActionListener{
 
 
 	/**
-	 * 
+	 * Creates the menu.
 	 */
 	private void createMenu() {
 		menubar = new JMenuBar();
@@ -325,6 +323,8 @@ ActionListener{
 		}
 	}
 	private class GamePanel extends JPanel{
+
+		private static final long serialVersionUID = 5320803475250127615L;
 		private int tfps;
 		private long now;
 		private long lastTime;
@@ -334,12 +334,6 @@ ActionListener{
 			Graphics2D graphics = (Graphics2D)g;
 			graphics.setColor(new Color(175, 150, 50));
 			graphics.fillRect(0, 0, width, height);
-			//the ugly proxy skip turn button: this is coded for in Field.java
-//			graphics.setColor(new Color(255, 255, 255));
-//			graphics.fillRect(760, 560, 40, 40);
-//			graphics.setColor(new Color(0, 0, 0));
-//			graphics.drawString("Skip", 770, 580);
-
 			if (chatting) {
 				graphics.setColor(new Color(185, 160, 60));
 				graphics.draw3DRect(17, 407, 760, 18, true);

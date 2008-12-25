@@ -445,7 +445,6 @@ class ClientThread extends Thread {
                             if (c.turn % c.numPlayers == c.id) {
                                 c.gui.appendText("It's your move!!!!!! Time to d-d-d-d-d-duel!", Color.CYAN);
                             }
-                            c.field.rotateDeck(c.turn%c.numPlayers);
                         } else if (infotype.equals("discard")) {
                             //TODO: Keep track of discard pile on client side
                             if(tid==c.id){
