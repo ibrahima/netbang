@@ -105,6 +105,7 @@ public abstract class Clickable implements Comparable<Clickable>{
 	}
 	/**
 	 * Rotates the Clickable the specified angle, in radians.
+	 * @param angle The angle to rotate the Clickable by
 	 */
 	public void rotate(double angle){
 		double realrotation=(angle-theta)%(Math.PI*2);
@@ -170,6 +171,12 @@ public abstract class Clickable implements Comparable<Clickable>{
 		case GROW:
 			break;
 		case SHRINK:
+			break;
+		case FADEIN:
+			fade(1);
+			break;
+		case FADEOUT:
+			fade(-1);
 			break;
 		}
 	}
