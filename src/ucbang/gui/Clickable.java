@@ -28,7 +28,7 @@ public abstract class Clickable implements Comparable<Clickable>{
 	//protected final BufferedImage sourceImg;
 	protected boolean draggable = true;
 	public boolean animating = false;
-	public enum Animations {ROTATETO, MOVETO, GROW, SHRINK};
+	public enum Animations {ROTATETO, MOVETO, GROW, SHRINK, FADEIN, FADEOUT};
 	protected Animations animation;
 	protected double rotateto=0.0;
 	protected Point moveto;
@@ -185,4 +185,5 @@ public abstract class Clickable implements Comparable<Clickable>{
 		yspeed = (y-rect.y)/10;
 		xspeed = (x-rect.x)/10;
 	}
+	public abstract void fade(int amount);
 }

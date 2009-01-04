@@ -84,4 +84,9 @@ public class CardSpace extends Clickable{
 		g.setColor(temp);
 
 	}
+
+	public void fade(int amount) {
+		// TODO Auto-generated method stub
+		
+	}
 }
