@@ -7,14 +7,13 @@ public class InfoText extends Clickable {
 	String text;
 	Color color;
 	Color currentcolor;
-	Color bg;
-	public InfoText(Polygon p, String text, Color color, Color background) {
+	int alpha;
+	public InfoText(Polygon p, String text, Color color) {
 		super(p, null);
 		animation = Animations.FADEIN;
 		this.text = text;
 		this.color = color;
-		bg = background;
-		currentcolor = background;
+		currentcolor = new Color(color.getRGB() & ~(255<<24));
 	}
 
 	/**
@@ -22,13 +21,14 @@ public class InfoText extends Clickable {
 	 * @param amount 1 for fade in, -1 for fade out
 	 * @see ucbang.gui.Clickable#fade(int)
 	 */
-	public void fade(int amount) {
+	public void fade() {
 		System.out.println(color.getAlpha());
-		if(amount>0){
-			
-		}else{
-			
-		}
+		alpha = color.getAlpha()+16*(animation == Animations.FADEIN ? 1 : 0);
+		if(alpha > 255) alpha = 255;
+		if(alpha < 0) alpha = 0;
+		currentcolor = new Color((color.getRGB() & ~(255<<24)) | alpha<<24);
+		if(animation == Animations.FADEIN && alpha == 255) animating = false;
+		else if (animation == Animations.FADEOUT && alpha == 0) animating = false;
 	}
 
 }

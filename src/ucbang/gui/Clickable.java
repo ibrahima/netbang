@@ -34,7 +34,8 @@ public abstract class Clickable implements Comparable<Clickable>{
 	protected Point moveto;
 	protected int xspeed, yspeed;
 	/**
-	 * @param r
+	 * @param p The polygon that describes the Clickable
+	 * @param srcimg The image that the Clickable contains
 	 */
 	public Clickable(Polygon p, BufferedImage srcimg){
 		bounds = p;
@@ -173,10 +174,10 @@ public abstract class Clickable implements Comparable<Clickable>{
 		case SHRINK:
 			break;
 		case FADEIN:
-			fade(1);
+			fade();
 			break;
 		case FADEOUT:
-			fade(-1);
+			fade();
 			break;
 		}
 	}
@@ -192,5 +193,5 @@ public abstract class Clickable implements Comparable<Clickable>{
 		yspeed = (y-rect.y)/10;
 		xspeed = (x-rect.x)/10;
 	}
-	public abstract void fade(int amount);
+	public abstract void fade();
 }

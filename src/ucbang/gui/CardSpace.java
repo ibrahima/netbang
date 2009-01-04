@@ -85,7 +85,7 @@ public class CardSpace extends Clickable{
 
 	}
 
-	public void fade(int amount) {
+	public void fade() {
 		// TODO Auto-generated method stub
 		
 	}

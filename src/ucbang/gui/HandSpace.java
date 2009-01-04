@@ -115,7 +115,7 @@ public class HandSpace extends Clickable{
 			g.draw3DRect(rect.x, rect.y, rect.width, rect.height, true);
 	}
 
-	public void fade(int amount) {
+	public void fade() {
 		// TODO Auto-generated method stub
 		
 	}
