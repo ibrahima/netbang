@@ -92,11 +92,13 @@ public class ServerBrowser extends JFrame implements ActionListener, MouseListen
 		gbc.gridx = 1;
 		joinlan = new JButton("Join LAN");
 		joinlan.setMnemonic(java.awt.event.KeyEvent.VK_O);
+		joinlan.addActionListener(this);
 		this.add(joinlan, gbc);
 		
 		gbc.gridx = 2;
 		createlan = new JButton("Create LAN");
 		createlan.setMnemonic(java.awt.event.KeyEvent.VK_L);
+		createlan.addActionListener(this);
 		this.add(createlan, gbc);
 		
 		gbc.gridx = 3;
