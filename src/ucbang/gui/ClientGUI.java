@@ -29,8 +29,8 @@ import ucbang.core.Card;
 import ucbang.core.Player;
 import ucbang.network.Client;
 
-public class ClientGUI extends JFrame implements KeyListener, ComponentListener,
-ActionListener{
+public class ClientGUI extends JFrame implements KeyListener,
+		ComponentListener, ActionListener {
 
 	private static final long serialVersionUID = 4377855794895936467L;
 	int p;
@@ -49,13 +49,13 @@ ActionListener{
 	JDialog logviewer;
 	JScrollPane logscroll;
 	JTextArea logs;
+
 	public ClientGUI(int p, Client client) {
 		this.client = client;
 		this.p = p;
 		chat = new StringBuilder();
 		createAndShowGui();
 	}
-
 
 	/**
 	 * Creates the GUI.
@@ -66,7 +66,7 @@ ActionListener{
 		this.setIgnoreRepaint(true);
 		panel = new GamePanel();
 		panel.setPreferredSize(new Dimension(width, height));
-		panel.setMinimumSize(new Dimension(width,height));
+		panel.setMinimumSize(new Dimension(width, height));
 		this.setContentPane(panel);
 		this.pack();
 		createMenu();
@@ -79,13 +79,13 @@ ActionListener{
 			public void windowActivated(WindowEvent e) {
 				paint(getGraphics());
 			}
-			public void windowClosing(WindowEvent e){
-				((ClientGUI)(e.getWindow())).client.running=false;
+
+			public void windowClosing(WindowEvent e) {
+				((ClientGUI) (e.getWindow())).client.running = false;
 			}
 		});
 		createLogViewer();
 	}
-
 
 	/**
 	 * Creates the chat log viewer window.
@@ -94,14 +94,14 @@ ActionListener{
 		logviewer = new JDialog(this, "Chat Log", false);
 		logviewer.setSize(400, 200);
 		logviewer.setLocation(800, 0);
-		logs = new JTextArea(9,34);
+		logs = new JTextArea(9, 34);
 		logs.setEditable(false);
-		logscroll = new JScrollPane(logs, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+		logscroll = new JScrollPane(logs,
+				JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
 				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		logviewer.add(logscroll);
 		logviewer.pack();
 	}
-
 
 	/**
 	 * Creates the menu.
@@ -131,7 +131,7 @@ ActionListener{
 		about.setMnemonic(KeyEvent.VK_A);
 		about.addActionListener(this);
 		helpmenu.add(about);
-		
+
 		fpsmenu = new JMenu("FPS");
 		menubar.add(fpsmenu);
 	}
@@ -156,33 +156,38 @@ ActionListener{
 		textIndex++;
 		text.add(str);
 		textColor.add(c);
-		logs.append(str+"\n");
-		logscroll.getVerticalScrollBar().setValue(logscroll.getVerticalScrollBar().getMaximum());
+		logs.append(str + "\n");
+		logscroll.getVerticalScrollBar().setValue(
+				logscroll.getVerticalScrollBar().getMaximum());
 		logviewer.repaint();
 	}
 
-
 	/**
 	 * Prompts the player to choose a name
+	 * 
 	 * @return the name the player chose
 	 */
 	public static String promptChooseName() {
 		String s = "";
 		while (s == null || s.length() == 0) {
 			s = (String) JOptionPane
-			.showInputDialog(null, "What is your name?");
+					.showInputDialog(null, "What is your name?");
 		}
 		return s;
 	}
 
 	/**
 	 * Creates a yes or no prompt with the desired question and title
-	 * @param message The message to ask
-	 * @param title The title of the message prompt
+	 * 
+	 * @param message
+	 *            The message to ask
+	 * @param title
+	 *            The title of the message prompt
 	 * @return whether the client agrees to start; 0 is yes and 1 is no
 	 */
 	public int promptYesNo(String message, String title) {
-		// I think it's visually more intuitive to have Yes on the left, but keep in
+		// I think it's visually more intuitive to have Yes on the left, but
+		// keep in
 		// mind that this means 0 is yes and 1 is no!
 		int r = -1;
 		while (r == -1) {
@@ -193,21 +198,23 @@ ActionListener{
 		return r;
 	}
 
-
 	/**
-	 * Asks the player to choose a card. This is used for many instances.
-	 * TODO: replace al with ID of the player.
+	 * Asks the player to choose a card. This is used for many instances. TODO:
+	 * replace al with ID of the player.
 	 * 
 	 * @param al
 	 * @return
 	 */
-	public void promptChooseCard(ArrayList<Card> al, String str1, String str2, boolean force) {
+	public void promptChooseCard(ArrayList<Card> al, String str1, String str2,
+			boolean force) {
 		client.field.pick = al;
 		client.prompting = true;
 		client.forceDecision = force;
 	}
+
 	/**
 	 * Adds one bool, then does promptChooseCard
+	 * 
 	 * @param str1
 	 * @param str2
 	 * @param force
@@ -225,23 +232,21 @@ ActionListener{
 	}
 
 	public void keyTyped(KeyEvent e) {
-		if((int)e.getKeyChar()==27){
-			if(chatting){
+		if ((int) e.getKeyChar() == 27) {
+			if (chatting) {
 				chatting = false;
 				if (chat.length() > 0) {
 					chat.delete(0, chat.length());
 				}
-			}
-			else{
-				if(client.prompting&&!client.forceDecision){
+			} else {
+				if (client.prompting && !client.forceDecision) {
 					client.outMsgs.add("Prompt:-1");
 					client.nextPrompt = -2;
 					client.prompting = false;
 				}
 				return;
 			}
-		}
-		else if (e.getKeyChar() == '\n') {
+		} else if (e.getKeyChar() == '\n') {
 			chatting = !chatting;
 			if (!chatting && chat.length() > 0) {
 				client.addChat(chat.toString());
@@ -252,77 +257,68 @@ ActionListener{
 				chat.deleteCharAt(chat.length() - 1);
 			else
 				chat.append(e.getKeyChar());
-		} else{
-			/*if(Character.isDigit(e.getKeyChar())){
-				int f = ((Character)e.getKeyChar())%48;
-				appendText(client.players.get(f).name);
-			}
-			if((char)e.getKeyChar()=='a'){
-				appendText(String.valueOf(client.numPlayers));
-			}
-			if((char)e.getKeyChar()=='s'){
-				appendText(String.valueOf(client.players.size()));
-			}
-			if((char)e.getKeyChar()=='d'){
-				appendText(String.valueOf(client.id));
-			}
-			if((char)e.getKeyChar()=='f'){
-				appendText(String.valueOf(client.player.id));
-			}
-			if((char)e.getKeyChar()=='g'){
-				appendText(client.players.get(client.id)+" "+client.player+" "+client.id);
-			}
-			if((char)e.getKeyChar()=='h'){
-				appendText(client.players.get(client.id).hand.size()+""+client.player.hand.size());
-			}
-			if((char)e.getKeyChar()=='j'){
-				String s = "";
-				for(Card c:client.player.hand){
-					s+=c.name+" ";
-				}
-				appendText(s);
-			}
+		} else {
+			/*
+			 * if(Character.isDigit(e.getKeyChar())){ int f =
+			 * ((Character)e.getKeyChar())%48;
+			 * appendText(client.players.get(f).name); }
+			 * if((char)e.getKeyChar()=='a'){
+			 * appendText(String.valueOf(client.numPlayers)); }
+			 * if((char)e.getKeyChar()=='s'){
+			 * appendText(String.valueOf(client.players.size())); }
+			 * if((char)e.getKeyChar()=='d'){
+			 * appendText(String.valueOf(client.id)); }
+			 * if((char)e.getKeyChar()=='f'){
+			 * appendText(String.valueOf(client.player.id)); }
+			 * if((char)e.getKeyChar()=='g'){
+			 * appendText(client.players.get(client
+			 * .id)+" "+client.player+" "+client.id); }
+			 * if((char)e.getKeyChar()=='h'){
+			 * appendText(client.players.get(client
+			 * .id).hand.size()+""+client.player.hand.size()); }
+			 * if((char)e.getKeyChar()=='j'){ String s = ""; for(Card
+			 * c:client.player.hand){ s+=c.name+" "; } appendText(s); }
 			 */
 		}
 	}
 
-
 	public void componentHidden(ComponentEvent e) {
 	}
-
 
 	public void componentMoved(ComponentEvent e) {
 	}
 
-	public void componentResized(ComponentEvent e){
+	public void componentResized(ComponentEvent e) {
 		int oldw = width;
 		int oldh = height;
-		if(panel==null)return;
+		if (panel == null)
+			return;
 		height = panel.getHeight();
 		width = panel.getWidth();
-		if(height<600)
-			height=600;
-		if(width<800)
-			width=800;
+		if (height < 600)
+			height = 600;
+		if (width < 800)
+			width = 800;
 		panel.setPreferredSize(new Dimension(width, height));
 		this.pack();
-		if(client.field!=null)client.field.resize(oldw, oldh, width, height);
+		if (client.field != null)
+			client.field.resize(oldw, oldh, width, height);
 	}
-
 
 	public void componentShown(ComponentEvent e) {
 	}
 
 	public void actionPerformed(ActionEvent e) {
-		if(e.getSource().equals(quit)){
+		if (e.getSource().equals(quit)) {
 			client.running = false;
-		}else if(e.getSource().equals(chatlog)){
+		} else if (e.getSource().equals(chatlog)) {
 			logviewer.setVisible(true);
-		}else if(e.getSource().equals(about)){
+		} else if (e.getSource().equals(about)) {
 
 		}
 	}
-	private class GamePanel extends JPanel{
+
+	private class GamePanel extends JPanel {
 
 		private static final long serialVersionUID = 5320803475250127615L;
 		private int tfps;
@@ -331,7 +327,7 @@ ActionListener{
 		private int fps;
 
 		public void paintComponent(Graphics g) {
-			Graphics2D graphics = (Graphics2D)g;
+			Graphics2D graphics = (Graphics2D) g;
 			graphics.setColor(new Color(175, 150, 50));
 			graphics.fillRect(0, 0, width, height);
 			if (chatting) {
@@ -343,11 +339,12 @@ ActionListener{
 			if (textIndex >= 0) { // there is text to display, must draw it
 				for (int n = textIndex; n >= (textIndex < 9 ? 0 : textIndex - 9); n--) {
 					graphics.setColor(textColor.get(n));
-					graphics.drawString(text.get(n), 20, 580 - 15 * (textIndex - n));
+					graphics.drawString(text.get(n), 20,
+							580 - 15 * (textIndex - n));
 					graphics.setColor(Color.WHITE);
 				}
 			}
-			if(client.field!=null)
+			if (client.field != null)
 				client.field.paint(graphics);
 			graphics.setColor(Color.DARK_GRAY);
 			graphics.drawString("Players", 10, 12);
@@ -358,12 +355,12 @@ ActionListener{
 				graphics.drawString(temp.name, 25, 25 + 15 * n++);
 			}
 			tfps++;
-			now=System.currentTimeMillis();
-			if((now-lastTime)>1000){
-				lastTime=now;
-				fps=tfps;
-				tfps=0;
-				fpsmenu.setText(fps+"FPS");
+			now = System.currentTimeMillis();
+			if ((now - lastTime) > 1000) {
+				lastTime = now;
+				fps = tfps;
+				tfps = 0;
+				fpsmenu.setText(fps + "FPS");
 			}
 		}
 	}

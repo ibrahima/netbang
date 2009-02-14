@@ -12,12 +12,13 @@ import java.net.URL;
 import javax.swing.JFrame;
 import javax.swing.JProgressBar;
 
-
-public class Updater extends JFrame{
+public class Updater extends JFrame {
 	String updateurl;
 	JProgressBar progress;
-	public static void main(String[] args){
-		Updater up = new Updater("http://inst.eecs.berkeley.edu/~ibrahima/bang/bang.jar");
+
+	public static void main(String[] args) {
+		Updater up = new Updater(
+				"http://inst.eecs.berkeley.edu/~ibrahima/bang/bang.jar");
 		up.downloadLatestVersion();
 		try {
 			Process foo = Runtime.getRuntime().exec("java -jar bang.jar");
@@ -27,12 +28,13 @@ public class Updater extends JFrame{
 		System.exit(0);
 
 	}
-	public Updater(String url){
+
+	public Updater(String url) {
 		updateurl = url;
 		this.setPreferredSize(new Dimension(300, 80));
 		this.setSize(new Dimension(300, 80));
 		this.setTitle("UCBang Updater");
-		progress = new JProgressBar(0,100);
+		progress = new JProgressBar(0, 100);
 		progress.setValue(0);
 		progress.setStringPainted(true);
 		this.add(progress);
@@ -40,7 +42,8 @@ public class Updater extends JFrame{
 		this.setVisible(true);
 		this.requestFocus(true);
 	}
-	void downloadLatestVersion(){
+
+	void downloadLatestVersion() {
 		URL url;
 		try {
 			url = new URL(updateurl);
@@ -59,21 +62,23 @@ public class Updater extends JFrame{
 				while ((numRead = in.read(buffer)) != -1) {
 					out.write(buffer, 0, numRead);
 					numWritten += numRead;
-					System.out.println((double)numWritten/(double)filesize);
+					System.out.println((double) numWritten / (double) filesize);
 					progress.setValue((int) numWritten);
 				}
-				if(filesize!=numWritten)
-					System.out.println("Wrote "+numWritten+" bytes, should have been "+filesize);
+				if (filesize != numWritten)
+					System.out.println("Wrote " + numWritten
+							+ " bytes, should have been " + filesize);
 				else
 					System.out.println("Downloaded successfully.");
 				out.close();
 				in.close();
 			}
-		}catch(IOException e){
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
-	public static long getRemoteFileSize(String sourceurl){
+
+	public static long getRemoteFileSize(String sourceurl) {
 		URL url;
 		try {
 			url = new URL(sourceurl);
@@ -85,11 +90,12 @@ public class Updater extends JFrame{
 				hConnection.disconnect();
 				return filesize;
 			}
-		}catch(Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return -1;
 	}
+
 	public static long getLocalFileSize(String filename) {
 		File file = new File(filename);
 
@@ -99,7 +105,8 @@ public class Updater extends JFrame{
 		}
 		return file.length();
 	}
-	public static void downloadFile(String sourceurl, String dest){
+
+	public static void downloadFile(String sourceurl, String dest) {
 		URL url;
 		try {
 			url = new URL(sourceurl);
@@ -117,16 +124,17 @@ public class Updater extends JFrame{
 				while ((numRead = in.read(buffer)) != -1) {
 					out.write(buffer, 0, numRead);
 					numWritten += numRead;
-					System.out.println((double)numWritten/(double)filesize);
+					System.out.println((double) numWritten / (double) filesize);
 				}
-				if(filesize!=numWritten)
-					System.out.println("Wrote "+numWritten+" bytes, should have been "+filesize);
+				if (filesize != numWritten)
+					System.out.println("Wrote " + numWritten
+							+ " bytes, should have been " + filesize);
 				else
 					System.out.println("Downloaded successfully.");
 				out.close();
 				in.close();
 			}
-		}catch(IOException e){
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
