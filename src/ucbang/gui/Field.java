@@ -29,7 +29,7 @@ public class Field implements MouseListener, MouseMotionListener {
 	public ArrayList<HandSpace> handPlacer = new ArrayList<HandSpace>(); // to avoid npe
 	String description;
 	Point describeWhere;
-	long lastMouseMoved = System.currentTimeMillis();
+	public long lastMouseMoved = System.currentTimeMillis();
 	int tooltipWidth = 0;
 	int tooltipHeight = 0;
 	Point hoverpoint;
@@ -184,56 +184,60 @@ public class Field implements MouseListener, MouseMotionListener {
 		for (CardSpace crd : Char) {
 			crd.paint(graphics);
 		}
-		if (description == null
-				&& System.currentTimeMillis() - lastMouseMoved > 1000) {
-			// create description
-			StringBuilder temp = new StringBuilder();
-			Clickable cl = binarySearchCardAtPoint(hoverpoint);
-			if (cl instanceof CardSpace) {
-				CardSpace cs = (CardSpace) cl;
-				if (cs != null && cs.card != null) {
-					if (cs.card.type == 1 || cs.card.name.equals("BULLETBACK")) {
-						temp
-								.append(client.players.get(cs.playerid).name
-										+ "\n");
-						if (client.players.get(cs.playerid).maxLifePoints > 0)
-							temp
-									.append(client.players.get(cs.playerid).lifePoints
-											+ "HP\n");
-						;
-						// TODO: add distance to tooltip?
-					}
-					if (!cs.card.name.equals("BULLETBACK"))
-						temp.append(cs.card.name.replace('_', ' '));
-					if (!cs.card.description.equals(""))
-						temp.append(" - " + cs.card.description);
-					description = temp.toString();
-					describeWhere = hoverpoint;
-					tooltipWidth = textWidth(description, graphics);
-					tooltipHeight = textHeight(description, graphics);
-					if (describeWhere.x + tooltipWidth > client.gui.width) {
-						describeWhere.x = client.gui.width - tooltipWidth;
-					}
-					if (describeWhere.y + tooltipHeight > client.gui.height) {
-						describeWhere.y = client.gui.height - tooltipHeight;
-					}
-				}
-			}
-		}
-		if (description != null) {
-			Rectangle2D bounds = graphics.getFont().getStringBounds(
-					description, graphics.getFontRenderContext());
-			Color temp = graphics.getColor();
-			graphics.setColor(Color.YELLOW);
-			graphics.fill3DRect(describeWhere.x, describeWhere.y
-					- (int) bounds.getHeight() + 32, tooltipWidth,
-					tooltipHeight, false);
-			graphics.setColor(Color.BLACK);
-			improvedDrawString(description, describeWhere.x,
-					describeWhere.y + 30, graphics);
-			graphics.setColor(temp);
-		}
+                if(description!=null)
+			drawDescription(graphics);
 	}
+        
+        public void drawDescription(Graphics2D graphics){
+            if (description == null) {
+                    // create description
+                    StringBuilder temp = new StringBuilder();
+                    Clickable cl = binarySearchCardAtPoint(hoverpoint);
+                    if (cl instanceof CardSpace) {
+                            CardSpace cs = (CardSpace) cl;
+                            if (cs != null && cs.card != null) {
+                                    if (cs.card.type == 1 || cs.card.name.equals("BULLETBACK")) {
+                                            temp
+                                                            .append(client.players.get(cs.playerid).name
+                                                                            + "\n");
+                                            if (client.players.get(cs.playerid).maxLifePoints > 0)
+                                                    temp
+                                                                    .append(client.players.get(cs.playerid).lifePoints
+                                                                                    + "HP\n");
+                                            ;
+                                            // TODO: add distance to tooltip?
+                                    }
+                                    if (!cs.card.name.equals("BULLETBACK"))
+                                            temp.append(cs.card.name.replace('_', ' '));
+                                    if (!cs.card.description.equals(""))
+                                            temp.append(" - " + cs.card.description);
+                                    description = temp.toString();
+                                    describeWhere = hoverpoint;
+                                    tooltipWidth = textWidth(description, graphics);
+                                    tooltipHeight = textHeight(description, graphics);
+                                    if (describeWhere.x + tooltipWidth > client.gui.width) {
+                                            describeWhere.x = client.gui.width - tooltipWidth;
+                                    }
+                                    if (describeWhere.y + tooltipHeight > client.gui.height) {
+                                            describeWhere.y = client.gui.height - tooltipHeight;
+                                    }
+                            }
+                    }
+            }
+            if (description != null) {
+                    Rectangle2D bounds = graphics.getFont().getStringBounds(
+                                    description, graphics.getFontRenderContext());
+                    Color temp = graphics.getColor();
+                    graphics.setColor(Color.YELLOW);
+                    graphics.fill3DRect(describeWhere.x, describeWhere.y
+                                    - (int) bounds.getHeight() + 32, tooltipWidth,
+                                    tooltipHeight, false);
+                    graphics.setColor(Color.BLACK);
+                    improvedDrawString(description, describeWhere.x,
+                                    describeWhere.y + 30, graphics);
+                    graphics.setColor(temp);
+            }
+        }
 
 	public Clickable binarySearchCardAtPoint(Point ep) {
 		// bsearch method
@@ -359,22 +363,15 @@ public class Field implements MouseListener, MouseMotionListener {
 		if (cl instanceof CardSpace) {
 			CardSpace cs = (CardSpace) cl;
 			if (cs != null && cs.card != null) {
-				if (cs.playerid != -1) {
-				}
-				// client.gui.appendText(String.valueOf(client.players.get(cs.playerid).hand.indexOf(cs.card))+" "+(cs.hs!=null?String.valueOf(cs.hs.cards.indexOf(cs)):""));
-				else if (pick != null) {
-				}
-				// client.gui.appendText(String.valueOf(pick.contains(cs.card)));
 			} else
-				return;
+                        return;
 			if (e.getButton() == MouseEvent.BUTTON3) {
 				cs.rotateTo(cs.theta + Math.PI / 4);
 			} else if (client.prompting) {
 				if (pick != null && pick.contains(cs.card)) {
 					if (cs.card.type == 1) {
 						client.outMsgs.add("Prompt:" + pick.indexOf(cs.card));
-						client.player.hand.clear(); // you just picked a
-													// character card
+						client.player.hand.clear(); // you just picked a character card
 						clear();
 					} else {
 						client.outMsgs.add("Prompt:" + pick.indexOf(cs.card));
@@ -382,7 +379,7 @@ public class Field implements MouseListener, MouseMotionListener {
 					pick = null;
 					client.prompting = false;
 				} else if (client.forceDecision == false) {
-					// it's your turn
+					// it's your turn, you are not forced to play a card
 					if (client.targetingPlayer) {
 						if (cs.card.type == 1 || cs.card.name == "BULLETBACK") {
 							client.targetingPlayer = false;
@@ -393,24 +390,18 @@ public class Field implements MouseListener, MouseMotionListener {
 						Player p = client.players.get(cs.playerid);
 						if (cs.card.location == 0) {
 							client.nextPrompt = p.hand.indexOf(cs.card);
-							// client.gui.appendText("Index of card is "+client.nextPrompt);
 						} else {
 							client.nextPrompt = ((0 - client.players
 									.get(cs.playerid).field.indexOf(cs.card)) - 3);
-							// client.gui.appendText("lol "+client.nextPrompt);
 						}
 						client.outMsgs.add("Prompt:" + p.id);
 					} else {
-						client.outMsgs
-								.add("Prompt:"
-										+ ((0 - client.player.field
-												.indexOf(cs.card)) - 3));
+						client.outMsgs.add("Prompt:" + ((0 - client.player.field.indexOf(cs.card)) - 3));
 						pick = null;
 						client.prompting = false;
 					}
 				} else {
-					System.out
-							.println("i was prompting, but a bad card was given");
+					System.out.println("i was prompting, but a bad card was given");
 				}
 			}
 		} else if (cl instanceof Button) {
@@ -435,6 +426,7 @@ public class Field implements MouseListener, MouseMotionListener {
 					((HandSpace) cl).autoSort = !((HandSpace) cl).autoSort;
 			}
 		}
+	    client.redraw = true;
 	}
 
 	public void mousePressed(MouseEvent e) {
@@ -455,6 +447,8 @@ public class Field implements MouseListener, MouseMotionListener {
 						- movingCard.rect.y);
 			// System.out.println("picked up card");
 		}
+                
+                client.redraw = true;
 	}
 
 	public void mouseReleased(MouseEvent e) {
@@ -474,17 +468,10 @@ public class Field implements MouseListener, MouseMotionListener {
 				return;
 			movingCard.move(Math
 					.max(0, Math.min(e.getPoint().x - pointOnCard.x, client.gui
-							.getWidth() - 55)), Math.max(0, Math.min(e
-					.getPoint().y
-					- pointOnCard.y, client.gui.getHeight() - 85))); // replace
-																		// boundaries
-																		// with
-																		// width()/height()
-																		// of
-																		// frame?
-		} else {
-			// System.out.println("not dragging");
+							.getWidth() - 55)), Math.max(0, Math.min(e.getPoint().y - pointOnCard.y, client.gui.getHeight() - 85)));
 		}
+                
+                client.redraw = true;
 	}
 
 	public void mouseEntered(MouseEvent e) {
@@ -497,6 +484,8 @@ public class Field implements MouseListener, MouseMotionListener {
 		lastMouseMoved = System.currentTimeMillis();
 		hoverpoint = e.getPoint();
 		description = null;
+                
+                client.redraw = true;
 	}
 
 	/**

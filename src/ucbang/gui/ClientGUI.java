@@ -224,7 +224,7 @@ public class ClientGUI extends JFrame implements KeyListener,
 	}
 
 	public void keyPressed(KeyEvent e) {
-
+            
 	}
 
 	public void keyReleased(KeyEvent e) {
@@ -232,6 +232,7 @@ public class ClientGUI extends JFrame implements KeyListener,
 	}
 
 	public void keyTyped(KeyEvent e) {
+                client.redraw = true;
 		if ((int) e.getKeyChar() == 27) {
 			if (chatting) {
 				chatting = false;

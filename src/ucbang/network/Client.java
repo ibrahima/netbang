@@ -1,6 +1,8 @@
 package ucbang.network;
 
 import java.awt.Color;
+import java.awt.Graphics2D;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.InputStreamReader;
@@ -38,7 +40,10 @@ public class Client extends Thread {
     public boolean forceDecision;
     public boolean targetingPlayer;
     public int nextPrompt = -2; //this value will be returned the next time the client is prompted to do something
+    
     boolean guiEnabled;
+    public boolean redraw = true;
+    
     public ArrayList<Card> specialHand = new ArrayList<Card>(); //for general store or when players die and their hands are revealed
     public ArrayList<Card> discardpile = new ArrayList<Card>(); //only used for drawing the discard pile, for aesthetic effect
     /**
@@ -129,7 +134,16 @@ public class Client extends Thread {
         }
         t = new ClientThread(socket, this);
         while (running) {
-            if(guiEnabled)gui.repaint();
+            try{
+                t.sleep(10);
+                if(guiEnabled&&redraw){ gui.repaint(); redraw = false; }
+                else if(System.currentTimeMillis() - field.lastMouseMoved > 1000){ // hackish?
+                    field.drawDescription((Graphics2D)gui.getGraphics());
+                }
+            }
+            catch(InterruptedException e){
+                
+            }
         }
         
         //process has been killed
@@ -233,6 +247,7 @@ class ClientThread extends Thread {
                 }
                 out.flush();
                 if (in.ready()) {
+                    c.redraw = true;
                     buffer = (String)in.readLine();
                     String[] temp = buffer.split(":", 2);
                     String messagetype = temp[0];
