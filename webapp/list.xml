@@ -7,5 +7,6 @@
 		<type>{{ server.type|escape }}</type>
 		<players>{{ server.players }}</players>
 		<started>{{ server.started }}</started>
+                <date>{{ server.date }}</date> 
 	</server>{% endfor %}
 </serverlist>
