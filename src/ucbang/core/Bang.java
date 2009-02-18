@@ -159,7 +159,7 @@ public class Bang {
                                                           server.choice.get(0)[0][1], true);
                                     }
                                     else{
-                                        System.out.println(players[turn%numPlayers].bangs+"~!@#!@#!@#!@#@!#!#!@#!@#!#@!@#!@#!#!#!#!@#!#!@#12");
+                                        //System.out.println(players[turn%numPlayers].bangs+"~!@#!@#!@#!@#@!#!#!@#!@#!#@!@#!@#!#!#!#!@#!#!@#12");
                                         server.prompt(server.choice.get(1)[0][1], 
                                                       "PlayCardUnforced", 
                                                       true); //unforce b/c do not have to miss

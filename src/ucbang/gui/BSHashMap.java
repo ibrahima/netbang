@@ -32,10 +32,10 @@ public class BSHashMap<K, V> extends HashMap<K, V> {
 	}
 
 	public V remove(Object o) {
-		if (o instanceof Card) {
-			CardSpace cs = (CardSpace) get(o);
+		/*if (o instanceof Card) {
+			CardSpace cs = (CardSpace)get(o);
 			if (cs == null) {
-				// client.gui.appendText("WTFWTFWTF");
+				System.out.println("ERROR");
 			}
 			if (cs.hs != null) {
 				if (!cs.field)
@@ -47,7 +47,7 @@ public class BSHashMap<K, V> extends HashMap<K, V> {
 				}
 			}
 			// System.out.println(cs.card.name+" "+cs.playerid+" "+(cs.hs==null)+" "+handPlacer.get(cs.playerid).fieldCards.contains(cs));
-		}
+		}*/
 		occupied.remove(get(o));
 		V oo = super.remove(o);
 		return oo;

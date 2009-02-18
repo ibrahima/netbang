@@ -26,7 +26,7 @@ public class Field implements MouseListener, MouseMotionListener {
 	Clickable movingCard;
 	Card clicked;
 	ArrayList<Card> pick;
-	public ArrayList<HandSpace> handPlacer = new ArrayList<HandSpace>(); // to avoid npe
+	public ArrayList<HandSpace> handPlacer = new ArrayList<HandSpace>();
 	String description;
 	Point describeWhere;
 	public long lastMouseMoved = System.currentTimeMillis();
@@ -69,12 +69,12 @@ public class Field implements MouseListener, MouseMotionListener {
 	/**
 	 * Removes the last card in the hand of a player, used when the player is an
 	 * opponent whose hand is unknown and they just played a card
-	 * 
+	 * deprecated?
 	 * @param player
 	 *            the player whose hand to remove a card from
 	 */
 	public void removeLast(int player) {
-		clickies.remove(handPlacer.get(player).removeLast().card);
+		clickies.remove(handPlacer.get(player).removeLast().card); 
 	}
 
 	/**
@@ -356,7 +356,11 @@ public class Field implements MouseListener, MouseMotionListener {
 		movingCard = null;
 		clickies.clear();
 	}
-
+        
+        public Clickable remove(int player, int card) {
+            return clickies.remove(handPlacer.get(player).cards.remove(card).rect);
+        }
+        
 	public void mouseClicked(MouseEvent e) {
 		Point ep = e.getPoint();
 

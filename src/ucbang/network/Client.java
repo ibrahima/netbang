@@ -438,7 +438,7 @@ class ClientThread extends Thread {
                                     if(temp1.length==4){
                                         card = c.player.hand.get(Integer.valueOf(temp1[3]));
                                         card.location = 1;
-                                        c.field.clickies.remove(card);
+                                        c.field.remove(tid, Integer.valueOf(temp1[3]));
                                         c.player.hand.remove(card);
                                     } else{
                                         card = new Card(Deck.CardName.values()[Integer.valueOf(temp1[2])]);
@@ -448,7 +448,7 @@ class ClientThread extends Thread {
                                     if(temp1.length==4){
                                         card = new Card(CardName.valueOf(temp1[2]));
                                         card.location = 1;
-                                        c.field.clickies.remove(c.players.get(tid).hand.get((int)Integer.valueOf(temp1[3])));
+                                        c.field.remove(tid,(int)Integer.valueOf(temp1[3]));
                                         c.players.get(tid).hand.remove((int)Integer.valueOf(temp1[3]));
                                     }
                                     else{
@@ -478,13 +478,14 @@ class ClientThread extends Thread {
                         } else if (infotype.equals("discard")) {
                             //TODO: Keep track of discard pile on client side
                             if(tid==c.id){
-                                c.field.clickies.remove(c.player.hand.get(Integer.valueOf(temp1[2])));
+                                c.field.remove(tid, Integer.valueOf(temp1[2]));
                                 String cname = c.player.hand.remove(Integer.valueOf(temp1[2]).intValue()).name;
                                 c.gui.appendText("You discarded:" + cname);
                                 c.discardpile.add(new Card(Deck.CardName.valueOf(cname)));
                             }
                             else{
-                                c.field.clickies.remove(c.players.get(tid).hand.get(Integer.valueOf(temp1[2])));
+                                    System.out.println(messagevalue + c.players.get(tid).hand.get(Integer.valueOf(temp1[2])));
+                                c.field.remove(tid, Integer.valueOf(temp1[2]));
                                 c.players.get(tid).hand.remove(Integer.valueOf(temp1[2]).intValue());
                                 c.gui.appendText("Player "+tid+" discarded:" + (temp1.length==4?temp1[3]:"card #"+temp1[2]));
                                 if(temp1.length==4){
@@ -495,14 +496,14 @@ class ClientThread extends Thread {
                             //TODO: Keep track of discard pile on client side
                             if(tid==c.id){
                                 c.gui.appendText("REMOVING:" + Integer.valueOf(temp1[2]).intValue()+ " "+c.player.field.get(Integer.valueOf(temp1[2]).intValue())+" "+c.player.field.size());
-                                c.field.clickies.remove(c.player.field.get(Integer.valueOf(temp1[2]).intValue()));
+                                c.field.remove(tid, Integer.valueOf(temp1[2]));
                                 String cname =c.player.field.remove(Integer.valueOf(temp1[2]).intValue()).name;
                                 c.gui.appendText("You discarded:" + cname);
                                 c.discardpile.add(new Card(Deck.CardName.valueOf(cname)));
                             }
                             else{
                                 System.out.println("ASDFASDFASDFASDFASDF"+temp[1]);
-                                c.field.clickies.remove(c.players.get(tid).field.get(Integer.valueOf(temp1[2])));
+                                c.field.remove(tid, Integer.valueOf(temp1[2]));
                                 c.players.get(tid).field.remove(Integer.valueOf(temp1[2]).intValue());
                                 c.gui.appendText("Player "+tid+" discarded:" + temp1[3]);
                                 c.discardpile.add(new Card(Deck.CardName.valueOf(temp1[3])));
@@ -513,9 +514,8 @@ class ClientThread extends Thread {
                             String s = "";
                             s = "Player " + temp1[1] + " played " + temp1[2] + (temp1.length == 4 ? " at player " + temp1[3] : "");
                             c.gui.appendText(s);
-                            c.discardpile.add(new Card(Deck.CardName.valueOf(temp1[2])));
-                            //if(tid!=c.id && (temp1.length==4?!temp1[3].equals("no miss"):true)) //client would have already removed it
-                                //c.field.removeLast(tid);
+                            if(!temp1[2].equals("no miss"))
+                                c.discardpile.add(new Card(Deck.CardName.valueOf(temp1[2])));
                         } else if (infotype.equals("id")) { //TODO: remove safely?
                             c.id = tid;
                         } else if (infotype.equals("character")) {
