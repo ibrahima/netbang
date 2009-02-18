@@ -25,6 +25,10 @@ import javax.swing.table.AbstractTableModel;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
+import java.util.Date;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -161,11 +165,7 @@ public class ServerBrowser extends JFrame implements ActionListener, MouseListen
 						servers.add(processServerNode(server));
 					}
 				}
-				/*
-				 * BufferedReader is = new BufferedReader(new
-				 * InputStreamReader(hConnection.getInputStream()));
-				 * while(is.ready()) System.out.println(is.readLine());
-				 */
+                                
 				hConnection.disconnect();
 				Iterator<ServerInfo> iter = servers.iterator();
 				while (iter.hasNext()) {
@@ -181,9 +181,13 @@ public class ServerBrowser extends JFrame implements ActionListener, MouseListen
 
 	ServerInfo processServerNode(Node n) {
 		NodeList ns = n.getChildNodes();
+                String dateNode = ns.item(11).getTextContent();
+                String dateLocal = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
 		return new ServerInfo(ns.item(1).getTextContent(), ns.item(3)
 				.getTextContent(), ns.item(5).getTextContent(),
-				Integer.parseInt(ns.item(7).getTextContent()), Boolean.parseBoolean(ns.item(9).getTextContent()));
+				Integer.parseInt(ns.item(7).getTextContent()), Boolean.parseBoolean(ns.item(9).getTextContent()), 
+                                    (dateNode.substring(0,dateLocal.length()).equals(dateLocal)?dateNode.substring(dateLocal.length()+1):dateNode)); 
+                                    //(created today?)time only:add date;
 	}
 	public int currentRevision(){
 		BufferedReader is;
@@ -295,12 +299,14 @@ public class ServerBrowser extends JFrame implements ActionListener, MouseListen
 		String type;
 		int players;
 		boolean started;
-		public ServerInfo(String name, String ip, String type, int players, boolean started) {
+                String time;
+		public ServerInfo(String name, String ip, String type, int players, boolean started, String time) {
 			this.name = name;
 			this.ip = ip;
 			this.type = type;
 			this.players = players;
 			this.started = started;
+                        this.time = time;
 		}
 
 		public String toString() {
@@ -308,10 +314,10 @@ public class ServerBrowser extends JFrame implements ActionListener, MouseListen
 		}
 	}
 	class ServerTableModel extends AbstractTableModel {
-		String[] columns = {"Name","IP Address", "Game Type", "Players", "Started"};
+		String[] columns = {"Name","IP Address", "Game Type", "Players", "Started", "Time Last Seen"};
 	    private String[][] data;
 	    public ServerTableModel(ArrayList<ServerInfo> list){
-	    	data = new String[list.size()][5];
+	    	data = new String[list.size()][6];
 	    	Iterator<ServerInfo> iter = list.iterator();
 	    	int i=0;
 	    	while(iter.hasNext()){
@@ -321,11 +327,12 @@ public class ServerBrowser extends JFrame implements ActionListener, MouseListen
 	    		data[i][2]=temp.type;
 	    		data[i][3]=temp.players+"";
 	    		data[i][4]=temp.started+"";
+                        data[i][5]=temp.time+"";
 	    		i++;
 	    	}
 	    }
 	    public void setData(ArrayList<ServerInfo> list){
-	    	data = new String[list.size()][5];
+	    	data = new String[list.size()][6];
 	    	Iterator<ServerInfo> iter = list.iterator();
 	    	int i=0;
 	    	while(iter.hasNext()){
@@ -335,6 +342,7 @@ public class ServerBrowser extends JFrame implements ActionListener, MouseListen
 	    		data[i][2]=temp.type;
 	    		data[i][3]=temp.players+"";
 	    		data[i][4]=temp.started+"";
+                        data[i][5]=temp.time+"";
 	    		i++;
 	    	}
 	    }
