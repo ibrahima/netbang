@@ -51,7 +51,12 @@ public class Client extends Thread {
      * @param guiEnabled whether the GUI is enabled
      */
     public Client(String host, boolean guiEnabled) {
-    	new Client(host, guiEnabled, ClientGUI.promptChooseName());
+        String s = ClientGUI.promptChooseName();
+        if(s == null){
+            new ServerBrowser();
+            return;
+        }
+    	new Client(host, guiEnabled, s);
     }
     /**
      * Constructs a client to the Bang server on the specified host, with the specified name.
@@ -111,10 +116,14 @@ public class Client extends Thread {
     void promptName() {
         System.out.println("Choosing a new name");
         name = ClientGUI.promptChooseName();
+        if(name!= null && name.length()==0)
+            name = ClientGUI.promptChooseName();    
         synchronized (name) {
             name.notifyAll();
         }
-        System.out.println("New name is " + name);
+        if(name == null){
+            return;
+        }
     }
 
     public void run() {
@@ -127,6 +136,12 @@ public class Client extends Thread {
         while (running) {
             if(guiEnabled)gui.repaint();
         }
+        
+        //process has been killed
+        quit();
+    }
+    
+    public void quit(){
         gui.dispose();
         gui = null;
         System.out.println("Exiting");
@@ -242,6 +257,12 @@ class ClientThread extends Thread {
                                                ": Connection refused because name was taken");
                             namesent = false;
                             c.promptName();
+                            
+                            //quit if no name entered
+                            if(c.name == null){
+                                c.quit();
+                                return;
+                            }
                         }
                     } else if (messagetype.equals("Chat")) {
                     	if(c.guiEnabled)

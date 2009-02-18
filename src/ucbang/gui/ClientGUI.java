@@ -36,6 +36,7 @@ public class ClientGUI extends JFrame implements KeyListener,
 	int p;
 	StringBuilder chat;
 	boolean chatting = false;
+        boolean show_fps = false;
 	public int width = 800;
 	public int height = 600;
 	ArrayList<String> text = new ArrayList<String>();
@@ -132,8 +133,10 @@ public class ClientGUI extends JFrame implements KeyListener,
 		about.addActionListener(this);
 		helpmenu.add(about);
 
-		fpsmenu = new JMenu("FPS");
-		menubar.add(fpsmenu);
+                if(show_fps){
+                    fpsmenu = new JMenu("FPS");
+                    menubar.add(fpsmenu);
+                }
 	}
 
 	/**
@@ -168,11 +171,8 @@ public class ClientGUI extends JFrame implements KeyListener,
 	 * @return the name the player chose
 	 */
 	public static String promptChooseName() {
-		String s = "";
-		while (s == null || s.length() == 0) {
-			s = (String) JOptionPane
+		String s = (String) JOptionPane
 					.showInputDialog(null, "What is your name?");
-		}
 		return s;
 	}
 
@@ -354,14 +354,16 @@ public class ClientGUI extends JFrame implements KeyListener,
 				Player temp = iter.next();
 				graphics.drawString(temp.name, 25, 25 + 15 * n++);
 			}
-			tfps++;
-			now = System.currentTimeMillis();
-			if ((now - lastTime) > 1000) {
-				lastTime = now;
-				fps = tfps;
-				tfps = 0;
-				fpsmenu.setText(fps + "FPS");
-			}
+                        if(show_fps){
+                            tfps++;
+                            now = System.currentTimeMillis();
+                            if ((now - lastTime) > 1000) {
+                                    lastTime = now;
+                                    fps = tfps;
+                                    tfps = 0;
+                                    fpsmenu.setText(fps + "FPS");
+                            }
+                        }
 		}
 	}
 }

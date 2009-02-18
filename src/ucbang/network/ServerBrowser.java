@@ -104,6 +104,7 @@ public class ServerBrowser extends JFrame implements ActionListener, MouseListen
 		gbc.gridx = 3;
 		foobar = new JButton("FOOBAR");
 		foobar.setMnemonic(java.awt.event.KeyEvent.VK_F);
+                
 		this.add(foobar, gbc);	
 		this.pack();
 		this.setVisible(true);
