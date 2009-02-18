@@ -1,7 +1,6 @@
 package ucbang.network;
 
 import java.awt.Color;
-import java.awt.Graphics2D;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -138,7 +137,7 @@ public class Client extends Thread {
                 t.sleep(10);
                 if(guiEnabled&&redraw){ gui.repaint(); redraw = false; }
                 else if(System.currentTimeMillis() - field.lastMouseMoved > 1000){ // hackish?
-                    field.drawDescription((Graphics2D)gui.getGraphics());
+                    field.drawDescription();
                 }
             }
             catch(InterruptedException e){

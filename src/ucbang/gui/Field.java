@@ -185,10 +185,11 @@ public class Field implements MouseListener, MouseMotionListener {
 			crd.paint(graphics);
 		}
                 if(description!=null)
-			drawDescription(graphics);
+			drawDescription();
 	}
         
-        public void drawDescription(Graphics2D graphics){
+        public void drawDescription(){
+            Graphics2D graphics = (Graphics2D)client.gui.getGraphics();
             if (description == null) {
                     // create description
                     StringBuilder temp = new StringBuilder();
