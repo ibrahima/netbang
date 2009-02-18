@@ -9,7 +9,6 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.Random;
 
 import ucbang.core.Card;
 import ucbang.core.Deck;
@@ -24,7 +23,6 @@ public class Client extends Thread {
     public int id;
     public int numPlayers = 0; // should be deprecated soon in favor of
     Socket socket = null;
-    Random r = new Random();
     int port = 12345;
     String host = "127.0.0.1";
     boolean connected = false;
