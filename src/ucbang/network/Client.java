@@ -121,9 +121,6 @@ public class Client extends Thread {
         synchronized (name) {
             name.notifyAll();
         }
-        if(name == null){
-            return;
-        }
     }
 
     public void run() {
