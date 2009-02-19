@@ -37,7 +37,7 @@ public abstract class Clickable implements Comparable<Clickable> {
 	protected double rotateto = 0.0;
 	protected Point moveto;
 	protected int xspeed, yspeed;
-
+	public static int numAnimating = 0;
 	/**
 	 * @param p
 	 *            The polygon that describes the Clickable
@@ -181,6 +181,7 @@ public abstract class Clickable implements Comparable<Clickable> {
 			if (Math.abs(theta - rotateto) <= Math.PI / 32) {
 				rotate(rotateto);
 				animating = false;
+				numAnimating--;
 				break;
 			}
 			if (theta > rotateto)
@@ -192,6 +193,7 @@ public abstract class Clickable implements Comparable<Clickable> {
 			if (rect.y - moveto.y < yspeed) {
 				this.move(moveto.x, moveto.y);
 				animating = false;
+				numAnimating--;
 				break;
 			}
 			this.translate(xspeed, yspeed);
@@ -212,12 +214,14 @@ public abstract class Clickable implements Comparable<Clickable> {
 	public void rotateTo(double theta) {
 		animation = Animations.ROTATETO;
 		animating = true;
+		numAnimating++;
 		rotateto = theta;
 	}
 
 	public void moveTo(int x, int y) {
 		animation = Animations.MOVETO;
 		animating = true;
+		numAnimating++;
 		moveto = new Point(x, y);
 		yspeed = (y - rect.y) / 10;
 		xspeed = (x - rect.x) / 10;
@@ -228,10 +232,12 @@ public abstract class Clickable implements Comparable<Clickable> {
 	public void fadeIn() {
 		animation = Animations.FADEIN;
 		animating = true;
+		numAnimating++;
 	}
 
 	public void fadeOut() {
 		animation = Animations.FADEOUT;
 		animating = true;
+		numAnimating++;
 	}
 }
