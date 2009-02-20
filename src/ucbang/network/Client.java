@@ -135,7 +135,7 @@ public class Client extends Thread {
         t = new ClientThread(socket, this);
         while (running) {
             try{
-                t.sleep(10);
+                Thread.sleep(10);
                 if(guiEnabled&&(redraw  || Clickable.numAnimating > 0)){ gui.repaint(); redraw = false; }
                 else if(System.currentTimeMillis() - field.lastMouseMoved > 1000){ // hackish?
                     field.drawDescription();
