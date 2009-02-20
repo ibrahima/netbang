@@ -16,6 +16,7 @@ import ucbang.core.Deck;
 import ucbang.core.Player;
 import ucbang.core.Deck.CardName;
 import ucbang.gui.CardDisplayer;
+import ucbang.gui.Clickable;
 import ucbang.gui.ClientGUI;
 import ucbang.gui.Field;
 
@@ -135,7 +136,7 @@ public class Client extends Thread {
         while (running) {
             try{
                 t.sleep(10);
-                if(guiEnabled&&redraw){ gui.repaint(); redraw = false; }
+                if(guiEnabled&&(redraw  || Clickable.numAnimating > 0)){ gui.repaint(); redraw = false; }
                 else if(System.currentTimeMillis() - field.lastMouseMoved > 1000){ // hackish?
                     field.drawDescription();
                 }
