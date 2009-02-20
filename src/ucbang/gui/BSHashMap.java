@@ -19,9 +19,9 @@ public class BSHashMap<K, V> extends HashMap<K, V> {
 
 	public ArrayList<V> values() {
 		ArrayList<V> al = new ArrayList<V>();
-		Collections.sort(occupied, new Comparator() {
-			public int compare(Object o1, Object o2) {
-				return ((Comparable<Object>) o1).compareTo(o2);
+		Collections.sort(occupied, new Comparator<V>() {
+			public int compare(V o1, V o2) {
+				return ((Comparable<V>) o1).compareTo(o2);
 			}
 		});
 		al.addAll(occupied);
