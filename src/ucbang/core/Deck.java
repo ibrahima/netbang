@@ -14,8 +14,8 @@ public class Deck {
     }
     public void fillCharacterCards(int numPlayers){
         //Assign character cards
-        ArrayList<Enum> charList = new ArrayList<Enum>();
-        for(Enum e: Characters.values()){
+        ArrayList<Characters> charList = new ArrayList<Characters>();
+        for(Characters e: Characters.values()){
             charList.add(e);
         }
         for(int n = 0; n<numPlayers; n++){
@@ -28,7 +28,7 @@ public class Deck {
     }
     public void fillGameCards(){
         //Create a drawPile
-        Enum[] cards = new Enum[120];
+        CardName[] cards = new CardName[120];
         Arrays.fill(cards, 0, 1, CardName.APPALOOSA);
         Arrays.fill(cards, 1, 30, CardName.BANG);
         Arrays.fill(cards, 30, 33, CardName.BARREL);
@@ -72,8 +72,8 @@ public class Deck {
         Arrays.fill(cards, 118, 119, CardName.WHISKY);
         Arrays.fill(cards, 119, 120, CardName.WINCHESTER);
 
-        ArrayList<Enum> allCards = new ArrayList<Enum>();
-        for(Enum e: cards)
+        ArrayList<CardName> allCards = new ArrayList<CardName>();
+        for(CardName e: cards)
             allCards.add(e);
         while(allCards.size()>0){
             drawPile.add(new Card(allCards.remove((int)(Math.random()*allCards.size()))));

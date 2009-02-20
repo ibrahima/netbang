@@ -10,7 +10,6 @@ import java.awt.event.MouseListener;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.PrintWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
@@ -26,19 +25,19 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import java.util.Date;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import org.xml.sax.ErrorHandler;
-import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
 
 import updater.Updater;
 
 public class ServerBrowser extends JFrame implements ActionListener, MouseListener{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 773307472628459263L;
 	ArrayList<ServerInfo> servers = new ArrayList<ServerInfo>();
 	JTable servertable;
 	JScrollPane scrollPane;
@@ -261,38 +260,7 @@ public class ServerBrowser extends JFrame implements ActionListener, MouseListen
 		}
 		
 	}
-	private static class MyErrorHandler implements ErrorHandler {
 
-		private PrintWriter out;
-
-		MyErrorHandler(PrintWriter out) {
-			this.out = out;
-		}
-
-		private String getParseExceptionInfo(SAXParseException spe) {
-			String systemId = spe.getSystemId();
-			if (systemId == null) {
-				systemId = "null";
-			}
-			String info = "URI=" + systemId + " Line=" + spe.getLineNumber()
-					+ ": " + spe.getMessage();
-			return info;
-		}
-
-		public void warning(SAXParseException spe) throws SAXException {
-			out.println("Warning: " + getParseExceptionInfo(spe));
-		}
-
-		public void error(SAXParseException spe) throws SAXException {
-			String message = "Error: " + getParseExceptionInfo(spe);
-			throw new SAXException(message);
-		}
-
-		public void fatalError(SAXParseException spe) throws SAXException {
-			String message = "Fatal Error: " + getParseExceptionInfo(spe);
-			throw new SAXException(message);
-		}
-	}
 	private class ServerInfo {
 		String name;
 		String ip;
@@ -314,6 +282,10 @@ public class ServerBrowser extends JFrame implements ActionListener, MouseListen
 		}
 	}
 	class ServerTableModel extends AbstractTableModel {
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = -5523627394901068270L;
 		String[] columns = {"Name","IP Address", "Game Type", "Players", "Started", "Time Last Seen"};
 	    private String[][] data;
 	    public ServerTableModel(ArrayList<ServerInfo> list){

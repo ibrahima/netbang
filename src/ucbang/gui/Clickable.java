@@ -7,8 +7,6 @@ import java.awt.Rectangle;
 import java.awt.Shape;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.PathIterator;
-import java.awt.geom.Point2D;
-import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 
 /**
@@ -111,19 +109,19 @@ public abstract class Clickable implements Comparable<Clickable> {
 		this.partner = partner;
 	}
 
-	private Point2D.Double getPolygonCenter(Polygon poly) {
-		// R + r = height
-		Rectangle2D r2 = poly.getBounds2D();
-		double cx = r2.getX() + r2.getWidth() / 2;
-		double cy = r2.getY() + r2.getHeight() / 2;
-		int sides = poly.xpoints.length;
-		double side = Point2D.distance(poly.xpoints[0], poly.ypoints[0],
-				poly.xpoints[1], poly.ypoints[1]);
-		double R = side / (2 * Math.sin(Math.PI / sides));
-		double r = R * Math.cos(Math.PI / sides);
-		double dy = (R - r) / 2;
-		return new Point2D.Double(cx, cy + dy);
-	}
+//	private Point2D.Double getPolygonCenter(Polygon poly) {
+//		// R + r = height
+//		Rectangle2D r2 = poly.getBounds2D();
+//		double cx = r2.getX() + r2.getWidth() / 2;
+//		double cy = r2.getY() + r2.getHeight() / 2;
+//		int sides = poly.xpoints.length;
+//		double side = Point2D.distance(poly.xpoints[0], poly.ypoints[0],
+//				poly.xpoints[1], poly.ypoints[1]);
+//		double R = side / (2 * Math.sin(Math.PI / sides));
+//		double r = R * Math.cos(Math.PI / sides);
+//		double dy = (R - r) / 2;
+//		return new Point2D.Double(cx, cy + dy);
+//	}
 
 	/**
 	 * Rotates the Clickable the specified angle, in radians.

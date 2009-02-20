@@ -365,7 +365,7 @@ class ClientThread extends Thread {
                         }
                         c.outMsgs.add("Ready");
                     } else if (messagetype.equals("GetInfo")) {
-                        String[] temp1 = buffer.split(":", 2);
+                        //String[] temp1 = buffer.split(":", 2);
                         c.outMsgs.add("Ready");
                     } else if (messagetype.equals("SetInfo")) { // note: a bit of a
                         // misnomer for lifepoints, just adds or subtracts that amount

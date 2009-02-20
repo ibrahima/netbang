@@ -10,7 +10,7 @@ public class Player {
 
 	public int id; // temporary probably
 	public String name;
-	public Enum role;
+	public Deck.Role role;
 	public int maxLifePoints;
 
         public int bangs = 0;

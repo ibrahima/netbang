@@ -13,6 +13,10 @@ import javax.swing.JFrame;
 import javax.swing.JProgressBar;
 
 public class Updater extends JFrame {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 2658597131065273700L;
 	String updateurl;
 	JProgressBar progress;
 

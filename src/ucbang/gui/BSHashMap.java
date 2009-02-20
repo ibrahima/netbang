@@ -5,9 +5,11 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 
-import ucbang.core.Card;
-
 public class BSHashMap<K, V> extends HashMap<K, V> {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -8116258538167187433L;
 	ArrayList<V> occupied = new ArrayList<V>();
 
 	public V put(K key, V value) {

@@ -283,7 +283,7 @@ public class Bang {
                                         }
                                     }
                                     else{
-                                        if(temp>-1){///askdfjlasjflajfa;lsjkafsf REPLACE THIS WITH GETCARD
+                                        if(temp>-1){//TODO:askdfjlasjflajfa;lsjkafsf REPLACE THIS WITH GETCARD
                                             players[turn%numPlayers].hand.add(players[(server.choice.get(1)[0][1])].hand.get(temp));
                                             server.sendInfo(turn%numPlayers,"Draw:" + turn%numPlayers + ":Game:"+players[(server.choice.get(1)[0][1])].hand.get(temp).name);
                                             playerDiscardCard(server.choice.get(1)[0][1], temp, false);
@@ -573,7 +573,7 @@ public class Bang {
      */
     public void start() {
         //Assign roles
-        ArrayList<Enum> roles = new ArrayList<Enum>();
+        ArrayList<Deck.Role> roles = new ArrayList<Deck.Role>();
         players = new Player[numPlayers];
         for (int n = 0; n < numPlayers; n++) {
             players[n] = new Player(n, server.names.get(n));
