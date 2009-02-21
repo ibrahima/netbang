@@ -11,7 +11,7 @@ public class InfoText extends Clickable {
 
 	public InfoText(Polygon p, String text, Color color) {
 		super(p, null);
-		animation = Animations.FADEIN;
+		animation |= FADEIN;
 		this.text = text;
 		this.color = color;
 		currentcolor = new Color(color.getRGB() & ~(255 << 24));
@@ -27,16 +27,16 @@ public class InfoText extends Clickable {
 	public void fade() {
 		System.out.println(color.getAlpha());
 		alpha = color.getAlpha() + 26
-				* (animation == Animations.FADEIN ? 1 : 0);
+				* ((animation & FADEIN) != 0 ? 1 : 0);
 		if (alpha > 255)
 			alpha = 255;
 		if (alpha < 0)
 			alpha = 0;
 		currentcolor = new Color((color.getRGB() & ~(255 << 24)) | alpha << 24);
-		if (animation == Animations.FADEIN && alpha == 255)
-			animating = false;
-		else if (animation == Animations.FADEOUT && alpha == 0)
-			animating = false;
+		if ((animation & FADEIN)!=0 && alpha == 255)
+			animation &= ~FADEIN;
+		else if ((animation & FADEOUT)!=0 && alpha == 0)
+			animation &= ~FADEOUT;
 	}
 
 }

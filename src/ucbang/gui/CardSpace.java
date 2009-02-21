@@ -93,7 +93,7 @@ public class CardSpace extends Clickable {
 	}
 
 	public void paint(Graphics2D g) {
-		if (animating)
+		if (animation!=0)
 			animate();
 		Color temp = g.getColor();
 		// g.fillRoundRect(rect.x, rect.y, rect.width, rect.height, 7, 7);

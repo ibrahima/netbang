@@ -25,13 +25,17 @@ public abstract class Clickable implements Comparable<Clickable> {
 	protected BufferedImage img;
 	// protected final BufferedImage sourceImg;
 	protected boolean draggable = true;
-	public boolean animating = false;
+	/**
+	 * The animation constants
+	 */
+	public final int ROTATETO = 0x1;
+	public final int MOVETO = 0x2;
+	public final int GROW = 0x4;
+	public final int SHRINK = 0x8;
+	public final int FADEIN = 0x10;
+	public final int FADEOUT = 0x20;
 
-	public enum Animations {
-		ROTATETO, MOVETO, GROW, SHRINK, FADEIN, FADEOUT
-	};
-
-	protected Animations animation;
+	protected int animation;
 	protected double rotateto = 0.0;
 	protected Point moveto;
 	protected int xspeed, yspeed;
@@ -174,51 +178,49 @@ public abstract class Clickable implements Comparable<Clickable> {
 	}
 
 	public void animate() {
-		switch (animation) {
-		case ROTATETO:
+		//TODO: Fix
+		if((animation & ROTATETO)!=0){
 			if (Math.abs(theta - rotateto) <= Math.PI / 32) {
 				rotate(rotateto);
-				animating = false;
+				animation &= ~ROTATETO;
 				numAnimating--;
-				break;
 			}
-			if (theta > rotateto)
+			else if (theta > rotateto)
 				rotate(theta - Math.PI / 32);
-			if (theta < rotateto)
+			else if (theta < rotateto)
 				rotate(theta + Math.PI / 32);
-			break;
-		case MOVETO:
+		}
+		if((animation & MOVETO)!=0){
 			if (rect.y - moveto.y < yspeed) {
 				this.move(moveto.x, moveto.y);
-				animating = false;
+				animation &= ~MOVETO;
 				numAnimating--;
-				break;
 			}
-			this.translate(xspeed, yspeed);
-			break;
-		case GROW:
-			break;
-		case SHRINK:
-			break;
-		case FADEIN:
+			else
+				this.translate(xspeed, yspeed);
+		}
+		if((animation & GROW)!=0){
+			//TODO: Add grow
+		}
+		if((animation & SHRINK)!=0){
+			//TODO: Add shrink
+		}
+		if((animation & FADEIN)!=0){
 			fade();
-			break;
-		case FADEOUT:
+		}
+		if((animation & FADEOUT)!=0){
 			fade();
-			break;
 		}
 	}
 
 	public void rotateTo(double theta) {
-		animation = Animations.ROTATETO;
-		animating = true;
+		animation |= ROTATETO;
 		numAnimating++;
 		rotateto = theta;
 	}
 
 	public void moveTo(int x, int y) {
-		animation = Animations.MOVETO;
-		animating = true;
+		animation |= MOVETO;
 		numAnimating++;
 		moveto = new Point(x, y);
 		yspeed = (y - rect.y) / 10;
@@ -228,14 +230,12 @@ public abstract class Clickable implements Comparable<Clickable> {
 	public abstract void fade();
 
 	public void fadeIn() {
-		animation = Animations.FADEIN;
-		animating = true;
+		animation |= FADEIN;
 		numAnimating++;
 	}
 
 	public void fadeOut() {
-		animation = Animations.FADEOUT;
-		animating = true;
+		animation |= FADEOUT;
 		numAnimating++;
 	}
 }

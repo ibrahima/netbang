@@ -106,7 +106,7 @@ public class HandSpace extends Clickable {
 			int x = (int) rect.x + rect.width - xoffset;
 			int y = (int) rect.y + yoffset;
 			CardSpace cs = cards.get(n);
-			if (cs.animating && cs.animation == Animations.MOVETO)
+			if (cs.animation!=0 && (cs.animation & MOVETO) !=0)
 				continue;
 			cs.rect.x = x;
 			cs.rect.y = y;
@@ -121,7 +121,7 @@ public class HandSpace extends Clickable {
 			int x = (int) rect.x + rect.width - xoffset;
 			int y = (int) rect.y + yoffset;
 			CardSpace cs = fieldCards.get(n);
-			if (cs.animating && cs.animation == Animations.MOVETO)
+			if (cs.animation!=0 && (cs.animation & MOVETO) !=0)
 				continue;
 			cs.rect.x = x;
 			cs.rect.y = y;

@@ -469,7 +469,7 @@ public class Field implements MouseListener, MouseMotionListener {
 		lastMouseMoved = System.currentTimeMillis();
 		if (movingCard != null) {
 			if (movingCard instanceof CardSpace
-					&& ((CardSpace) movingCard).animating)
+					&& ((CardSpace) movingCard).animation!=0)
 				return;
 			movingCard.move(Math
 					.max(0, Math.min(e.getPoint().x - pointOnCard.x, client.gui
