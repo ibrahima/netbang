@@ -178,7 +178,15 @@ public abstract class Clickable implements Comparable<Clickable> {
 	}
 
 	public void animate() {
-		//TODO: Fix
+		if((animation & MOVETO)!=0){
+			if (rect.y - moveto.y < yspeed) {
+				this.move(moveto.x, moveto.y);
+				animation &= ~MOVETO;
+				numAnimating--;
+			}
+			else
+				this.translate(xspeed, yspeed);
+		}
 		if((animation & ROTATETO)!=0){
 			if (Math.abs(theta - rotateto) <= Math.PI / 32) {
 				rotate(rotateto);
@@ -190,15 +198,7 @@ public abstract class Clickable implements Comparable<Clickable> {
 			else if (theta < rotateto)
 				rotate(theta + Math.PI / 32);
 		}
-		if((animation & MOVETO)!=0){
-			if (rect.y - moveto.y < yspeed) {
-				this.move(moveto.x, moveto.y);
-				animation &= ~MOVETO;
-				numAnimating--;
-			}
-			else
-				this.translate(xspeed, yspeed);
-		}
+
 		if((animation & GROW)!=0){
 			//TODO: Add grow
 		}
