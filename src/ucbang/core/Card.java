@@ -14,7 +14,8 @@ public class Card {
 	/**
 	 * 1 = self, 2 = choose 1 player, 3 = all, 4 = all others
 	 */
-	public int target;
+	public enum Targets{SELF, ONE, ALL, OTHERS};
+	public Targets target;
 	/**
 	 * For play cards: 1 = deal damage, 2 = heal, 3 = miss, 4 = draw
          * For char cards: 1 = special draw
@@ -167,7 +168,7 @@ public class Card {
 				type = 2;
 				special = 1;
 				range = 0;
-				target = 2;
+				target = Targets.ONE;
 				effect = play.DAMAGE.ordinal();
 				description = "BANG! cards are the main method to reduce other players' life points. \n" +
 						"If you want to play a BANG! card to hit one of the players, determine: a) what \n" +
@@ -175,7 +176,7 @@ public class Card {
 				break;
 			case PUNCH:
 				type = 2;
-				target = 2;
+				target = Targets.ONE;
 				range = 1;
 				effect = play.DAMAGE.ordinal();
 				description="This cards has same effect as BANG! card, but on distance 1.\n" +
@@ -183,13 +184,13 @@ public class Card {
 				break;
 			case GATLING:
 				type = 2;
-				target = 4;
+				target = Targets.OTHERS;
 				effect = play.DAMAGE.ordinal();
 				description="The symbols show: a BANG! to all the other players.";
 				break;
 			case HOWITZER:
 				type = 3;
-				target = 4;
+				target = Targets.OTHERS;
 				effect = play.DAMAGE.ordinal();
 				description="The current player play a Howitzer card in front of him.\n" +
 						"Starting with the next player's turn, he can discard it for BANG!\n" +
@@ -198,14 +199,14 @@ public class Card {
 			case INDIANS:
 				type = 2;
 				special = 2;
-				target = 4;
+				target = Targets.OTHERS;
 				effect = play.DAMAGE.ordinal();
 				description="Each player, excluding the one who played this card, may discard a BANG!\n" +
 						" card, or lose a life point. Neither Missed! nor Barrel has effect in this case.";
 				break;
 			case KNIFE:
 				type = 3;
-				target = 2;
+				target = Targets.ONE;
 				range = 1;
 				effect = play.DAMAGE.ordinal();
 				description="The current player play a Knife card in front of him. Starting with the next\n" +
@@ -213,7 +214,7 @@ public class Card {
 				break;
 			case BUFFALO_RIFLE:
 				type = 3;
-				target = 2;
+				target = Targets.ONE;
 				range = -1;
 				effect = play.DAMAGE.ordinal();
 				description="The current player play a Buffalo Rifle card in front of him. Starting with the\n" +
@@ -222,7 +223,7 @@ public class Card {
 				break;
 			case SPRINGFIELD:
 				type = 2;
-				target = 2;
+				target = Targets.ONE;
 				discardToPlay = true;
 				range = -1;
 				effect = play.DAMAGE.ordinal();
@@ -231,7 +232,7 @@ public class Card {
 				break;
 			case PEPPERBOX:
 				type = 3;
-				target = 2;
+				target = Targets.ONE;
 				range = 0;
 				effect = play.DAMAGE.ordinal();
 				description="The current player play a PepperBox card in front of him. Starting with the next\n" +
@@ -240,7 +241,7 @@ public class Card {
 				break; // TODO: make same range as bang
 			case DERRINGER:
 				type = 3;
-				target = 2;
+				target = Targets.ONE;
 				range = 1;
 				effect = play.DAMAGE.ordinal();
 				effect2 = play.DRAW.ordinal();
@@ -250,7 +251,7 @@ public class Card {
 				break;
 			case DUEL:
 				type = 2;
-				target = 2;
+				target = Targets.ONE;
 				range = -1;
 				effect = play.DUEL.ordinal();
 				description="The player playing this card challenges any other player (at any distance), staring him in\n" +
@@ -261,7 +262,7 @@ public class Card {
 				break;
 			case DYNAMITE:
 				type = 3;
-				target = 1;
+				target = Targets.SELF;
 				effect = field.DYNAMITE.ordinal();
                                 description="The player puts this card on his field. On his next turn, it has a 20% chance of blowing up.\n" +
                                                 "If it doesn't blow up, it is given to the player to his left, and then it has a chance of\n" +
@@ -333,7 +334,7 @@ public class Card {
 				break;
 			case GENERAL_STORE:
 				type = 2;
-				target = 3;
+				target = Targets.ALL;
 				range = 1;
 				effect = play.DRAW.ordinal();
                                 description="After staying on the field for one turn, can be discarded to draw two cards.";
@@ -342,7 +343,7 @@ public class Card {
 			case JAIL:
 				type = 2; //TODO: make special case for jail
 				range = -1;
-                                target = 2;
+                                target = Targets.ONE;
 				effect = play.JAIL.ordinal();
                                 description="25% chance that target player skips his next turn. Cannot be used on the Sheriff.";
 				break; // special case: even though jail remains on the field of
@@ -371,7 +372,7 @@ public class Card {
 
 			case BEER:
 				type = 2;
-				target = 1;
+				target = Targets.SELF;
                                 range = 1;
 				special = 1;
 				effect = play.HEAL.ordinal();
@@ -379,7 +380,7 @@ public class Card {
 				break;
 			case TEQUILA:
 				type = 2;
-				target = 2;
+				target = Targets.ONE;
                                 range = 1;
 				discardToPlay = true;
 				effect = play.HEAL.ordinal();
@@ -387,7 +388,7 @@ public class Card {
 				break;
 			case WHISKY:
 				type = 2;
-				target = 1;
+				target = Targets.SELF;
 				range = 2;
 				discardToPlay = true;
 				effect = play.HEAL.ordinal();
@@ -395,13 +396,13 @@ public class Card {
 				break; // special case: heals 2 hp, so i guess i'll use "range"
 			case CANTEEN:
 				type = 3;
-				target = 1;
+				target = Targets.SELF;
                                 range = 1;
 				effect = play.HEAL.ordinal();
 				break;
 			case SALOON:
 				type = 2;
-				target = 3;
+				target = Targets.ALL;
                                 range = 1;
 				effect = play.HEAL.ordinal();
                                 description="All players regain one life.";
@@ -409,14 +410,14 @@ public class Card {
 
 			case BRAWL:
 				type = 2;
-				target = 4;
+				target = Targets.OTHERS;
 				discardToPlay = true;
 				play.DISCARD.ordinal();
                                 description="Discard a card to play. Choose one card for each player; that player discards it.";
                                 break;
 			case CAN_CAN:
 				type = 3;
-				target = 2;
+				target = Targets.ONE;
 				range = -1;
 				effect = play.STEAL.ordinal();
                                 description="After staying on the field for one turn, may be discarded to draw a card in any\n" +
@@ -424,7 +425,7 @@ public class Card {
 				break;
 			case RAG_TIME:
 				type = 2;
-				target = 2;
+				target = Targets.ONE;
 				range = -1;
 				discardToPlay = true;
 				effect = play.STEAL.ordinal();
@@ -432,14 +433,14 @@ public class Card {
 				break;
 			case PANIC:
 				type = 2;
-				target = 2;
+				target = Targets.ONE;
 				range = 1;
 				effect = play.STEAL.ordinal();
                                 description="Draw a card in any opponent's hand or field at a range of 1.";
 				break;
 			case CAT_BALLOU:
 				type = 2;
-				target = 2;
+				target = Targets.ONE;
 				range = -1;
 				effect = play.DISCARD.ordinal();
                                 description="Pick a card in any opponent's hand or field. That card is discarded.";

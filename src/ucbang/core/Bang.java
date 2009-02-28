@@ -2,6 +2,7 @@ package ucbang.core;
 
 import java.util.ArrayList;
 
+import ucbang.core.Card.Targets;
 import ucbang.network.Server;
 
 public class Bang {
@@ -28,7 +29,6 @@ public class Bang {
      * where it makes more sense
      */
     public void process() {
-        int who = turn % numPlayers;
         if (turn == -2) {
             start();
             turn++;
@@ -53,8 +53,9 @@ public class Bang {
                                         1) + " cards left in your hand.");
                 }
                 if (server.choice.get(0)[0][1] != -1) {
-                    if (getCard(server.choice.get(0)[0][0],server.choice.get(0)[0][1]).target == 
-                        2 && 
+                    int who = turn % numPlayers;
+					if (getCard(server.choice.get(0)[0][0],server.choice.get(0)[0][1]).target == 
+                        Targets.ONE && 
                         (getCard(server.choice.get(0)[0][0],server.choice.get(0)[0][1]).type == 
                          3? 
                          getCard(server.choice.get(0)[0][0],server.choice.get(0)[0][1]).location ==
@@ -63,12 +64,12 @@ public class Bang {
                             {
                                 if (getCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]).effect == Card.play.STEAL.ordinal() ||
                                  getCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]).effect == Card.play.DISCARD.ordinal()){
-                                    server.prompt(turn % numPlayers, "PickCardTarget", true);
+                                    server.prompt(who, "PickCardTarget", true);
                                 }
                                 else{   
-                                    server.prompt(turn % numPlayers, "PickTarget", true);
+                                    server.prompt(who, "PickTarget", true);
                                 }
-                                server.sendInfo(turn%numPlayers, "InfoMsg:Pick Target:0");    
+                                server.sendInfo(who, "InfoMsg:Pick Target:0");    
                                 return;
                             }
                         } else if (server.choice.size() == 2) {
@@ -115,7 +116,7 @@ public class Bang {
                                     } else {
                                         server.choice.remove(server.choice.size() - 
                                                              1);
-                                        server.prompt(turn % numPlayers, 
+                                        server.prompt(who, 
                                                       "PlayCardUnforced", 
                                                       true);
                                         System.out.println("Cannot play that card: you need another card to discard");
@@ -128,7 +129,7 @@ public class Bang {
                                                    server.choice.get(1)[0][1]);
                                 if (getCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]).effect == Card.play.STEAL.ordinal() ||
                                     getCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]).effect == Card.play.DISCARD.ordinal()){
-                                        server.prompt(turn % numPlayers, 
+                                        server.prompt(who, 
                                                       "PickCardTarget", 
                                                       true);
                                         return;
@@ -142,14 +143,14 @@ public class Bang {
                                                        server.choice.get(0)[0][1], false);
                                     server.choice.remove(server.choice.size()-1);
                                     server.choice.remove(server.choice.size()-1);
-                                    server.prompt(turn % numPlayers, "PlayCardUnforced", true);
+                                    server.prompt(who, "PlayCardUnforced", true);
                                     return;
                                 } else if (getCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]).effect == Card.play.DAMAGE.ordinal() ||
                                  getCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]).effect == Card.play.DUEL.ordinal() ) {
-                                    if(players[turn%numPlayers].bangs>0 && getCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]).special == 1 &&
-                                     (playerHasFieldEffect(turn % numPlayers, Card.field.GUN)==-1||players[turn % numPlayers].field.get(playerHasFieldEffect(turn % numPlayers, Card.field.GUN)).special!=1)){
+                                    if(players[who].bangs>0 && getCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]).special == 1 &&
+                                     (playerHasFieldEffect(who, Card.field.GUN)==-1||players[who].field.get(playerHasFieldEffect(who, Card.field.GUN)).special!=1)){
                                         server.choice.remove(server.choice.size() - 1);
-                                        server.sendInfo(turn%numPlayers, "InfoMsg:Stop banging!:1");    
+                                        server.sendInfo(who, "InfoMsg:Stop banging!:1");    
                                     }                                    
                                     else if(playerHasFieldEffect(server.choice.get(1)[0][1], Card.field.BARREL)>-1&&Math.random()<.25 ||
                                      (players[server.choice.get(1)[0][1]].character==Deck.Characters.JOURDONNAIS.ordinal()?Math.random()<.25:false)){
@@ -191,8 +192,8 @@ public class Bang {
                                                        1);
                                     }
                                     if(getCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]).special == 1 && 
-                                     players[turn % numPlayers].character!=Deck.Characters.WILLY_THE_KID.ordinal())//Willy the Kid
-                                        players[turn%numPlayers].bangs++;
+                                     players[who].character!=Deck.Characters.WILLY_THE_KID.ordinal())//Willy the Kid
+                                        players[who].bangs++;
                                     server.choice.remove(server.choice.size() - 
                                                          1);
                                     server.choice.remove(server.choice.size() - 
@@ -212,8 +213,8 @@ public class Bang {
                                         playerDrawCard(server.choice.get(1)[0][0], 1);
                                     }
                                     if(getCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]).special == 1 &&
-                                     players[turn % numPlayers].character!=Deck.Characters.WILLY_THE_KID.ordinal())
-                                        players[turn%numPlayers].bangs++;
+                                     players[who].character!=Deck.Characters.WILLY_THE_KID.ordinal())
+                                        players[who].bangs++;
                                     playerDiscardCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1], true);
                                     playerDiscardCard(server.choice.get(1)[0][1], server.choice.get(2)[0][1], true);
                                     server.choice.remove(server.choice.size() - 1);
@@ -266,7 +267,7 @@ public class Bang {
                                     if(server.choice.get(1)[0][1] == server.choice.get(1)[0][0]){
                                         server.choice.remove(server.choice.size() - 1);
                                         server.choice.remove(server.choice.size() - 1);
-                                        server.prompt(turn % numPlayers, "PickCardTarget", true);
+                                        server.prompt(who, "PickCardTarget", true);
                                         System.out.println("Cannot panic yourself");
                                         return;
                                     }
@@ -284,14 +285,14 @@ public class Bang {
                                     }
                                     else{
                                         if(temp>-1){//TODO:askdfjlasjflajfa;lsjkafsf REPLACE THIS WITH GETCARD
-                                            players[turn%numPlayers].hand.add(players[(server.choice.get(1)[0][1])].hand.get(temp));
-                                            server.sendInfo(turn%numPlayers,"Draw:" + turn%numPlayers + ":Game:"+players[(server.choice.get(1)[0][1])].hand.get(temp).name);
+                                            players[who].hand.add(players[(server.choice.get(1)[0][1])].hand.get(temp));
+                                            server.sendInfo(who,"Draw:" + who + ":Game:"+players[(server.choice.get(1)[0][1])].hand.get(temp).name);
                                             playerDiscardCard(server.choice.get(1)[0][1], temp, false);
                                         }
                                         else{
                                             temp = (-temp)-3;
-                                            players[turn%numPlayers].hand.add(players[(server.choice.get(1)[0][1])].field.get(temp));
-                                            server.sendInfo(turn%numPlayers,"Draw:" + turn%numPlayers + ":Game:"+players[(server.choice.get(1)[0][1])].field.get(temp).name);
+                                            players[who].hand.add(players[(server.choice.get(1)[0][1])].field.get(temp));
+                                            server.sendInfo(who,"Draw:" + who + ":Game:"+players[(server.choice.get(1)[0][1])].field.get(temp).name);
                                             playerFieldDiscardCard(server.choice.get(1)[0][1], temp, false);
                                         }
                                     }
@@ -303,7 +304,7 @@ public class Bang {
                             }
                         }                        
                     } else if (getCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]).target == 
-                               3 &&
+                               Targets.ALL &&
                                (getCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]).type == 
                                 3? 
                                 getCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]).location ==
@@ -321,7 +322,7 @@ public class Bang {
                                                         if(players[n].lifePoints>0)
                                                             store.add(drawCard());
                                                     }
-                                                    storeIndex = turn % numPlayers;
+                                                    storeIndex = who;
                                                     
                                                     String s = "";
                                                     for(Card c:store)
@@ -365,7 +366,7 @@ public class Bang {
                         }
 
                     } else if (getCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]).target == 
-                               4 && 
+                               Targets.OTHERS && 
                                 (getCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]).type == 
                                  3? 
                                  getCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]).location ==
@@ -373,7 +374,7 @@ public class Bang {
                         if (server.choice.size() == 1) {
                             int[] p = new int[numPlayers - 1];
                             for (int n = 0, m = 0; n < numPlayers - 1; n++, m++) {
-                                if (m == turn % numPlayers) {
+                                if (m == who) {
                                     m++;
                                 }
                                 p[n] = m;
@@ -425,7 +426,7 @@ public class Bang {
                                     server.choice.get(0)[0][1]);
                         if(getCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]).name=="DYNAMITE"){
                             //System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-                             getCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]).effect2 = turn%numPlayers;
+                             getCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]).effect2 = who;
                         }
                         getCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]).location = 2;
                         players[server.choice.get(0)[0][0]].field.add(getCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]));
@@ -454,7 +455,7 @@ public class Bang {
                         }
                     }
                     server.choice.remove(server.choice.size() - 1);
-                    server.prompt(turn % numPlayers, "PlayCardUnforced", true);
+                    server.prompt(who, "PlayCardUnforced", true);
                 }
                 if (server.choice.get(0)[0][1] == -1 || 
                     players[server.choice.get(0)[0][0]].hand.size() <= 
@@ -479,10 +480,10 @@ public class Bang {
             System.out.println("YOU CAN'T DO ANYTHING WITH THAT");
             return false;
         }
-        if (c.target != 2 && p2 != null) {
+        if (c.target != Targets.ONE && p2 != null) {
             System.out.println("NON-TARGETING CARD HAS TARGET");
             return false;
-        } else if (c.target == 2 && p2 == null) {
+        } else if (c.target == Targets.ONE && p2 == null) {
             System.out.println("TARGETING CARD DOES NOT HAVE TARGET");
             return false;
         }
@@ -505,11 +506,11 @@ public class Bang {
                             return false; //TODO: technically, this should be allowed, and the old jail should be discarded
                     }
                 } else if (c.effect == Card.play.HEAL.ordinal()) {
-                    if (c.target == 1 && 
+                    if (c.target == Targets.SELF && 
                         p1.lifePoints == p1.maxLifePoints) { //can't beer self with max hp
                         System.out.println("ILLEGAL CARD: you are already at maxhp");
                         return false;
-                    } else if (c.target == 2 && 
+                    } else if (c.target == Targets.ONE && 
                                p2.lifePoints == p2.maxLifePoints) {
                         System.out.println("ILLEGAL CARD: target is already at maxhp");
                         return false;
@@ -525,7 +526,7 @@ public class Bang {
                 System.out.println("ILLEGAL CARD: can't play miss on turn");
                 return false;
             }
-            if(c.target==2 && c.range!=-1){
+            if(c.target == Targets.ONE && c.range != -1){
                 if(c.effect == Card.play.DAMAGE.ordinal()){ 
                     if(c.range == 0){
                         int gun = (playerHasFieldEffect(p1.id, Card.field.GUN)!=-1?p1.field.get(playerHasFieldEffect(p1.id, Card.field.GUN)).range:1);
@@ -697,18 +698,19 @@ public class Bang {
 
         //check if player is dead
         int oldturn = turn;
-        while (players[turn % numPlayers].lifePoints == 0 && 
+        int who = turn % numPlayers;
+		while (players[who].lifePoints == 0 && 
                turn - oldturn < numPlayers) {
             turn++;
         }
 
         server.sendInfo("SetInfo:turn:" + turn);
         
-        for(int n = 0; n<players[turn % numPlayers].field.size(); n++){
-            Card c = players[turn % numPlayers].field.get(n);
+        for(int n = 0; n<players[who].field.size(); n++){
+            Card c = players[who].field.get(n);
             if(c.effect == Card.play.JAIL.ordinal()){
                 if(c.type==2){
-                    playerFieldDiscardCard(turn%numPlayers, n, true);
+                    playerFieldDiscardCard(who, n, true);
                      if(Math.random()<.75){
                         nextTurn();
                         return;
@@ -716,7 +718,7 @@ public class Bang {
                 } 
                 else{ //dynamite
                     if(Math.random()<0){ //BOOM
-                        playerFieldDiscardCard(turn%numPlayers, n, true); 
+                        playerFieldDiscardCard(who, n, true); 
                         System.out.println("ASPLODEDEDEDEDEDEDEDEDEDEDED!11111!!$!@#$!@#$");
                         //something to end the guy's turn if he's dead
                     }
@@ -726,56 +728,56 @@ public class Bang {
                                a - turn < numPlayers) {
                             a++;
                         }
-                        if(players[turn%numPlayers].field.get(n).effect2 != a%numPlayers){
+                        if(players[who].field.get(n).effect2 != a%numPlayers){
                             server.sendInfo("SetInfo:PutInField:"+a%numPlayers+":"+
-                                        players[turn%numPlayers].field.get(n).ordinal);
-                            players[a%numPlayers].field.add(players[turn%numPlayers].field.get(n));
+                                        players[who].field.get(n).ordinal);
+                            players[a%numPlayers].field.add(players[who].field.get(n));
                         }
-                        playerFieldDiscardCard(turn%numPlayers, n, true);
+                        playerFieldDiscardCard(who, n, true);
                     }
                 }
             }
         }
         
-        for(Card c : players[turn % numPlayers].field){ //set all green cards played the turn before to 1
+        for(Card c : players[who].field){ //set all green cards played the turn before to 1
             c.location = 1;
         }
         
-        players[turn%numPlayers].bangs = 0;
+        players[who].bangs = 0;
         
         //draw two cards
-        if (players[turn%numPlayers].characterCard.effect != 1) { //TODO: get rid of specialDraw, move to a direct reference to character cards
-            playerDrawCard(turn % numPlayers, 2);
+        if (players[who].characterCard.effect != 1) { //TODO: get rid of specialDraw, move to a direct reference to character cards
+            playerDrawCard(who, 2);
         } else {
-            switch((Deck.Characters)players[turn%numPlayers].characterCard.e){
+            switch((Deck.Characters)players[who].characterCard.e){
                 case BLACK_JACK: //TODO: reveal second card drawn.
-                    playerDrawCard(turn % numPlayers, (Math.random()<.5?3:2));
+                    playerDrawCard(who, (Math.random()<.5?3:2));
                     break;
                 case JESSE_JONES:
-                playerDrawCard(turn % numPlayers, 2);
+                playerDrawCard(who, 2);
                     break;
                 case KIT_CARLSON:
-                playerDrawCard(turn % numPlayers, 2);
+                playerDrawCard(who, 2);
                     break;
                 case PEDRO_RAMIREZ:
-                playerDrawCard(turn % numPlayers, 2);
+                playerDrawCard(who, 2);
                     break;
                 case BILL_NOFACE:
-                playerDrawCard(turn % numPlayers, 2);
+                playerDrawCard(who, 2);
                     break;
                 case PAT_BRENNAN:
-                playerDrawCard(turn % numPlayers, 2);
+                playerDrawCard(who, 2);
                     break;
                 case PIXIE_PETE:
-                    playerDrawCard(turn % numPlayers, 4);
+                    playerDrawCard(who, 4);
                     break;
                 default: 
                     break;
                 //
             }
         }
-        System.out.println("It is turn " + turn % numPlayers);
-        server.prompt(turn % numPlayers, "PlayCardUnforced", true);
+        System.out.println("It is turn " + who);
+        server.prompt(who, "PlayCardUnforced", true);
     }
 
     /**
