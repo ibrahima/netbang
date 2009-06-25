@@ -1,4 +1,4 @@
-package ucbang.gui;
+package netbang.gui;
 
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;

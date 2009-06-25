@@ -1,4 +1,4 @@
-package ucbang.core;
+package netbang.core;
 
 import java.util.ArrayList;
 

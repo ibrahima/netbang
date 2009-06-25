@@ -1,4 +1,4 @@
-package ucbang.gui;
+package netbang.gui;
 
 import java.awt.Graphics2D;
 import java.awt.Point;

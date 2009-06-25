@@ -1,4 +1,4 @@
-package ucbang.network;
+package netbang.network;
 
 public class Opcodes {
     enum Message{

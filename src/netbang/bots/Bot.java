@@ -1,6 +1,6 @@
-package ucbang.bots;
+package netbang.bots;
 
-import ucbang.network.Client;
+import netbang.network.Client;
 
 public abstract class Bot extends Client {
 	public Bot(String host, String name) {

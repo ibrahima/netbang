@@ -1,4 +1,4 @@
-package ucbang.gui;
+package netbang.gui;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -12,11 +12,12 @@ import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import ucbang.core.Card;
-import ucbang.core.Deck;
-import ucbang.core.Player;
+import netbang.core.Card;
+import netbang.core.Deck;
+import netbang.core.Player;
+import netbang.network.Client;
 
-import ucbang.network.Client;
+
 
 public class Field implements MouseListener, MouseMotionListener {
 	Client client;

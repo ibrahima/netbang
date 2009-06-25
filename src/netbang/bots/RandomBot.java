@@ -1,4 +1,4 @@
-package ucbang.bots;
+package netbang.bots;
 
 import java.util.Random;
 

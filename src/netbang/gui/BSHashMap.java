@@ -1,4 +1,4 @@
-package ucbang.gui;
+package netbang.gui;
 
 import java.util.ArrayList;
 import java.util.Collections;
