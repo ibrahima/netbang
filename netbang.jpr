@@ -16,7 +16,7 @@
       <string v="oracle.bm.commonIde.data.project.ModelerProjectSettings/modelersContentSet"/>
       <string v="oracle.tip.tools.ide.pm.addin.PMProjectSettings/Integration_Content"/>
    </list>
-   <value n="defaultPackage" v="UCBang"/>
+   <value n="defaultPackage" v="netbang"/>
    <hash n="oracle.bm.commonIde.data.project.ModelerProjectSettings">
       <hash n="modelersContentSet">
          <list n="url-path">

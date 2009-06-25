@@ -5,6 +5,6 @@
       <value n="oracle.jdevimpl.xml.oc4j.ds.DataSourcesMigratorHelper" v="10.1.3.3.0"/>
    </hash>
    <list n="listOfChildren">
-      <hash><url n="URL" path="UCBang.jpr"/></hash>
+      <hash><url n="URL" path="netbang.jpr"/></hash>
    </list>
 </jws:workspace>
