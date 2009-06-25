@@ -1,4 +1,4 @@
-package ucbang.network;
+package netbang.network;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -16,8 +16,9 @@ import java.util.LinkedList;
 
 import javax.swing.JOptionPane;
 
-import ucbang.core.Bang;
-import ucbang.core.Player;
+import netbang.core.Bang;
+import netbang.core.Player;
+
 
 public class Server extends Thread {
 	public static void main(String Args[]) {

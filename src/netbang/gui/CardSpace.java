@@ -1,4 +1,4 @@
-package ucbang.gui;
+package netbang.gui;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -6,7 +6,8 @@ import java.awt.Polygon;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 
-import ucbang.core.Card;
+import netbang.core.Card;
+
 
 /**
  * Contains a card and a rectangle

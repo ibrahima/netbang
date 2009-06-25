@@ -1,4 +1,4 @@
-package ucbang.network;
+package netbang.network;
 
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;

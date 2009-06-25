@@ -1,4 +1,4 @@
-package ucbang.gui;
+package netbang.gui;
 
 import java.awt.Color;
 import java.awt.Polygon;
@@ -22,7 +22,7 @@ public class InfoText extends Clickable {
 	 * 
 	 * @param amount
 	 *            1 for fade in, -1 for fade out
-	 * @see ucbang.gui.Clickable#fade(int)
+	 * @see netbang.gui.Clickable#fade(int)
 	 */
 	public void fade() {
 		System.out.println(color.getAlpha());

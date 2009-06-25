@@ -1,9 +1,10 @@
-package ucbang.core;
+package netbang.core;
 
 import java.util.ArrayList;
 
-import ucbang.core.Card.Targets;
-import ucbang.network.Server;
+import netbang.core.Card.Targets;
+import netbang.network.Server;
+
 
 public class Bang {
     Server server;

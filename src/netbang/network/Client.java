@@ -1,4 +1,4 @@
-package ucbang.network;
+package netbang.network;
 
 import java.awt.Color;
 
@@ -11,14 +11,15 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 
-import ucbang.core.Card;
-import ucbang.core.Deck;
-import ucbang.core.Player;
-import ucbang.core.Deck.CardName;
-import ucbang.gui.CardDisplayer;
-import ucbang.gui.Clickable;
-import ucbang.gui.ClientGUI;
-import ucbang.gui.Field;
+import netbang.core.Card;
+import netbang.core.Deck;
+import netbang.core.Player;
+import netbang.core.Deck.CardName;
+import netbang.gui.CardDisplayer;
+import netbang.gui.Clickable;
+import netbang.gui.ClientGUI;
+import netbang.gui.Field;
+
 
 public class Client extends Thread {
     String name = "";

@@ -1,4 +1,4 @@
-package ucbang.gui;
+package netbang.gui;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -25,9 +25,10 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
-import ucbang.core.Card;
-import ucbang.core.Player;
-import ucbang.network.Client;
+import netbang.core.Card;
+import netbang.core.Player;
+import netbang.network.Client;
+
 
 public class ClientGUI extends JFrame implements KeyListener,
 		ComponentListener, ActionListener {

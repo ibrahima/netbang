@@ -1,8 +1,8 @@
-package ucbang.launchers;
+package netbang.launchers;
 
-import ucbang.bots.RandomBot;
-import ucbang.network.Client;
-import ucbang.network.Server;
+import netbang.bots.RandomBot;
+import netbang.network.Client;
+import netbang.network.Server;
 
 public class TestBot {
 

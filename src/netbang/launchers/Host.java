@@ -1,7 +1,7 @@
-package ucbang.launchers;
+package netbang.launchers;
 
-import ucbang.network.Client;
-import ucbang.network.Server;
+import netbang.network.Client;
+import netbang.network.Server;
 
 public class Host {
 	public static void main(String args[]) {
