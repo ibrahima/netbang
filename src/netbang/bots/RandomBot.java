@@ -10,25 +10,25 @@ import java.util.Random;
  */
 public class RandomBot extends Bot {
 
-	/**
-	 * @param host
-	 * @param name
-	 */
-	public RandomBot(String host, String name) {
-		super(host, name);
-	}
+    /**
+     * @param host
+     * @param name
+     */
+    public RandomBot(String host, String name) {
+        super(host, name);
+    }
 
-	public int choose() {
-		return 0;
-	}
+    public int choose() {
+        return 0;
+    }
 
-	/**
-	 * Prompts the player to play a card
-	 */
-	protected void promptPlayCard() {
-		Random r = new Random();
-		int choice = r.nextInt(this.player.hand.size());
-		outMsgs.add("Prompt:" + choice);
-	}
+    /**
+     * Prompts the player to play a card
+     */
+    protected void promptPlayCard() {
+        Random r = new Random();
+        int choice = r.nextInt(this.player.hand.size());
+        outMsgs.add("Prompt:" + choice);
+    }
 
 }

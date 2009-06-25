@@ -60,7 +60,7 @@ public class Client extends Thread {
             new ServerBrowser();
             return;
         }
-    	new Client(host, guiEnabled, s);
+        new Client(host, guiEnabled, s);
     }
     /**
      * Constructs a client to the Bang server on the specified host, with the specified name.
@@ -177,23 +177,23 @@ public class Client extends Thread {
     public void addChat(String chat) {
         addMsg("Chat:" + chat);
     }
-	/**
-	 * Prompts the player to start
-	 * @return
-	 */
-	protected int promptStart() {
+    /**
+     * Prompts the player to start
+     * @return
+     */
+    protected int promptStart() {
         gui.appendText("Host has requested the game be started", 
                 Color.BLUE);
-		return gui.promptYesNo("Host has sent a request to start game", 
-		                    "Start game?");
-	}
-	/**
-	 * Prompts the player to play a card
-	 */
-	protected void promptPlayCard() {
-		gui.promptChooseCard(player.hand, "", "", 
-		                       true);
-	}
+        return gui.promptYesNo("Host has sent a request to start game", 
+                            "Start game?");
+    }
+    /**
+     * Prompts the player to play a card
+     */
+    protected void promptPlayCard() {
+        gui.promptChooseCard(player.hand, "", "", 
+                               true);
+    }
 
 }
 
@@ -252,14 +252,14 @@ class ClientThread extends Thread {
                     buffer = (String)in.readLine();
                     String[] temp = buffer.split(":", 2);
                     String messagetype = temp[0];
-					String messagevalue = temp[1];
-					if (messagetype.equals("Connection")) {
+                    String messagevalue = temp[1];
+                    if (messagetype.equals("Connection")) {
                         System.out.println(messagevalue);
                         if (!c.connected && 
                             messagevalue.equals("Successfully connected.")) {
                             c.connected = true;
                             if(c.guiEnabled)
-                            	c.gui.setTitle("UCBang - " + c.name + 
+                                c.gui.setTitle("UCBang - " + c.name + 
                                            " - Connected to server on " + 
                                            server.getInetAddress());
                         } else if (!c.connected && 
@@ -276,10 +276,10 @@ class ClientThread extends Thread {
                             }
                         }
                     } else if (messagetype.equals("Chat")) {
-                    	if(c.guiEnabled)
-                    		c.gui.appendText(messagevalue);
-                    	else
-                    		print(messagevalue);
+                        if(c.guiEnabled)
+                            c.gui.appendText(messagevalue);
+                        else
+                            print(messagevalue);
                     } else if (messagetype.equals("InfoMsg")) {
                         String[] temp1 = messagevalue.split(":");
                         c.gui.appendText(temp1[0], (Integer.valueOf(temp1[1])==0)?Color.BLUE:Color.RED);
@@ -345,13 +345,13 @@ class ClientThread extends Thread {
                                     Card card = 
                                         new Card(Deck.Characters.valueOf(temp1[m]));
                                     if(c.guiEnabled)
-                                    	c.field.add(card, 150+80*m, 200, c.id, false);
+                                        c.field.add(card, 150+80*m, 200, c.id, false);
                                     c.player.hand.add(card);
                                 } else {
                                     Card card = 
                                         new Card(Deck.CardName.valueOf(temp1[m]));
                                     if(c.guiEnabled)
-                                    	c.field.add(card, c.id, false);
+                                        c.field.add(card, c.id, false);
                                     c.player.hand.add(card);
                                 }
                             }
@@ -360,8 +360,8 @@ class ClientThread extends Thread {
                                              temp1[1] + "cards.", Color.GREEN);
                             for(int i=0;i<Integer.valueOf(temp1[1]);i++){
                                 Card card = new Card(Deck.CardName.BACK);
-                            	c.field.add(card, Integer.valueOf(temp1[0]), false);
-                            	c.players.get(Integer.valueOf(temp1[0])).hand.add(card);
+                                c.field.add(card, Integer.valueOf(temp1[0]), false);
+                                c.players.get(Integer.valueOf(temp1[0])).hand.add(card);
                             }
                         }
                         c.outMsgs.add("Ready");
@@ -372,7 +372,7 @@ class ClientThread extends Thread {
                         // misnomer for lifepoints, just adds or subtracts that amount
                         // set information about hand and stuff
                         String[] temp1 = messagevalue.split(":");
-                    	int tid = Integer.valueOf(temp1[1]);
+                        int tid = Integer.valueOf(temp1[1]);
                         String infotype = temp1[0];
                         Player ptemp = null;
                         if (infotype.equals("newPlayer")) {
@@ -388,8 +388,8 @@ class ClientThread extends Thread {
                             }
                         }
                         if (infotype.equals("role")) {
-                        	if(c.guiEnabled)
-                        		if (tid == c.id) {
+                            if(c.guiEnabled)
+                                if (tid == c.id) {
                                     c.field.clear();
                                     c.player.role = 
                                             Deck.Role.values()[Integer.valueOf(temp1[2])];
@@ -408,29 +408,29 @@ class ClientThread extends Thread {
                                                          Deck.Role.values()[Integer.valueOf(temp1[2])].name(), 
                                                          Color.YELLOW);
                                 }
-                        	else{
-                        		print("HIHALSADPKASDKLKJASLDLASK");
-                        	}
+                            else{
+                                print("HIHALSADPKASDKLKJASLDLASK");
+                            }
                             
                         } else if (infotype.equals("maxHP")) {
-                        	if(c.guiEnabled)
-                        		c.gui.appendText("Player " + temp1[1] + 
+                            if(c.guiEnabled)
+                                c.gui.appendText("Player " + temp1[1] + 
                                              " has a maxHP of " + temp1[2], 
                                              Color.RED);
                             ptemp.maxLifePoints=Integer.valueOf(temp1[2]);
                             ptemp.lifePoints=Integer.valueOf(temp1[2]);
                                 //this should match the above block
                             if(tid+1==c.numPlayers&&c.guiEnabled)
-                            	c.field.start2();
+                                c.field.start2();
                         } else if (infotype.equals("HP")) {
                             ptemp.lifePoints+=Integer.valueOf(temp1[2]).intValue();
-                        	if(c.guiEnabled){
-                        		c.gui.appendText("Player " + temp1[1] + 
+                            if(c.guiEnabled){
+                                c.gui.appendText("Player " + temp1[1] + 
                                         " life points changed by " + 
                                         temp1[2], Color.RED);
-                        		c.field.setHP(tid,ptemp.lifePoints);
-                        	}else
-                        		c.print("Player " + temp1[1] + 
+                                c.field.setHP(tid,ptemp.lifePoints);
+                            }else
+                                c.print("Player " + temp1[1] + 
                                         " life points changed by " + 
                                         temp1[2]);
                         } else if (infotype.equals("PutInField")) {

@@ -85,12 +85,12 @@ public class Deck {
     }
     
     public Card draw() throws Exception{
-    	if(drawPile.size()>0)
-    		return drawPile.pop();
-    	else
-    		throw new Exception("The deck is empty.");
+        if(drawPile.size()>0)
+            return drawPile.pop();
+        else
+            throw new Exception("The deck is empty.");
     }
     public int size(){
-    	return drawPile.size();
+        return drawPile.size();
     }
 }
