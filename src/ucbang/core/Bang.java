@@ -54,7 +54,7 @@ public class Bang {
                 }
                 if (server.choice.get(0)[0][1] != -1) {
                     int who = turn % numPlayers;
-					if (getCard(server.choice.get(0)[0][0],server.choice.get(0)[0][1]).target == 
+                    if (getCard(server.choice.get(0)[0][0],server.choice.get(0)[0][1]).target == 
                         Targets.ONE && 
                         (getCard(server.choice.get(0)[0][0],server.choice.get(0)[0][1]).type == 
                          3? 
@@ -699,7 +699,7 @@ public class Bang {
         //check if player is dead
         int oldturn = turn;
         int who = turn % numPlayers;
-		while (players[who].lifePoints == 0 && 
+        while (players[who].lifePoints == 0 && 
                turn - oldturn < numPlayers) {
             turn++;
         }
