@@ -124,7 +124,7 @@
     </target>
 
     <target name="find_revision" description="Sets property 'build.num' to the next revision">
-		<buildnumber file="revision.txt" />
+        <buildnumber file="revision.txt" />
         <echo>Revision: ${build.number}</echo>
         <echo file="revision.txt" append="false">${build.number}</echo>
     </target>
