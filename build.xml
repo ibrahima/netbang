@@ -123,13 +123,10 @@
         </scp>
     </target>
 
-    <target name="find_revision" description="Sets property 'svn.revision' to the head svn revision">
-        <taskdef resource="org/tigris/subversion/svnant/svnantlib.xml" />
-        <svn>
-            <status path="src" revisionProperty="svn.revision" />
-        </svn>
-        <echo>Revision: ${svn.revision}</echo>
-        <echo file="revision.txt" append="false">${svn.revision}</echo>
+    <target name="find_revision" description="Sets property 'build.num' to the next revision">
+		<buildnumber file="revision.txt" />
+        <echo>Revision: ${build.number}</echo>
+        <echo file="revision.txt" append="false">${build.number}</echo>
     </target>
 
 </project>
