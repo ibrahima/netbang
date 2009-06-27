@@ -2,8 +2,9 @@ package netbang.network;
 
 public class Opcodes {
     enum Message{
-        SETNAME(0),
-        COMMAND(0),
+        SETNAME(1),
+        SETROLE(1),
+        COMMAND(1),
         READY(0);
         
         private Message(int i){
@@ -22,7 +23,13 @@ public class Opcodes {
         PROMPTING;
     }
     
+    public static String createMessage(){
+        return "";
+    }
     public static Message fromString(String str){
         return Message.valueOf(str);
+    }
+    public static String[] getCommandParams(){
+        return new String[]{""};
     }
 }

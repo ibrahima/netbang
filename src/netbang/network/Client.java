@@ -20,6 +20,7 @@ import netbang.gui.Clickable;
 import netbang.gui.ClientGUI;
 import netbang.gui.Field;
 
+import netbang.core.Constants;
 
 public class Client extends Thread {
     String name = "";
@@ -392,20 +393,20 @@ class ClientThread extends Thread {
                                 if (tid == c.id) {
                                     c.field.clear();
                                     c.player.role = 
-                                            Deck.Role.values()[Integer.valueOf(temp1[2])];
+                                            Constants.Role.values()[Integer.valueOf(temp1[2])];
                                     c.gui.appendText("You are a " + 
-                                                     Deck.Role.values()[Integer.valueOf(temp1[2])].name(), 
+                                                     Constants.Role.values()[Integer.valueOf(temp1[2])].name(), 
                                                      Color.YELLOW);
                                 } else {
                                     if (Integer.valueOf(temp1[2]) == 0)
                                         c.gui.appendText("Player " + temp1[1] + 
                                                          " is the " + 
-                                                         Deck.Role.values()[Integer.valueOf(temp1[2])].name(), 
+                                                         Constants.Role.values()[Integer.valueOf(temp1[2])].name(), 
                                                          Color.YELLOW);
                                     else //only shown when player is killed
                                         c.gui.appendText("Player " + temp1[1] + 
                                                          " was a " + 
-                                                         Deck.Role.values()[Integer.valueOf(temp1[2])].name(), 
+                                                         Constants.Role.values()[Integer.valueOf(temp1[2])].name(), 
                                                          Color.YELLOW);
                                 }
                             else{
