@@ -306,36 +306,10 @@ class ClientThread extends Thread {
                                 break;
                             }
                     } else if (messagetype.equals("Prompt")) {
-                        if(client.nextPrompt!=-2){
-                            client.outMsgs.add("Prompt:" + client.nextPrompt);
-                            client.nextPrompt = -2;
-                        }
-                        // received a prompt from host to start
-                        else if (messagevalue.equals("Start")) {
-                            client.outMsgs.add("Prompt:" + 
-                                          client.promptStart());
-                        } else if (messagevalue.equals("PlayCard")) {
-                            client.promptPlayCard();
-                        } else if (messagevalue.equals("PlayCardUnforced")) {
-                            client.gui.promptChooseCard(client.player.hand, "", "", 
-                                                   false);
-                        } else if (messagevalue.equals("PickCardTarget")) {
-                            client.gui.promptTargetCard("", "", //null should be ALL cards.
-                                                   false);
-                            client.nextPrompt = -1;
-                        } else if (messagevalue.equals("GeneralStore")) {
-                            client.gui.promptChooseCard(client.specialHand, "", "", true);
-                        } else if (messagevalue.equals("ChooseCharacter")) {
-                            client.promptPlayCard();
-                        } else if (messagevalue.equals("PickTarget")) {
-                            //System.out.println("I am player " + c.id + ", prompting = " + c.prompting);
-                            //c.outMsgs.add("Prompt:" + (1 - c.id));
-                            client.gui.promptChooseCard(null, "", "", false);
-                            client.targetingPlayer = true;
-                        } else {
-                            System.out.println("WTF do i do with " + messagevalue);
-                            Thread.dumpStack();
-                        }
+                        if(!processPrompt(messagevalue)){
+                		    System.out.println("WTF do i do with " + messagevalue);
+                		    Thread.dumpStack();
+                		}
 
                     } else if (messagetype.equals("Draw")) {
                         String[] temp1 = messagevalue.split(":");
@@ -411,10 +385,57 @@ class ClientThread extends Thread {
     }
 
 	/**
+	 * Processes a prompt request from the server
+	 * @param messagevalue
+	 * @return True if the message was properly processed, false otherwise
+	 */
+	private boolean processPrompt(String messagevalue) {
+		Boolean processed = false;
+		if(client.nextPrompt!=-2){
+			processed = true;
+		    client.outMsgs.add("Prompt:" + client.nextPrompt);
+		    client.nextPrompt = -2;
+		}
+		// received a prompt from host to start
+		else if (messagevalue.equals("Start")) {
+			processed = true;
+		    client.outMsgs.add("Prompt:" + 
+		                  client.promptStart());
+		} else if (messagevalue.equals("PlayCard")) {
+			processed = true;
+		    client.promptPlayCard();
+		} else if (messagevalue.equals("PlayCardUnforced")) {
+			processed = true;
+		    client.gui.promptChooseCard(client.player.hand, "", "", 
+		                           false);
+		} else if (messagevalue.equals("PickCardTarget")) {
+			processed = true;
+		    client.gui.promptTargetCard("", "", //null should be ALL cards.
+		                           false);
+		    client.nextPrompt = -1;
+		} else if (messagevalue.equals("GeneralStore")) {
+			processed = true;
+		    client.gui.promptChooseCard(client.specialHand, "", "", true);
+		} else if (messagevalue.equals("ChooseCharacter")) {
+			processed = true;
+		    client.promptPlayCard();
+		} else if (messagevalue.equals("PickTarget")) {
+			processed = true;
+		    //System.out.println("I am player " + c.id + ", prompting = " + c.prompting);
+		    //c.outMsgs.add("Prompt:" + (1 - c.id));
+		    client.gui.promptChooseCard(null, "", "", false);
+		    client.targetingPlayer = true;
+		}
+		return processed;
+	}
+
+	/**
+	 * Processes a setinfo request from the server.
 	 * @param type
 	 * @param fields
 	 * @param playerid
 	 * @param player
+	 * @return True if the message was properly processed, false otherwise
 	 */
 	private Boolean processInfo(String type, String[] fields, int playerid,
 			Player player) {
