@@ -413,29 +413,29 @@ class ClientThread extends Thread {
 	/**
 	 * @param type
 	 * @param fields
-	 * @param tid
+	 * @param playerid
 	 * @param player
 	 */
-	private Boolean processInfo(String type, String[] fields, int tid,
+	private Boolean processInfo(String type, String[] fields, int playerid,
 			Player player) {
 		Boolean processed = false;
 		if (type.equals("newPlayer")) {
 			processed = true;
-		    client.id = tid;
-		    client.player = new Player(tid, client.name); 
+		    client.id = playerid;
+		    client.player = new Player(playerid, client.name); 
 		    client.numPlayers = Integer.valueOf(fields[2]);
 		    client.players.set(client.id, client.player);
 		} else{
-		    if(client.id == tid){
+		    if(client.id == playerid){
 		            player = client.player;
-		    }else if(tid<client.players.size()&&tid>=0){
-		            player = client.players.get(tid);
+		    }else if(playerid<client.players.size()&&playerid>=0){
+		            player = client.players.get(playerid);
 		    }
 		}
 		if (type.equals("role")) {
 			processed = true;
 		    if(client.guiEnabled)
-		        if (tid == client.id) {
+		        if (playerid == client.id) {
 		            client.field.clear();
 		            client.player.role = 
 		                    Deck.Role.values()[Integer.valueOf(fields[2])];
@@ -455,7 +455,7 @@ class ClientThread extends Thread {
 		                                 Color.YELLOW);
 		        }
 		    else{
-		        if (tid == client.id) {
+		        if (playerid == client.id) {
 		            client.field.clear();
 		            client.player.role = 
 		                    Deck.Role.values()[Integer.valueOf(fields[2])];
@@ -471,7 +471,7 @@ class ClientThread extends Thread {
 		    player.maxLifePoints=Integer.valueOf(fields[2]);
 		    player.lifePoints=Integer.valueOf(fields[2]);
 		        //this should match the above block
-		    if(tid + 1 == client.numPlayers && client.guiEnabled)
+		    if(playerid + 1 == client.numPlayers && client.guiEnabled)
 		        client.field.start2();
 		} else if (type.equals("HP")) {
 			processed = true;
@@ -480,7 +480,7 @@ class ClientThread extends Thread {
 		        client.gui.appendText("Player " + fields[1] + 
 		                " life points changed by " + 
 		                fields[2], Color.RED);
-		        client.field.setHP(tid,player.lifePoints);
+		        client.field.setHP(playerid,player.lifePoints);
 		    }else
 		        client.print("Player " + fields[1] + 
 		                " life points changed by " + 
@@ -489,11 +489,11 @@ class ClientThread extends Thread {
 			processed = true;
 	        client.gui.appendText("Player "+fields[1]+" added "+fields[2]+" to the field.");
 	        Card card;
-	        if(tid==client.id){
+	        if(playerid==client.id){
 	            if(fields.length==4){
 	                card = client.player.hand.get(Integer.valueOf(fields[3]));
 	                card.location = 1;
-	                client.field.remove(tid, Integer.valueOf(fields[3]));
+	                client.field.remove(playerid, Integer.valueOf(fields[3]));
 	                client.player.hand.remove(card);
 	            } else{
 	                card = new Card(Deck.CardName.values()[Integer.valueOf(fields[2])]);
@@ -503,16 +503,16 @@ class ClientThread extends Thread {
 	            if(fields.length==4){
 	                card = new Card(CardName.valueOf(fields[2]));
 	                card.location = 1;
-	                client.field.remove(tid,(int)Integer.valueOf(fields[3]));
-	                client.players.get(tid).hand.remove((int)Integer.valueOf(fields[3]));
+	                client.field.remove(playerid,(int)Integer.valueOf(fields[3]));
+	                client.players.get(playerid).hand.remove((int)Integer.valueOf(fields[3]));
 	            }
 	            else{
 	                card = new Card(Deck.CardName.values()[Integer.valueOf(fields[2])]);
 	                card.location = 1;
 	            }
 	        }
-	        client.players.get(tid).field.add(card);
-	        client.field.add(card, tid, true);
+	        client.players.get(playerid).field.add(card);
+	        client.field.add(card, playerid, true);
 		} else if(type.equals("GeneralStore")){
 			processed = true;
 		    System.out.println("General Store!!!!!");
@@ -528,24 +528,24 @@ class ClientThread extends Thread {
 	        }
 		} else if (type.equals("turn")) {
 			processed = true;
-		    client.turn = tid;
+		    client.turn = playerid;
 		    if (client.turn % client.numPlayers == client.id) {
 		        client.gui.appendText("It's your move!!!!!! Time to d-d-d-d-d-duel!", Color.CYAN);
 		    }
 		} else if (type.equals("discard")) {
 		    //TODO: Keep track of discard pile on client side
 			processed = true;
-		    if(tid==client.id){
-		        client.field.remove(tid, Integer.valueOf(fields[2]));
+		    if(playerid==client.id){
+		        client.field.remove(playerid, Integer.valueOf(fields[2]));
 		        String cname = client.player.hand.remove(Integer.valueOf(fields[2]).intValue()).name;
 		        client.gui.appendText("You discarded:" + cname);
 		        client.discardpile.add(new Card(Deck.CardName.valueOf(cname)));
 		    }
 		    else{
-		        System.out.println(client.players.get(tid).name + " discarded " + client.players.get(tid).hand.get(Integer.valueOf(fields[2])));
-		        client.field.remove(tid, Integer.valueOf(fields[2]));
-		        client.players.get(tid).hand.remove(Integer.valueOf(fields[2]).intValue());
-		        client.gui.appendText("Player "+tid+" discarded:" + (fields.length==4?fields[3]:"card #"+fields[2]));
+		        System.out.println(client.players.get(playerid).name + " discarded " + client.players.get(playerid).hand.get(Integer.valueOf(fields[2])));
+		        client.field.remove(playerid, Integer.valueOf(fields[2]));
+		        client.players.get(playerid).hand.remove(Integer.valueOf(fields[2]).intValue());
+		        client.gui.appendText("Player "+playerid+" discarded:" + (fields.length==4?fields[3]:"card #"+fields[2]));
 		        if(fields.length==4){
 		            client.discardpile.add(new Card(Deck.CardName.valueOf(fields[3])));
 		        }
@@ -553,17 +553,17 @@ class ClientThread extends Thread {
 		} else if (type.equals("fieldDiscard")) {
 		    //TODO: Keep track of discard pile on client side
 			processed = true;
-		    if(tid==client.id){
+		    if(playerid==client.id){
 		        client.gui.appendText("REMOVING:" + Integer.valueOf(fields[2]).intValue()+ " "+client.player.field.get(Integer.valueOf(fields[2]).intValue())+" "+client.player.field.size());
-		        client.field.remove(tid, Integer.valueOf(fields[2]));
+		        client.field.remove(playerid, Integer.valueOf(fields[2]));
 		        String cname =client.player.field.remove(Integer.valueOf(fields[2]).intValue()).name;
 		        client.gui.appendText("You discarded:" + cname);
 		        client.discardpile.add(new Card(Deck.CardName.valueOf(cname)));
 		    }
 		    else{
-		        client.field.remove(tid, Integer.valueOf(fields[2]));
-		        client.players.get(tid).field.remove(Integer.valueOf(fields[2]).intValue());
-		        client.gui.appendText("Player "+tid+" discarded:" + fields[3]);
+		        client.field.remove(playerid, Integer.valueOf(fields[2]));
+		        client.players.get(playerid).field.remove(Integer.valueOf(fields[2]).intValue());
+		        client.gui.appendText("Player "+playerid+" discarded:" + fields[3]);
 		        client.discardpile.add(new Card(Deck.CardName.valueOf(fields[3])));
 		    }
 		}
@@ -577,17 +577,17 @@ class ClientThread extends Thread {
 		        client.discardpile.add(new Card(Deck.CardName.valueOf(fields[2])));
 		} else if (type.equals("id")) { //TODO: remove safely? <-- what does this mean?
 			processed = true;
-		    client.id = tid;
+		    client.id = playerid;
 		} else if (type.equals("character")) {
 			processed = true;
-		    if (tid == client.id){
+		    if (playerid == client.id){
 		        client.player.character = Integer.valueOf(fields[2]);
-		        client.players.get(tid).character=Integer.valueOf(fields[2]);
+		        client.players.get(playerid).character=Integer.valueOf(fields[2]);
 		    }
 		    else {
 		        client.gui.appendText("Player " + fields[1] + " chose " + Deck.Characters.values()[Integer.valueOf(fields[2])], Color.YELLOW);
-		        client.players.get(tid).character=Integer.valueOf(fields[2]);
-		        client.field.add(new Card(Deck.Characters.values()[Integer.valueOf(fields[2])]), tid, false);
+		        client.players.get(playerid).character=Integer.valueOf(fields[2]);
+		        client.field.add(new Card(Deck.Characters.values()[Integer.valueOf(fields[2])]), playerid, false);
 		    }
 		}
 		return processed;
