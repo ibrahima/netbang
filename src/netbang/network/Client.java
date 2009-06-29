@@ -340,11 +340,6 @@ class ClientThread extends Thread {
                             }
                         }
                         client.outMsgs.add("Ready");
-                    } else if (messagetype.equals("GetInfo")) {
-                    	//TODO: I'm pretty sure the client should never receive a message getinfo
-                    	//TODO: Remove if this is ascertained
-                        //String[] temp1 = buffer.split(":", 2);
-                        client.outMsgs.add("Ready");
                     } else if (messagetype.equals("SetInfo")) { // note: a bit of a
                         // misnomer for lifepoints, just adds or subtracts that amount
                         // set information about hand and stuff
