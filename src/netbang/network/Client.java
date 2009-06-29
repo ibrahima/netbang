@@ -457,7 +457,11 @@ class ClientThread extends Thread {
 		                                 Color.YELLOW);
 		        }
 		    else{
-		        print("HIHALSADPKASDKLKJASLDLASK");
+		        if (tid == client.id) {
+		            client.field.clear();
+		            client.player.role = 
+		                    Deck.Role.values()[Integer.valueOf(fields[2])];
+		        }
 		    }
 		    
 		} else if (type.equals("maxHP")) {
@@ -591,10 +595,6 @@ class ClientThread extends Thread {
 		}
 		return processed;
 	}
-
-
-
-
 
     protected void finalize() throws Throwable {
         try {
