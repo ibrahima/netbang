@@ -378,8 +378,7 @@ class ClientThread extends Thread {
                         int tid = Integer.valueOf(infofields[1]);
                         String infotype = infofields[0];
                         Player ptemp = null;
-                        if(!processInfo(infotype, infofields, tid, ptemp,
-								messagevalue)){
+                        if(!processInfo(infotype, infofields, tid, ptemp)){
                 		    System.out.println("WTF do i do with " + infotype + ":" + infofields[1]);
                 		    Thread.dumpStack();
                 		}
@@ -416,10 +415,9 @@ class ClientThread extends Thread {
 	 * @param fields
 	 * @param tid
 	 * @param player
-	 * @param messagevalue
 	 */
 	private Boolean processInfo(String type, String[] fields, int tid,
-			Player player, String messagevalue) {
+			Player player) {
 		Boolean processed = false;
 		if (type.equals("newPlayer")) {
 			processed = true;
@@ -544,7 +542,7 @@ class ClientThread extends Thread {
 		        client.discardpile.add(new Card(Deck.CardName.valueOf(cname)));
 		    }
 		    else{
-		            System.out.println(messagevalue + client.players.get(tid).hand.get(Integer.valueOf(fields[2])));
+		        System.out.println(client.players.get(tid).name + " discarded " + client.players.get(tid).hand.get(Integer.valueOf(fields[2])));
 		        client.field.remove(tid, Integer.valueOf(fields[2]));
 		        client.players.get(tid).hand.remove(Integer.valueOf(fields[2]).intValue());
 		        client.gui.appendText("Player "+tid+" discarded:" + (fields.length==4?fields[3]:"card #"+fields[2]));
@@ -563,7 +561,6 @@ class ClientThread extends Thread {
 		        client.discardpile.add(new Card(Deck.CardName.valueOf(cname)));
 		    }
 		    else{
-		        System.out.println("ASDFASDFASDFASDFASDF"+messagevalue);
 		        client.field.remove(tid, Integer.valueOf(fields[2]));
 		        client.players.get(tid).field.remove(Integer.valueOf(fields[2]).intValue());
 		        client.gui.appendText("Player "+tid+" discarded:" + fields[3]);
