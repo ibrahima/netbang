@@ -201,7 +201,7 @@ class ClientThread extends Thread {
     Socket server;
     BufferedReader in;
     BufferedWriter out;
-    Client c;
+    Client client;
     String buffer;
     boolean namesent = false;
 
@@ -209,7 +209,7 @@ class ClientThread extends Thread {
 
     public ClientThread(Socket theServer, Client c) {
         server = theServer;
-        this.c = c;
+        this.client = c;
         try {
             out = new BufferedWriter(new OutputStreamWriter(server.getOutputStream()));
             in =  new BufferedReader(new InputStreamReader(server.getInputStream()));
@@ -226,19 +226,19 @@ class ClientThread extends Thread {
     }
 
     public void run() {
-        while (!server.isClosed() && c.running) {
+        while (!server.isClosed() && client.running) {
             // System.out.println("Loop looping");
             try {
-                if (c.name != null && out != null && !c.connected && 
+                if (client.name != null && out != null && !client.connected && 
                     !namesent) {
-                    out.write("Name:" + c.name);
+                    out.write("Name:" + client.name);
                     out.newLine();
                     out.flush();
                     namesent = true;
                 }
-                synchronized (c.outMsgs) {
-                    if (!c.outMsgs.isEmpty()) {
-                        Iterator<String> iter = c.outMsgs.iterator();
+                synchronized (client.outMsgs) {
+                    if (!client.outMsgs.isEmpty()) {
+                        Iterator<String> iter = client.outMsgs.iterator();
                         while (iter.hasNext()) {
                             out.write(iter.next());
                             out.newLine();
@@ -248,292 +248,142 @@ class ClientThread extends Thread {
                 }
                 out.flush();
                 if (in.ready()) {
-                    c.redraw = true;
+                    client.redraw = true;
                     buffer = (String)in.readLine();
                     String[] temp = buffer.split(":", 2);
                     String messagetype = temp[0];
                     String messagevalue = temp[1];
                     if (messagetype.equals("Connection")) {
                         System.out.println(messagevalue);
-                        if (!c.connected && 
+                        if (!client.connected && 
                             messagevalue.equals("Successfully connected.")) {
-                            c.connected = true;
-                            if(c.guiEnabled)
-                                c.gui.setTitle("UCBang - " + c.name + 
+                            client.connected = true;
+                            if(client.guiEnabled)
+                                client.gui.setTitle("UCBang - " + client.name + 
                                            " - Connected to server on " + 
                                            server.getInetAddress());
-                        } else if (!c.connected && 
+                        } else if (!client.connected && 
                                    messagevalue.equals("Name taken!")) {
                             System.out.println(this + 
                                                ": Connection refused because name was taken");
                             namesent = false;
-                            c.promptName();
+                            client.promptName();
                             
                             //quit if no name entered
-                            if(c.name == null){
-                                c.quit();
+                            if(client.name == null){
+                                client.quit();
                                 return;
                             }
                         }
                     } else if (messagetype.equals("Chat")) {
-                        if(c.guiEnabled)
-                            c.gui.appendText(messagevalue);
+                        if(client.guiEnabled)
+                            client.gui.appendText(messagevalue);
                         else
                             print(messagevalue);
                     } else if (messagetype.equals("InfoMsg")) {
                         String[] temp1 = messagevalue.split(":");
-                        c.gui.appendText(temp1[0], (Integer.valueOf(temp1[1])==0)?Color.BLUE:Color.RED);
-                        c.outMsgs.add("Ready");
+                        client.gui.appendText(temp1[0], (Integer.valueOf(temp1[1])==0)?Color.BLUE:Color.RED);
+                        client.outMsgs.add("Ready");
                     } else if (messagetype.equals("Players")) {
                         String[] ppl = messagevalue.split(",");
                         for (int i = 0; i < ppl.length; i++) {
                             if (ppl[i] != null && !ppl[i].isEmpty()) {
-                                c.players.add(new Player(i, ppl[i]));
+                                client.players.add(new Player(i, ppl[i]));
                             }
                         }
                     } else if (messagetype.equals("PlayerJoin")) {
-                        c.players.add(new Player(c.players.size(), messagevalue));
+                        client.players.add(new Player(client.players.size(), messagevalue));
                         System.out.println("added "+messagevalue);
                     } else if (messagetype.equals("PlayerLeave")) {
-                        if(c.player.maxLifePoints>0){ //game is started
-                            c.gui.appendText("A player has left the game. Game cannot continue. Server shutting down.");
+                        if(client.player.maxLifePoints>0){ //game is started
+                            client.gui.appendText("A player has left the game. Game cannot continue. Server shutting down.");
                             break;
                         }
-                        for(Player p : c.players)
+                        for(Player p : client.players)
                             if(p.name.equals(messagevalue)){
-                                c.players.remove(p);
+                                client.players.remove(p);
                                 System.out.println("removed "+p.name);
                                 break;
                             }
                     } else if (messagetype.equals("Prompt")) {
-                        if(c.nextPrompt!=-2){
-                            c.outMsgs.add("Prompt:" + c.nextPrompt);
-                            c.nextPrompt = -2;
+                        if(client.nextPrompt!=-2){
+                            client.outMsgs.add("Prompt:" + client.nextPrompt);
+                            client.nextPrompt = -2;
                         }
                         // received a prompt from host to start
                         else if (messagevalue.equals("Start")) {
-                            c.outMsgs.add("Prompt:" + 
-                                          c.promptStart());
+                            client.outMsgs.add("Prompt:" + 
+                                          client.promptStart());
                         } else if (messagevalue.equals("PlayCard")) {
-                            c.promptPlayCard();
+                            client.promptPlayCard();
                         } else if (messagevalue.equals("PlayCardUnforced")) {
-                            c.gui.promptChooseCard(c.player.hand, "", "", 
+                            client.gui.promptChooseCard(client.player.hand, "", "", 
                                                    false);
                         } else if (messagevalue.equals("PickCardTarget")) {
-                            c.gui.promptTargetCard("", "", //null should be ALL cards.
+                            client.gui.promptTargetCard("", "", //null should be ALL cards.
                                                    false);
-                            c.nextPrompt = -1;
+                            client.nextPrompt = -1;
                         } else if (messagevalue.equals("GeneralStore")) {
-                            c.gui.promptChooseCard(c.specialHand, "", "", true);
+                            client.gui.promptChooseCard(client.specialHand, "", "", true);
                         } else if (messagevalue.equals("ChooseCharacter")) {
-                            c.promptPlayCard();
+                            client.promptPlayCard();
                         } else if (messagevalue.equals("PickTarget")) {
                             //System.out.println("I am player " + c.id + ", prompting = " + c.prompting);
                             //c.outMsgs.add("Prompt:" + (1 - c.id));
-                            c.gui.promptChooseCard(null, "", "", false);
-                            c.targetingPlayer = true;
+                            client.gui.promptChooseCard(null, "", "", false);
+                            client.targetingPlayer = true;
                         } else {
                             System.out.println("WTF do i do with " + messagevalue);
+                            Thread.dumpStack();
                         }
 
                     } else if (messagetype.equals("Draw")) {
                         String[] temp1 = messagevalue.split(":");
                         int n = temp1.length;
-                        if (Integer.valueOf(temp1[0]) == c.id) {
+                        if (Integer.valueOf(temp1[0]) == client.id) {
                             for (int m = 2; m < n; m++) {
                                 if (temp1[1].equals("Character")) {
                                     Card card = 
                                         new Card(Deck.Characters.valueOf(temp1[m]));
-                                    if(c.guiEnabled)
-                                        c.field.add(card, 150+80*m, 200, c.id, false);
-                                    c.player.hand.add(card);
+                                    if(client.guiEnabled)
+                                        client.field.add(card, 150+80*m, 200, client.id, false);
+                                    client.player.hand.add(card);
                                 } else {
                                     Card card = 
                                         new Card(Deck.CardName.valueOf(temp1[m]));
-                                    if(c.guiEnabled)
-                                        c.field.add(card, c.id, false);
-                                    c.player.hand.add(card);
+                                    if(client.guiEnabled)
+                                        client.field.add(card, client.id, false);
+                                    client.player.hand.add(card);
                                 }
                             }
                         } else {
-                            c.gui.appendText("Player " + temp1[0] + " drew " + 
+                            client.gui.appendText("Player " + temp1[0] + " drew " + 
                                              temp1[1] + "cards.", Color.GREEN);
                             for(int i=0;i<Integer.valueOf(temp1[1]);i++){
                                 Card card = new Card(Deck.CardName.BACK);
-                                c.field.add(card, Integer.valueOf(temp1[0]), false);
-                                c.players.get(Integer.valueOf(temp1[0])).hand.add(card);
+                                client.field.add(card, Integer.valueOf(temp1[0]), false);
+                                client.players.get(Integer.valueOf(temp1[0])).hand.add(card);
                             }
                         }
-                        c.outMsgs.add("Ready");
+                        client.outMsgs.add("Ready");
                     } else if (messagetype.equals("GetInfo")) {
+                    	//TODO: I'm pretty sure the client should never receive a message getinfo
+                    	//TODO: Remove if this is ascertained
                         //String[] temp1 = buffer.split(":", 2);
-                        c.outMsgs.add("Ready");
+                        client.outMsgs.add("Ready");
                     } else if (messagetype.equals("SetInfo")) { // note: a bit of a
                         // misnomer for lifepoints, just adds or subtracts that amount
                         // set information about hand and stuff
-                        String[] temp1 = messagevalue.split(":");
-                        int tid = Integer.valueOf(temp1[1]);
-                        String infotype = temp1[0];
+                        String[] infofields = messagevalue.split(":");
+                        int tid = Integer.valueOf(infofields[1]);
+                        String infotype = infofields[0];
                         Player ptemp = null;
-                        if (infotype.equals("newPlayer")) {
-                            c.id = tid;
-                            c.player = new Player(tid, c.name); 
-                            c.numPlayers = Integer.valueOf(temp1[2]);
-                            c.players.set(c.id, c.player);
-                        } else{
-                            if(c.id == tid){
-                                    ptemp = c.player;
-                            }else if(tid<c.players.size()&&tid>=0){
-                                    ptemp = c.players.get(tid);
-                            }
-                        }
-                        if (infotype.equals("role")) {
-                            if(c.guiEnabled)
-                                if (tid == c.id) {
-                                    c.field.clear();
-                                    c.player.role = 
-                                            Deck.Role.values()[Integer.valueOf(temp1[2])];
-                                    c.gui.appendText("You are a " + 
-                                                     Deck.Role.values()[Integer.valueOf(temp1[2])].name(), 
-                                                     Color.YELLOW);
-                                } else {
-                                    if (Integer.valueOf(temp1[2]) == 0)
-                                        c.gui.appendText("Player " + temp1[1] + 
-                                                         " is the " + 
-                                                         Deck.Role.values()[Integer.valueOf(temp1[2])].name(), 
-                                                         Color.YELLOW);
-                                    else //only shown when player is killed
-                                        c.gui.appendText("Player " + temp1[1] + 
-                                                         " was a " + 
-                                                         Deck.Role.values()[Integer.valueOf(temp1[2])].name(), 
-                                                         Color.YELLOW);
-                                }
-                            else{
-                                print("HIHALSADPKASDKLKJASLDLASK");
-                            }
-                            
-                        } else if (infotype.equals("maxHP")) {
-                            if(c.guiEnabled)
-                                c.gui.appendText("Player " + temp1[1] + 
-                                             " has a maxHP of " + temp1[2], 
-                                             Color.RED);
-                            ptemp.maxLifePoints=Integer.valueOf(temp1[2]);
-                            ptemp.lifePoints=Integer.valueOf(temp1[2]);
-                                //this should match the above block
-                            if(tid+1==c.numPlayers&&c.guiEnabled)
-                                c.field.start2();
-                        } else if (infotype.equals("HP")) {
-                            ptemp.lifePoints+=Integer.valueOf(temp1[2]).intValue();
-                            if(c.guiEnabled){
-                                c.gui.appendText("Player " + temp1[1] + 
-                                        " life points changed by " + 
-                                        temp1[2], Color.RED);
-                                c.field.setHP(tid,ptemp.lifePoints);
-                            }else
-                                c.print("Player " + temp1[1] + 
-                                        " life points changed by " + 
-                                        temp1[2]);
-                        } else if (infotype.equals("PutInField")) {
-                                c.gui.appendText("Player "+temp1[1]+" added "+temp1[2]+" to the field.");
-                                Card card;
-                                if(tid==c.id){
-                                    if(temp1.length==4){
-                                        card = c.player.hand.get(Integer.valueOf(temp1[3]));
-                                        card.location = 1;
-                                        c.field.remove(tid, Integer.valueOf(temp1[3]));
-                                        c.player.hand.remove(card);
-                                    } else{
-                                        card = new Card(Deck.CardName.values()[Integer.valueOf(temp1[2])]);
-                                    }
-                                }
-                                else{
-                                    if(temp1.length==4){
-                                        card = new Card(CardName.valueOf(temp1[2]));
-                                        card.location = 1;
-                                        c.field.remove(tid,(int)Integer.valueOf(temp1[3]));
-                                        c.players.get(tid).hand.remove((int)Integer.valueOf(temp1[3]));
-                                    }
-                                    else{
-                                        card = new Card(Deck.CardName.values()[Integer.valueOf(temp1[2])]);
-                                        card.location = 1;
-                                    }
-                                }
-                                c.players.get(tid).field.add(card);
-                                c.field.add(card, tid, true);
-                        } else if(infotype.equals("GeneralStore")){
-                            System.out.println("General Store!!!!!");
-                                for(Card card: c.specialHand){
-                                    c.field.clickies.remove(card);
-                                }
-                                c.specialHand.clear();
-                                
-                                for(int n = 2; n<temp1.length; n++){
-                                    Card card = new Card(Deck.CardName.valueOf(temp1[n]));
-                                    c.specialHand.add(card);
-                                    c.field.add(card, c.gui.width/2-120+n*30, c.gui.height/2, -1, false);
-                                }
-                        } else if (infotype.equals("turn")) {
-                            c.turn = tid;
-                            if (c.turn % c.numPlayers == c.id) {
-                                c.gui.appendText("It's your move!!!!!! Time to d-d-d-d-d-duel!", Color.CYAN);
-                            }
-                        } else if (infotype.equals("discard")) {
-                            //TODO: Keep track of discard pile on client side
-                            if(tid==c.id){
-                                c.field.remove(tid, Integer.valueOf(temp1[2]));
-                                String cname = c.player.hand.remove(Integer.valueOf(temp1[2]).intValue()).name;
-                                c.gui.appendText("You discarded:" + cname);
-                                c.discardpile.add(new Card(Deck.CardName.valueOf(cname)));
-                            }
-                            else{
-                                    System.out.println(messagevalue + c.players.get(tid).hand.get(Integer.valueOf(temp1[2])));
-                                c.field.remove(tid, Integer.valueOf(temp1[2]));
-                                c.players.get(tid).hand.remove(Integer.valueOf(temp1[2]).intValue());
-                                c.gui.appendText("Player "+tid+" discarded:" + (temp1.length==4?temp1[3]:"card #"+temp1[2]));
-                                if(temp1.length==4){
-                                    c.discardpile.add(new Card(Deck.CardName.valueOf(temp1[3])));
-                                }
-                            }
-                        } else if (infotype.equals("fieldDiscard")) {
-                            //TODO: Keep track of discard pile on client side
-                            if(tid==c.id){
-                                c.gui.appendText("REMOVING:" + Integer.valueOf(temp1[2]).intValue()+ " "+c.player.field.get(Integer.valueOf(temp1[2]).intValue())+" "+c.player.field.size());
-                                c.field.remove(tid, Integer.valueOf(temp1[2]));
-                                String cname =c.player.field.remove(Integer.valueOf(temp1[2]).intValue()).name;
-                                c.gui.appendText("You discarded:" + cname);
-                                c.discardpile.add(new Card(Deck.CardName.valueOf(cname)));
-                            }
-                            else{
-                                System.out.println("ASDFASDFASDFASDFASDF"+temp[1]);
-                                c.field.remove(tid, Integer.valueOf(temp1[2]));
-                                c.players.get(tid).field.remove(Integer.valueOf(temp1[2]).intValue());
-                                c.gui.appendText("Player "+tid+" discarded:" + temp1[3]);
-                                c.discardpile.add(new Card(Deck.CardName.valueOf(temp1[3])));
-                            }
-                        }
-                        else if (infotype.equals("CardPlayed")) {
-                            //TODO: Keep track of discard pile on client side
-                            String s = "";
-                            s = "Player " + temp1[1] + " played " + temp1[2] + (temp1.length == 4 ? " at player " + temp1[3] : "");
-                            c.gui.appendText(s);
-                            if(!temp1[2].equals("no miss"))
-                                c.discardpile.add(new Card(Deck.CardName.valueOf(temp1[2])));
-                        } else if (infotype.equals("id")) { //TODO: remove safely?
-                            c.id = tid;
-                        } else if (infotype.equals("character")) {
-                            if (tid == c.id){
-                                c.player.character = Integer.valueOf(temp1[2]);
-                                c.players.get(tid).character=Integer.valueOf(temp1[2]);
-                            }
-                            else {
-                                c.gui.appendText("Player " + temp1[1] + " chose " + Deck.Characters.values()[Integer.valueOf(temp1[2])], Color.YELLOW);
-                                c.players.get(tid).character=Integer.valueOf(temp1[2]);
-                                c.field.add(new Card(Deck.Characters.values()[Integer.valueOf(temp1[2])]), tid, false);
-                            }
-                        } else {
-                            System.out.println("WTF do i do with " + infotype + ":" + temp1[1]);
-                        }
-                        c.outMsgs.add("Ready");
+                        if(!processInfo(infotype, infofields, tid, ptemp,
+								messagevalue)){
+                		    System.out.println("WTF do i do with " + infotype + ":" + infofields[1]);
+                		    Thread.dumpStack();
+                		}
+                        client.outMsgs.add("Ready");
                     }
                 }
             } catch (Exception e) {
@@ -561,6 +411,187 @@ class ClientThread extends Thread {
         System.out.println("Server connection closed");
     }
 
+	/**
+	 * @param type
+	 * @param fields
+	 * @param tid
+	 * @param player
+	 * @param messagevalue
+	 */
+	private Boolean processInfo(String type, String[] fields, int tid,
+			Player player, String messagevalue) {
+		Boolean processed = false;
+		if (type.equals("newPlayer")) {
+			processed = true;
+		    client.id = tid;
+		    client.player = new Player(tid, client.name); 
+		    client.numPlayers = Integer.valueOf(fields[2]);
+		    client.players.set(client.id, client.player);
+		} else{
+		    if(client.id == tid){
+		            player = client.player;
+		    }else if(tid<client.players.size()&&tid>=0){
+		            player = client.players.get(tid);
+		    }
+		}
+		if (type.equals("role")) {
+			processed = true;
+		    if(client.guiEnabled)
+		        if (tid == client.id) {
+		            client.field.clear();
+		            client.player.role = 
+		                    Deck.Role.values()[Integer.valueOf(fields[2])];
+		            client.gui.appendText("You are a " + 
+		                             Deck.Role.values()[Integer.valueOf(fields[2])].name(), 
+		                             Color.YELLOW);
+		        } else {
+		            if (Integer.valueOf(fields[2]) == 0)
+		                client.gui.appendText("Player " + fields[1] + 
+		                                 " is the " + 
+		                                 Deck.Role.values()[Integer.valueOf(fields[2])].name(), 
+		                                 Color.YELLOW);
+		            else //only shown when player is killed
+		                client.gui.appendText("Player " + fields[1] + 
+		                                 " was a " + 
+		                                 Deck.Role.values()[Integer.valueOf(fields[2])].name(), 
+		                                 Color.YELLOW);
+		        }
+		    else{
+		        print("HIHALSADPKASDKLKJASLDLASK");
+		    }
+		    
+		} else if (type.equals("maxHP")) {
+			processed = true;
+		    if(client.guiEnabled)
+		        client.gui.appendText("Player " + fields[1] + 
+		                     " has a maxHP of " + fields[2], 
+		                     Color.RED);
+		    player.maxLifePoints=Integer.valueOf(fields[2]);
+		    player.lifePoints=Integer.valueOf(fields[2]);
+		        //this should match the above block
+		    if(tid+1==client.numPlayers&&client.guiEnabled)
+		        client.field.start2();
+		} else if (type.equals("HP")) {
+			processed = true;
+		    player.lifePoints+=Integer.valueOf(fields[2]).intValue();
+		    if(client.guiEnabled){
+		        client.gui.appendText("Player " + fields[1] + 
+		                " life points changed by " + 
+		                fields[2], Color.RED);
+		        client.field.setHP(tid,player.lifePoints);
+		    }else
+		        client.print("Player " + fields[1] + 
+		                " life points changed by " + 
+		                fields[2]);
+		} else if (type.equals("PutInField")) {
+			processed = true;
+	        client.gui.appendText("Player "+fields[1]+" added "+fields[2]+" to the field.");
+	        Card card;
+	        if(tid==client.id){
+	            if(fields.length==4){
+	                card = client.player.hand.get(Integer.valueOf(fields[3]));
+	                card.location = 1;
+	                client.field.remove(tid, Integer.valueOf(fields[3]));
+	                client.player.hand.remove(card);
+	            } else{
+	                card = new Card(Deck.CardName.values()[Integer.valueOf(fields[2])]);
+	            }
+	        }
+	        else{
+	            if(fields.length==4){
+	                card = new Card(CardName.valueOf(fields[2]));
+	                card.location = 1;
+	                client.field.remove(tid,(int)Integer.valueOf(fields[3]));
+	                client.players.get(tid).hand.remove((int)Integer.valueOf(fields[3]));
+	            }
+	            else{
+	                card = new Card(Deck.CardName.values()[Integer.valueOf(fields[2])]);
+	                card.location = 1;
+	            }
+	        }
+	        client.players.get(tid).field.add(card);
+	        client.field.add(card, tid, true);
+		} else if(type.equals("GeneralStore")){
+			processed = true;
+		    System.out.println("General Store!!!!!");
+	        for(Card card: client.specialHand){
+	            client.field.clickies.remove(card);
+	        }
+	        client.specialHand.clear();
+	        
+	        for(int n = 2; n<fields.length; n++){
+	            Card card = new Card(Deck.CardName.valueOf(fields[n]));
+	            client.specialHand.add(card);
+	            client.field.add(card, client.gui.width/2-120+n*30, client.gui.height/2, -1, false);
+	        }
+		} else if (type.equals("turn")) {
+			processed = true;
+		    client.turn = tid;
+		    if (client.turn % client.numPlayers == client.id) {
+		        client.gui.appendText("It's your move!!!!!! Time to d-d-d-d-d-duel!", Color.CYAN);
+		    }
+		} else if (type.equals("discard")) {
+		    //TODO: Keep track of discard pile on client side
+			processed = true;
+		    if(tid==client.id){
+		        client.field.remove(tid, Integer.valueOf(fields[2]));
+		        String cname = client.player.hand.remove(Integer.valueOf(fields[2]).intValue()).name;
+		        client.gui.appendText("You discarded:" + cname);
+		        client.discardpile.add(new Card(Deck.CardName.valueOf(cname)));
+		    }
+		    else{
+		            System.out.println(messagevalue + client.players.get(tid).hand.get(Integer.valueOf(fields[2])));
+		        client.field.remove(tid, Integer.valueOf(fields[2]));
+		        client.players.get(tid).hand.remove(Integer.valueOf(fields[2]).intValue());
+		        client.gui.appendText("Player "+tid+" discarded:" + (fields.length==4?fields[3]:"card #"+fields[2]));
+		        if(fields.length==4){
+		            client.discardpile.add(new Card(Deck.CardName.valueOf(fields[3])));
+		        }
+		    }
+		} else if (type.equals("fieldDiscard")) {
+		    //TODO: Keep track of discard pile on client side
+			processed = true;
+		    if(tid==client.id){
+		        client.gui.appendText("REMOVING:" + Integer.valueOf(fields[2]).intValue()+ " "+client.player.field.get(Integer.valueOf(fields[2]).intValue())+" "+client.player.field.size());
+		        client.field.remove(tid, Integer.valueOf(fields[2]));
+		        String cname =client.player.field.remove(Integer.valueOf(fields[2]).intValue()).name;
+		        client.gui.appendText("You discarded:" + cname);
+		        client.discardpile.add(new Card(Deck.CardName.valueOf(cname)));
+		    }
+		    else{
+		        System.out.println("ASDFASDFASDFASDFASDF"+messagevalue);
+		        client.field.remove(tid, Integer.valueOf(fields[2]));
+		        client.players.get(tid).field.remove(Integer.valueOf(fields[2]).intValue());
+		        client.gui.appendText("Player "+tid+" discarded:" + fields[3]);
+		        client.discardpile.add(new Card(Deck.CardName.valueOf(fields[3])));
+		    }
+		}
+		else if (type.equals("CardPlayed")) {
+		    //TODO: Keep track of discard pile on client side
+			processed = true;			
+		    String s = "";
+		    s = "Player " + fields[1] + " played " + fields[2] + (fields.length == 4 ? " at player " + fields[3] : "");
+		    client.gui.appendText(s);
+		    if(!fields[2].equals("no miss"))
+		        client.discardpile.add(new Card(Deck.CardName.valueOf(fields[2])));
+		} else if (type.equals("id")) { //TODO: remove safely? <-- what does this mean?
+			processed = true;
+		    client.id = tid;
+		} else if (type.equals("character")) {
+			processed = true;
+		    if (tid == client.id){
+		        client.player.character = Integer.valueOf(fields[2]);
+		        client.players.get(tid).character=Integer.valueOf(fields[2]);
+		    }
+		    else {
+		        client.gui.appendText("Player " + fields[1] + " chose " + Deck.Characters.values()[Integer.valueOf(fields[2])], Color.YELLOW);
+		        client.players.get(tid).character=Integer.valueOf(fields[2]);
+		        client.field.add(new Card(Deck.Characters.values()[Integer.valueOf(fields[2])]), tid, false);
+		    }
+		}
+		return processed;
+	}
+
 
 
 
@@ -577,8 +608,8 @@ class ClientThread extends Thread {
     }
 
     void print(Object stuff) {
-        if (c.gui != null)
-            c.gui.appendText("ClientThread:" + stuff);
+        if (client.gui != null)
+            client.gui.appendText("ClientThread:" + stuff);
         else
             System.out.println("ClientThread:" + stuff);
     }

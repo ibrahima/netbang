@@ -144,7 +144,7 @@ public class ClientGUI extends JFrame implements KeyListener,
      * appendText with default color of white
      * 
      * @param str
-     * @param c
+     * @param client
      */
     public void appendText(String str) {
         appendText(str, Color.WHITE);
