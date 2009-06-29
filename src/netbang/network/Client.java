@@ -473,7 +473,7 @@ class ClientThread extends Thread {
 		    player.maxLifePoints=Integer.valueOf(fields[2]);
 		    player.lifePoints=Integer.valueOf(fields[2]);
 		        //this should match the above block
-		    if(tid+1==client.numPlayers&&client.guiEnabled)
+		    if(tid + 1 == client.numPlayers && client.guiEnabled)
 		        client.field.start2();
 		} else if (type.equals("HP")) {
 			processed = true;
