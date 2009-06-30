@@ -227,7 +227,6 @@ class ClientThread extends Thread {
 
     public void run() {
         while (!server.isClosed() && client.running) {
-            // System.out.println("Loop looping");
             try {
                 if (client.name != null && out != null && !client.connected && 
                     !namesent) {
@@ -259,7 +258,7 @@ class ClientThread extends Thread {
                             messagevalue.equals("Successfully connected.")) {
                             client.connected = true;
                             if(client.guiEnabled)
-                                client.gui.setTitle("UCBang - " + client.name + 
+                                client.gui.setTitle("NetBang - " + client.name + 
                                            " - Connected to server on " + 
                                            server.getInetAddress());
                         } else if (!client.connected && 

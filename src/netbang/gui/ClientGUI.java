@@ -76,7 +76,7 @@ public class ClientGUI extends JFrame implements KeyListener,
         this.addComponentListener(this);
         this.setVisible(true);
         this.requestFocus(true);
-        this.setTitle("UCBang");
+        this.setTitle("NetBang");
         addWindowListener(new WindowAdapter() {
             public void windowActivated(WindowEvent e) {
                 paint(getGraphics());

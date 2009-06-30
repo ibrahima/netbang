@@ -37,7 +37,7 @@ public class Updater extends JFrame {
         updateurl = url;
         this.setPreferredSize(new Dimension(300, 80));
         this.setSize(new Dimension(300, 80));
-        this.setTitle("UCBang Updater");
+        this.setTitle("NetBang Updater");
         progress = new JProgressBar(0, 100);
         progress.setValue(0);
         progress.setStringPainted(true);

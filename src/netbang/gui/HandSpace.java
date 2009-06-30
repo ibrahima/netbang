@@ -54,7 +54,7 @@ public class HandSpace extends Clickable {
     /*
      * (non-Javadoc)
      * 
-     * @see ucbang.gui.Field.Clickable#move(int, int)
+     * @see netbang.gui.Field.Clickable#move(int, int)
      */
     public void move(int x, int y) {
         int dx = x - rect.x;
@@ -79,7 +79,7 @@ public class HandSpace extends Clickable {
     /*
      * (non-Javadoc)
      * 
-     * @see ucbang.gui.Field.Clickable#translate(int, int)
+     * @see netbang.gui.Field.Clickable#translate(int, int)
      */
     public void translate(int dx, int dy) {
         super.translate(dx, dy);

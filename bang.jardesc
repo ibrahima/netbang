@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="WINDOWS-1252" standalone="no"?>
 <jardesc>
-    <jar path="UCBang/bang.jar"/>
-    <options buildIfNeeded="true" compress="true" descriptionLocation="/UCBang/bang.jardesc" exportErrors="true" exportWarnings="true" includeDirectoryEntries="false" overwrite="false" saveDescription="true" storeRefactorings="false" useSourceFolders="false"/>
+    <jar path="NetBang/bang.jar"/>
+    <options buildIfNeeded="true" compress="true" descriptionLocation="/NetBang/bang.jardesc" exportErrors="true" exportWarnings="true" includeDirectoryEntries="false" overwrite="false" saveDescription="true" storeRefactorings="false" useSourceFolders="false"/>
     <storedRefactorings deprecationInfo="true" structuralOnly="false"/>
     <selectedProjects/>
-    <manifest generateManifest="true" mainClassHandleIdentifier="=UCBang/src&lt;ucbang.network{ServerBrowser.java[ServerBrowser" manifestLocation="" manifestVersion="1.0" reuseManifest="false" saveManifest="false" usesManifest="true">
+    <manifest generateManifest="true" mainClassHandleIdentifier="=NetBang/src&lt;netbang.network{ServerBrowser.java[ServerBrowser" manifestLocation="" manifestVersion="1.0" reuseManifest="false" saveManifest="false" usesManifest="true">
         <sealing sealJar="true">
             <packagesToSeal/>
             <packagesToUnSeal/>
         </sealing>
     </manifest>
     <selectedElements exportClassFiles="true" exportJavaFiles="false" exportOutputFolder="false">
-        <javaElement handleIdentifier="=UCBang/src"/>
-        <folder path="/UCBang/images"/>
+        <javaElement handleIdentifier="=NetBang/src"/>
+        <folder path="/NetBang/images"/>
     </selectedElements>
     <fatjar builder="org.eclipse.jdt.ui.plain_jar_builder" launchConfig=""/>
 </jardesc>

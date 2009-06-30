@@ -12,7 +12,7 @@
     <property name="source" value="1.6" />
     <property name="version.num" value="0.8" />
 
-    <path id="UCBang.classpath">
+    <path id="NetBang.classpath">
         <pathelement location="classes" />
     </path>
     <target name="init">
