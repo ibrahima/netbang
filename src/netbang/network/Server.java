@@ -5,10 +5,12 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -469,8 +471,13 @@ class ServerThread extends Thread {
 	 * @return Returns whether the client attached to this thread is on localhost
 	 */
 	private boolean isClientLocalhost() {
-		return client.getInetAddress().toString().equals("/127.0.0.1")||
-				client.getInetAddress().toString().equals("/0:0:0:0:0:0:0:1");
+		try {
+			return client.getInetAddress().equals(InetAddress.getByName(null));
+		} catch (UnknownHostException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return false;
+		}
 	}
 
 	/**
