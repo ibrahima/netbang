@@ -299,9 +299,7 @@ public class Server extends Thread {
         choice = new ArrayList<int[][]>();
         choice.add(new int[numPlayers - 1][2]);
         for (int n = 0, m = 0; m < numPlayers - 1; n++, m++) {// this prompt
-            // goes out to
-            // everyone
-            // except host
+            // goes out to everyone except host
             if (n != host) {
                 choice.get(choice.size() - 1)[m][0] = n;
                 choice.get(choice.size() - 1)[m][1] = -2;
@@ -471,13 +469,7 @@ class ServerThread extends Thread {
 	 * @return Returns whether the client attached to this thread is on localhost
 	 */
 	private boolean isClientLocalhost() {
-		try {
-			return client.getInetAddress().equals(InetAddress.getByName(null));
-		} catch (UnknownHostException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return false;
-		}
+		return client.getInetAddress().isLoopbackAddress();
 	}
 
 	/**
