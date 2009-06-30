@@ -435,15 +435,20 @@ class ClientThread extends Thread {
 			Player player) {
 		Boolean processed = false;
 		if (type.equals("newPlayer")) {
+			System.out.print("newPlayer");
+			for(int i=0; i<fields.length; i++){
+				System.out.print("\t"+fields[i]);
+			}
+			System.out.println();
 			processed = true;
 		    client.id = playerid;
-		    client.player = new Player(playerid, client.name); 
+		    client.player = new Player(playerid, client.name); //TODO: This line seems fishy, doesn't this recreate the player twice?
 		    client.numPlayers = Integer.valueOf(fields[2]);
 		    client.players.set(client.id, client.player);
 		} else{
 		    if(client.id == playerid){
 		            player = client.player;
-		    }else if(playerid<client.players.size()&&playerid>=0){
+		    }else if(playerid < client.players.size() && playerid >= 0){
 		            player = client.players.get(playerid);
 		    }
 		}
