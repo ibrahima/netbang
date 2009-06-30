@@ -380,31 +380,14 @@ class ServerThread extends Thread {
 					if (msgtype.equals("Name")) {
                         processNameRequest(msgfields);
                     } else if(msgtype.equals("/quit")){
-                        if(client.getInetAddress().toString().equals("/127.0.0.1")){
-                            server.running=false;
-                            System.out.println("Server shutting down");
-                        }
-                        else{
-                            server.sendInfo(("PlayerLeave:"+name));
-                        }
+                        processQuitter();
                     } else if (msgtype.equals("Chat")) {
                         if (msgfields[1].charAt(0) == '/') {
                             parseSlashCommands(msgfields);
                         } else
                             server.addChat(name + ": " + msgfields[1]);
                     } else if (msgtype.equals("Prompt")) {
-                        if (server.prompting >= 1) {
-                            int n;
-                            // if(id>server.choice.length)
-                            for (n = 0; server.choice.get(server.choice.size() - 1)[n][0] != id||(server.choice.get(server.choice.size() - 1)[n][0] == id && server.choice.get(server.choice.size() - 1)[n][1]>-1); n++) {
-                            }
-                            server.choice.get(server.choice.size() - 1)[n][1] = Integer
-                            .valueOf(msgfields[1]);
-                            System.out.println("Player "+n+" returned "+msgfields[1]);
-                            server.prompting = 2;
-                        } else {
-                            System.out.println("Received prompt from player when not prompted!");
-                        }
+                        processPrompt(msgfields);
                     } else if (msgtype.equals("Ready")) {
                         if (server.ready != null) {
                             server.ready[id][1]--;
@@ -447,6 +430,37 @@ class ServerThread extends Thread {
             e.printStackTrace();
         }
     }
+
+	/**
+	 * @param msgfields
+	 */
+	private void processPrompt(String[] msgfields) {
+		if (server.prompting >= 1) {
+		    int n;
+		    // if(id>server.choice.length)
+		    for (n = 0; server.choice.get(server.choice.size() - 1)[n][0] != id||(server.choice.get(server.choice.size() - 1)[n][0] == id && server.choice.get(server.choice.size() - 1)[n][1]>-1); n++) {
+		    }
+		    server.choice.get(server.choice.size() - 1)[n][1] = Integer
+		    .valueOf(msgfields[1]);
+		    System.out.println("Player "+n+" returned "+msgfields[1]);
+		    server.prompting = 2;
+		} else {
+		    System.out.println("Received prompt from player when not prompted!");
+		}
+	}
+
+	/**
+	 * 
+	 */
+	private void processQuitter() {
+		if(client.getInetAddress().toString().equals("/127.0.0.1")){
+		    server.running=false;
+		    System.out.println("Server shutting down");
+		}
+		else{
+		    server.sendInfo(("PlayerLeave:"+name));
+		}
+	}
 
 	/**
 	 * @param msgfields
