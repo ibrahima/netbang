@@ -435,11 +435,6 @@ class ClientThread extends Thread {
 			Player player) {
 		Boolean processed = false;
 		if (type.equals("newPlayer")) {
-			System.out.print("newPlayer");
-			for(int i=0; i<fields.length; i++){
-				System.out.print("\t"+fields[i]);
-			}
-			System.out.println();
 			processed = true;
 		    client.id = playerid;
 		    client.player = new Player(playerid, client.name); //TODO: This line seems fishy, doesn't this recreate the player twice?
@@ -459,9 +454,7 @@ class ClientThread extends Thread {
 		            client.field.clear();
 		            client.player.role = 
 		                    Deck.Role.values()[Integer.valueOf(fields[2])];
-		            client.gui.appendText("You are a " + 
-		                             Deck.Role.values()[Integer.valueOf(fields[2])].name(), 
-		                             Color.YELLOW);
+		            client.gui.appendText("You are a " + client.player.role.name(), Color.YELLOW);
 		        } else {
 		            if (Integer.valueOf(fields[2]) == 0)
 		                client.gui.appendText("Player " + fields[1] + 

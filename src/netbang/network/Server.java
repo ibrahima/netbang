@@ -375,39 +375,11 @@ class ServerThread extends Thread {
             try {
                 if (in.ready()) {
                     buffer = (String) in.readLine();
-                    //System.out.println("Server received from player ID "+id+" "
-                    // + buffer);
-                    String[] temp = buffer.split(":", 2);
-                    if (temp[0].equals("Name")) {
-                        if (!connected) {// player was never connected
-                            if (server.messages.containsKey(temp[1])) {
-                                out.write("Connection:Name taken!");
-                                out.newLine();
-                                out.flush();
-                                print(client.getInetAddress()
-                                        + " Attempting joining with taken name.");
-                            } else {
-                                name = temp[1];
-                                print(name + "(" + client.getInetAddress()
-                                        + ") has joined the game.");
-                                server.playerJoin(name);
-                                server.messages.put(name, newMsgs);
-                                out.write("Connection:Successfully connected.");
-                                out.newLine();
-                                out.flush();
-                                Object[] players = server.messages.keySet().toArray();
-                                out.write("Players:");
-                                String wr=(String)players[0];
-                                for(int n = 1; n<players.length; n++) {// give player list
-                                    wr+=","+(String)players[n];
-                                }
-                                out.write(wr);
-                                System.out.println("PLAYERS LIST IS NOW "+ wr);
-                                out.newLine();
-                                out.flush();
-                            }
-                        }
-                    } else if(temp[0].equals("/quit")){
+                    String[] msgfields = buffer.split(":", 2);
+                    String msgtype = msgfields[0];
+					if (msgtype.equals("Name")) {
+                        processNameRequest(msgfields);
+                    } else if(msgtype.equals("/quit")){
                         if(client.getInetAddress().toString().equals("/127.0.0.1")){
                             server.running=false;
                             System.out.println("Server shutting down");
@@ -415,65 +387,25 @@ class ServerThread extends Thread {
                         else{
                             server.sendInfo(("PlayerLeave:"+name));
                         }
-                    } else if (temp[0].equals("Chat")) {
-                        if (temp[1].charAt(0) == '/') {
-                            // TODO: Send commands
-                            if (temp[1].equals("/start")&&(id==0||client.getInetAddress().toString().equals("/127.0.0.1"))&& server.gameInProgress == 0){
-                                server.startGame(id, name);
-                            }
-                            else if (temp[1].startsWith("/rename")) {
-                                if (server.gameInProgress == 2) {
-                                    System.out.println("I'm sorry, Dave.");
-                                } else if (temp[1].length() > 7
-                                        && temp[1].charAt(7) == ' ') {
-                                    String temp1 = temp[1].split(" ", 2)[1];
-                                    if (server.messages.containsKey(temp1)) {
-                                        out.write("Connection:Name taken!");
-                                        out.newLine();
-                                        out.flush();
-                                        print(name
-                                                + "("
-                                                + client.getInetAddress()
-                                                + ") Attempting renaming to taken name.");
-                                    } else {
-                                        print(name + "("
-                                                + client.getInetAddress()
-                                                + ") is now known as " + temp1);
-                                        server.messages.remove(name);
-                                        server.messages.put(temp1, newMsgs);
-                                        server.playerLeave(name);
-                                        server.playerJoin(temp1);
-                                        System.out.println("hi");
-                                        name = temp1;
-                                        out.write("Connection:Successfully renamed.");
-                                        out.newLine();
-                                        out.flush();
-                                    }
-                                } else {
-                                    // TODO: (Optional) create /help RENAME
-                                    // TODO: Create /help commands
-                                }
-                            } else if (temp[1].startsWith("/prompting")) {
-                                System.out.println("Prompting is "
-                                        + server.prompting + " "
-                                        + server.gameInProgress);
-                            }
+                    } else if (msgtype.equals("Chat")) {
+                        if (msgfields[1].charAt(0) == '/') {
+                            parseSlashCommands(msgfields);
                         } else
-                            server.addChat(name + ": " + temp[1]);
-                    } else if (temp[0].equals("Prompt")) {
+                            server.addChat(name + ": " + msgfields[1]);
+                    } else if (msgtype.equals("Prompt")) {
                         if (server.prompting >= 1) {
                             int n;
                             // if(id>server.choice.length)
                             for (n = 0; server.choice.get(server.choice.size() - 1)[n][0] != id||(server.choice.get(server.choice.size() - 1)[n][0] == id && server.choice.get(server.choice.size() - 1)[n][1]>-1); n++) {
                             }
                             server.choice.get(server.choice.size() - 1)[n][1] = Integer
-                            .valueOf(temp[1]);
-                            System.out.println("Player "+n+" returned "+temp[1]);
+                            .valueOf(msgfields[1]);
+                            System.out.println("Player "+n+" returned "+msgfields[1]);
                             server.prompting = 2;
                         } else {
                             System.out.println("Received prompt from player when not prompted!");
                         }
-                    } else if (temp[0].equals("Ready")) {
+                    } else if (msgtype.equals("Ready")) {
                         if (server.ready != null) {
                             server.ready[id][1]--;
                         } else {
@@ -515,4 +447,84 @@ class ServerThread extends Thread {
             e.printStackTrace();
         }
     }
+
+	/**
+	 * @param msgfields
+	 * @throws IOException
+	 */
+	private void processNameRequest(String[] msgfields) throws IOException {
+		if (!connected) {// player was never connected
+		    if (server.messages.containsKey(msgfields[1])) {
+		        out.write("Connection:Name taken!");
+		        out.newLine();
+		        out.flush();
+		        print(client.getInetAddress()
+		                + " Attempting joining with taken name.");
+		    } else {
+		        name = msgfields[1];
+		        print(name + "(" + client.getInetAddress()
+		                + ") has joined the game.");
+		        server.playerJoin(name);
+		        server.messages.put(name, newMsgs);
+		        out.write("Connection:Successfully connected.");
+		        out.newLine();
+		        out.flush();
+		        Object[] players = server.messages.keySet().toArray();
+		        out.write("Players:");
+		        String wr=(String)players[0];
+		        for(int n = 1; n<players.length; n++) {// give player list
+		            wr+=","+(String)players[n];
+		        }
+		        out.write(wr);
+		        System.out.println("PLAYERS LIST IS NOW "+ wr);
+		        out.newLine();
+		        out.flush();
+		    }
+		}
+	}
+
+	/**
+	 * @param msgfields
+	 * @throws IOException
+	 */
+	private void parseSlashCommands(String[] msgfields) throws IOException {
+		// TODO: Send commands
+		if (msgfields[1].equals("/start")&&(id==0||client.getInetAddress().toString().equals("/127.0.0.1"))&& server.gameInProgress == 0){
+		    server.startGame(id, name);
+		}
+		else if (msgfields[1].startsWith("/rename")) {
+		    if (server.gameInProgress == 2) {
+		        System.out.println("I'm sorry, Dave.");
+		    } else if (msgfields[1].length() > 7
+		            && msgfields[1].charAt(7) == ' ') {
+		        String temp1 = msgfields[1].split(" ", 2)[1];
+		        if (server.messages.containsKey(temp1)) {
+		            out.write("Connection:Name taken!");
+		            out.newLine();
+		            out.flush();
+		            print(name + "(" + client.getInetAddress()
+		                    + ") Attempting renaming to taken name.");
+		        } else {
+		            print(name + "(" + client.getInetAddress()
+		                    + ") is now known as " + temp1);
+		            server.messages.remove(name);
+		            server.messages.put(temp1, newMsgs);
+		            server.playerLeave(name);
+		            server.playerJoin(temp1);
+		            System.out.println("hi");
+		            name = temp1;
+		            out.write("Connection:Successfully renamed.");
+		            out.newLine();
+		            out.flush();
+		        }
+		    } else {
+		        // TODO: (Optional) create /help RENAME
+		        // TODO: Create /help commands
+		    }
+		} else if (msgfields[1].startsWith("/prompting")) {
+		    System.out.println("Prompting is "
+		            + server.prompting + " "
+		            + server.gameInProgress);
+		}
+	}
 }
