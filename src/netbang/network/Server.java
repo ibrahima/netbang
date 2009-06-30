@@ -438,8 +438,10 @@ class ServerThread extends Thread {
 		if (server.prompting >= 1) {
 		    int n;
 		    // if(id>server.choice.length)
-		    for (n = 0; server.choice.get(server.choice.size() - 1)[n][0] != id||(server.choice.get(server.choice.size() - 1)[n][0] == id && server.choice.get(server.choice.size() - 1)[n][1]>-1); n++) {
-		    }
+		    for (n = 0; server.choice.get(server.choice.size() - 1)[n][0] != id || 
+		    	(server.choice.get(server.choice.size() - 1)[n][0] == id && 
+		    	server.choice.get(server.choice.size() - 1)[n][1]>-1); n++) {
+		    }//TODO: HUH?! Why is this dead loop here? O.o I split it across 3 lines for readability
 		    server.choice.get(server.choice.size() - 1)[n][1] = Integer
 		    .valueOf(msgfields[1]);
 		    System.out.println("Player "+n+" returned "+msgfields[1]);
