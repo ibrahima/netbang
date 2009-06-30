@@ -452,16 +452,25 @@ class ServerThread extends Thread {
 	}
 
 	/**
-	 * 
+	 * Processes someone leaving
 	 */
 	private void processQuitter() {
-		if(client.getInetAddress().toString().equals("/127.0.0.1")){
+		if(isClientLocalhost()){
 		    server.running=false;
 		    System.out.println("Server shutting down");
 		}
 		else{
 		    server.sendInfo(("PlayerLeave:"+name));
 		}
+	}
+
+	/**
+	 * This method is an abstraction to check whether the client is at localhost.
+	 * @return Returns whether the client attached to this thread is on localhost
+	 */
+	private boolean isClientLocalhost() {
+		return client.getInetAddress().toString().equals("/127.0.0.1")||
+				client.getInetAddress().toString().equals("/0:0:0:0:0:0:0:1");
 	}
 
 	/**
@@ -505,7 +514,8 @@ class ServerThread extends Thread {
 	 */
 	private void parseSlashCommands(String[] msgfields) throws IOException {
 		// TODO: Send commands
-		if (msgfields[1].equals("/start")&&(id==0||client.getInetAddress().toString().equals("/127.0.0.1"))&& server.gameInProgress == 0){
+		if (msgfields[1].equals("/start")&&(id==0 || isClientLocalhost()) &&
+				server.gameInProgress == 0){
 		    server.startGame(id, name);
 		}
 		else if (msgfields[1].startsWith("/rename")) {
