@@ -472,7 +472,7 @@ class ClientThread extends Thread {
 		        if (playerid == client.id) {
 		            client.field.clear();
 		            client.player.role = 
-		                    Deck.Role.values()[Integer.valueOf(fields[2])];
+		                    Constants.Role.values()[Integer.valueOf(fields[2])];
 		        }
 		    }
 		    
