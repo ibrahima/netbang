@@ -20,6 +20,7 @@ import netbang.gui.Clickable;
 import netbang.gui.ClientGUI;
 import netbang.gui.Field;
 
+import netbang.core.Constants;
 
 public class Client extends Thread {
     String name = "";
@@ -453,18 +454,18 @@ class ClientThread extends Thread {
 		        if (playerid == client.id) {
 		            client.field.clear();
 		            client.player.role = 
-		                    Deck.Role.values()[Integer.valueOf(fields[2])];
+		                    Constants.Role.values()[Integer.valueOf(fields[2])];
 		            client.gui.appendText("You are a " + client.player.role.name(), Color.YELLOW);
 		        } else {
 		            if (Integer.valueOf(fields[2]) == 0)
 		                client.gui.appendText("Player " + fields[1] + 
 		                                 " is the " + 
-		                                 Deck.Role.values()[Integer.valueOf(fields[2])].name(), 
+		                                 Constants.Role.values()[Integer.valueOf(fields[2])].name(), 
 		                                 Color.YELLOW);
 		            else //only shown when player is killed
 		                client.gui.appendText("Player " + fields[1] + 
 		                                 " was a " + 
-		                                 Deck.Role.values()[Integer.valueOf(fields[2])].name(), 
+		                                 Constants.Role.values()[Integer.valueOf(fields[2])].name(), 
 		                                 Color.YELLOW);
 		        }
 		    else{

@@ -10,12 +10,12 @@ public class Player {
 
     public int id; // temporary probably
     public String name;
-    public Deck.Role role;
+    public Constants.Role role;
     public int maxLifePoints;
 
-        public int bangs = 0;
+    public int bangs = 0;
     
-        //public int weaponRange; // only counts for Bang! cards OBSOLETE
+    //public int weaponRange; // only counts for Bang! cards OBSOLETE
     //public int realRange; // also counts for Panics, etc.
     //public int distance; // your protection against other player's Bang!s
         

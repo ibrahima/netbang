@@ -106,6 +106,8 @@
          <hash n="Default">
             <value n="custom" v="false"/>
             <value n="name" v="Default"/>
+            <url n="targetURL" path="src/netbang/launchers/Test2.java"/>
+            <value n="VMName" v="server"/>
          </hash>
       </hash>
       <list n="runConfigurationList">

@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import netbang.core.Card.Targets;
 import netbang.network.Server;
 
-
 public class Bang {
     Server server;
 
@@ -497,7 +496,7 @@ public class Bang {
             }
             if (c.type == 2 ||(c.type == 3 && players[server.choice.get(0)[0][0]].field.contains(c))) {
                 if (c.effect == Card.play.JAIL.ordinal()) {
-                    if(p2.role.ordinal()==0){
+                    if(p2.role.ordinal()== Constants.Role.OUTLAW.ordinal()){
                         return false; //cannot jail sheriff
                     } else if(p1==p2){
                         return false; //cannot jail self
@@ -575,7 +574,7 @@ public class Bang {
      */
     public void start() {
         //Assign roles
-        ArrayList<Deck.Role> roles = new ArrayList<Deck.Role>();
+        ArrayList<Constants.Role> roles = new ArrayList<Constants.Role>();
         players = new Player[numPlayers];
         for (int n = 0; n < numPlayers; n++) {
             players[n] = new Player(n, server.names.get(n));
@@ -583,48 +582,48 @@ public class Bang {
 
         switch (numPlayers) {
         case 2: //DEBUG MODE
-            roles.add(Deck.Role.SHERIFF);
-            roles.add(Deck.Role.OUTLAW);
+            roles.add(Constants.Role.SHERIFF);
+            roles.add(Constants.Role.OUTLAW);
             break;
         case 4:
-            roles.add(Deck.Role.SHERIFF);
-            roles.add(Deck.Role.OUTLAW);
-            roles.add(Deck.Role.OUTLAW);
-            roles.add(Deck.Role.RENEGADE);
+            roles.add(Constants.Role.SHERIFF);
+            roles.add(Constants.Role.OUTLAW);
+            roles.add(Constants.Role.OUTLAW);
+            roles.add(Constants.Role.RENEGADE);
             break;
         case 5:
-            roles.add(Deck.Role.SHERIFF);
-            roles.add(Deck.Role.OUTLAW);
-            roles.add(Deck.Role.OUTLAW);
-            roles.add(Deck.Role.RENEGADE);
-            roles.add(Deck.Role.DEPUTY);
+            roles.add(Constants.Role.SHERIFF);
+            roles.add(Constants.Role.OUTLAW);
+            roles.add(Constants.Role.OUTLAW);
+            roles.add(Constants.Role.RENEGADE);
+            roles.add(Constants.Role.DEPUTY);
             break;
         case 6:
-            roles.add(Deck.Role.SHERIFF);
-            roles.add(Deck.Role.OUTLAW);
-            roles.add(Deck.Role.OUTLAW);
-            roles.add(Deck.Role.RENEGADE);
-            roles.add(Deck.Role.DEPUTY);
-            roles.add(Deck.Role.OUTLAW);
+            roles.add(Constants.Role.SHERIFF);
+            roles.add(Constants.Role.OUTLAW);
+            roles.add(Constants.Role.OUTLAW);
+            roles.add(Constants.Role.RENEGADE);
+            roles.add(Constants.Role.DEPUTY);
+            roles.add(Constants.Role.OUTLAW);
             break;
         case 7:
-            roles.add(Deck.Role.SHERIFF);
-            roles.add(Deck.Role.OUTLAW);
-            roles.add(Deck.Role.OUTLAW);
-            roles.add(Deck.Role.RENEGADE);
-            roles.add(Deck.Role.DEPUTY);
-            roles.add(Deck.Role.OUTLAW);
-            roles.add(Deck.Role.DEPUTY);
+            roles.add(Constants.Role.SHERIFF);
+            roles.add(Constants.Role.OUTLAW);
+            roles.add(Constants.Role.OUTLAW);
+            roles.add(Constants.Role.RENEGADE);
+            roles.add(Constants.Role.DEPUTY);
+            roles.add(Constants.Role.OUTLAW);
+            roles.add(Constants.Role.DEPUTY);
             break;
         case 8:
-            roles.add(Deck.Role.SHERIFF);
-            roles.add(Deck.Role.OUTLAW);
-            roles.add(Deck.Role.OUTLAW);
-            roles.add(Deck.Role.RENEGADE);
-            roles.add(Deck.Role.DEPUTY);
-            roles.add(Deck.Role.OUTLAW);
-            roles.add(Deck.Role.OUTLAW);
-            roles.add(Deck.Role.RENEGADE);
+            roles.add(Constants.Role.SHERIFF);
+            roles.add(Constants.Role.OUTLAW);
+            roles.add(Constants.Role.OUTLAW);
+            roles.add(Constants.Role.RENEGADE);
+            roles.add(Constants.Role.DEPUTY);
+            roles.add(Constants.Role.OUTLAW);
+            roles.add(Constants.Role.OUTLAW);
+            roles.add(Constants.Role.RENEGADE);
             break;
         default:
             System.out.print("Bad number of players!");
@@ -639,7 +638,7 @@ public class Bang {
                 server.sendInfo("SetInfo:role:" + n + ":" + role);
             } else
                 server.sendInfo(n, "SetInfo:role:" + n + ":" + role);
-            players[n].role = Deck.Role.values()[Integer.valueOf(role)];
+            players[n].role = Constants.Role.values()[Integer.valueOf(role)];
         }
 
         deck = new Deck();
@@ -677,7 +676,7 @@ public class Bang {
         //Give Sheriff the first turn (turn 0)
         for (int n = 0; n < numPlayers; n++) {
             System.out.println("Player " + n + " is a " + players[n].role);
-            if (players[n].role == Deck.Role.SHERIFF) {
+            if (players[n].role == Constants.Role.SHERIFF) {
                 turn = n - 1;
                 break;
             }
@@ -791,7 +790,7 @@ public class Bang {
         int renegades = 0;
         for (Player p: players) {
             if (p.lifePoints > 0) {
-                switch ((Deck.Role)p.role) {
+                switch ((Constants.Role)p.role) {
                 case DEPUTY:
                     deputies++;
                 case SHERIFF:
