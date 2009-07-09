@@ -42,6 +42,13 @@ public class Server extends Thread {
     /**
      * Stores player choices as received by the server.
      * The format is int[m][n], where m is player and n is option
+     * 
+     * <p>Actually, I'm not sure what that meant but it seems like it's not
+     * really true. The 2D array stores  information on who was prompted and
+     * what their response was. m is the player number in the order that they
+     * were prompted, and array[m][0] gives the player number that the rest of
+     * the game understands. array[m][1] gives their response status.
+     * </p>
      */
     public ArrayList<int[][]> choice;
 
