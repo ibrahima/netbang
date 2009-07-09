@@ -91,9 +91,7 @@ public class Bang {
                                              * says something about obsolete?
                                              */
                                             
-                                            System.out.println(server.choice.size() + 
-                                                               " " + 
-                                                               secondchoice.length);
+                                            System.out.println(server.choice.size() + " " + secondchoice.length);
                                             return;
                                         }
                                         if (secondchoice.length ==  2) { //has  been asked to discard
