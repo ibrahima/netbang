@@ -17,6 +17,7 @@ import java.util.LinkedList;
 import javax.swing.JOptionPane;
 
 import netbang.core.Bang;
+import netbang.core.Choice;
 import netbang.core.Player;
 
 
@@ -48,7 +49,7 @@ public class Server extends Thread {
      * the game understands. array[m][1] gives their response status.
      * </p>
      */
-    public ArrayList<int[][]> choice;
+    public ArrayList<Choice[]> choice;
 
     public int[][] ready;
     Bang game; // just insert game stuff here
@@ -64,8 +65,7 @@ public class Server extends Thread {
         this.lan = lan;
         running = true;
         if(!lan)
-            adder = new ServerListAdder(JOptionPane
-                    .showInputDialog(null, "Input server name"));
+            adder = new ServerListAdder(JOptionPane.showInputDialog(null, "Input server name"));
         try {
             me = new ServerSocket(port);
             me.setSoTimeout(1000);
@@ -146,10 +146,9 @@ public class Server extends Thread {
      */
     public void promptAll(String s) {
         prompting = 1;
-        choice.add(new int[numPlayers][2]);
+        choice.add(new Choice[numPlayers]);
         for (int n = 0; n < numPlayers; n++) {
-            choice.get(choice.size() - 1)[n][0] = n;
-            choice.get(choice.size() - 1)[n][1] = -2;
+            choice.get(choice.size() - 1)[n] = new Choice(n, -2);
         }
         for (int n = 0; n < numPlayers; n++) {
             prompt(n, s);
@@ -163,10 +162,9 @@ public class Server extends Thread {
      */
     public void promptPlayers(int[] p, String s) {
         prompting = 1;
-        choice.add(new int[p.length][2]);
+        choice.add(new Choice[p.length]);
         for (int n = 0; n < p.length; n++) {
-            choice.get(choice.size() - 1)[n][0] = p[n];
-            choice.get(choice.size() - 1)[n][1] = -2;
+            choice.get(choice.size() - 1)[n] = new Choice(p[n], -2);
         }
         for (int n:p) {
             prompt(n, s);
@@ -179,7 +177,7 @@ public class Server extends Thread {
      */
     public void promptPlayer(int p, String s) {
         prompting = 1;
-        choice.add(new int[][] { { p, -2 } });
+        choice.add(new Choice[] { new Choice( p, -2 ) });
         prompt(p, s);
     }
     public void run() {
@@ -216,7 +214,7 @@ public class Server extends Thread {
                     // System.out.println(choice.length + " " +
                     // choice[0].length);
                     for (int n = 0; n < choice.get(choice.size() - 1).length; n++) {
-                        if (choice.get(choice.size() - 1)[n][1] == -2) {
+                        if (choice.get(choice.size() - 1)[n].choice == -2) {
                             flag = false;
                         }
                     }
@@ -309,13 +307,12 @@ public class Server extends Thread {
             e.printStackTrace();
         }
         prompting = 1;
-        choice = new ArrayList<int[][]>();
-        choice.add(new int[numPlayers - 1][2]);
+        choice = new ArrayList<Choice[]>();
+        choice.add(new Choice[numPlayers - 1]);
         for (int n = 0, m = 0; m < numPlayers - 1; n++, m++) {// this prompt
             // goes out to everyone except host
             if (n != host) {
-                choice.get(choice.size() - 1)[m][0] = n;
-                choice.get(choice.size() - 1)[m][1] = -2;
+                choice.get(choice.size() - 1)[m] = new Choice(n, -2);
             } else
                 m--;
         }
@@ -451,12 +448,11 @@ class ServerThread extends Thread {
 		if (server.prompting >= 1) {
 		    int n;
 		    // if(id>server.choice.length)
-		    for (n = 0; server.choice.get(server.choice.size() - 1)[n][0] != id || 
-		    	(server.choice.get(server.choice.size() - 1)[n][0] == id && 
-		    	server.choice.get(server.choice.size() - 1)[n][1]>-1); n++) {
+		    for (n = 0; server.choice.get(server.choice.size() - 1)[n].playerid != id || 
+		    	(server.choice.get(server.choice.size() - 1)[n].playerid == id && 
+		    	server.choice.get(server.choice.size() - 1)[n].choice>-1); n++) {
 		    }//TODO: HUH?! Why is this dead loop here? O.o I split it across 3 lines for readability
-		    server.choice.get(server.choice.size() - 1)[n][1] = Integer
-		    .valueOf(msgfields[1]);
+		    server.choice.get(server.choice.size() - 1)[n].choice = Integer.valueOf(msgfields[1]);
 		    System.out.println("Player "+n+" returned "+msgfields[1]);
 		    server.prompting = 2;
 		} else {
