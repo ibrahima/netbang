@@ -45,11 +45,7 @@ public class Card {
             type = 1;
             int[] threehp = new int[] { 3, 6, 8, 16, 21, 27, 28, 30 };
             if (Arrays.binarySearch(threehp, ordinal) >= 0
-                    && ordinal == threehp[Arrays.binarySearch(threehp, ordinal)]) { // awkward
-                                                                                    // way
-                                                                                    // of
-                                                                                    // doing
-                                                                                    // contains
+                    && ordinal == threehp[Arrays.binarySearch(threehp, ordinal)]) {// awkward way of doing contains
                 special = 3;
             } else
                 special = 4;
