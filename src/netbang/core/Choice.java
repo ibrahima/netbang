@@ -16,25 +16,6 @@ public class Choice {
 		this.playerid = playerid;
 		this.choice = choice;
 	}
-	private final int playerid;
-	private int choice;
-	/**
-	 * @return the playerid
-	 */
-	public int getPlayerid() {
-		return playerid;
-	}
-
-	/**
-	 * @return the choice
-	 */
-	public int getChoice() {
-		return choice;
-	}
-	/**
-	 * @param choice the choice to set
-	 */
-	public void setChoice(int choice) {
-		this.choice = choice;
-	}
+	public final int playerid;
+	public int choice;
 }
