@@ -1,0 +1,22 @@
+Options/Brainstorm for cleaning up choices thing
+
+1)  The whole 2D array is useless, considering the "columns" are just 2 element
+    arrays acting as essentially a car/cdr pair from Scheme. At the least, that
+    column can be replaced by a class that has two fields for player id and
+    choice.
+    
+2)  It kind of makes sense to store the choice data in a map of some sort
+    instead, with playerid being the key and choice being the value. This is a
+    little strange though, since it seems like in most cases the 2D array is
+    actually accessed directly at the 0th index. I find this very strange since
+    the array is indexed in an arbitrary order; this can only mean that in most
+    cases there is only *one* entry in the 2D array. Usually, a prompt is only
+    sent to one player.
+    
+3)  I think choices is better implemented as a LinkedList, since it's not often
+    going to be very large and although accesses to it are indexed, it's almost
+    always accessing the first or second entries, which are trivial in a
+    LinkedList. I guess in theory an array has better cache locality than a
+    linked list though. We could just specify the size of the array at creation
+    time to save memory. This is a smaller issue though.
+
