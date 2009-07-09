@@ -131,12 +131,8 @@ public class Server extends Thread {
      * </ul>
      * @param player The player to send the prompt to
      * @param s The prompt message
-     * @param one Whether only one player is being prompted. Too lazy to make a helper method for that.
      */
-    public void prompt(int player, String s, boolean one) {
-        if (one) {
-            choice.add(new int[][] { { player, -2 } });
-        }
+    public void prompt(int player, String s) {
         if (prompting == 0) {
             prompting = 1;
         }
@@ -156,7 +152,7 @@ public class Server extends Thread {
             choice.get(choice.size() - 1)[n][1] = -2;
         }
         for (int n = 0; n < numPlayers; n++) {
-            prompt(n, s, false);
+            prompt(n, s);
         }
     }
 
@@ -173,10 +169,19 @@ public class Server extends Thread {
             choice.get(choice.size() - 1)[n][1] = -2;
         }
         for (int n:p) {
-            prompt(n, s, false);
+            prompt(n, s);
         }
     }
-
+    /**
+     * Prompt the player specified.
+     * @param p The player to prompt
+     * @param s The prompt message
+     */
+    public void promptPlayer(int p, String s) {
+        prompting = 1;
+        choice.add(new int[][] { { p, -2 } });
+        prompt(p, s);
+    }
     public void run() {
         while (running) {
             if (!lan&&System.currentTimeMillis() - listLastUpdated > 60000) {

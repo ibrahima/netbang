@@ -17,8 +17,6 @@ import netbang.core.Deck;
 import netbang.core.Player;
 import netbang.network.Client;
 
-
-
 public class Field implements MouseListener, MouseMotionListener {
     Client client;
     public BSHashMap<Rectangle, Clickable> clickies = new BSHashMap<Rectangle, Clickable>();

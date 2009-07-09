@@ -37,7 +37,7 @@ public class Bang {
         } else {
             if(offturn>-1){
                 if (server.choice.size() == 0) {
-                    server.prompt(offturn, "PlayCard", true);
+                    server.promptPlayer(offturn, "PlayCard");
                 }
                 else if (server.choice.size() >= 1) {
                     offturn = -1;
@@ -63,10 +63,10 @@ public class Bang {
                             {
                                 if (getCard(firstchoice[0][0], firstchoice[0][1]).effect == Card.play.STEAL.ordinal() ||
                                  getCard(firstchoice[0][0], firstchoice[0][1]).effect == Card.play.DISCARD.ordinal()){
-                                    server.prompt(who, "PickCardTarget", true);
+                                    server.promptPlayer(who, "PickCardTarget");
                                 }
                                 else{   
-                                    server.prompt(who, "PickTarget", true);
+                                    server.promptPlayer(who, "PickTarget");
                                 }
                                 server.sendInfo(who, "InfoMsg:Pick Target:0");    
                                 return;
@@ -81,25 +81,25 @@ public class Bang {
                                         if (secondchoice.length == 1) { //has not been asked to discard yet
                                             System.out.println("THIS CARD REQUIRES A DISCARD TO PLAY AS WELL");
                                             server.choice.set(1, new int[][] { secondchoice[0], { firstchoice[0][0], -2 } }); //TODO: obsolete?
-                                            server.prompt(firstchoice[0][0], 
-                                                          "PlayCard", 
-                                                          false); //TODO: play card from hand only
+                                            server.prompt(firstchoice[0][0],
+                                                          "PlayCard"); //TODO: play card from hand only
+                                            /*TODO: Why didn't this have true for prompting one player?
+                                             * It *was* prompting only one player. I guess the reasoning
+                                             * was that the line above set the array manually, but it also
+                                             * says something about obsolete?
+                                             */
+                                            
                                             System.out.println(server.choice.size() + 
                                                                " " + 
                                                                secondchoice.length);
                                             return;
                                         }
                                         if (secondchoice.length ==  2) { //has  been asked to discard
-                                            if (secondchoice[1][1] == 
-                                                firstchoice[0][1]) {
+                                            if (secondchoice[1][1] == firstchoice[0][1]) {
                                                 System.out.println("Cannot discard the card you are playing");
-                                                server.choice.set(1, 
-                                                                  new int[][] { secondchoice[0], 
-                                                                                { firstchoice[0][0], 
-                                                                                  -2 } });
-                                                server.prompt(firstchoice[0][0], 
-                                                              "PlayCard", 
-                                                              false); //TODO: play card from hand only
+                                                server.choice.set(1, new int[][] { secondchoice[0], 
+                                                                                { firstchoice[0][0], -2 } });
+                                                server.prompt(firstchoice[0][0], "PlayCard"); //TODO: play card from hand only
                                                 return;
                                             } else {
                                                 System.out.println("DISCARD OK.");
@@ -113,11 +113,8 @@ public class Bang {
                                             }
                                         }
                                     } else {
-                                        server.choice.remove(server.choice.size() - 
-                                                             1);
-                                        server.prompt(who, 
-                                                      "PlayCardUnforced", 
-                                                      true);
+                                        server.choice.remove(server.choice.size() - 1);
+                                        server.promptPlayer(who, "PlayCardUnforced");
                                         System.out.println("Cannot play that card: you need another card to discard");
                                         return;
                                     }
@@ -128,9 +125,7 @@ public class Bang {
                                                    secondchoice[0][1]);
                                 if (getCard(firstchoice[0][0], firstchoice[0][1]).effect == Card.play.STEAL.ordinal() ||
                                     getCard(firstchoice[0][0], firstchoice[0][1]).effect == Card.play.DISCARD.ordinal()){
-                                        server.prompt(who, 
-                                                      "PickCardTarget", 
-                                                      true);
+                                        server.promptPlayer(who, "PickCardTarget");
                                         return;
                                 }
                                 server.sendInfo("SetInfo:CardPlayed:" + firstchoice[0][0] + ":" + getCard(firstchoice[0][0],firstchoice[0][1]).name + ":" + secondchoice[0][1]);
@@ -142,7 +137,7 @@ public class Bang {
                                                        firstchoice[0][1], false);
                                     server.choice.remove(server.choice.size()-1);
                                     server.choice.remove(server.choice.size()-1);
-                                    server.prompt(who, "PlayCardUnforced", true);
+                                    server.promptPlayer(who, "PlayCardUnforced");
                                     return;
                                 } else if (getCard(firstchoice[0][0], firstchoice[0][1]).effect == Card.play.DAMAGE.ordinal() ||
                                  getCard(firstchoice[0][0], firstchoice[0][1]).effect == Card.play.DUEL.ordinal() ) {
@@ -160,9 +155,8 @@ public class Bang {
                                     }
                                     else{
                                         //System.out.println(players[turn%numPlayers].bangs+"~!@#!@#!@#!@#@!#!#!@#!@#!#@!@#!@#!#!#!#!@#!#!@#12");
-                                        server.prompt(secondchoice[0][1], 
-                                                      "PlayCardUnforced", 
-                                                      true); //unforce b/c do not have to miss
+                                        server.promptPlayer(secondchoice[0][1], 
+                                                      "PlayCardUnforced"); //unforce b/c do not have to miss
                                         return;
                                     }
                                 } else {
@@ -221,7 +215,7 @@ public class Bang {
                                 } else { //not a miss card!
                                     System.out.println("May only play a miss!");
                                     server.choice.remove(server.choice.size() - 1);
-                                    server.prompt(secondchoice[0][1], "PlayCardUnforced", true);
+                                    server.promptPlayer(secondchoice[0][1], "PlayCardUnforced");
                                     return;
                                 }
                             }
@@ -242,12 +236,12 @@ public class Bang {
                                             firstchoice[0][1]--;
                                         server.choice.remove(server.choice.size() - 1);
                                         server.choice.remove(server.choice.size() - 1);
-                                        server.prompt(secondchoice[0][1], "PlayCardUnforced", true);
+                                        server.promptPlayer(secondchoice[0][1], "PlayCardUnforced");
                                         return;
                                     }
                                     else if(server.choice.size()==3){
                                         playerDiscardCard(server.choice.get(server.choice.size()-1)[0][0], server.choice.get(server.choice.size()-1)[0][1], true);
-                                        server.prompt(secondchoice[0][0], "PlayCardUnforced", true);
+                                        server.promptPlayer(secondchoice[0][0], "PlayCardUnforced");
                                         return;
                                     }
                                     else{
@@ -258,7 +252,7 @@ public class Bang {
                                     System.out.println("ILLEGAL CARD");
                                     int i = server.choice.get(server.choice.size() - 1)[0][0];
                                     server.choice.remove(server.choice.size() - 1);
-                                    server.prompt(i, "PlayCardUnforced", true);
+                                    server.promptPlayer(i, "PlayCardUnforced");
                                 }
                             }
                             else if (getCard(firstchoice[0][0], firstchoice[0][1]).effect == Card.play.STEAL.ordinal() ||
@@ -266,7 +260,7 @@ public class Bang {
                                     if(secondchoice[0][1] == secondchoice[0][0]){
                                         server.choice.remove(server.choice.size() - 1);
                                         server.choice.remove(server.choice.size() - 1);
-                                        server.prompt(who, "PickCardTarget", true);
+                                        server.promptPlayer(who, "PickCardTarget");
                                         System.out.println("Cannot panic yourself");
                                         return;
                                     }
@@ -327,7 +321,7 @@ public class Bang {
                                                     for(Card c:store)
                                                         s += ":"+c.name;
                                                     server.sendInfo("SetInfo:GeneralStore:-1"+s);
-                                                    server.prompt(storeIndex, "GeneralStore", true);
+                                                    server.promptPlayer(storeIndex, "GeneralStore");
                                                     return;
                                                 }
                                                 else{
@@ -348,7 +342,7 @@ public class Bang {
                                                         for(Card c:store)
                                                             s += ":"+c.name;
                                                         server.sendInfo("SetInfo:GeneralStore:-1"+s);
-                                                        server.prompt(storeIndex, "GeneralStore", true);
+                                                        server.promptPlayer(storeIndex, "GeneralStore");
                                                         return;
                                                     }
                                                     else{
@@ -454,7 +448,7 @@ public class Bang {
                         }
                     }
                     server.choice.remove(server.choice.size() - 1);
-                    server.prompt(who, "PlayCardUnforced", true);
+                    server.promptPlayer(who, "PlayCardUnforced");
                 }
                 if (firstchoice[0][1] == -1 || 
                     players[firstchoice[0][0]].hand.size() <= 
@@ -774,7 +768,7 @@ public class Bang {
             }
         }
         System.out.println("It is turn " + who);
-        server.prompt(who, "PlayCardUnforced", true);
+        server.promptPlayer(who, "PlayCardUnforced");
     }
 
     /**
