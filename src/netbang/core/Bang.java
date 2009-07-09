@@ -45,22 +45,24 @@ public class Bang {
             }
             
             if (server.choice.size() >= 1) {
-                if (server.choice.size() == 1) {
-                    System.out.println("You played " + server.choice.get(0)[0][1] + ". You have " +
-                    		(players[server.choice.get(0)[0][0]].hand.size() - 1) + " cards left in your hand.");
+                int[][] firstchoice = server.choice.get(0);
+				if (server.choice.size() == 1) {
+                    System.out.println("You played " + firstchoice[0][1] + ". You have " +
+                    		(players[firstchoice[0][0]].hand.size() - 1) + " cards left in your hand.");
                 }
-                if (server.choice.get(0)[0][1] != -1) {
+                if (firstchoice[0][1] != -1) {
                     int who = turn % numPlayers;
-                    if (getCard(server.choice.get(0)[0][0],server.choice.get(0)[0][1]).target == 
+                    int[][] secondchoice = server.choice.get(1);
+					if (getCard(firstchoice[0][0],firstchoice[0][1]).target == 
                         Targets.ONE && 
-                        (getCard(server.choice.get(0)[0][0],server.choice.get(0)[0][1]).type == 
+                        (getCard(firstchoice[0][0],firstchoice[0][1]).type == 
                          3? 
-                         getCard(server.choice.get(0)[0][0],server.choice.get(0)[0][1]).location ==
+                         getCard(firstchoice[0][0],firstchoice[0][1]).location ==
                           1:true)) {
                         if (server.choice.size() == 1) {
                             {
-                                if (getCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]).effect == Card.play.STEAL.ordinal() ||
-                                 getCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]).effect == Card.play.DISCARD.ordinal()){
+                                if (getCard(firstchoice[0][0], firstchoice[0][1]).effect == Card.play.STEAL.ordinal() ||
+                                 getCard(firstchoice[0][0], firstchoice[0][1]).effect == Card.play.DISCARD.ordinal()){
                                     server.prompt(who, "PickCardTarget", true);
                                 }
                                 else{   
@@ -70,44 +72,44 @@ public class Bang {
                                 return;
                             }
                         } else if (server.choice.size() == 2) {
-                            if (server.choice.get(1)[0][1] == -1) {
+                            if (secondchoice[0][1] == -1) {
                                 System.out.println("Cancelled");
                                 server.choice.remove(server.choice.size() - 1);
-                            } else if (isCardLegal(getCard(server.choice.get(0)[0][0],server.choice.get(0)[0][1]), players[server.choice.get(0)[0][0]], players[server.choice.get(1)[0][1]])) {
-                                if (getCard(server.choice.get(0)[0][0],server.choice.get(0)[0][1]).discardToPlay == true) {
-                                    if (players[server.choice.get(0)[0][0]].hand.size() > 1) {
-                                        if (server.choice.get(1).length == 1) { //has not been asked to discard yet
+                            } else if (isCardLegal(getCard(firstchoice[0][0],firstchoice[0][1]), players[firstchoice[0][0]], players[secondchoice[0][1]])) {
+                                if (getCard(firstchoice[0][0],firstchoice[0][1]).discardToPlay == true) {
+                                    if (players[firstchoice[0][0]].hand.size() > 1) {
+                                        if (secondchoice.length == 1) { //has not been asked to discard yet
                                             System.out.println("THIS CARD REQUIRES A DISCARD TO PLAY AS WELL");
-                                            server.choice.set(1, new int[][] { server.choice.get(1)[0], { server.choice.get(0)[0][0], -2 } }); //TODO: obsolete?
-                                            server.prompt(server.choice.get(0)[0][0], 
+                                            server.choice.set(1, new int[][] { secondchoice[0], { firstchoice[0][0], -2 } }); //TODO: obsolete?
+                                            server.prompt(firstchoice[0][0], 
                                                           "PlayCard", 
                                                           false); //TODO: play card from hand only
                                             System.out.println(server.choice.size() + 
                                                                " " + 
-                                                               server.choice.get(1).length);
+                                                               secondchoice.length);
                                             return;
                                         }
-                                        if (server.choice.get(1).length ==  2) { //has  been asked to discard
-                                            if (server.choice.get(1)[1][1] == 
-                                                server.choice.get(0)[0][1]) {
+                                        if (secondchoice.length ==  2) { //has  been asked to discard
+                                            if (secondchoice[1][1] == 
+                                                firstchoice[0][1]) {
                                                 System.out.println("Cannot discard the card you are playing");
                                                 server.choice.set(1, 
-                                                                  new int[][] { server.choice.get(1)[0], 
-                                                                                { server.choice.get(0)[0][0], 
+                                                                  new int[][] { secondchoice[0], 
+                                                                                { firstchoice[0][0], 
                                                                                   -2 } });
-                                                server.prompt(server.choice.get(0)[0][0], 
+                                                server.prompt(firstchoice[0][0], 
                                                               "PlayCard", 
                                                               false); //TODO: play card from hand only
                                                 return;
                                             } else {
                                                 System.out.println("DISCARD OK.");
                                                 //may need to reorder the cards;
-                                                if (server.choice.get(0)[0][1] > 
-                                                    server.choice.get(1)[1][1]) {
-                                                    server.choice.get(0)[0][1]--;
+                                                if (firstchoice[0][1] > 
+                                                    secondchoice[1][1]) {
+                                                    firstchoice[0][1]--;
                                                 }
-                                                playerDiscardCard(server.choice.get(0)[0][0], 
-                                                                  server.choice.get(1)[1][1], true);
+                                                playerDiscardCard(firstchoice[0][0], 
+                                                                  secondchoice[1][1], true);
                                             }
                                         }
                                     } else {
@@ -121,112 +123,112 @@ public class Bang {
                                     }
                                 }
                                 System.out.println("Player " + 
-                                                   server.choice.get(1)[0][0] + 
+                                                   secondchoice[0][0] + 
                                                    " is targeting " + 
-                                                   server.choice.get(1)[0][1]);
-                                if (getCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]).effect == Card.play.STEAL.ordinal() ||
-                                    getCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]).effect == Card.play.DISCARD.ordinal()){
+                                                   secondchoice[0][1]);
+                                if (getCard(firstchoice[0][0], firstchoice[0][1]).effect == Card.play.STEAL.ordinal() ||
+                                    getCard(firstchoice[0][0], firstchoice[0][1]).effect == Card.play.DISCARD.ordinal()){
                                         server.prompt(who, 
                                                       "PickCardTarget", 
                                                       true);
                                         return;
                                 }
-                                server.sendInfo("SetInfo:CardPlayed:" + server.choice.get(0)[0][0] + ":" + getCard(server.choice.get(0)[0][0],server.choice.get(0)[0][1]).name + ":" + server.choice.get(1)[0][1]);
-                                if (getCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]).effect == Card.play.JAIL.ordinal()){
-                                    server.sendInfo("SetInfo:PutInField:"+server.choice.get(1)[0][1]+":"+
-                                                getCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]).ordinal);
-                                    players[server.choice.get(1)[0][1]].field.add(getCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1])); //give player the jail
-                                    playerDiscardCard(server.choice.get(0)[0][0], 
-                                                       server.choice.get(0)[0][1], false);
+                                server.sendInfo("SetInfo:CardPlayed:" + firstchoice[0][0] + ":" + getCard(firstchoice[0][0],firstchoice[0][1]).name + ":" + secondchoice[0][1]);
+                                if (getCard(firstchoice[0][0], firstchoice[0][1]).effect == Card.play.JAIL.ordinal()){
+                                    server.sendInfo("SetInfo:PutInField:"+secondchoice[0][1]+":"+
+                                                getCard(firstchoice[0][0], firstchoice[0][1]).ordinal);
+                                    players[secondchoice[0][1]].field.add(getCard(firstchoice[0][0], firstchoice[0][1])); //give player the jail
+                                    playerDiscardCard(firstchoice[0][0], 
+                                                       firstchoice[0][1], false);
                                     server.choice.remove(server.choice.size()-1);
                                     server.choice.remove(server.choice.size()-1);
                                     server.prompt(who, "PlayCardUnforced", true);
                                     return;
-                                } else if (getCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]).effect == Card.play.DAMAGE.ordinal() ||
-                                 getCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]).effect == Card.play.DUEL.ordinal() ) {
-                                    if(players[who].bangs>0 && getCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]).special == 1 &&
+                                } else if (getCard(firstchoice[0][0], firstchoice[0][1]).effect == Card.play.DAMAGE.ordinal() ||
+                                 getCard(firstchoice[0][0], firstchoice[0][1]).effect == Card.play.DUEL.ordinal() ) {
+                                    if(players[who].bangs>0 && getCard(firstchoice[0][0], firstchoice[0][1]).special == 1 &&
                                      (playerHasFieldEffect(who, Card.field.GUN)==-1||players[who].field.get(playerHasFieldEffect(who, Card.field.GUN)).special!=1)){
                                         server.choice.remove(server.choice.size() - 1);
                                         server.sendInfo(who, "InfoMsg:Stop banging!:1");    
                                     }                                    
-                                    else if(playerHasFieldEffect(server.choice.get(1)[0][1], Card.field.BARREL)>-1&&Math.random()<.25 ||
-                                     (players[server.choice.get(1)[0][1]].character==Deck.Characters.JOURDONNAIS.ordinal()?Math.random()<.25:false)){
-                                        server.sendInfo("InfoMsg:Player "+server.choice.get(1)[0][1]+" did a barrel roll!:0");
+                                    else if(playerHasFieldEffect(secondchoice[0][1], Card.field.BARREL)>-1&&Math.random()<.25 ||
+                                     (players[secondchoice[0][1]].character==Deck.Characters.JOURDONNAIS.ordinal()?Math.random()<.25:false)){
+                                        server.sendInfo("InfoMsg:Player "+secondchoice[0][1]+" did a barrel roll!:0");
                                         server.choice.remove(server.choice.size() - 1);
-                                        playerDiscardCard(server.choice.get(0)[0][0], 
-                                                          server.choice.get(0)[0][1], true);
+                                        playerDiscardCard(firstchoice[0][0], 
+                                                          firstchoice[0][1], true);
                                     }
                                     else{
                                         //System.out.println(players[turn%numPlayers].bangs+"~!@#!@#!@#!@#@!#!#!@#!@#!#@!@#!@#!#!#!#!@#!#!@#12");
-                                        server.prompt(server.choice.get(1)[0][1], 
+                                        server.prompt(secondchoice[0][1], 
                                                       "PlayCardUnforced", 
                                                       true); //unforce b/c do not have to miss
                                         return;
                                     }
                                 } else {
                                     System.out.println("NOT A BANG, SO TARGET DOES NOT CHOOSE (Unimplemented targetting card)");
-                                    playerDiscardCard(server.choice.get(0)[0][0], 
-                                                      server.choice.get(0)[0][1], true);
+                                    playerDiscardCard(firstchoice[0][0], 
+                                                      firstchoice[0][1], true);
                                 }
                             }
                             else{
                                 server.choice.remove(server.choice.size() - 1);
                             }
                         } else if (server.choice.size() >= 3) {
-                            if (getCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]).effect == 
+                            if (getCard(firstchoice[0][0], firstchoice[0][1]).effect == 
                                 Card.play.DAMAGE.ordinal() && 
-                                getCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]).special != 
+                                getCard(firstchoice[0][0], firstchoice[0][1]).special != 
                                 2) {
                                 if (server.choice.get(2)[0][1] == -1) { //no miss played
                                     server.sendInfo("SetInfo:CardPlayed:" + 
-                                                    server.choice.get(1)[0][1] + 
+                                                    secondchoice[0][1] + 
                                                     ":no miss");
-                                    changeLifePoints(server.choice.get(1)[0][1], 
+                                    changeLifePoints(secondchoice[0][1], 
                                                      -1);
-                                    if (getCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]).effect2 == 
+                                    if (getCard(firstchoice[0][0], firstchoice[0][1]).effect2 == 
                                         Card.play.DRAW.ordinal()) {
-                                        playerDrawCard(server.choice.get(1)[0][0], 
+                                        playerDrawCard(secondchoice[0][0], 
                                                        1);
                                     }
-                                    if(getCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]).special == 1 && 
+                                    if(getCard(firstchoice[0][0], firstchoice[0][1]).special == 1 && 
                                      players[who].character!=Deck.Characters.WILLY_THE_KID.ordinal())//Willy the Kid
                                         players[who].bangs++;
                                     server.choice.remove(server.choice.size() - 
                                                          1);
                                     server.choice.remove(server.choice.size() - 
                                                          1);
-                                    playerDiscardCard(server.choice.get(0)[0][0], 
-                                                      server.choice.get(0)[0][1], true);
-                                } else if (getCard(server.choice.get(1)[0][1], server.choice.get(2)[0][1]).effect == Card.play.MISS.ordinal() && 
-                                    (getCard(server.choice.get(1)[0][1], server.choice.get(2)[0][1]).type == 3?getCard(server.choice.get(1)[0][1], server.choice.get(2)[0][1]).location>0:true)) {
-                                    server.sendInfo("SetInfo:CardPlayed:" + server.choice.get(1)[0][1] + ":" + getCard(server.choice.get(1)[0][1], server.choice.get(2)[0][1]).name);
-                                    if (getCard(server.choice.get(1)[0][1], server.choice.get(2)[0][1]).effect2 == 
+                                    playerDiscardCard(firstchoice[0][0], 
+                                                      firstchoice[0][1], true);
+                                } else if (getCard(secondchoice[0][1], server.choice.get(2)[0][1]).effect == Card.play.MISS.ordinal() && 
+                                    (getCard(secondchoice[0][1], server.choice.get(2)[0][1]).type == 3?getCard(secondchoice[0][1], server.choice.get(2)[0][1]).location>0:true)) {
+                                    server.sendInfo("SetInfo:CardPlayed:" + secondchoice[0][1] + ":" + getCard(secondchoice[0][1], server.choice.get(2)[0][1]).name);
+                                    if (getCard(secondchoice[0][1], server.choice.get(2)[0][1]).effect2 == 
                                         Card.play.DRAW.ordinal()) {
-                                        playerDrawCard(server.choice.get(1)[0][1], 
+                                        playerDrawCard(secondchoice[0][1], 
                                                        1);
                                     }
-                                    if (getCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]).effect2 == 
+                                    if (getCard(firstchoice[0][0], firstchoice[0][1]).effect2 == 
                                         Card.play.DRAW.ordinal()) {
-                                        playerDrawCard(server.choice.get(1)[0][0], 1);
+                                        playerDrawCard(secondchoice[0][0], 1);
                                     }
-                                    if(getCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]).special == 1 &&
+                                    if(getCard(firstchoice[0][0], firstchoice[0][1]).special == 1 &&
                                      players[who].character!=Deck.Characters.WILLY_THE_KID.ordinal())
                                         players[who].bangs++;
-                                    playerDiscardCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1], true);
-                                    playerDiscardCard(server.choice.get(1)[0][1], server.choice.get(2)[0][1], true);
+                                    playerDiscardCard(firstchoice[0][0], firstchoice[0][1], true);
+                                    playerDiscardCard(secondchoice[0][1], server.choice.get(2)[0][1], true);
                                     server.choice.remove(server.choice.size() - 1);
                                     server.choice.remove(server.choice.size() - 1);
                                 } else { //not a miss card!
                                     System.out.println("May only play a miss!");
                                     server.choice.remove(server.choice.size() - 1);
-                                    server.prompt(server.choice.get(1)[0][1], "PlayCardUnforced", true);
+                                    server.prompt(secondchoice[0][1], "PlayCardUnforced", true);
                                     return;
                                 }
                             }
-                            else if(getCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]).effect == Card.play.DUEL.ordinal()){
+                            else if(getCard(firstchoice[0][0], firstchoice[0][1]).effect == Card.play.DUEL.ordinal()){
                                 if(server.choice.get(server.choice.size()-1)[0][1]==-1){
                                     changeLifePoints(server.choice.get(server.choice.size()-1)[0][0], -1);
-                                    playerDiscardCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1], true);
+                                    playerDiscardCard(firstchoice[0][0], firstchoice[0][1], true);
                                     server.choice.remove(server.choice.size() - 1);
                                     server.choice.remove(server.choice.size() - 1);
                                     if(server.choice.size()==4){
@@ -236,16 +238,16 @@ public class Bang {
                                 else if(getCard(server.choice.get(server.choice.size()-1)[0][0], server.choice.get(server.choice.size()-1)[0][1]).effect == Card.play.DAMAGE.ordinal() && getCard(server.choice.get(server.choice.size()-1)[0][0], server.choice.get(server.choice.size()-1)[0][1]).special==1){
                                     if(server.choice.size() == 4){
                                         playerDiscardCard(server.choice.get(server.choice.size()-1)[0][0], server.choice.get(server.choice.size()-1)[0][1], true);
-                                        if(server.choice.get(server.choice.size()-1)[0][1]<server.choice.get(0)[0][1])
-                                            server.choice.get(0)[0][1]--;
+                                        if(server.choice.get(server.choice.size()-1)[0][1]<firstchoice[0][1])
+                                            firstchoice[0][1]--;
                                         server.choice.remove(server.choice.size() - 1);
                                         server.choice.remove(server.choice.size() - 1);
-                                        server.prompt(server.choice.get(1)[0][1], "PlayCardUnforced", true);
+                                        server.prompt(secondchoice[0][1], "PlayCardUnforced", true);
                                         return;
                                     }
                                     else if(server.choice.size()==3){
                                         playerDiscardCard(server.choice.get(server.choice.size()-1)[0][0], server.choice.get(server.choice.size()-1)[0][1], true);
-                                        server.prompt(server.choice.get(1)[0][0], "PlayCardUnforced", true);
+                                        server.prompt(secondchoice[0][0], "PlayCardUnforced", true);
                                         return;
                                     }
                                     else{
@@ -259,59 +261,59 @@ public class Bang {
                                     server.prompt(i, "PlayCardUnforced", true);
                                 }
                             }
-                            else if (getCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]).effect == Card.play.STEAL.ordinal() ||
-                                getCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]).effect == Card.play.DISCARD.ordinal()){
-                                    if(server.choice.get(1)[0][1] == server.choice.get(1)[0][0]){
+                            else if (getCard(firstchoice[0][0], firstchoice[0][1]).effect == Card.play.STEAL.ordinal() ||
+                                getCard(firstchoice[0][0], firstchoice[0][1]).effect == Card.play.DISCARD.ordinal()){
+                                    if(secondchoice[0][1] == secondchoice[0][0]){
                                         server.choice.remove(server.choice.size() - 1);
                                         server.choice.remove(server.choice.size() - 1);
                                         server.prompt(who, "PickCardTarget", true);
                                         System.out.println("Cannot panic yourself");
                                         return;
                                     }
-                                    server.sendInfo("SetInfo:CardPlayed:" + server.choice.get(0)[0][0] + ":" + getCard(server.choice.get(0)[0][0],server.choice.get(0)[0][1]).name + ":" + server.choice.get(1)[0][1]);
+                                    server.sendInfo("SetInfo:CardPlayed:" + firstchoice[0][0] + ":" + getCard(firstchoice[0][0],firstchoice[0][1]).name + ":" + secondchoice[0][1]);
                                     int temp = server.choice.get(2)[0][1];
-                                    if(getCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]).effect == Card.play.DISCARD.ordinal()){
+                                    if(getCard(firstchoice[0][0], firstchoice[0][1]).effect == Card.play.DISCARD.ordinal()){
                                         if(temp>-1){
-                                            playerDiscardCard(server.choice.get(1)[0][1], temp, true);
+                                            playerDiscardCard(secondchoice[0][1], temp, true);
                                              }
                                         else{
                                             temp = (-temp)-3;
                                             System.out.println("LOOKING FOR A CARD IN FIELD");
-                                            playerFieldDiscardCard(server.choice.get(1)[0][1], temp, true);
+                                            playerFieldDiscardCard(secondchoice[0][1], temp, true);
                                         }
                                     }
                                     else{
                                         if(temp>-1){//TODO:askdfjlasjflajfa;lsjkafsf REPLACE THIS WITH GETCARD
-                                            players[who].hand.add(players[(server.choice.get(1)[0][1])].hand.get(temp));
-                                            server.sendInfo(who,"Draw:" + who + ":Game:"+players[(server.choice.get(1)[0][1])].hand.get(temp).name);
-                                            playerDiscardCard(server.choice.get(1)[0][1], temp, false);
+                                            players[who].hand.add(players[(secondchoice[0][1])].hand.get(temp));
+                                            server.sendInfo(who,"Draw:" + who + ":Game:"+players[(secondchoice[0][1])].hand.get(temp).name);
+                                            playerDiscardCard(secondchoice[0][1], temp, false);
                                         }
                                         else{
                                             temp = (-temp)-3;
-                                            players[who].hand.add(players[(server.choice.get(1)[0][1])].field.get(temp));
-                                            server.sendInfo(who,"Draw:" + who + ":Game:"+players[(server.choice.get(1)[0][1])].field.get(temp).name);
-                                            playerFieldDiscardCard(server.choice.get(1)[0][1], temp, false);
+                                            players[who].hand.add(players[(secondchoice[0][1])].field.get(temp));
+                                            server.sendInfo(who,"Draw:" + who + ":Game:"+players[(secondchoice[0][1])].field.get(temp).name);
+                                            playerFieldDiscardCard(secondchoice[0][1], temp, false);
                                         }
                                     }
                                     server.choice.remove(server.choice.size() - 1);
                                     server.choice.remove(server.choice.size() - 1);
-                                    playerDiscardCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1], true);
+                                    playerDiscardCard(firstchoice[0][0], firstchoice[0][1], true);
                                     //server.prompt(turn%numPlayers, "PlayCardUnforced", true);
                                     //return;
                             }
                         }                        
-                    } else if (getCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]).target == 
+                    } else if (getCard(firstchoice[0][0], firstchoice[0][1]).target == 
                                Targets.ALL &&
-                               (getCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]).type == 
+                               (getCard(firstchoice[0][0], firstchoice[0][1]).type == 
                                 3? 
-                                getCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]).location ==
+                                getCard(firstchoice[0][0], firstchoice[0][1]).location ==
                                  1:true)) {
-                        if (getCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]).effect == Card.play.HEAL.ordinal()) {
+                        if (getCard(firstchoice[0][0], firstchoice[0][1]).effect == Card.play.HEAL.ordinal()) {
                             for (int n = 0; n < numPlayers; n++) {
                                 changeLifePoints(n, 1);
                             }
-                            playerDiscardCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1], true);
-                        } else if (getCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]).effect == 
+                            playerDiscardCard(firstchoice[0][0], firstchoice[0][1], true);
+                        } else if (getCard(firstchoice[0][0], firstchoice[0][1]).effect == 
                                    Card.play.DRAW.ordinal()) {
                                                 if(store==null){
                                                     store = new ArrayList<Card>();
@@ -329,7 +331,7 @@ public class Bang {
                                                     return;
                                                 }
                                                 else{
-                                                        Card card = store.remove(server.choice.get(1)[0][1]);
+                                                        Card card = store.remove(secondchoice[0][1]);
                                                         server.sendInfo(storeIndex, "Draw:"+storeIndex+":Game:" + card.name);
                                                         for(int m = 0; m != storeIndex; m++)
                                                             server.sendInfo(m, "Draw:" + storeIndex + ":" + 1);
@@ -357,16 +359,16 @@ public class Bang {
                                                     }
                                                 }
                         } else {                        
-                            server.sendInfo("SetInfo:PutInField:"+server.choice.get(0)[0][0]+":"+
-                                    getCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]).name+":"+
-                                    server.choice.get(0)[0][1]);
+                            server.sendInfo("SetInfo:PutInField:"+firstchoice[0][0]+":"+
+                                    getCard(firstchoice[0][0], firstchoice[0][1]).name+":"+
+                                    firstchoice[0][1]);
                         }
 
-                    } else if (getCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]).target == 
+                    } else if (getCard(firstchoice[0][0], firstchoice[0][1]).target == 
                                Targets.OTHERS && 
-                                (getCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]).type == 
+                                (getCard(firstchoice[0][0], firstchoice[0][1]).type == 
                                  3? 
-                                 getCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]).location ==
+                                 getCard(firstchoice[0][0], firstchoice[0][1]).location ==
                                   1:true)) {
                         if (server.choice.size() == 1) {
                             int[] p = new int[numPlayers - 1];
@@ -380,14 +382,14 @@ public class Bang {
                             return;
                         } else if (server.choice.size() == 2) {
                             ArrayList<Integer> al = new ArrayList<Integer>();
-                            for (int[] n: server.choice.get(1)) {
+                            for (int[] n: secondchoice) {
                                 if (n[1] == -1) {
                                     changeLifePoints(n[0], -1);
                                 }
-                                else if ((getCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]).special == 0 && 
+                                else if ((getCard(firstchoice[0][0], firstchoice[0][1]).special == 0 && 
                                            getCard(n[0], n[1]).effect == Card.play.MISS.ordinal() && 
                                             getCard(n[0], n[1]).type != 3) || 
-                                         (getCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]).special == 2 && 
+                                         (getCard(firstchoice[0][0], firstchoice[0][1]).special == 2 && 
                                            getCard(n[0], n[1]).effect == Card.play.DAMAGE.ordinal() && 
                                             getCard(n[0], n[1]).special == 1)) {
                                     if (getCard(n[0], n[1]).effect2 == 
@@ -402,7 +404,7 @@ public class Bang {
                                 }
                             }
                             if (al.size() == 0){
-                                playerDiscardCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1], true);
+                                playerDiscardCard(firstchoice[0][0], firstchoice[0][1], true);
                                 server.choice.remove(server.choice.size() - 1);
                             }
                             else {
@@ -416,46 +418,46 @@ public class Bang {
                             }
                         }
                     } 
-                    else if((getCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]).type == 3 || getCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]).type == 5) && getCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]).location == 0){
-                        isCardLegal(getCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]), players[server.choice.get(0)[0][0]], null);
-                        server.sendInfo("SetInfo:PutInField:"+server.choice.get(0)[0][0]+":"+
-                                    getCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]).name+":"+
-                                    server.choice.get(0)[0][1]);
-                        if(getCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]).name=="DYNAMITE"){
+                    else if((getCard(firstchoice[0][0], firstchoice[0][1]).type == 3 || getCard(firstchoice[0][0], firstchoice[0][1]).type == 5) && getCard(firstchoice[0][0], firstchoice[0][1]).location == 0){
+                        isCardLegal(getCard(firstchoice[0][0], firstchoice[0][1]), players[firstchoice[0][0]], null);
+                        server.sendInfo("SetInfo:PutInField:"+firstchoice[0][0]+":"+
+                                    getCard(firstchoice[0][0], firstchoice[0][1]).name+":"+
+                                    firstchoice[0][1]);
+                        if(getCard(firstchoice[0][0], firstchoice[0][1]).name=="DYNAMITE"){
                             //System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-                             getCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]).effect2 = who;
+                             getCard(firstchoice[0][0], firstchoice[0][1]).effect2 = who;
                         }
-                        getCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]).location = 2;
-                        players[server.choice.get(0)[0][0]].field.add(getCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]));
-                        players[server.choice.get(0)[0][0]].hand.remove(server.choice.get(0)[0][1]);
+                        getCard(firstchoice[0][0], firstchoice[0][1]).location = 2;
+                        players[firstchoice[0][0]].field.add(getCard(firstchoice[0][0], firstchoice[0][1]));
+                        players[firstchoice[0][0]].hand.remove(firstchoice[0][1]);
                         //server.choice.remove(server.choice.size() - 1);
                         //server.prompt(turn % numPlayers, "PlayCardUnforced", true);
                     } else { //self targetting
-                        if (isCardLegal(getCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]), 
-                                        players[server.choice.get(0)[0][0]], 
+                        if (isCardLegal(getCard(firstchoice[0][0], firstchoice[0][1]), 
+                                        players[firstchoice[0][0]], 
                                         null)) {
                             server.sendInfo("SetInfo:CardPlayed:" + 
-                                            server.choice.get(0)[0][0] + ":" + 
-                                            getCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]).name);
-                            if (getCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]).effect == 
+                                            firstchoice[0][0] + ":" + 
+                                            getCard(firstchoice[0][0], firstchoice[0][1]).name);
+                            if (getCard(firstchoice[0][0], firstchoice[0][1]).effect == 
                                 Card.play.DRAW.ordinal()) {
-                                playerDrawCard(server.choice.get(0)[0][0], 
-                                               getCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]).range);
+                                playerDrawCard(firstchoice[0][0], 
+                                               getCard(firstchoice[0][0], firstchoice[0][1]).range);
                             }
-                            if (getCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]).effect == 
+                            if (getCard(firstchoice[0][0], firstchoice[0][1]).effect == 
                                 Card.play.HEAL.ordinal()) {
-                                changeLifePoints(server.choice.get(0)[0][0], 
-                                                 getCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]).range +
-                                                 (getCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1]).special==1 && isCharacter(server.choice.get(0)[0][0],Deck.Characters.TEQUILA_JOE)?1:0));
+                                changeLifePoints(firstchoice[0][0], 
+                                                 getCard(firstchoice[0][0], firstchoice[0][1]).range +
+                                                 (getCard(firstchoice[0][0], firstchoice[0][1]).special==1 && isCharacter(firstchoice[0][0],Deck.Characters.TEQUILA_JOE)?1:0));
                             }
-                            playerDiscardCard(server.choice.get(0)[0][0], server.choice.get(0)[0][1], true);
+                            playerDiscardCard(firstchoice[0][0], firstchoice[0][1], true);
                         }
                     }
                     server.choice.remove(server.choice.size() - 1);
                     server.prompt(who, "PlayCardUnforced", true);
                 }
-                if (server.choice.get(0)[0][1] == -1 || 
-                    players[server.choice.get(0)[0][0]].hand.size() <= 
+                if (firstchoice[0][1] == -1 || 
+                    players[firstchoice[0][0]].hand.size() <= 
                     0) { //TODO: add check for cards that can be played on field as well
                     server.choice.remove(server.choice.size() - 1);
                     nextTurn();
