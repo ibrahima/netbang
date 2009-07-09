@@ -52,7 +52,9 @@ public class Bang {
                 }
                 if (firstchoice[0].choice != -1) {
                     int who = turn % numPlayers;
-                    Choice[] secondchoice = server.choice.get(1);
+                    Choice[] secondchoice = null;
+                    if(server.choice.size()>1)
+                    	secondchoice = server.choice.get(1);
 					if (getCard(firstchoice[0].playerid,firstchoice[0].choice).target == 
                         Targets.ONE && 
                         (getCard(firstchoice[0].playerid,firstchoice[0].choice).type == 
