@@ -46,11 +46,8 @@ public class Bang {
             
             if (server.choice.size() >= 1) {
                 if (server.choice.size() == 1) {
-                    System.out.println("You played " + 
-                                       server.choice.get(0)[0][1] + 
-                                       ". You have " + 
-                                       (players[server.choice.get(0)[0][0]].hand.size() - 
-                                        1) + " cards left in your hand.");
+                    System.out.println("You played " + server.choice.get(0)[0][1] + ". You have " +
+                    		(players[server.choice.get(0)[0][0]].hand.size() - 1) + " cards left in your hand.");
                 }
                 if (server.choice.get(0)[0][1] != -1) {
                     int who = turn % numPlayers;
@@ -958,12 +955,20 @@ public class Bang {
         }
     }
 
+    /**
+     * @param p The player whose max lifepoints to change
+     * @param n The amount by which to change the max lifepoints
+     */
     void changeMaxLifePoints(int p, int n) {
         server.sendInfo("SetInfo:maxHP:" + p + ":" + n);
         players[p].maxLifePoints += n;
         players[p].lifePoints = players[p].maxLifePoints;
     }
 
+    /**
+     * @param p The player whose lifepoints to change
+     * @param n The amount by which to change the lifepoints
+     */
     void changeLifePoints(int p, int n) {
         if (players[p].lifePoints + n > players[p].maxLifePoints) {
             System.out.println("Player " + p + " is now at max hp.");
@@ -976,6 +981,11 @@ public class Bang {
         }
     }
     
+    /**
+     * @param p The player from whom to retrieve the card
+     * @param n The card number to retrieve
+     * @return the specified card
+     */
     Card getCard(int p, int n){
         if(n>-1){
             return players[p].hand.get(n);
