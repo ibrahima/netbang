@@ -65,8 +65,7 @@ public class Client extends Thread {
     }
     /**
      * Constructs a client to the Bang server on the specified host, with the specified name.
-     * <p>Note: guiEnabled is intended for bots and the like. As such there is no
-     * use of it yet, but there will be eventually.</p>
+     * <p>Note: guiEnabled is intended for bots and the like.</p>
      * @param host the host to connect to
      * @param guiEnabled whether the GUI is enabled
      * @param name the name of the client
