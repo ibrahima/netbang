@@ -39,8 +39,11 @@ public class Server extends Thread {
      * unchecked updates, 2 = unchecked prompt
      */
     public int prompting;
-    public ArrayList<int[][]> choice;     // int[m][n], where m is player and n is
-    // option
+    /**
+     * Stores player choices as received by the server.
+     * The format is int[m][n], where m is player and n is option
+     */
+    public ArrayList<int[][]> choice;
 
     public int[][] ready;
     Bang game; // just insert game stuff here
