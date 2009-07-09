@@ -682,8 +682,6 @@ public class Bang {
         nextTurn();
     }
 
-    //returns false if game is over
-
     public void nextTurn() {
         turn++;
 
