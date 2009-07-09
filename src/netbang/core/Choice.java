@@ -9,27 +9,22 @@ package netbang.core;
  */
 public class Choice {
 	/**
-	 * @param player
+	 * @param playerid
 	 * @param choice
 	 */
-	public Choice(int player, int choice) {
-		this.player = player;
+	public Choice(int playerid, int choice) {
+		this.playerid = playerid;
 		this.choice = choice;
 	}
-	private int player;
+	private final int playerid;
 	private int choice;
 	/**
-	 * @return the player
+	 * @return the playerid
 	 */
-	public int getPlayer() {
-		return player;
+	public int getPlayerid() {
+		return playerid;
 	}
-	/**
-	 * @param player the player to set
-	 */
-	public void setPlayer(int player) {
-		this.player = player;
-	}
+
 	/**
 	 * @return the choice
 	 */
