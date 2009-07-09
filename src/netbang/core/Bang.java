@@ -62,17 +62,15 @@ public class Bang {
                          getCard(firstchoice[0].playerid,firstchoice[0].choice).location ==
                           1:true)) {
                         if (server.choice.size() == 1) {
-                            {
-                                if (getCard(firstchoice[0].playerid, firstchoice[0].choice).effect == Card.play.STEAL.ordinal() ||
-                                 getCard(firstchoice[0].playerid, firstchoice[0].choice).effect == Card.play.DISCARD.ordinal()){
-                                    server.promptPlayer(who, "PickCardTarget");
-                                }
-                                else{   
-                                    server.promptPlayer(who, "PickTarget");
-                                }
-                                server.sendInfo(who, "InfoMsg:Pick Target:0");    
-                                return;
+                            if (getCard(firstchoice[0].playerid, firstchoice[0].choice).effect == Card.play.STEAL.ordinal() ||
+                             getCard(firstchoice[0].playerid, firstchoice[0].choice).effect == Card.play.DISCARD.ordinal()){
+                                server.promptPlayer(who, "PickCardTarget");
                             }
+                            else{   
+                                server.promptPlayer(who, "PickTarget");
+                            }
+                            server.sendInfo(who, "InfoMsg:Pick Target:0");    
+                            return;
                         } else if (server.choice.size() == 2) {
                             if (secondchoice[0].choice == -1) {
                                 System.out.println("Cancelled");
@@ -465,8 +463,7 @@ public class Bang {
     /**
      * 
      */
-    public boolean isCardLegal(Card c, Player p1, 
-                               Player p2) {
+    public boolean isCardLegal(Card c, Player p1, Player p2) {
         if(c.type == 3 && c.location != 1){
             System.out.println("YOU JUST PLAYED THAT GREEN CARD");
             return false;
@@ -483,58 +480,56 @@ public class Bang {
             return false;
         }
         //the rules
-        if (true) { //no idea why i had a condition here
-            Choice[] firstchoice = server.choice.get(0);
-			if ((c.type == 3 || c.type == 5) && players[firstchoice[0].playerid].hand.contains(c)) {
-                if(c.type == 5)
-                    if(playerHasFieldEffect(firstchoice[0].playerid, Card.field.GUN)>-1)
-                        playerFieldDiscardCard(firstchoice[0].playerid, playerHasFieldEffect(firstchoice[0].playerid, Card.field.GUN), true);
+        Choice[] firstchoice = server.choice.get(0);
+		if ((c.type == 3 || c.type == 5) && players[firstchoice[0].playerid].hand.contains(c)) {
+            if(c.type == 5)
+                if(playerHasFieldEffect(firstchoice[0].playerid, Card.field.GUN)>-1)
+                    playerFieldDiscardCard(firstchoice[0].playerid, playerHasFieldEffect(firstchoice[0].playerid, Card.field.GUN), true);
+        }
+        if (c.type == 2 ||(c.type == 3 && players[firstchoice[0].playerid].field.contains(c))) {
+            if (c.effect == Card.play.JAIL.ordinal()) {
+                if(p2.role.ordinal()== Constants.Role.OUTLAW.ordinal()){
+                    return false; //cannot jail sheriff
+                } else if(p1==p2){
+                    return false; //cannot jail self
+                }
+                for(Card card :p2.field){
+                    if(card.effect == Card.play.JAIL.ordinal()) //TODO: this sort of check should be for all field cards
+                        return false; //TODO: technically, this should be allowed, and the old jail should be discarded
+                }
+            } else if (c.effect == Card.play.HEAL.ordinal()) {
+                if (c.target == Targets.SELF && 
+                    p1.lifePoints == p1.maxLifePoints) { //can't beer self with max hp
+                    System.out.println("ILLEGAL CARD: you are already at maxhp");
+                    return false;
+                } else if (c.target == Targets.ONE && 
+                           p2.lifePoints == p2.maxLifePoints) {
+                    System.out.println("ILLEGAL CARD: target is already at maxhp");
+                    return false;
+                }
+            } else if(c.effect == Card.play.DAMAGE.ordinal()){ 
+                if(p1 == p2) {
+                    System.out.println("ILLEGAL CARD: why would you shoot yourself?");
+                    return false;
+                }
             }
-            if (c.type == 2 ||(c.type == 3 && players[firstchoice[0].playerid].field.contains(c))) {
-                if (c.effect == Card.play.JAIL.ordinal()) {
-                    if(p2.role.ordinal()== Constants.Role.OUTLAW.ordinal()){
-                        return false; //cannot jail sheriff
-                    } else if(p1==p2){
-                        return false; //cannot jail self
-                    }
-                    for(Card card :p2.field){
-                        if(card.effect == Card.play.JAIL.ordinal()) //TODO: this sort of check should be for all field cards
-                            return false; //TODO: technically, this should be allowed, and the old jail should be discarded
-                    }
-                } else if (c.effect == Card.play.HEAL.ordinal()) {
-                    if (c.target == Targets.SELF && 
-                        p1.lifePoints == p1.maxLifePoints) { //can't beer self with max hp
-                        System.out.println("ILLEGAL CARD: you are already at maxhp");
-                        return false;
-                    } else if (c.target == Targets.ONE && 
-                               p2.lifePoints == p2.maxLifePoints) {
-                        System.out.println("ILLEGAL CARD: target is already at maxhp");
-                        return false;
-                    }
-                } else if(c.effect == Card.play.DAMAGE.ordinal()){ 
-                    if(p1 == p2) {
-                        System.out.println("ILLEGAL CARD: why would you shoot yourself?");
+        } else if (c.type == 4 && 
+                   c.effect == Card.play.MISS.ordinal()) { //can't play miss
+            System.out.println("ILLEGAL CARD: can't play miss on turn");
+            return false;
+        }
+        if(c.target == Targets.ONE && c.range != -1){
+            if(c.effect == Card.play.DAMAGE.ordinal()){ 
+                if(c.range == 0){
+                    int gun = (playerHasFieldEffect(p1.id, Card.field.GUN)!=-1?p1.field.get(playerHasFieldEffect(p1.id, Card.field.GUN)).range:1);
+                    if(getRangeBetweenPlayers(p1, p2)>gun){
+                        //System.out.println("YOU RANGE: "+gun+". Target distance: "+ getRangeBetweenPlayers(p1, p2));
+                        server.sendInfo(p1.id, "InfoMsg:Player "+server.choice.get(1)[0].choice+" out of range. "+gun+"/"+ getRangeBetweenPlayers(p1, p2)+":1");
                         return false;
                     }
                 }
-            } else if (c.type == 4 && 
-                       c.effect == Card.play.MISS.ordinal()) { //can't play miss
-                System.out.println("ILLEGAL CARD: can't play miss on turn");
-                return false;
-            }
-            if(c.target == Targets.ONE && c.range != -1){
-                if(c.effect == Card.play.DAMAGE.ordinal()){ 
-                    if(c.range == 0){
-                        int gun = (playerHasFieldEffect(p1.id, Card.field.GUN)!=-1?p1.field.get(playerHasFieldEffect(p1.id, Card.field.GUN)).range:1);
-                        if(getRangeBetweenPlayers(p1, p2)>gun){
-                            //System.out.println("YOU RANGE: "+gun+". Target distance: "+ getRangeBetweenPlayers(p1, p2));
-                            server.sendInfo(p1.id, "InfoMsg:Player "+server.choice.get(1)[0].choice+" out of range. "+gun+"/"+ getRangeBetweenPlayers(p1, p2)+":1");
-                            return false;
-                        }
-                    }
-                    else if(c.range == 1 && getRangeBetweenPlayers(p1, p2)>1)
-                        return false;
-                }
+                else if(c.range == 1 && getRangeBetweenPlayers(p1, p2)>1)
+                    return false;
             }
         }
         return true;
