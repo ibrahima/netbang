@@ -19,6 +19,7 @@ import netbang.gui.CardDisplayer;
 import netbang.gui.Clickable;
 import netbang.gui.ClientGUI;
 import netbang.gui.Field;
+import netbang.gui.InfoText;
 
 import netbang.core.Constants;
 
@@ -92,6 +93,8 @@ public class Client extends Thread {
                     x = 65;
                 }
             }
+            InfoText testtext = new InfoText(50, 400,"TEST FADEIN PLZ KTHX",Color.BLUE);
+
         }
         player = new Player(id, name);
         this.start();
@@ -138,8 +141,8 @@ public class Client extends Thread {
             try{
                 Thread.sleep(10);
                 if(guiEnabled&&(redraw  || Clickable.numAnimating > 0)){ gui.repaint(); redraw = false; }
-                else if(System.currentTimeMillis() - field.lastMouseMoved > 1000){ // hackish?
-                    field.drawDescription();
+                else if(System.currentTimeMillis() - field.lastMouseMoved > 1000){
+                    field.drawDescription();// TODO: Make this an infotext so that we don't need a special case for it
                 }
             }
             catch(InterruptedException e){
