@@ -31,13 +31,13 @@ import netbang.network.Client;
 
 
 public class ClientGUI extends JFrame implements KeyListener,
-        ComponentListener, ActionListener {
+ComponentListener, ActionListener {
 
     private static final long serialVersionUID = 4377855794895936467L;
     int p;
     StringBuilder chat;
     boolean chatting = false;
-        boolean show_fps = false;
+    boolean show_fps = false;
     public int width = 800;
     public int height = 600;
     ArrayList<String> text = new ArrayList<String>();
@@ -134,10 +134,10 @@ public class ClientGUI extends JFrame implements KeyListener,
         about.addActionListener(this);
         helpmenu.add(about);
 
-                if(show_fps){
-                    fpsmenu = new JMenu("FPS");
-                    menubar.add(fpsmenu);
-                }
+        if(show_fps){
+            fpsmenu = new JMenu("FPS");
+            menubar.add(fpsmenu);
+        }
     }
 
     /**
@@ -173,7 +173,7 @@ public class ClientGUI extends JFrame implements KeyListener,
      */
     public static String promptChooseName() {
         String s = (String) JOptionPane
-                    .showInputDialog(null, "What is your name?");
+        .showInputDialog(null, "What is your name?");
         return s;
     }
 
@@ -233,7 +233,7 @@ public class ClientGUI extends JFrame implements KeyListener,
     }
 
     public void keyTyped(KeyEvent e) {
-                client.redraw = true;
+        client.redraw = true;
         if ((int) e.getKeyChar() == 27) {
             if (chatting) {
                 chatting = false;
@@ -356,16 +356,16 @@ public class ClientGUI extends JFrame implements KeyListener,
                 Player temp = iter.next();
                 graphics.drawString(temp.name, 25, 25 + 15 * n++);
             }
-                        if(show_fps){
-                            tfps++;
-                            now = System.currentTimeMillis();
-                            if ((now - lastTime) > 1000) {
-                                    lastTime = now;
-                                    fps = tfps;
-                                    tfps = 0;
-                                    fpsmenu.setText(fps + "FPS");
-                            }
-                        }
+            if(show_fps){
+                tfps++;
+                now = System.currentTimeMillis();
+                if ((now - lastTime) > 1000) {
+                    lastTime = now;
+                    fps = tfps;
+                    tfps = 0;
+                    fpsmenu.setText(fps + "FPS");
+                }
+            }
         }
     }
 }

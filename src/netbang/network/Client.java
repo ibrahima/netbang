@@ -182,8 +182,7 @@ public class Client extends Thread {
      * @return
      */
     protected int promptStart() {
-        gui.appendText("Host has requested the game be started",
-                Color.BLUE);
+        gui.appendText("Host has requested the game be started", Color.BLUE);
         return gui.promptYesNo("Host has sent a request to start game",
                             "Start game?");
     }
@@ -191,8 +190,7 @@ public class Client extends Thread {
      * Prompts the player to play a card
      */
     protected void promptPlayCard() {
-        gui.promptChooseCard(player.hand, "", "",
-                               true);
+        gui.promptChooseCard(player.hand, "", "", true);
     }
 
 }

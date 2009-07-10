@@ -89,7 +89,7 @@ public class Bang {
                                             System.out.println(server.choice.size() + " " + secondchoice.length);
                                             return;
                                         }
-                                        if (secondchoice.length ==  2) { //has  been asked to discard
+                                        else if (secondchoice.length ==  2) { //has  been asked to discard
                                             if (secondchoice[1].choice == firstchoice[0].choice) {
                                                 System.out.println("Cannot discard the card you are playing");
                                                 server.choice.set(1, new Choice[] { secondchoice[0],
