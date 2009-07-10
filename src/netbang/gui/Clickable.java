@@ -66,10 +66,7 @@ public abstract class Clickable implements Comparable<Clickable> {
                     .getLocation().x);
     }
 
-    public void paint(Graphics2D g) {
-        if (img != null)
-            g.drawImage(img, rect.x, rect.y, null);
-    }
+    public abstract void paint(Graphics2D g);
 
     /**
      * Moves the Clickable to the specified location
