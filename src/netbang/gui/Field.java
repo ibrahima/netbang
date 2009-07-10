@@ -89,28 +89,24 @@ public class Field implements MouseListener, MouseMotionListener {
      */
     public void add(Card card, int player, boolean field) {
         if (client.id == player)
-            System.out.println("Client has " + client.player.hand.size()
-                    + "cards in his hand.");
+            System.out.println("Client has " + client.player.hand.size() + "cards in his hand.");
         if (card.type == 1) {// this a character card
             int x = 350;
             int y = 200;
             clickies.put(new Rectangle(x, y, 60, 90), new CardSpace(card,
-                    rectToPoly(x, y, 60, 90), player, false, cd
-                            .getImage(card.name), null));
+                    rectToPoly(x, y, 60, 90), player, false, cd.getImage(card.name), null));
         } else {
             HandSpace hs = handPlacer.get(player);
             int fieldoffset = (field ? 100 : 0);
             double handoffset = 30 * (!field ? client.players.get(player).hand
                     .size() : client.players.get(player).field.size());
-            int xoffset = (int) (handoffset * Math.sin(hs.theta))
-                    + (int) (fieldoffset * Math.sin(hs.theta));
+            int xoffset = (int) (handoffset * Math.sin(hs.theta)) + (int) (fieldoffset * Math.sin(hs.theta));
             int yoffset = (int) (handoffset * Math.cos(hs.theta))
-                    + (int) (fieldoffset * Math.cos(hs.theta));
+            + (int) (fieldoffset * Math.cos(hs.theta));
             int x = (int) hs.rect.x + hs.rect.width - xoffset;
             int y = (int) hs.rect.y + yoffset;
-            CardSpace cs = new CardSpace(card, rectToPoly(deckcard.rect.x,
-                    deckcard.rect.y, 60, 90), player, field, cd
-                    .getImage(card.name), hs);
+            CardSpace cs = new CardSpace(card, rectToPoly(deckcard.rect.x, deckcard.rect.y, 60, 90),
+                    player, field, cd.getImage(card.name), hs);
             clickies.put(cs.rect, cs);
             cs.moveTo(x, y);
             hs.addCard(cs);
@@ -183,61 +179,54 @@ public class Field implements MouseListener, MouseMotionListener {
         for (CardSpace crd : Char) {
             crd.paint(graphics);
         }
-                if(description!=null)
+        if(description!=null)
             drawDescription();
     }
-        
-        public void drawDescription(){
-            Graphics2D graphics = (Graphics2D)client.gui.getGraphics();
-            if (description == null) {
-                    // create description
-                    StringBuilder temp = new StringBuilder();
-                    Clickable cl = binarySearchCardAtPoint(hoverpoint);
-                    if (cl instanceof CardSpace) {
-                            CardSpace cs = (CardSpace) cl;
-                            if (cs != null && cs.card != null) {
-                                    if (cs.card.type == 1 || cs.card.name.equals("BULLETBACK")) {
-                                            temp
-                                                            .append(client.players.get(cs.playerid).name
-                                                                            + "\n");
-                                            if (client.players.get(cs.playerid).maxLifePoints > 0)
-                                                    temp
-                                                                    .append(client.players.get(cs.playerid).lifePoints
-                                                                                    + "HP\n");
-                                            ;
-                                            // TODO: add distance to tooltip?
-                                    }
-                                    if (!cs.card.name.equals("BULLETBACK"))
-                                            temp.append(cs.card.name.replace('_', ' '));
-                                    if (!cs.card.description.equals(""))
-                                            temp.append(" - " + cs.card.description);
-                                    description = temp.toString();
-                                    describeWhere = hoverpoint;
-                                    tooltipWidth = textWidth(description, graphics);
-                                    tooltipHeight = textHeight(description, graphics);
-                                    if (describeWhere.x + tooltipWidth > client.gui.width) {
-                                            describeWhere.x = client.gui.width - tooltipWidth;
-                                    }
-                                    if (describeWhere.y + tooltipHeight > client.gui.height) {
-                                            describeWhere.y = client.gui.height - tooltipHeight;
-                                    }
-                            }
+
+    public void drawDescription(){
+        Graphics2D graphics = (Graphics2D)client.gui.getGraphics();
+        if (description == null) {
+            // create description
+            StringBuilder temp = new StringBuilder();
+            Clickable cl = binarySearchCardAtPoint(hoverpoint);
+            if (cl instanceof CardSpace) {
+                CardSpace cs = (CardSpace) cl;
+                if (cs != null && cs.card != null) {
+                    if (cs.card.type == 1 || cs.card.name.equals("BULLETBACK")) {
+                        temp.append(client.players.get(cs.playerid).name + "\n");
+                        if (client.players.get(cs.playerid).maxLifePoints > 0)
+                            temp.append(client.players.get(cs.playerid).lifePoints + "HP\n");
+                        // TODO: add distance to tooltip?
                     }
-            }
-            if (description != null) {
-                    Rectangle2D bounds = graphics.getFont().getStringBounds(
-                                    description, graphics.getFontRenderContext());
-                    Color temp = graphics.getColor();
-                    graphics.setColor(Color.YELLOW);
-                    graphics.fill3DRect(describeWhere.x, describeWhere.y
-                                    - (int) bounds.getHeight() + 32, tooltipWidth,
-                                    tooltipHeight, false);
-                    graphics.setColor(Color.BLACK);
-                    improvedDrawString(description, describeWhere.x,
-                                    describeWhere.y + 30, graphics);
-                    graphics.setColor(temp);
+                    if (!cs.card.name.equals("BULLETBACK"))
+                        temp.append(cs.card.name.replace('_', ' '));
+                    if (!cs.card.description.equals(""))
+                        temp.append(" - " + cs.card.description);
+                    description = temp.toString();
+                    describeWhere = hoverpoint;
+                    tooltipWidth = textWidth(description, graphics);
+                    tooltipHeight = textHeight(description, graphics);
+                    if (describeWhere.x + tooltipWidth > client.gui.width) {
+                        describeWhere.x = client.gui.width - tooltipWidth;
+                    }
+                    if (describeWhere.y + tooltipHeight > client.gui.height) {
+                        describeWhere.y = client.gui.height - tooltipHeight;
+                    }
+                }
             }
         }
+        if (description != null) {
+            Rectangle2D bounds = graphics.getFont().getStringBounds(
+                    description, graphics.getFontRenderContext());
+            Color temp = graphics.getColor();
+            graphics.setColor(Color.YELLOW);
+            graphics.fill3DRect(describeWhere.x, describeWhere.y - (int) bounds.getHeight() + 32, tooltipWidth,
+                    tooltipHeight, false);
+            graphics.setColor(Color.BLACK);
+            improvedDrawString(description, describeWhere.x, describeWhere.y + 30, graphics);
+            graphics.setColor(temp);
+        }
+    }
 
     public Clickable binarySearchCardAtPoint(Point ep) {
         // bsearch method
@@ -245,16 +234,16 @@ public class Field implements MouseListener, MouseMotionListener {
         int end;
 
         ArrayList<Clickable> al = clickies.values(); // search the values
-                                                        // arrayList for...
+        // arrayList for...
         if (al.isEmpty() || ep == null)
             return null;
         int a = 0, b = al.size(), index = al.size() / 2;
 
         while (a != b) {
             if (ep.y > al.get(index).rect.y + 85) { // the "start" is the value
-                                                    // of the card whose bottom
-                                                    // is closest to the cursor
-                                                    // (and on the cursor)
+                // of the card whose bottom
+                // is closest to the cursor
+                // (and on the cursor)
                 a = index + 1;
             } else {
                 b = index;
@@ -267,9 +256,9 @@ public class Field implements MouseListener, MouseMotionListener {
         index = al.size() / 2;
         while (a != b) {
             if (ep.y > al.get(index).rect.y) { // the "end" is the value of the
-                                                // card whose top is closest to
-                                                // the cursor (and on the
-                                                // cursor)
+                // card whose top is closest to
+                // the cursor (and on the
+                // cursor)
                 a = index + 1;
             } else {
                 b = index;
@@ -292,8 +281,7 @@ public class Field implements MouseListener, MouseMotionListener {
         HandSpace hs = null;
         clear();
         for (int player = 0; player < client.numPlayers; player++) {
-            theta = -(player - client.id) * (2 * Math.PI / client.numPlayers)
-                    - Math.PI / 2;
+            theta = -(player - client.id) * (2 * Math.PI / client.numPlayers) - Math.PI / 2;
             while (theta < 0) {
                 theta += Math.PI * 2;
             }
@@ -301,25 +289,20 @@ public class Field implements MouseListener, MouseMotionListener {
                 theta -= Math.PI * 2;
             }
             int hsx = client.gui.width / 2
-                    + (int) ((client.gui.width - 150) / 2 * Math.cos(theta));
+            + (int) ((client.gui.width - 150) / 2 * Math.cos(theta));
             int hsy = 280 - (int) (220 * Math.sin(theta));
             hs = new HandSpace(rectToPoly(hsx, hsy, 10, 10), player, theta);
             handPlacer.add(hs);
             clickies.put(hs.rect, hs);
             Card chara = null;
             if (client.players.get(player).character >= 0) {
-                System.out
-                        .println(player
-                                + ":"
-                                + Deck.Characters.values()[client.players
-                                        .get(player).character]);
-                chara = new Card(Deck.Characters.values()[client.players
-                        .get(player).character]);
+                System.out.println(player + ":"
+                        + Deck.Characters.values()[client.players.get(player).character]);
+                chara = new Card(Deck.Characters.values()[client.players.get(player).character]);
             } else if (client.id == player) {
                 System.out.println(player + ":"
                         + Deck.Characters.values()[client.player.character]);
-                chara = new Card(
-                        Deck.Characters.values()[client.player.character]);
+                chara = new Card(Deck.Characters.values()[client.player.character]);
             }
             if (chara != null) {
                 int x = (int) hs.rect.x - 60;
@@ -355,11 +338,11 @@ public class Field implements MouseListener, MouseMotionListener {
         movingCard = null;
         clickies.clear();
     }
-        
-        public Clickable remove(int player, int card) {
-            return clickies.remove(handPlacer.get(player).cards.remove(card).rect);
-        }
-        
+
+    public Clickable remove(int player, int card) {
+        return clickies.remove(handPlacer.get(player).cards.remove(card).rect);
+    }
+
     public void mouseClicked(MouseEvent e) {
         Point ep = e.getPoint();
 
@@ -368,7 +351,7 @@ public class Field implements MouseListener, MouseMotionListener {
             CardSpace cs = (CardSpace) cl;
             if (cs != null && cs.card != null) {
             } else
-                        return;
+                return;
             if (e.getButton() == MouseEvent.BUTTON3) {
                 cs.rotateTo(cs.theta + Math.PI / 4);
             } else if (client.prompting) {
@@ -451,8 +434,8 @@ public class Field implements MouseListener, MouseMotionListener {
                         - movingCard.rect.y);
             // System.out.println("picked up card");
         }
-                
-                client.redraw = true;
+
+        client.redraw = true;
     }
 
     public void mouseReleased(MouseEvent e) {
@@ -474,8 +457,8 @@ public class Field implements MouseListener, MouseMotionListener {
                     .max(0, Math.min(e.getPoint().x - pointOnCard.x, client.gui
                             .getWidth() - 55)), Math.max(0, Math.min(e.getPoint().y - pointOnCard.y, client.gui.getHeight() - 85)));
         }
-                
-                client.redraw = true;
+
+        client.redraw = true;
     }
 
     public void mouseEntered(MouseEvent e) {
@@ -488,8 +471,7 @@ public class Field implements MouseListener, MouseMotionListener {
         lastMouseMoved = System.currentTimeMillis();
         hoverpoint = e.getPoint();
         description = null;
-                
-                client.redraw = true;
+        client.redraw = true;
     }
 
     /**
@@ -529,8 +511,7 @@ public class Field implements MouseListener, MouseMotionListener {
     }
 
     public void rotateDeck(int player) {
-        System.out.println(client.getPlayerName()
-                + "Rotating deck to point towards "
+        System.out.println(client.getPlayerName() + "Rotating deck to point towards "
                 + handPlacer.get(player).theta);
         deckcard.rotateTo(handPlacer.get(player).theta - Math.PI / 2);
     }
