@@ -276,6 +276,12 @@ public class Server extends Thread {
         // same time, unlike prompts
         if (ready != null) {
             while (ready[player][1] > 0) {
+                try{
+                    /* Temporary fix for 64bit java. An infinite loop is otherwise generated at this line
+                    as "ready" will never be allowed to be mutated between loops.                         */
+                    Thread.sleep(1);
+                }
+                catch(Exception e){}
             } // wait
             ready[player][1]++;
         } else {
