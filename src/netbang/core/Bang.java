@@ -599,9 +599,9 @@ public class Bang {
             System.exit(0);
             break;
         }
+
         for (int n = 0; n < numPlayers; n++) {
-            int role = 
-                roles.remove((int)(Math.random() * roles.size())).ordinal();
+            int role = roles.remove((int)(Math.random() * roles.size())).ordinal();
             if (role == 0) {
                 sheriff = n;
                 server.sendInfo("SetInfo:role:" + n + ":" + role);
