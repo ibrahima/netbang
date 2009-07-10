@@ -387,7 +387,7 @@ class ServerThread extends Thread {
                     buffer = (String) in.readLine();
                     String[] msgfields = buffer.split(":", 2);
                     String msgtype = msgfields[0];
-					if (msgtype.equals("Name")) {
+                    if (msgtype.equals("Name")) {
                         processNameRequest(msgfields);
                     } else if(msgtype.equals("/quit")){
                         processQuitter();
