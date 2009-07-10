@@ -53,7 +53,7 @@ public class HandSpace extends Clickable {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see netbang.gui.Field.Clickable#move(int, int)
      */
     public void move(int x, int y) {
@@ -78,7 +78,7 @@ public class HandSpace extends Clickable {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see netbang.gui.Field.Clickable#translate(int, int)
      */
     public void translate(int dx, int dy) {

@@ -19,7 +19,7 @@ public class InfoText extends Clickable {
 
     /**
      * Fades the InfoText.
-     * 
+     *
      * @param amount
      *            1 for fade in, -1 for fade out
      * @see netbang.gui.Clickable#fade(int)

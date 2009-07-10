@@ -4,9 +4,9 @@ import java.util.Random;
 
 /**
  * The Randombot is a bot that randomly responds to prompts to play a card.
- * 
+ *
  * @author Ibrahim
- * 
+ *
  */
 public class RandomBot extends Bot {
 

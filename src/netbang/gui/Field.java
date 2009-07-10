@@ -47,7 +47,7 @@ public class Field implements MouseListener, MouseMotionListener {
      * cases it should not be used. Use add(Card, int, boolean) whenever
      * possible
      * </p>
-     * 
+     *
      * @param card
      *            The card to be added
      * @param x
@@ -73,7 +73,7 @@ public class Field implements MouseListener, MouseMotionListener {
      *            the player whose hand to remove a card from
      */
     public void removeLast(int player) {
-        clickies.remove(handPlacer.get(player).removeLast().card); 
+        clickies.remove(handPlacer.get(player).removeLast().card);
     }
 
     /**
@@ -82,7 +82,7 @@ public class Field implements MouseListener, MouseMotionListener {
      * This method is "smart" and can locate cards automatically. Use this
      * whenever players exist
      * </p>
-     * 
+     *
      * @param card
      * @param player
      * @param field
@@ -476,7 +476,7 @@ public class Field implements MouseListener, MouseMotionListener {
 
     /**
      * Scales all objects to the newly resized coordinates.
-     * 
+     *
      * @param width
      * @param height
      * @param width2
@@ -490,7 +490,7 @@ public class Field implements MouseListener, MouseMotionListener {
 
     /**
      * Sets the given players's HP and updates the bullet display accordingly
-     * 
+     *
      * @param playerid
      *            the id of the player whose HP changed
      * @param lifePoints

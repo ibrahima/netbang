@@ -11,7 +11,7 @@ import java.awt.image.BufferedImage;
 
 /**
  * @author Ibrahim
- * 
+ *
  */
 public abstract class Clickable implements Comparable<Clickable> {
 
@@ -73,7 +73,7 @@ public abstract class Clickable implements Comparable<Clickable> {
 
     /**
      * Moves the Clickable to the specified location
-     * 
+     *
      * @param x
      * @param y
      */
@@ -105,7 +105,7 @@ public abstract class Clickable implements Comparable<Clickable> {
      * If a Clickable has a partner defined, moving it will also translate the
      * partner so that they move together.
      * </p>
-     * 
+     *
      * @param partner
      *            the other Clickable to be set as the partner
      */
@@ -129,7 +129,7 @@ public abstract class Clickable implements Comparable<Clickable> {
 
     /**
      * Rotates the Clickable the specified angle, in radians.
-     * 
+     *
      * @param angle
      *            The angle to rotate the Clickable by
      */

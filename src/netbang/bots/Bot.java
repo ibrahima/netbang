@@ -10,14 +10,14 @@ public abstract class Bot extends Client {
     /**
      * This method will be overridden by various bot classes to define different
      * bot behaviors.
-     * 
+     *
      * @return
      */
     public abstract int choose();
 
     /**
      * All bots will always agree to start
-     * 
+     *
      * @return returns 0 to signify that the bot agrees to start
      */
     protected int promptStart() {

@@ -35,7 +35,7 @@ import updater.Updater;
 
 public class ServerBrowser extends JFrame implements ActionListener, MouseListener{
     /**
-     * 
+     *
      */
     private static final long serialVersionUID = 773307472628459263L;
     ArrayList<ServerInfo> servers = new ArrayList<ServerInfo>();
@@ -73,42 +73,42 @@ public class ServerBrowser extends JFrame implements ActionListener, MouseListen
         gbc.gridx=1;
         gbc.gridheight=1;
         gbc.gridwidth=1;
-        
+
         join = new JButton("Join");
         join.setMnemonic(java.awt.event.KeyEvent.VK_J);
         this.add(join,gbc);
         join.addActionListener(this);
-        
+
         create = new JButton("Create Server");
         create.setMnemonic(java.awt.event.KeyEvent.VK_C);
         gbc.gridx=2;
         create.addActionListener(this);
         this.add(create,gbc);
         gbc.gridx=3;
-        
+
         refresh = new JButton("Refresh");
         refresh.setMnemonic(java.awt.event.KeyEvent.VK_R);
         refresh.addActionListener(this);
         this.add(refresh,gbc);
-        
+
         gbc.gridy = 6;
         gbc.gridx = 1;
         joinlan = new JButton("Join LAN");
         joinlan.setMnemonic(java.awt.event.KeyEvent.VK_O);
         joinlan.addActionListener(this);
         this.add(joinlan, gbc);
-        
+
         gbc.gridx = 2;
         createlan = new JButton("Create LAN");
         createlan.setMnemonic(java.awt.event.KeyEvent.VK_L);
         createlan.addActionListener(this);
         this.add(createlan, gbc);
-        
+
         gbc.gridx = 3;
         foobar = new JButton("FOOBAR");
         foobar.setMnemonic(java.awt.event.KeyEvent.VK_F);
-                
-        this.add(foobar, gbc);    
+
+        this.add(foobar, gbc);
         this.pack();
         this.setVisible(true);
         downloadList();
@@ -164,7 +164,7 @@ public class ServerBrowser extends JFrame implements ActionListener, MouseListen
                         servers.add(processServerNode(server));
                     }
                 }
-                                
+
                 hConnection.disconnect();
                 Iterator<ServerInfo> iter = servers.iterator();
                 while (iter.hasNext()) {
@@ -184,8 +184,8 @@ public class ServerBrowser extends JFrame implements ActionListener, MouseListen
                 String dateLocal = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
         return new ServerInfo(ns.item(1).getTextContent(), ns.item(3)
                 .getTextContent(), ns.item(5).getTextContent(),
-                Integer.parseInt(ns.item(7).getTextContent()), Boolean.parseBoolean(ns.item(9).getTextContent()), 
-                                    (dateNode.substring(0,dateLocal.length()).equals(dateLocal)?dateNode.substring(dateLocal.length()+1):dateNode)); 
+                Integer.parseInt(ns.item(7).getTextContent()), Boolean.parseBoolean(ns.item(9).getTextContent()),
+                                    (dateNode.substring(0,dateLocal.length()).equals(dateLocal)?dateNode.substring(dateLocal.length()+1):dateNode));
                                     //(created today?)time only:add date;
     }
     public int currentRevision(){
@@ -258,7 +258,7 @@ public class ServerBrowser extends JFrame implements ActionListener, MouseListen
             this.dispose();
             System.exit(-1);
         }
-        
+
     }
 
     private class ServerInfo {
@@ -283,7 +283,7 @@ public class ServerBrowser extends JFrame implements ActionListener, MouseListen
     }
     class ServerTableModel extends AbstractTableModel {
         /**
-         * 
+         *
          */
         private static final long serialVersionUID = -5523627394901068270L;
         String[] columns = {"Name","IP Address", "Game Type", "Players", "Started", "Time Last Seen"};
@@ -343,19 +343,19 @@ public class ServerBrowser extends JFrame implements ActionListener, MouseListen
                 this.dispose();
             }
         }
-        
+
     }
     public void mouseEntered(MouseEvent e) {
-        
+
     }
     public void mouseExited(MouseEvent e) {
-        
+
     }
     public void mousePressed(MouseEvent e) {
-        
+
     }
     public void mouseReleased(MouseEvent e) {
-        
+
     }
 
 

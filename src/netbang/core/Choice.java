@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package netbang.core;
 

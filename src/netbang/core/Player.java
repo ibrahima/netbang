@@ -14,11 +14,11 @@ public class Player {
     public int maxLifePoints;
 
     public int bangs = 0;
-    
+
     //public int weaponRange; // only counts for Bang! cards OBSOLETE
     //public int realRange; // also counts for Panics, etc.
     //public int distance; // your protection against other player's Bang!s
-        
+
     public ArrayList<Card> hand = new ArrayList<Card>();
     public ArrayList<Card> field = new ArrayList<Card>();
 

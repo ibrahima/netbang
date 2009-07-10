@@ -26,7 +26,7 @@ public class Card {
                         // and bangs, 1 for miss, 2 for dodge
     public boolean discardToPlay; // cards that need a discard to play
     public int range; // used for guns and panic and #cards drawn
-        
+
     public int location; //0 = in hand, 1 = on field, 2 = played
     public static enum play {
         DAMAGE, HEAL, MISS, DRAW, STEAL, DISCARD, DUEL, JAIL
@@ -262,7 +262,7 @@ public class Card {
                 effect = field.DYNAMITE.ordinal();
                                 description="The player puts this card on his field. On his next turn, it has a 20% chance of blowing up.\n" +
                                                 "If it doesn't blow up, it is given to the player to his left, and then it has a chance of\n" +
-                                                "blowing up on that player. If it blows up, it does three damage to that player.\n" + 
+                                                "blowing up on that player. If it blows up, it does three damage to that player.\n" +
                                                 "If it continues through all players without blowing up, it is discarded.";
                                 break;
             case MISS:
@@ -485,11 +485,11 @@ public class Card {
     public static Card playedCard(Enum e){
         return null;
     }
-    
+
     public void setLocation(int i){
         location = i;
     }
-        
+
     public String toString(){
         return name;
     }

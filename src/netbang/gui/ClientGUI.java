@@ -142,7 +142,7 @@ public class ClientGUI extends JFrame implements KeyListener,
 
     /**
      * appendText with default color of white
-     * 
+     *
      * @param str
      * @param client
      */
@@ -152,7 +152,7 @@ public class ClientGUI extends JFrame implements KeyListener,
 
     /**
      * adds text to the bottom of the text area
-     * 
+     *
      * @param str
      * @param c
      */
@@ -168,7 +168,7 @@ public class ClientGUI extends JFrame implements KeyListener,
 
     /**
      * Prompts the player to choose a name
-     * 
+     *
      * @return the name the player chose
      */
     public static String promptChooseName() {
@@ -179,7 +179,7 @@ public class ClientGUI extends JFrame implements KeyListener,
 
     /**
      * Creates a yes or no prompt with the desired question and title
-     * 
+     *
      * @param message
      *            The message to ask
      * @param title
@@ -202,7 +202,7 @@ public class ClientGUI extends JFrame implements KeyListener,
     /**
      * Asks the player to choose a card. This is used for many instances. TODO:
      * replace al with ID of the player.
-     * 
+     *
      * @param al
      * @return
      */
@@ -215,7 +215,7 @@ public class ClientGUI extends JFrame implements KeyListener,
 
     /**
      * Adds one bool, then does promptChooseCard
-     * 
+     *
      * @param str1
      * @param str2
      * @param force
@@ -225,7 +225,7 @@ public class ClientGUI extends JFrame implements KeyListener,
     }
 
     public void keyPressed(KeyEvent e) {
-            
+
     }
 
     public void keyReleased(KeyEvent e) {

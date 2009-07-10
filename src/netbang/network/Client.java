@@ -42,10 +42,10 @@ public class Client extends Thread {
     public boolean forceDecision;
     public boolean targetingPlayer;
     public int nextPrompt = -2; //this value will be returned the next time the client is prompted to do something
-    
+
     boolean guiEnabled;
     public boolean redraw = true;
-    
+
     public ArrayList<Card> specialHand = new ArrayList<Card>(); //for general store or when players die and their hands are revealed
     public ArrayList<Card> discardpile = new ArrayList<Card>(); //only used for drawing the discard pile, for aesthetic effect
     /**
@@ -121,7 +121,7 @@ public class Client extends Thread {
         System.out.println("Choosing a new name");
         name = ClientGUI.promptChooseName();
         if(name!= null && name.length()==0)
-            name = ClientGUI.promptChooseName();    
+            name = ClientGUI.promptChooseName();
         synchronized (name) {
             name.notifyAll();
         }
@@ -143,14 +143,14 @@ public class Client extends Thread {
                 }
             }
             catch(InterruptedException e){
-                
+
             }
         }
-        
+
         //process has been killed
         quit();
     }
-    
+
     public void quit(){
         gui.dispose();
         gui = null;
@@ -182,16 +182,16 @@ public class Client extends Thread {
      * @return
      */
     protected int promptStart() {
-        gui.appendText("Host has requested the game be started", 
+        gui.appendText("Host has requested the game be started",
                 Color.BLUE);
-        return gui.promptYesNo("Host has sent a request to start game", 
+        return gui.promptYesNo("Host has sent a request to start game",
                             "Start game?");
     }
     /**
      * Prompts the player to play a card
      */
     protected void promptPlayCard() {
-        gui.promptChooseCard(player.hand, "", "", 
+        gui.promptChooseCard(player.hand, "", "",
                                true);
     }
 
@@ -228,7 +228,7 @@ class ClientThread extends Thread {
     public void run() {
         while (!server.isClosed() && client.running) {
             try {
-                if (client.name != null && out != null && !client.connected && 
+                if (client.name != null && out != null && !client.connected &&
                     !namesent) {
                     out.write("Name:" + client.name);
                     out.newLine();
@@ -254,20 +254,20 @@ class ClientThread extends Thread {
                     String messagevalue = temp[1];
                     if (messagetype.equals("Connection")) {
                         System.out.println(messagevalue);
-                        if (!client.connected && 
+                        if (!client.connected &&
                             messagevalue.equals("Successfully connected.")) {
                             client.connected = true;
                             if(client.guiEnabled)
-                                client.gui.setTitle("NetBang - " + client.name + 
-                                           " - Connected to server on " + 
+                                client.gui.setTitle("NetBang - " + client.name +
+                                           " - Connected to server on " +
                                            server.getInetAddress());
-                        } else if (!client.connected && 
+                        } else if (!client.connected &&
                                    messagevalue.equals("Name taken!")) {
-                            System.out.println(this + 
+                            System.out.println(this +
                                                ": Connection refused because name was taken");
                             namesent = false;
                             client.promptName();
-                            
+
                             //quit if no name entered
                             if(client.name == null){
                                 client.quit();
@@ -316,13 +316,13 @@ class ClientThread extends Thread {
                         if (Integer.valueOf(temp1[0]) == client.id) {
                             for (int m = 2; m < n; m++) {
                                 if (temp1[1].equals("Character")) {
-                                    Card card = 
+                                    Card card =
                                         new Card(Deck.Characters.valueOf(temp1[m]));
                                     if(client.guiEnabled)
                                         client.field.add(card, 150+80*m, 200, client.id, false);
                                     client.player.hand.add(card);
                                 } else {
-                                    Card card = 
+                                    Card card =
                                         new Card(Deck.CardName.valueOf(temp1[m]));
                                     if(client.guiEnabled)
                                         client.field.add(card, client.id, false);
@@ -330,7 +330,7 @@ class ClientThread extends Thread {
                                 }
                             }
                         } else {
-                            client.gui.appendText("Player " + temp1[0] + " drew " + 
+                            client.gui.appendText("Player " + temp1[0] + " drew " +
                                              temp1[1] + "cards.", Color.GREEN);
                             for(int i=0;i<Integer.valueOf(temp1[1]);i++){
                                 Card card = new Card(Deck.CardName.BACK);
@@ -354,7 +354,7 @@ class ClientThread extends Thread {
                     }
                 }
             } catch (Exception e) {
-                if (e != null && e.getMessage() != null && 
+                if (e != null && e.getMessage() != null &&
                     e.getMessage().equals("Connection reset")) {
                     print("Connection to server lost");
                     try {
@@ -393,14 +393,14 @@ class ClientThread extends Thread {
 		// received a prompt from host to start
 		else if (messagevalue.equals("Start")) {
 			processed = true;
-		    client.outMsgs.add("Prompt:" + 
+		    client.outMsgs.add("Prompt:" +
 		                  client.promptStart());
 		} else if (messagevalue.equals("PlayCard")) {
 			processed = true;
 		    client.promptPlayCard();
 		} else if (messagevalue.equals("PlayCardUnforced")) {
 			processed = true;
-		    client.gui.promptChooseCard(client.player.hand, "", "", 
+		    client.gui.promptChooseCard(client.player.hand, "", "",
 		                           false);
 		} else if (messagevalue.equals("PickCardTarget")) {
 			processed = true;
@@ -452,34 +452,34 @@ class ClientThread extends Thread {
 		    if(client.guiEnabled)
 		        if (playerid == client.id) {
 		            client.field.clear();
-		            client.player.role = 
+		            client.player.role =
 		                    Constants.Role.values()[Integer.valueOf(fields[2])];
 		            client.gui.appendText("You are a " + client.player.role.name(), Color.YELLOW);
 		        } else {
 		            if (Integer.valueOf(fields[2]) == 0)
-		                client.gui.appendText("Player " + fields[1] + 
-		                                 " is the " + 
-		                                 Constants.Role.values()[Integer.valueOf(fields[2])].name(), 
+		                client.gui.appendText("Player " + fields[1] +
+		                                 " is the " +
+		                                 Constants.Role.values()[Integer.valueOf(fields[2])].name(),
 		                                 Color.YELLOW);
 		            else //only shown when player is killed
-		                client.gui.appendText("Player " + fields[1] + 
-		                                 " was a " + 
-		                                 Constants.Role.values()[Integer.valueOf(fields[2])].name(), 
+		                client.gui.appendText("Player " + fields[1] +
+		                                 " was a " +
+		                                 Constants.Role.values()[Integer.valueOf(fields[2])].name(),
 		                                 Color.YELLOW);
 		        }
 		    else{
 		        if (playerid == client.id) {
 		            client.field.clear();
-		            client.player.role = 
+		            client.player.role =
 		                    Constants.Role.values()[Integer.valueOf(fields[2])];
 		        }
 		    }
-		    
+
 		} else if (type.equals("maxHP")) {
 			processed = true;
 		    if(client.guiEnabled)
-		        client.gui.appendText("Player " + fields[1] + 
-		                     " has a maxHP of " + fields[2], 
+		        client.gui.appendText("Player " + fields[1] +
+		                     " has a maxHP of " + fields[2],
 		                     Color.RED);
 		    player.maxLifePoints=Integer.valueOf(fields[2]);
 		    player.lifePoints=Integer.valueOf(fields[2]);
@@ -490,13 +490,13 @@ class ClientThread extends Thread {
 			processed = true;
 		    player.lifePoints+=Integer.valueOf(fields[2]).intValue();
 		    if(client.guiEnabled){
-		        client.gui.appendText("Player " + fields[1] + 
-		                " life points changed by " + 
+		        client.gui.appendText("Player " + fields[1] +
+		                " life points changed by " +
 		                fields[2], Color.RED);
 		        client.field.setHP(playerid,player.lifePoints);
 		    }else
-		        client.print("Player " + fields[1] + 
-		                " life points changed by " + 
+		        client.print("Player " + fields[1] +
+		                " life points changed by " +
 		                fields[2]);
 		} else if (type.equals("PutInField")) {
 			processed = true;
@@ -533,7 +533,7 @@ class ClientThread extends Thread {
 	            client.field.clickies.remove(card);
 	        }
 	        client.specialHand.clear();
-	        
+
 	        for(int n = 2; n<fields.length; n++){
 	            Card card = new Card(Deck.CardName.valueOf(fields[n]));
 	            client.specialHand.add(card);
@@ -582,7 +582,7 @@ class ClientThread extends Thread {
 		}
 		else if (type.equals("CardPlayed")) {
 		    //TODO: Keep track of discard pile on client side
-			processed = true;			
+			processed = true;
 		    String s = "";
 		    s = "Player " + fields[1] + " played " + fields[2] + (fields.length == 4 ? " at player " + fields[3] : "");
 		    client.gui.appendText(s);

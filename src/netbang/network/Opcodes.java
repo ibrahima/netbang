@@ -6,7 +6,7 @@ public class Opcodes {
         SETROLE(1),
         COMMAND(1),
         READY(0);
-        
+
         private Message(int i){
             options = i;
         }
@@ -15,14 +15,14 @@ public class Opcodes {
             return options;
         }
     }
-    
+
     enum Commands{
         QUIT,
         CLOSESERVER,
         START,
         PROMPTING;
     }
-    
+
     public static String createMessage(){
         return "";
     }

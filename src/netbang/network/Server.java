@@ -41,7 +41,7 @@ public class Server extends Thread {
     /**
      * Stores player choices as received by the server.
      * The format is int[m][n], where m is player and n is option
-     * 
+     *
      * <p>Actually, I'm not sure what that meant but it seems like it's not
      * really true. The 2D array stores  information on who was prompted and
      * what their response was. m is the player number in the order that they
@@ -454,8 +454,8 @@ class ServerThread extends Thread {
 		if (server.prompting >= 1) {
 		    int n;
 		    // if(id>server.choice.length)
-		    for (n = 0; server.choice.get(server.choice.size() - 1)[n].playerid != id || 
-		    	(server.choice.get(server.choice.size() - 1)[n].playerid == id && 
+		    for (n = 0; server.choice.get(server.choice.size() - 1)[n].playerid != id ||
+		    	(server.choice.get(server.choice.size() - 1)[n].playerid == id &&
 		    	server.choice.get(server.choice.size() - 1)[n].choice>-1); n++) {
 		    }//TODO: HUH?! Why is this dead loop here? O.o I split it across 3 lines for readability
 		    server.choice.get(server.choice.size() - 1)[n].choice = Integer.valueOf(msgfields[1]);
