@@ -5,7 +5,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 
-public class BSHashMap<K, V> extends HashMap<K, V> {
+public class BSHashMap<K, V extends Comparable<? super V>> extends HashMap<K, V> {
     /**
      *
      */
@@ -21,7 +21,7 @@ public class BSHashMap<K, V> extends HashMap<K, V> {
         ArrayList<V> al = new ArrayList<V>();
         Collections.sort(occupied, new Comparator<V>() {
             public int compare(V o1, V o2) {
-                return ((Comparable<V>) o1).compareTo(o2);
+                return  o1.compareTo(o2);
             }
         });
         al.addAll(occupied);
