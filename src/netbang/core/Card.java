@@ -4,7 +4,7 @@ import java.util.Arrays;
 
 public class Card {
     public String description="";
-    public Enum e;
+    public Enum<?> e;
     public String name;
     public int ordinal;
     /**
@@ -37,7 +37,7 @@ public class Card {
     }; // field cards
     public enum suit{CLUB, DIAMOND, HEART, SPADE};
 
-    public Card(Enum e) {
+    public Card(Enum<?> e) {
         this.e = e;
         ordinal = e.ordinal();
         name = e.toString();
@@ -482,7 +482,7 @@ public class Card {
 
     //for display purposes only:
     //TODO: What is this?
-    public static Card playedCard(Enum e){
+    public static Card playedCard(Enum<?> e){
         return null;
     }
 
