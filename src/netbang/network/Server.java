@@ -386,7 +386,7 @@ class ServerThread extends Thread {
         System.out.println("Server:" + stuff);
     }
 
-    public synchronized void run() {
+    public void run() {
         while (!client.isClosed()&&server.running) {
             try {
                 if (in.ready()) {
