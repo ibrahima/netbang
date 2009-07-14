@@ -128,7 +128,7 @@ public class ServerBrowser extends JFrame implements ActionListener, MouseListen
                 Updater.downloadFile("http://inst.eecs.berkeley.edu/~ibrahima/bang/updater.jar", "updater.jar");
             }
             try {
-                Process foo = Runtime.getRuntime().exec("java -jar updater.jar");
+                Runtime.getRuntime().exec("java -jar updater.jar");
                 System.exit(0);
             } catch (IOException e) {
                 e.printStackTrace();

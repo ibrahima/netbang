@@ -26,6 +26,7 @@ public class Updater extends JFrame {
         up.downloadLatestVersion();
         try {
             Process foo = Runtime.getRuntime().exec("java -jar bang.jar");
+            if(foo.exitValue()!=0) System.out.println("Huh, something blew up.");
         } catch (IOException e) {
             e.printStackTrace();
         }
