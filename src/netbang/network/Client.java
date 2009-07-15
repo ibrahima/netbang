@@ -320,31 +320,31 @@ class ClientThread extends Thread {
                 		}
 
                     } else if (messagetype.equals("Draw")) {
-                        String[] temp1 = messagevalue.split(":");
-                        int n = temp1.length;
-                        if (Integer.valueOf(temp1[0]) == client.id) {
+                        String[] drawfields = messagevalue.split(":");
+                        int n = drawfields.length;
+                        if (Integer.valueOf(drawfields[0]) == client.id) {
                             for (int m = 2; m < n; m++) {
-                                if (temp1[1].equals("Character")) {
+                                if (drawfields[1].equals("Character")) {
                                     Card card =
-                                        new Card(Deck.Characters.valueOf(temp1[m]));
+                                        new Card(Deck.Characters.valueOf(drawfields[m]));
                                     if(client.guiEnabled)
                                         client.field.add(card, 150+80*m, 200, client.id, false);
                                     client.player.hand.add(card);
                                 } else {
                                     Card card =
-                                        new Card(Deck.CardName.valueOf(temp1[m]));
+                                        new Card(Deck.CardName.valueOf(drawfields[m]));
                                     if(client.guiEnabled)
                                         client.field.add(card, client.id, false);
                                     client.player.hand.add(card);
                                 }
                             }
                         } else {
-                            client.gui.appendText("Player " + temp1[0] + " drew " +
-                                             temp1[1] + "cards.", Color.GREEN);
-                            for(int i=0;i<Integer.valueOf(temp1[1]);i++){
+                            client.gui.appendText("Player " + drawfields[0] + " drew " +
+                                             drawfields[1] + "cards.", Color.GREEN);
+                            for(int i=0;i<Integer.valueOf(drawfields[1]);i++){
                                 Card card = new Card(Deck.CardName.BACK);
-                                client.field.add(card, Integer.valueOf(temp1[0]), false);
-                                client.players.get(Integer.valueOf(temp1[0])).hand.add(card);
+                                client.field.add(card, Integer.valueOf(drawfields[0]), false);
+                                client.players.get(Integer.valueOf(drawfields[0])).hand.add(card);
                             }
                         }
                         client.addMsg("Ready");
