@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
-
+import java.util.concurrent.locks.ReentrantLock;
 import javax.swing.JOptionPane;
 
 import netbang.core.Bang;
@@ -26,7 +26,7 @@ public class Server extends Thread {
         new Server(12345, false);
     }
     protected LinkedHashMap<String, LinkedList<String>> messages = new LinkedHashMap<String, LinkedList<String>>();
-    
+    protected ReentrantLock messageslock = new ReentrantLock();
     int numPlayers;
     ServerSocket me;
     /**
@@ -103,7 +103,12 @@ public class Server extends Thread {
      */
     void playerLeave(String player) {
         names.remove(player);
-        messages.remove(player);
+        messageslock.lock();
+        try {
+            messages.remove(player);
+        }finally {
+            messageslock.unlock();
+        }
         Iterator<String> keyter = messages.keySet().iterator();
         while (keyter.hasNext()) {
             addMessageToPlayer(keyter.next(), "PlayerLeave:" + player);
@@ -347,7 +352,6 @@ class ServerThread extends Thread {
     String buffer;
     boolean connected = false;
     LinkedList<String> newMsgs = new LinkedList<String>();
-
     public ServerThread(Socket theClient, Server myServer) {
         client = theClient;
         this.server = myServer;
@@ -503,7 +507,13 @@ class ServerThread extends Thread {
 		        print(name + "(" + client.getInetAddress()
 		                + ") has joined the game.");
 		        server.playerJoin(name);
-		        server.messages.put(name, newMsgs);
+		        server.messageslock.lock();
+		        try {
+		            server.messages.put(name, newMsgs);
+		        }
+		        finally {
+		            server.messageslock.unlock();
+		        }
 		        out.write("Connection:Successfully connected.");
 		        out.newLine();
 		        out.flush();
