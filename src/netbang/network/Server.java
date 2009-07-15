@@ -26,6 +26,7 @@ public class Server extends Thread {
         new Server(12345, false);
     }
     protected LinkedHashMap<String, LinkedList<String>> messages = new LinkedHashMap<String, LinkedList<String>>();
+    
     int numPlayers;
     ServerSocket me;
     /**
@@ -528,8 +529,8 @@ class ServerThread extends Thread {
 		        System.out.println("I'm sorry, Dave.");
 		    } else if (msgfields[1].length() > 7
 		            && msgfields[1].charAt(7) == ' ') {
-		        String temp1 = msgfields[1].split(" ", 2)[1];
-		        if (server.messages.containsKey(temp1)) {
+		        String newname = msgfields[1].split(" ", 2)[1];
+		        if (server.messages.containsKey(newname)) {
 		            out.write("Connection:Name taken!");
 		            out.newLine();
 		            out.flush();
@@ -537,13 +538,13 @@ class ServerThread extends Thread {
 		                    + ") Attempting renaming to taken name.");
 		        } else {
 		            print(name + "(" + client.getInetAddress()
-		                    + ") is now known as " + temp1);
+		                    + ") is now known as " + newname);
 		            server.messages.remove(name);
-		            server.messages.put(temp1, newMsgs);
+		            server.messages.put(newname, newMsgs);
 		            server.playerLeave(name);
-		            server.playerJoin(temp1);
+		            server.playerJoin(newname);
 		            System.out.println("hi");
-		            name = temp1;
+		            name = newname;
 		            out.write("Connection:Successfully renamed.");
 		            out.newLine();
 		            out.flush();
