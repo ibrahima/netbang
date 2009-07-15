@@ -499,14 +499,14 @@ class ServerThread extends Thread {
 		        out.write("Connection:Successfully connected.");
 		        out.newLine();
 		        out.flush();
-		        Object[] players = server.messages.keySet().toArray();
+		        String[] players = server.messages.keySet().toArray(new String[0]);
 		        out.write("Players:");
-		        String wr=(String)players[0];
+		        String wr = players[0];
 		        for(int n = 1; n<players.length; n++) {// give player list
-		            wr+=","+(String)players[n];
+		            wr+="," + players[n];
 		        }
 		        out.write(wr);
-		        System.out.println("PLAYERS LIST IS NOW "+ wr);
+		        System.out.println("PLAYERS LIST IS NOW " + wr);
 		        out.newLine();
 		        out.flush();
 		    }
