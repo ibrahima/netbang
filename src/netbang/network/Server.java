@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
-
+import java.util.concurrent.locks.ReentrantLock;
 import javax.swing.JOptionPane;
 
 import netbang.core.Bang;
@@ -26,6 +26,7 @@ public class Server extends Thread {
         new Server(12345, false);
     }
     protected LinkedHashMap<String, LinkedList<String>> messages = new LinkedHashMap<String, LinkedList<String>>();
+    protected ReentrantLock messageslock = new ReentrantLock();
     int numPlayers;
     ServerSocket me;
     /**
@@ -40,17 +41,12 @@ public class Server extends Thread {
     public int prompting;
     /**
      * Stores player choices as received by the server.
-     * The format is int[m][n], where m is player and n is option
-     *
-     * <p>Actually, I'm not sure what that meant but it seems like it's not
-     * really true. The 2D array stores  information on who was prompted and
-     * what their response was. m is the player number in the order that they
-     * were prompted, and array[m][0] gives the player number that the rest of
-     * the game understands. array[m][1] gives their response status.
-     * </p>
      */
     public ArrayList<Choice[]> choice;
 
+    /**
+     * I have no idea what this is, but it needs documentation.
+     */
     public int[][] ready;
     Bang game; // just insert game stuff here
     public LinkedList<String> names = new LinkedList<String>();
@@ -85,7 +81,7 @@ public class Server extends Thread {
     void addChat(String string) {
         Iterator<String> keyter = messages.keySet().iterator();
         while (keyter.hasNext()) {
-            messages.get(keyter.next()).add("Chat:" + string);
+            addMessageToPlayer(keyter.next(), "Chat:" + string);
         }
     }
 
@@ -97,7 +93,7 @@ public class Server extends Thread {
         names.add(player);
         Iterator<String> keyter = messages.keySet().iterator();
         while (keyter.hasNext()) {
-            messages.get(keyter.next()).add("PlayerJoin:" + player);
+            addMessageToPlayer(keyter.next(), "PlayerJoin:" + player);
         }
     }
 
@@ -107,10 +103,15 @@ public class Server extends Thread {
      */
     void playerLeave(String player) {
         names.remove(player);
-        messages.remove(player);
+        messageslock.lock();
+        try {
+            messages.remove(player);
+        }finally {
+            messageslock.unlock();
+        }
         Iterator<String> keyter = messages.keySet().iterator();
         while (keyter.hasNext()) {
-            messages.get(keyter.next()).add("PlayerLeave:" + player);
+            addMessageToPlayer(keyter.next(), "PlayerLeave:" + player);
         }
     }
 
@@ -137,7 +138,7 @@ public class Server extends Thread {
             prompting = 1;
         }
         System.out.println("Sending prompt to player "+player+" : "+s);
-        messages.get(names.get(player)).add("Prompt:" + s);
+        addMessageToPlayer(names.get(player), "Prompt:" + s);
     }
 
     /**
@@ -211,8 +212,6 @@ public class Server extends Thread {
                 // System.out.println("Has it been updated? "+prompting);
                 if (prompting == 2) {
                     boolean flag = true;
-                    // System.out.println(choice.length + " " +
-                    // choice[0].length);
                     for (int n = 0; n < choice.get(choice.size() - 1).length; n++) {
                         if (choice.get(choice.size() - 1)[n].choice == -2) {
                             flag = false;
@@ -294,7 +293,7 @@ public class Server extends Thread {
                 }
             }
         }
-        messages.get(names.get(player)).add(info);
+        addMessageToPlayer(names.get(player), info);
     }
     /**
      * Sends some character or game information to all players
@@ -303,6 +302,18 @@ public class Server extends Thread {
     public void sendInfo(String info) {
         for (int n = 0; n < numPlayers; n++) {
             sendInfo(n, info);
+        }
+    }
+    
+    /**
+     * Adds a message to the list for the player, making sure to use synchronization.
+     * @param player
+     * @param message
+     */
+    private void addMessageToPlayer(String player, String message) {
+        LinkedList<String> msgs = messages.get(player);
+        synchronized(msgs) {
+            msgs.add(message);
         }
     }
     void startGame(int host, String name) {
@@ -326,13 +337,12 @@ public class Server extends Thread {
         while (keyter.hasNext()) {
             String s = keyter.next();
             if (s != name)
-                messages.get(s).add("Prompt:Start");
+                addMessageToPlayer(s, "Prompt:Start");
         }
     }
 }
 
 class ServerThread extends Thread {
-    // sends HashMap of stuff to clients, gets client's updated positions
     Socket client;
     BufferedReader in;
     BufferedWriter out;
@@ -342,7 +352,6 @@ class ServerThread extends Thread {
     String buffer;
     boolean connected = false;
     LinkedList<String> newMsgs = new LinkedList<String>();
-
     public ServerThread(Socket theClient, Server myServer) {
         client = theClient;
         this.server = myServer;
@@ -354,18 +363,12 @@ class ServerThread extends Thread {
             out = new BufferedWriter(new OutputStreamWriter(client
                     .getOutputStream()));
         } catch (Exception e1) {
-
             e1.printStackTrace();
             try {
                 client.close();
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        }
-        try {
-
-        } catch (Exception e) {
-            e.printStackTrace();
         }
         this.start();
     }
@@ -386,7 +389,7 @@ class ServerThread extends Thread {
         System.out.println("Server:" + stuff);
     }
 
-    public synchronized void run() {
+    public void run() {
         while (!client.isClosed()&&server.running) {
             try {
                 if (in.ready()) {
@@ -415,15 +418,15 @@ class ServerThread extends Thread {
                                 + buffer);
                     }
                 }
-                if (!newMsgs.isEmpty()) {
-                    Iterator<String> iter = ((LinkedList<String>) newMsgs
-                            .clone()).iterator();
-                    while (iter.hasNext()) {
-                        out.write(iter.next());
-                        out.newLine();
-                        iter.remove();
+                synchronized(newMsgs) {
+                    if (!newMsgs.isEmpty()) {
+                        Iterator<String> iter = newMsgs.iterator();
+                        while (iter.hasNext()) {
+                            out.write(iter.next());
+                            out.newLine();
+                            iter.remove();
+                        }
                     }
-                    newMsgs.clear(); // will this still produce CME?
                 }
                 out.flush();
                 sleep(10); // is this needed?
@@ -504,18 +507,24 @@ class ServerThread extends Thread {
 		        print(name + "(" + client.getInetAddress()
 		                + ") has joined the game.");
 		        server.playerJoin(name);
-		        server.messages.put(name, newMsgs);
+		        server.messageslock.lock();
+		        try {
+		            server.messages.put(name, newMsgs);
+		        }
+		        finally {
+		            server.messageslock.unlock();
+		        }
 		        out.write("Connection:Successfully connected.");
 		        out.newLine();
 		        out.flush();
-		        Object[] players = server.messages.keySet().toArray();
+		        String[] players = server.messages.keySet().toArray(new String[0]);
 		        out.write("Players:");
-		        String wr=(String)players[0];
+		        StringBuilder wr = new StringBuilder(players[0]);
 		        for(int n = 1; n<players.length; n++) {// give player list
-		            wr+=","+(String)players[n];
+		            wr.append("," + players[n]);
 		        }
-		        out.write(wr);
-		        System.out.println("PLAYERS LIST IS NOW "+ wr);
+		        out.write(wr.toString());
+		        System.out.println("PLAYERS LIST IS NOW " + wr.toString());
 		        out.newLine();
 		        out.flush();
 		    }
@@ -537,8 +546,8 @@ class ServerThread extends Thread {
 		        System.out.println("I'm sorry, Dave.");
 		    } else if (msgfields[1].length() > 7
 		            && msgfields[1].charAt(7) == ' ') {
-		        String temp1 = msgfields[1].split(" ", 2)[1];
-		        if (server.messages.containsKey(temp1)) {
+		        String newname = msgfields[1].split(" ", 2)[1];
+		        if (server.messages.containsKey(newname)) {
 		            out.write("Connection:Name taken!");
 		            out.newLine();
 		            out.flush();
@@ -546,13 +555,13 @@ class ServerThread extends Thread {
 		                    + ") Attempting renaming to taken name.");
 		        } else {
 		            print(name + "(" + client.getInetAddress()
-		                    + ") is now known as " + temp1);
+		                    + ") is now known as " + newname);
 		            server.messages.remove(name);
-		            server.messages.put(temp1, newMsgs);
+		            server.messages.put(newname, newMsgs);
 		            server.playerLeave(name);
-		            server.playerJoin(temp1);
+		            server.playerJoin(newname);
 		            System.out.println("hi");
-		            name = temp1;
+		            name = newname;
 		            out.write("Connection:Successfully renamed.");
 		            out.newLine();
 		            out.flush();

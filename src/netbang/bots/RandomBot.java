@@ -28,7 +28,7 @@ public class RandomBot extends Bot {
     protected void promptPlayCard() {
         Random r = new Random();
         int choice = r.nextInt(this.player.hand.size());
-        outMsgs.add("Prompt:" + choice);
+        addMsg("Prompt:" + choice);
     }
 
 }
