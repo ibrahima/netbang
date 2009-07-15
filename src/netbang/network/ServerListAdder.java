@@ -16,7 +16,7 @@ public class ServerListAdder {
     private String name;
     int players=1;
     boolean started=false;
-
+    int failcount = 0;
     public ServerListAdder(String name) {
         this.name = name;
         try {
@@ -58,6 +58,10 @@ public class ServerListAdder {
     }
 
     public void addToServerList() {
+        if(failcount>5) {
+            System.out.println("Not trying to add to serverlist since it failed 5 times.");
+            return;
+        }
         try {
             URL url = new URL(address + "add");
 
@@ -88,6 +92,7 @@ public class ServerListAdder {
         } catch(UnknownHostException uh){
             System.out.println("Couldn't find "+address);
         } catch (Exception ex) {
+            failcount++;
             ex.printStackTrace();
         }
     }
