@@ -502,12 +502,12 @@ class ServerThread extends Thread {
 		        out.flush();
 		        String[] players = server.messages.keySet().toArray(new String[0]);
 		        out.write("Players:");
-		        String wr = players[0];
+		        StringBuilder wr = new StringBuilder(players[0]);
 		        for(int n = 1; n<players.length; n++) {// give player list
-		            wr+="," + players[n];
+		            wr.append("," + players[n]);
 		        }
-		        out.write(wr);
-		        System.out.println("PLAYERS LIST IS NOW " + wr);
+		        out.write(wr.toString());
+		        System.out.println("PLAYERS LIST IS NOW " + wr.toString());
 		        out.newLine();
 		        out.flush();
 		    }
