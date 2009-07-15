@@ -88,7 +88,7 @@ public class Client extends Thread {
             int x = 65;
             int y = 0;
             for (int i = 0; i < cards.length; i++) {
-                field.add(new Card(cards[i]), x, y, 0, false);
+                field.addCard(new Card(cards[i]), x, y, 0, false);
                 x += 60;
                 if (x > 750) {
                     y += 90;
@@ -328,13 +328,13 @@ class ClientThread extends Thread {
                                     Card card =
                                         new Card(Deck.Characters.valueOf(drawfields[m]));
                                     if(client.guiEnabled)
-                                        client.field.add(card, 150+80*m, 200, client.id, false);
+                                        client.field.addCard(card, 150+80*m, 200, client.id, false);
                                     client.player.hand.add(card);
                                 } else {
                                     Card card =
                                         new Card(Deck.CardName.valueOf(drawfields[m]));
                                     if(client.guiEnabled)
-                                        client.field.add(card, client.id, false);
+                                        client.field.addCard(card, client.id, false);
                                     client.player.hand.add(card);
                                 }
                             }
@@ -343,7 +343,7 @@ class ClientThread extends Thread {
                                              drawfields[1] + "cards.", Color.GREEN);
                             for(int i=0;i<Integer.valueOf(drawfields[1]);i++){
                                 Card card = new Card(Deck.CardName.BACK);
-                                client.field.add(card, Integer.valueOf(drawfields[0]), false);
+                                client.field.addCard(card, Integer.valueOf(drawfields[0]), false);
                                 client.players.get(Integer.valueOf(drawfields[0])).hand.add(card);
                             }
                         }
@@ -528,7 +528,7 @@ class ClientThread extends Thread {
 	            }
 	        }
 	        client.players.get(playerid).field.add(card);
-	        client.field.add(card, playerid, true);
+	        client.field.addCard(card, playerid, true);
 		} else if(type.equals("GeneralStore")){
 			processed = true;
 		    System.out.println("General Store!!!!!");
@@ -540,7 +540,7 @@ class ClientThread extends Thread {
 	        for(int n = 2; n<fields.length; n++){
 	            Card card = new Card(Deck.CardName.valueOf(fields[n]));
 	            client.specialHand.add(card);
-	            client.field.add(card, client.gui.width/2-120+n*30, client.gui.height/2, -1, false);
+	            client.field.addCard(card, client.gui.width/2-120+n*30, client.gui.height/2, -1, false);
 	        }
 		} else if (type.equals("turn")) {
 			processed = true;
@@ -603,7 +603,7 @@ class ClientThread extends Thread {
 		    else {
 		        client.gui.appendText("Player " + fields[1] + " chose " + Deck.Characters.values()[Integer.valueOf(fields[2])], Color.YELLOW);
 		        client.players.get(playerid).character=Integer.valueOf(fields[2]);
-		        client.field.add(new Card(Deck.Characters.values()[Integer.valueOf(fields[2])]), playerid, false);
+		        client.field.addCard(new Card(Deck.Characters.values()[Integer.valueOf(fields[2])]), playerid, false);
 		    }
 		}
 		return processed;

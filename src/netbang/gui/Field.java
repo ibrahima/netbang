@@ -59,7 +59,7 @@ public class Field implements MouseListener, MouseMotionListener {
      * @param field
      *            Whether the card is in the field or not
      */
-    public void add(Card card, int x, int y, int player, boolean field) {
+    public void addCard(Card card, int x, int y, int player, boolean field) {
         clickies.put(new Rectangle(x, y, 60, 90), new CardSpace(card,
                 rectToPoly(x, y, 60, 90), player, field,
                 cd.getImage(card.name), null));
@@ -87,7 +87,7 @@ public class Field implements MouseListener, MouseMotionListener {
      * @param player
      * @param field
      */
-    public void add(Card card, int player, boolean field) {
+    public void addCard(Card card, int player, boolean field) {
         if (client.id == player)
             System.out.println("Client has " + client.player.hand.size() + "cards in his hand.");
         if (card.type == 1) {// this a character card
