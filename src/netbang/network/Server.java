@@ -81,7 +81,7 @@ public class Server extends Thread {
     void addChat(String string) {
         Iterator<String> keyter = messages.keySet().iterator();
         while (keyter.hasNext()) {
-            messages.get(keyter.next()).add("Chat:" + string);
+            addMessageToPlayer(keyter.next(), "Chat:" + string);
         }
     }
 
@@ -93,7 +93,7 @@ public class Server extends Thread {
         names.add(player);
         Iterator<String> keyter = messages.keySet().iterator();
         while (keyter.hasNext()) {
-            messages.get(keyter.next()).add("PlayerJoin:" + player);
+            addMessageToPlayer(keyter.next(), "PlayerJoin:" + player);
         }
     }
 
@@ -106,7 +106,7 @@ public class Server extends Thread {
         messages.remove(player);
         Iterator<String> keyter = messages.keySet().iterator();
         while (keyter.hasNext()) {
-            messages.get(keyter.next()).add("PlayerLeave:" + player);
+            addMessageToPlayer(keyter.next(), "PlayerLeave:" + player);
         }
     }
 
@@ -133,7 +133,7 @@ public class Server extends Thread {
             prompting = 1;
         }
         System.out.println("Sending prompt to player "+player+" : "+s);
-        messages.get(names.get(player)).add("Prompt:" + s);
+        addMessageToPlayer(names.get(player), "Prompt:" + s);
     }
 
     /**
@@ -207,8 +207,6 @@ public class Server extends Thread {
                 // System.out.println("Has it been updated? "+prompting);
                 if (prompting == 2) {
                     boolean flag = true;
-                    // System.out.println(choice.length + " " +
-                    // choice[0].length);
                     for (int n = 0; n < choice.get(choice.size() - 1).length; n++) {
                         if (choice.get(choice.size() - 1)[n].choice == -2) {
                             flag = false;
@@ -290,7 +288,7 @@ public class Server extends Thread {
                 }
             }
         }
-        messages.get(names.get(player)).add(info);
+        addMessageToPlayer(names.get(player), info);
     }
     /**
      * Sends some character or game information to all players
@@ -299,6 +297,18 @@ public class Server extends Thread {
     public void sendInfo(String info) {
         for (int n = 0; n < numPlayers; n++) {
             sendInfo(n, info);
+        }
+    }
+    
+    /**
+     * Adds a message to the list for the player, making sure to use synchronization.
+     * @param player
+     * @param message
+     */
+    private void addMessageToPlayer(String player, String message) {
+        LinkedList<String> msgs = messages.get(player);
+        synchronized(msgs) {
+            msgs.add(message);
         }
     }
     void startGame(int host, String name) {
@@ -322,7 +332,7 @@ public class Server extends Thread {
         while (keyter.hasNext()) {
             String s = keyter.next();
             if (s != name)
-                messages.get(s).add("Prompt:Start");
+                addMessageToPlayer(s, "Prompt:Start");
         }
     }
 }
@@ -404,15 +414,15 @@ class ServerThread extends Thread {
                                 + buffer);
                     }
                 }
-                if (!newMsgs.isEmpty()) {
-                    Iterator<String> iter = ((LinkedList<String>) newMsgs
-                            .clone()).iterator();
-                    while (iter.hasNext()) {
-                        out.write(iter.next());
-                        out.newLine();
-                        iter.remove();
+                synchronized(newMsgs) {
+                    if (!newMsgs.isEmpty()) {
+                        Iterator<String> iter = newMsgs.iterator();
+                        while (iter.hasNext()) {
+                            out.write(iter.next());
+                            out.newLine();
+                            iter.remove();
+                        }
                     }
-                    newMsgs.clear(); // will this still produce CME?
                 }
                 out.flush();
                 sleep(10); // is this needed?
