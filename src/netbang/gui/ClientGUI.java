@@ -242,7 +242,7 @@ public class ClientGUI extends JFrame implements KeyListener,
                 }
             } else {
                 if (client.prompting && !client.forceDecision) {
-                    client.outMsgs.add("Prompt:-1");
+                    client.addMsg("Prompt:-1");
                     client.nextPrompt = -2;
                     client.prompting = false;
                 }

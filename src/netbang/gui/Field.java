@@ -357,11 +357,11 @@ public class Field implements MouseListener, MouseMotionListener {
             } else if (client.prompting) {
                 if (pick != null && pick.contains(cs.card)) {
                     if (cs.card.type == 1) {
-                        client.outMsgs.add("Prompt:" + pick.indexOf(cs.card));
+                        client.addMsg("Prompt:" + pick.indexOf(cs.card));
                         client.player.hand.clear(); // you just picked a character card
                         clear();
                     } else {
-                        client.outMsgs.add("Prompt:" + pick.indexOf(cs.card));
+                        client.addMsg("Prompt:" + pick.indexOf(cs.card));
                     }
                     pick = null;
                     client.prompting = false;
@@ -371,7 +371,7 @@ public class Field implements MouseListener, MouseMotionListener {
                         if (cs.card.type == 1 || cs.card.name == "BULLETBACK") {
                             client.targetingPlayer = false;
                             client.prompting = false;
-                            client.outMsgs.add("Prompt:" + cs.playerid);
+                            client.addMsg("Prompt:" + cs.playerid);
                         }
                     } else if (client.nextPrompt == -1) {
                         Player p = client.players.get(cs.playerid);
@@ -381,9 +381,9 @@ public class Field implements MouseListener, MouseMotionListener {
                             client.nextPrompt = ((0 - client.players
                                     .get(cs.playerid).field.indexOf(cs.card)) - 3);
                         }
-                        client.outMsgs.add("Prompt:" + p.id);
+                        client.addMsg("Prompt:" + p.id);
                     } else {
-                        client.outMsgs.add("Prompt:" + ((0 - client.player.field.indexOf(cs.card)) - 3));
+                        client.addMsg("Prompt:" + ((0 - client.player.field.indexOf(cs.card)) - 3));
                         pick = null;
                         client.prompting = false;
                     }
@@ -394,7 +394,7 @@ public class Field implements MouseListener, MouseMotionListener {
         } else if (cl instanceof Button) {
             if (cl == skip) {
                 if (client.prompting && !client.forceDecision) {
-                    client.outMsgs.add("Prompt:-1");
+                    client.addMsg("Prompt:-1");
                     client.prompting = false;
                 }
             } else

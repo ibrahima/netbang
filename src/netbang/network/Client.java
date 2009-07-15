@@ -10,6 +10,7 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.concurrent.locks.ReentrantLock;
 
 import netbang.core.Card;
 import netbang.core.Deck;
@@ -31,6 +32,7 @@ public class Client extends Thread {
     String host = "127.0.0.1";
     boolean connected = false;
     public LinkedList<String> outMsgs = new LinkedList<String>();
+    ReentrantLock outlock = new ReentrantLock();
     public ClientGUI gui;
     public ArrayList<Player> players = new ArrayList<Player>();
     public Player player;
@@ -164,9 +166,12 @@ public class Client extends Thread {
             System.out.println("Client "+name+": " + stuff);
     }
 
-    void addMsg(String msg) {
-        synchronized (outMsgs) {
+    public void addMsg(String msg) {
+        outlock.lock();
+        try {
             outMsgs.add(msg);
+        }finally {
+            outlock.unlock();
         }
     }
 
@@ -235,7 +240,8 @@ class ClientThread extends Thread {
                     out.flush();
                     namesent = true;
                 }
-                synchronized (client.outMsgs) {
+                client.outlock.lock();
+                try{
                     if (!client.outMsgs.isEmpty()) {
                         Iterator<String> iter = client.outMsgs.iterator();
                         while (iter.hasNext()) {
@@ -244,6 +250,8 @@ class ClientThread extends Thread {
                             iter.remove();
                         }
                     }
+                }finally {
+                    client.outlock.unlock();
                 }
                 out.flush();
                 if (in.ready()) {
@@ -282,7 +290,7 @@ class ClientThread extends Thread {
                     } else if (messagetype.equals("InfoMsg")) {
                         String[] temp1 = messagevalue.split(":");
                         client.gui.appendText(temp1[0], (Integer.valueOf(temp1[1])==0)?Color.BLUE:Color.RED);
-                        client.outMsgs.add("Ready");
+                        client.addMsg("Ready");
                     } else if (messagetype.equals("Players")) {
                         String[] ppl = messagevalue.split(",");
                         for (int i = 0; i < ppl.length; i++) {
@@ -338,7 +346,7 @@ class ClientThread extends Thread {
                                 client.players.get(Integer.valueOf(temp1[0])).hand.add(card);
                             }
                         }
-                        client.outMsgs.add("Ready");
+                        client.addMsg("Ready");
                     } else if (messagetype.equals("SetInfo")) { // note: a bit of a
                         // misnomer for lifepoints, just adds or subtracts that amount
                         // set information about hand and stuff
@@ -350,7 +358,7 @@ class ClientThread extends Thread {
                 		    System.out.println("WTF do i do with " + infotype + ":" + infofields[1]);
                 		    Thread.dumpStack();
                 		}
-                        client.outMsgs.add("Ready");
+                        client.addMsg("Ready");
                     }
                 }
             } catch (Exception e) {
@@ -387,21 +395,19 @@ class ClientThread extends Thread {
 		Boolean processed = false;
 		if(client.nextPrompt!=-2){
 			processed = true;
-		    client.outMsgs.add("Prompt:" + client.nextPrompt);
+		    client.addMsg("Prompt:" + client.nextPrompt);
 		    client.nextPrompt = -2;
 		}
 		// received a prompt from host to start
 		else if (messagevalue.equals("Start")) {
 			processed = true;
-		    client.outMsgs.add("Prompt:" +
-		                  client.promptStart());
+		    client.addMsg("Prompt:" + client.promptStart());
 		} else if (messagevalue.equals("PlayCard")) {
 			processed = true;
 		    client.promptPlayCard();
 		} else if (messagevalue.equals("PlayCardUnforced")) {
 			processed = true;
-		    client.gui.promptChooseCard(client.player.hand, "", "",
-		                           false);
+		    client.gui.promptChooseCard(client.player.hand, "", "", false);
 		} else if (messagevalue.equals("PickCardTarget")) {
 			processed = true;
 		    client.gui.promptTargetCard("", "", //null should be ALL cards.
@@ -457,13 +463,11 @@ class ClientThread extends Thread {
 		            client.gui.appendText("You are a " + client.player.role.name(), Color.YELLOW);
 		        } else {
 		            if (Integer.valueOf(fields[2]) == 0)
-		                client.gui.appendText("Player " + fields[1] +
-		                                 " is the " +
+		                client.gui.appendText("Player " + fields[1] + " is the " +
 		                                 Constants.Role.values()[Integer.valueOf(fields[2])].name(),
 		                                 Color.YELLOW);
 		            else //only shown when player is killed
-		                client.gui.appendText("Player " + fields[1] +
-		                                 " was a " +
+		                client.gui.appendText("Player " + fields[1] + " was a " +
 		                                 Constants.Role.values()[Integer.valueOf(fields[2])].name(),
 		                                 Color.YELLOW);
 		        }
@@ -479,8 +483,7 @@ class ClientThread extends Thread {
 			processed = true;
 		    if(client.guiEnabled)
 		        client.gui.appendText("Player " + fields[1] +
-		                     " has a maxHP of " + fields[2],
-		                     Color.RED);
+		                     " has a maxHP of " + fields[2], Color.RED);
 		    player.maxLifePoints=Integer.valueOf(fields[2]);
 		    player.lifePoints=Integer.valueOf(fields[2]);
 		        //this should match the above block
@@ -496,8 +499,7 @@ class ClientThread extends Thread {
 		        client.field.setHP(playerid,player.lifePoints);
 		    }else
 		        client.print("Player " + fields[1] +
-		                " life points changed by " +
-		                fields[2]);
+		                " life points changed by " + fields[2]);
 		} else if (type.equals("PutInField")) {
 			processed = true;
 	        client.gui.appendText("Player "+fields[1]+" added "+fields[2]+" to the field.");
