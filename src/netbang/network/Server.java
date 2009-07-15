@@ -346,18 +346,12 @@ class ServerThread extends Thread {
             out = new BufferedWriter(new OutputStreamWriter(client
                     .getOutputStream()));
         } catch (Exception e1) {
-
             e1.printStackTrace();
             try {
                 client.close();
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        }
-        try {
-
-        } catch (Exception e) {
-            e.printStackTrace();
         }
         this.start();
     }
