@@ -44,6 +44,9 @@ public class Server extends Thread {
      */
     public ArrayList<Choice[]> choice;
 
+    /**
+     * I have no idea what this is, but it needs documentation.
+     */
     public int[][] ready;
     Bang game; // just insert game stuff here
     public LinkedList<String> names = new LinkedList<String>();
