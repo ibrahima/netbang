@@ -164,12 +164,8 @@ public class Field implements MouseListener, MouseMotionListener {
                 } else {
                     crd.paint(graphics);// TODO:DEFAULT PAINTER
                 }
-            } else if (temp instanceof Button) {
-                temp.paint(graphics);
-            } else if (temp instanceof HandSpace) {
-                temp.paint(graphics);
             } else {
-                System.out.println("Something strange in my clickies");
+                temp.paint(graphics);
             }
         }
 
