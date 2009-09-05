@@ -200,14 +200,13 @@ ComponentListener, ActionListener {
     }
 
     /**
-     * Asks the player to choose a card. This is used for many instances. TODO:
-     * replace al with ID of the player.
+     * Asks the player to choose a card. This is used for many instances.
+     * TODO: replace al with ID of the player.
      *
      * @param al
      * @return
      */
-    public void promptChooseCard(ArrayList<Card> al, String str1, String str2,
-            boolean force) {
+    public void promptChooseCard(ArrayList<Card> al, boolean force) {
         client.field.pick = al;
         client.prompting = true;
         client.forceDecision = force;
@@ -216,12 +215,10 @@ ComponentListener, ActionListener {
     /**
      * Adds one bool, then does promptChooseCard
      *
-     * @param str1
-     * @param str2
      * @param force
      */
-    public void promptTargetCard(String str1, String str2, boolean force) {
-        promptChooseCard(null, str1, str2, force);
+    public void promptTargetCard(boolean force) {
+        promptChooseCard(null, force);
     }
 
     public void keyPressed(KeyEvent e) {

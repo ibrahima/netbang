@@ -198,7 +198,7 @@ public class Client extends Thread {
      * Prompts the player to play a card
      */
     protected void promptPlayCard() {
-        gui.promptChooseCard(player.hand, "", "", true);
+        gui.promptChooseCard(player.hand, true);
     }
 
 }
@@ -408,15 +408,14 @@ class ClientThread extends Thread {
 		    client.promptPlayCard();
 		} else if (messagevalue.equals("PlayCardUnforced")) {
 			processed = true;
-		    client.gui.promptChooseCard(client.player.hand, "", "", false);
+		    client.gui.promptChooseCard(client.player.hand, false);
 		} else if (messagevalue.equals("PickCardTarget")) {
 			processed = true;
-		    client.gui.promptTargetCard("", "", //null should be ALL cards.
-		                           false);
+		    client.gui.promptTargetCard(false);
 		    client.nextPrompt = -1;
 		} else if (messagevalue.equals("GeneralStore")) {
 			processed = true;
-		    client.gui.promptChooseCard(client.specialHand, "", "", true);
+		    client.gui.promptChooseCard(client.specialHand, true);
 		} else if (messagevalue.equals("ChooseCharacter")) {
 			processed = true;
 		    client.promptPlayCard();
@@ -424,7 +423,7 @@ class ClientThread extends Thread {
 			processed = true;
 		    //System.out.println("I am player " + c.id + ", prompting = " + c.prompting);
 		    //c.outMsgs.add("Prompt:" + (1 - c.id));
-		    client.gui.promptChooseCard(null, "", "", false);
+		    client.gui.promptChooseCard(null, false);
 		    client.targetingPlayer = true;
 		}
 		return processed;
