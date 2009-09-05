@@ -188,8 +188,7 @@ ComponentListener, ActionListener {
      */
     public int promptYesNo(String message, String title) {
         // I think it's visually more intuitive to have Yes on the left, but
-        // keep in
-        // mind that this means 0 is yes and 1 is no!
+        // keep in mind that this means 0 is yes and 1 is no!
         int r = -1;
         while (r == -1) {
             r = JOptionPane.showOptionDialog(this, message, title,
@@ -257,27 +256,6 @@ ComponentListener, ActionListener {
             else
                 chat.append(e.getKeyChar());
         } else {
-            /*
-             * if(Character.isDigit(e.getKeyChar())){ int f =
-             * ((Character)e.getKeyChar())%48;
-             * appendText(client.players.get(f).name); }
-             * if((char)e.getKeyChar()=='a'){
-             * appendText(String.valueOf(client.numPlayers)); }
-             * if((char)e.getKeyChar()=='s'){
-             * appendText(String.valueOf(client.players.size())); }
-             * if((char)e.getKeyChar()=='d'){
-             * appendText(String.valueOf(client.id)); }
-             * if((char)e.getKeyChar()=='f'){
-             * appendText(String.valueOf(client.player.id)); }
-             * if((char)e.getKeyChar()=='g'){
-             * appendText(client.players.get(client
-             * .id)+" "+client.player+" "+client.id); }
-             * if((char)e.getKeyChar()=='h'){
-             * appendText(client.players.get(client
-             * .id).hand.size()+""+client.player.hand.size()); }
-             * if((char)e.getKeyChar()=='j'){ String s = ""; for(Card
-             * c:client.player.hand){ s+=c.name+" "; } appendText(s); }
-             */
         }
     }
 

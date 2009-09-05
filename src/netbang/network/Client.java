@@ -399,8 +399,7 @@ class ClientThread extends Thread {
 		    client.addMsg("Prompt:" + client.nextPrompt);
 		    client.nextPrompt = -2;
 		}
-		// received a prompt from host to start
-		else if (messagevalue.equals("Start")) {
+		else if (messagevalue.equals("Start")) {// received a prompt from host to start
 			processed = true;
 		    client.addMsg("Prompt:" + client.promptStart());
 		} else if (messagevalue.equals("PlayCard")) {
@@ -421,8 +420,6 @@ class ClientThread extends Thread {
 		    client.promptPlayCard();
 		} else if (messagevalue.equals("PickTarget")) {
 			processed = true;
-		    //System.out.println("I am player " + c.id + ", prompting = " + c.prompting);
-		    //c.outMsgs.add("Prompt:" + (1 - c.id));
 		    client.gui.promptChooseCard(null, false);
 		    client.targetingPlayer = true;
 		}
