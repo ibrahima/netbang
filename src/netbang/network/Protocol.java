@@ -12,5 +12,9 @@ public class Protocol {
     /**
      * This string is sent when a player wants to discard a card.
      */
-    public final String DISCARD = "discard";
+    public static final String DISCARD = "Discard";
+    /**
+     * This string is sent when a player sends a chat message.
+     */
+    public static final String CHAT = "Chat";
 }

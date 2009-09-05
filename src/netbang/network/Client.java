@@ -177,7 +177,14 @@ public class Client extends Thread {
             outlock.unlock();
         }
     }
-
+    
+    /**
+     * Discards the card specified.
+     * @param card
+     */
+    public void discardCard(int card) {
+		addMsg(Protocol.DISCARD+":");
+	}
     /**
      * Sends the specified chat message to the server
      * @param chat the chat message
