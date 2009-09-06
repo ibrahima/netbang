@@ -183,14 +183,14 @@ public class Client extends Thread {
      * @param card
      */
     public void discardCard(int card) {
-		addMsg(Protocol.DISCARD+":");
+		addMsg(Protocol.MessageType.DISCARD+":");
 	}
     /**
      * Sends the specified chat message to the server
      * @param chat the chat message
      */
     public void addChat(String chat) {
-        addMsg("Chat:" + chat);
+        addMsg(Protocol.MessageType.CHAT + chat);
     }
     /**
      * Prompts the player to start
@@ -268,7 +268,7 @@ class ClientThread extends Thread {
                     String[] temp = buffer.split(":", 2);
                     String messagetype = temp[0];
                     String messagevalue = temp[1];
-                    if (messagetype.equals("Connection")) {
+                    if (messagetype.equals(Protocol.MessageType.CONNECTION)) {
                         System.out.println(messagevalue);
                         if (!client.connected &&
                             messagevalue.equals("Successfully connected.")) {
@@ -290,26 +290,26 @@ class ClientThread extends Thread {
                                 return;
                             }
                         }
-                    } else if (messagetype.equals("Chat")) {
+                    } else if (messagetype.equals(Protocol.MessageType.CHAT)) {
                         if(client.guiEnabled)
                             client.gui.appendText(messagevalue);
                         else
                             print(messagevalue);
-                    } else if (messagetype.equals("InfoMsg")) {
+                    } else if (messagetype.equals(Protocol.MessageType.INFOMSG)) {
                         String[] temp1 = messagevalue.split(":");
                         client.gui.appendText(temp1[0], (Integer.valueOf(temp1[1])==0)?Color.BLUE:Color.RED);
                         client.addMsg("Ready");
-                    } else if (messagetype.equals("Players")) {
+                    } else if (messagetype.equals(Protocol.MessageType.PLAYERS)) {
                         String[] ppl = messagevalue.split(",");
                         for (int i = 0; i < ppl.length; i++) {
                             if (ppl[i] != null && !ppl[i].isEmpty()) {
                                 client.players.add(new Player(i, ppl[i]));
                             }
                         }
-                    } else if (messagetype.equals("PlayerJoin")) {
+                    } else if (messagetype.equals(Protocol.MessageType.PLAYERJOIN)) {
                         client.players.add(new Player(client.players.size(), messagevalue));
                         System.out.println("added "+messagevalue);
-                    } else if (messagetype.equals("PlayerLeave")) {
+                    } else if (messagetype.equals(Protocol.MessageType.PLAYERLEAVE)) {
                         if(client.player.maxLifePoints>0){ //game is started
                             client.gui.appendText("A player has left the game. Game cannot continue. Server shutting down.");
                             break;
@@ -320,13 +320,13 @@ class ClientThread extends Thread {
                                 System.out.println("removed "+p.name);
                                 break;
                             }
-                    } else if (messagetype.equals("Prompt")) {
+                    } else if (messagetype.equals(Protocol.MessageType.PROMPT)) {
                         if(!processPrompt(messagevalue)){
                 		    System.out.println("WTF do i do with " + messagevalue);
                 		    Thread.dumpStack();
                 		}
 
-                    } else if (messagetype.equals("Draw")) {
+                    } else if (messagetype.equals(Protocol.MessageType.DRAW)) {
                         String[] drawfields = messagevalue.split(":");
                         int n = drawfields.length;
                         if (Integer.valueOf(drawfields[0]) == client.id) {
@@ -355,7 +355,7 @@ class ClientThread extends Thread {
                             }
                         }
                         client.addMsg("Ready");
-                    } else if (messagetype.equals("SetInfo")) { // note: a bit of a
+                    } else if (messagetype.equals(Protocol.MessageType.SETINFO)) { // note: a bit of a
                         // misnomer for lifepoints, just adds or subtracts that amount
                         // set information about hand and stuff
                         String[] infofields = messagevalue.split(":");
