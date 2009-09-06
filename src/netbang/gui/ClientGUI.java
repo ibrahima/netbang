@@ -188,8 +188,7 @@ ComponentListener, ActionListener {
      */
     public int promptYesNo(String message, String title) {
         // I think it's visually more intuitive to have Yes on the left, but
-        // keep in
-        // mind that this means 0 is yes and 1 is no!
+        // keep in mind that this means 0 is yes and 1 is no!
         int r = -1;
         while (r == -1) {
             r = JOptionPane.showOptionDialog(this, message, title,
@@ -200,14 +199,13 @@ ComponentListener, ActionListener {
     }
 
     /**
-     * Asks the player to choose a card. This is used for many instances. TODO:
-     * replace al with ID of the player.
+     * Asks the player to choose a card. This is used for many instances.
+     * TODO: replace al with ID of the player.
      *
      * @param al
      * @return
      */
-    public void promptChooseCard(ArrayList<Card> al, String str1, String str2,
-            boolean force) {
+    public void promptChooseCard(ArrayList<Card> al, boolean force) {
         client.field.pick = al;
         client.prompting = true;
         client.forceDecision = force;
@@ -216,12 +214,10 @@ ComponentListener, ActionListener {
     /**
      * Adds one bool, then does promptChooseCard
      *
-     * @param str1
-     * @param str2
      * @param force
      */
-    public void promptTargetCard(String str1, String str2, boolean force) {
-        promptChooseCard(null, str1, str2, force);
+    public void promptTargetCard(boolean force) {
+        promptChooseCard(null, force);
     }
 
     public void keyPressed(KeyEvent e) {
@@ -260,27 +256,6 @@ ComponentListener, ActionListener {
             else
                 chat.append(e.getKeyChar());
         } else {
-            /*
-             * if(Character.isDigit(e.getKeyChar())){ int f =
-             * ((Character)e.getKeyChar())%48;
-             * appendText(client.players.get(f).name); }
-             * if((char)e.getKeyChar()=='a'){
-             * appendText(String.valueOf(client.numPlayers)); }
-             * if((char)e.getKeyChar()=='s'){
-             * appendText(String.valueOf(client.players.size())); }
-             * if((char)e.getKeyChar()=='d'){
-             * appendText(String.valueOf(client.id)); }
-             * if((char)e.getKeyChar()=='f'){
-             * appendText(String.valueOf(client.player.id)); }
-             * if((char)e.getKeyChar()=='g'){
-             * appendText(client.players.get(client
-             * .id)+" "+client.player+" "+client.id); }
-             * if((char)e.getKeyChar()=='h'){
-             * appendText(client.players.get(client
-             * .id).hand.size()+""+client.player.hand.size()); }
-             * if((char)e.getKeyChar()=='j'){ String s = ""; for(Card
-             * c:client.player.hand){ s+=c.name+" "; } appendText(s); }
-             */
         }
     }
 
